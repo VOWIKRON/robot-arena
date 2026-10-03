@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.4
+- Aktuelle stabile Version: 0.1.5
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,6 +41,18 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-Kernsimulation: Ereignismodell-Grundstruktur für Bewegung, Schuss, Treffer und Schaden.
+NEXT-01: Ereignismodell-Grundtypen für Bewegung, Schuss, Treffer und Schaden inklusive Unit-Tests.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
+
+
+## Teststrategie
+
+- Testsuite wächst bei jedem Entwicklungsschritt mit.
+- Verhalten und Spielregeln werden als Charakterisierungs-/Regressionstests abgesichert.
+- Vor Refactorings werden fehlende Verhaltenstests ergänzt.
+- TEST_STRATEGY.md ist verbindliche Grundlage.
+
+## Rolling Backlog
+
+BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Der jeweils nächste Lauf bearbeitet genau einen davon.
