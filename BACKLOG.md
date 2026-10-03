@@ -5,18 +5,18 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.4  
+**Aktuelle stabile Version:** 0.1.6  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
 
 ## Konkrete nächste Läufe
 
-### NEXT-01 · Ereignismodell-Grundtypen
-- [ ] Event-Typen für Bewegung, Schuss, Treffer und Schaden definieren
-- [ ] Event-Datenmodell von Simulationszustand trennen
-- [ ] Unit-Tests für Event-Erzeugung
-- [ ] Testsuite-Doku um Event-Testfälle ergänzen
+### Erledigt in v0.1.6 · Ereignismodell-Grundtypen
+- [x] Event-Typen für Bewegung, Schuss, Treffer und Schaden definiert
+- [x] Event-Datenmodell vom Simulationszustand getrennt
+- [x] Unit-Tests für Event-Erzeugung ergänzt
+- [x] Testsuite-Doku um Event-Testfälle ergänzt
 
 ### NEXT-02 · Bewegungsereignisse
 - [ ] Bewegung als explizites Event erzeugen
@@ -73,6 +73,12 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [ ] fehlende Charakterisierungstests ergänzen
 - [ ] Duplikation in Engine identifizieren
 - [ ] erst danach gezieltes Refactoring planen
+
+### NEXT-11 · Reichweite und Cooldown charakterisieren
+- [ ] Verhalten exakt an der Reichweitengrenze testen
+- [ ] Cooldown-Abbau über mehrere Ticks charakterisieren
+- [ ] Regressionstest für ersten erlaubten Schuss nach Cooldown
+- [ ] Testsuite-Doku um Reichweiten-/Cooldown-Fälle ergänzen
 
 ---
 
