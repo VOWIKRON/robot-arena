@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.9 – 2026-10-03
+
+- successful shots emit separate HitEvents and DamageEvents
+- DamageEvents report actually applied non-negative damage
+- structure is clamped at zero; overkill is capped at remaining structure
+- fixed-seed regression secures deterministic damage jitter
+- public testsuite adds HIT-001 and DMG-001 through DMG-003
+- rolling backlog advances to NEXT-05
+- publish follows one-commit ticker principle
+
+
 ## 0.1.8 – 2026-10-03
 
 - simulation emits explicit ShotEvents when range, energy and cooldown allow firing

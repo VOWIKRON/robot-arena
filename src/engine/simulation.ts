@@ -1,6 +1,6 @@
 import type { MatchState, RobotDefinition, RobotState, Vec2 } from './types';
 import type { CombatEvent, MoveEvent } from './events';
-import { createMoveEvent, createShotEvent } from './events';
+import { createDamageEvent, createHitEvent, createMoveEvent, createShotEvent } from './events';
 import { SeededRandom } from './random';
 
 export type StepResult = Readonly<{
@@ -82,8 +82,13 @@ function updateRobot(
     )
   );
 
+  events.push(createHitEvent(tick, self.definition.id, enemy.definition.id));
+
   const jitter = 0.9 + rng.next() * 0.2;
-  enemy.structure = Math.max(0, enemy.structure - self.definition.weaponDamage * jitter);
+  const rawDamage = Math.max(0, self.definition.weaponDamage * jitter);
+  const appliedDamage = Math.min(enemy.structure, rawDamage);
+  enemy.structure = Math.max(0, enemy.structure - appliedDamage);
+  events.push(createDamageEvent(tick, self.definition.id, enemy.definition.id, appliedDamage));
 }
 
 export function stepMatchWithEvents(state: MatchState, rng: SeededRandom): StepResult {

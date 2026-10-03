@@ -3,11 +3,11 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.8
+- Aktuelle stabile Version: 0.1.9
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
-- Publish-Gate: nur explizite `release:`-Commits
+- Publish-Gate: grüne CI + neue, noch nicht live befindliche Version
 - Versionierte Releases: aktiv
 - Desktop-E2E: aktiv
 - Mobile-E2E: aktiv
@@ -25,9 +25,9 @@ Umgesetzt:
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 2
-- Entwicklungszyklen seit Refactoring: 2
-- Entwicklungszyklen seit Architektur-Review: 2
+- Entwicklungszyklen seit Test-Review: 3
+- Entwicklungszyklen seit Refactoring: 3
+- Entwicklungszyklen seit Architektur-Review: 3
 
 ## Öffentliche Metadaten
 
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-04: Treffer- und Schadensereignisse trennen und mit Struktur-/Schadensgrenzen absichern.
+NEXT-05: Sieg und Kampfende als explizites Ereignis modellieren und Aktionen nach Zerstörung absichern.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
@@ -75,3 +75,8 @@ NEXT-02 abgeschlossen: Bewegungen werden als Move-Events mit Tick, Roboter-ID so
 ## Schussereignisse
 
 NEXT-03 abgeschlossen: Erfolgreiche Schüsse werden als ShotEvents mit Tick, Angreifer, Ziel und Energiekosten ausgegeben. Reichweite, Energie und Cooldown sind als Verhaltenstests abgesichert. Sichtbares Spielverhalten bleibt unverändert.
+
+
+## Treffer- und Schadensereignisse
+
+NEXT-04 abgeschlossen: Erfolgreiche Schüsse erzeugen getrennte Shot-, Hit- und Damage-Events. Damage enthält den tatsächlich angewandten, nie negativen Schaden; Zielstruktur wird bei 0 geklemmt. Ein fester Seed sichert den Schadensjitter deterministisch ab.

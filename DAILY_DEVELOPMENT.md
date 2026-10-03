@@ -29,9 +29,9 @@ Der tägliche Lauf soll nicht möglichst viel ändern, sondern einen kleinen, ü
     - `release-notes.html`
     - `backlog.html`
 18. Versionsnummer erhöhen, wenn ein neuer öffentlicher Stand entsteht.
-19. Commit erzeugen.
-20. CI abwarten.
-21. Nur bei grüner CI veröffentlichen.
+19. Alle Änderungen eines Laufs möglichst in genau einem gebündelten Entwicklungscommit erzeugen.
+20. CI für genau diesen Commit-SHA abwarten.
+21. Nur bei grüner CI und einer neuen, noch nicht live befindlichen Version automatisch veröffentlichen; kein zusätzlicher Trigger-/release:-Commit.
 22. Release unveränderlich unter `releases/vX.Y.Z/` ablegen.
 23. dieselbe Version als aktuelle Version veröffentlichen.
 24. `publishedAt`, Version und Commit in den öffentlichen Metadaten setzen.

@@ -168,6 +168,40 @@ describe('simulation', () => {
     expect(raptorShots).toHaveLength(0);
   });
 
+  it('emits separate hit and damage events after a successful shot', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
+    state.robotB.energy = 0; state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const combat = result.events.filter((event) => event.type === 'shot' || event.type === 'hit' || event.type === 'damage');
+    expect(combat.map((event) => event.type)).toEqual(['shot', 'hit', 'damage']);
+    expect(combat[1]).toEqual({ type: 'hit', tick: 1, attackerId: RAPTOR.id, targetId: TITAN.id });
+    expect(combat[2]).toMatchObject({ type: 'damage', tick: 1, sourceId: RAPTOR.id, targetId: TITAN.id });
+  });
+
+  it('never emits negative damage and never reduces structure below zero', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
+    state.robotB.structure = 1; state.robotB.energy = 0; state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const damage = result.events.find((event) => event.type === 'damage');
+    expect(damage?.type).toBe('damage');
+    if (damage?.type === 'damage') { expect(damage.amount).toBeGreaterThanOrEqual(0); expect(damage.amount).toBeLessThanOrEqual(1); }
+    expect(result.state.robotB.structure).toBe(0);
+  });
+
+  it('keeps damage jitter deterministic for a fixed seed', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
+    state.robotB.energy = 0; state.robotB.cooldown = 99;
+    const first = stepMatchWithEvents(state, new SeededRandom(4711));
+    const second = stepMatchWithEvents(state, new SeededRandom(4711));
+    const firstDamage = first.events.find((event) => event.type === 'damage');
+    const secondDamage = second.events.find((event) => event.type === 'damage');
+    expect(firstDamage).toEqual(secondDamage);
+    if (firstDamage?.type === 'damage') expect(firstDamage.amount).toBeCloseTo(7.780831221491098, 10);
+  });
+
   it('keeps energy within zero and configured maximum', () => {
     let state = createMatch(RAPTOR, TITAN);
     const rng = new SeededRandom(4711);

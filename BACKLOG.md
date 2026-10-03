@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.8  
+**Aktuelle stabile Version:** 0.1.9  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -31,12 +31,12 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Test: kein Schuss ohne ausreichende Energie
 - [x] Test: kein Schuss während aktivem Cooldown
 
-### NEXT-04 · Treffer- und Schadensereignisse
-- [ ] Treffer vom Schuss trennen
-- [ ] Schaden als separates Event
-- [ ] Tests: Schaden nie negativ
-- [ ] Tests: Struktur nie unter 0
-- [ ] feste Seed-Regression für Schadensjitter
+### Erledigt in v0.1.9 · Treffer- und Schadensereignisse
+- [x] Treffer vom Schuss getrennt
+- [x] Schaden als separates Event
+- [x] Test: Schaden nie negativ
+- [x] Test: Struktur nie unter 0
+- [x] feste Seed-Regression für Schadensjitter
 
 ### NEXT-05 · Sieg- und Kampfende
 - [ ] Sieg als Event

@@ -208,3 +208,20 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Bedienung/Verhalten:** Sichtbar ändert sich für den Spieler noch nichts an Buttons oder Darstellung. Das beobachtbare Schussverhalten bleibt absichtlich gleich; neu ist, dass jede Schussentscheidung explizit als Event nachvollziehbar und gegen die drei Sperrbedingungen testbar ist.
 
 **Backlog:** NEXT-03 erledigt, NEXT-04 Treffer & Schaden ist neuer nächster Schritt. NEXT-13 Event-Stream-Determinismus wurde ergänzt, damit die konkrete Folgeplanung weiter ausreichend tief bleibt.
+
+
+---
+
+## 2026-10-03 – Automatischer Probelauf: NEXT-04 Treffer und Schaden
+
+**Ausgangszustand:** v0.1.8 live; CI des neuen Ticker-Publishpfads grün.
+
+**Umgesetzt:** Shot, Hit und Damage getrennt; angewandter Schaden auf 0 und Reststruktur begrenzt; Event-Reihenfolge Shot → Hit → Damage.
+
+**Tests:** HIT-001, DMG-001/002/003 einschließlich Strukturgrenze und festem Seed 4711.
+
+**Refactoring:** Schadensanwendung in rawDamage und appliedDamage getrennt; Event-Nutzlast entspricht dem tatsächlich angewandten Schaden.
+
+**Publishprinzip:** ein gebündelter Entwicklungscommit, CI als Gate, automatischer Publish nur für neue Version 0.1.9.
+
+**Nächster Schritt:** NEXT-05 Sieg und Kampfende.
