@@ -118,3 +118,24 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 - Testzeitpunkt über Build-Metadaten sichtbar.
 
 **Regel:** Entwicklungsentscheidungen und Auffälligkeiten gehören in protokoll.md und in die Task-Rückmeldung; testsuite.html dokumentiert ausschließlich Tests und Qualitätsprüfungen.
+
+---
+
+## 2026-10-03 – Testsuite für Refactoring und konkreter Rolling Backlog
+
+**Neue Vorgabe:** Die Testsuite wird nicht nur funktional größer, sondern sichert gezielt beobachtbares Verhalten und Spielregeln ab. Ziel ist, spätere Refactorings durchführen zu können, ohne unbeabsichtigte Verhaltensänderungen.
+
+**Direkt ergänzt:**
+- stabiler Initialzustand,
+- genau ein Tick pro Schritt,
+- Eingabestate bleibt unverändert,
+- Roboter nähern sich außerhalb der Kampfdistanz an,
+- Energie bleibt innerhalb gültiger Grenzen,
+- Struktur steigt im Kampf nicht,
+- fertiger Match-State bleibt unverändert.
+
+**Teststrategie:** Neue Datei TEST_STRATEGY.md beschreibt Unit-, Verhaltens-, Charakterisierungs-, Regression-, Desktop-, Mobile- und Deployment-Tests sowie das Refactoring-Gate.
+
+**Backlog-Regel:** Der Backlog enthält künftig nicht nur den nächsten Punkt, sondern mindestens 5–10 konkret priorisierte Folgeschritte. Feature- und Testausbau werden dabei gekoppelt.
+
+**Konkrete nächste Schritte:** NEXT-01 bis NEXT-10 wurden für Ereignismodell, Bewegung, Schuss, Treffer/Schaden, Sieg, Timeout, Energie, Arena-Grenzen, Regression-Seeds und Test-Review definiert.
