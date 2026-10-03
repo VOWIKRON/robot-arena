@@ -38,7 +38,14 @@ export type VictoryEvent = Readonly<{
   destroyedRobotId: string;
 }>;
 
-export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | VictoryEvent;
+export type CombatEndEvent = Readonly<{
+  type: 'combat-end';
+  tick: number;
+  winnerId: string;
+  destroyedRobotId: string;
+}>;
+
+export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | VictoryEvent | CombatEndEvent;
 
 export function createVictoryEvent(
   tick: number,
