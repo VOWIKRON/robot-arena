@@ -103,6 +103,71 @@ describe('simulation', () => {
     expect(after).toBeLessThan(before);
   });
 
+
+  it('emits a shot event when range, energy and cooldown allow firing', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotB.energy = 0;
+    state.robotB.cooldown = 99;
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const shots = result.events.filter((event) => event.type === 'shot');
+
+    expect(shots).toContainEqual({
+      type: 'shot',
+      tick: 1,
+      attackerId: RAPTOR.id,
+      targetId: TITAN.id,
+      energyCost: RAPTOR.weaponEnergy
+    });
+  });
+
+  it('does not emit a shot event while target remains outside weapon range', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotB.energy = 0;
+    state.robotB.cooldown = 99;
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const raptorShots = result.events.filter(
+      (event) => event.type === 'shot' && event.attackerId === RAPTOR.id
+    );
+
+    expect(raptorShots).toHaveLength(0);
+  });
+
+  it('does not emit a shot event without enough energy', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotA.energy = 0;
+    state.robotB.energy = 0;
+    state.robotB.cooldown = 99;
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const raptorShots = result.events.filter(
+      (event) => event.type === 'shot' && event.attackerId === RAPTOR.id
+    );
+
+    expect(raptorShots).toHaveLength(0);
+  });
+
+  it('does not emit a shot event while cooldown is still active', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotA.cooldown = 2;
+    state.robotB.energy = 0;
+    state.robotB.cooldown = 99;
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const raptorShots = result.events.filter(
+      (event) => event.type === 'shot' && event.attackerId === RAPTOR.id
+    );
+
+    expect(raptorShots).toHaveLength(0);
+  });
+
   it('keeps energy within zero and configured maximum', () => {
     let state = createMatch(RAPTOR, TITAN);
     const rng = new SeededRandom(4711);
