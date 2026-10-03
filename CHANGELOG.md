@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.5 – 2026-10-03
+
+- Engine-Verhaltenstests für Initialzustand, Tick, Immutability, Bewegung, Energie, Struktur und Kampfende ergänzt
+- TEST_STRATEGY.md als verbindliche Refactoring-Teststrategie eingeführt
+- Rolling Backlog mit NEXT-01 bis NEXT-10 konkretisiert
+- öffentliche Testsuite um neue Behavior-Testfälle erweitert
+- öffentliche Backlog-Seite zeigt mehrere konkrete Folgeschritte
+- E2E prüft Testsuite-Ausbau und konkrete Backlog-Reihenfolge
+
 ## 0.1.4 – 2026-10-03
 
 - öffentliche Testsuite auf echte Testfalldokumentation umgestellt
