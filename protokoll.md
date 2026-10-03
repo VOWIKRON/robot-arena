@@ -186,3 +186,25 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Bedienung/Verhalten:** Für den Spieler ändert sich in diesem Schritt bewusst noch nichts an Buttons, Darstellung oder Kampfablauf. Das beobachtbare Bewegungsverhalten soll gleich bleiben. Neu ist die interne Nachvollziehbarkeit jeder Bewegung als Event – Grundlage für Replay, Analyse und sicheres Refactoring.
 
 **Backlog:** NEXT-02 erledigt, NEXT-03 Schussereignisse ist neuer nächster Schritt. NEXT-12 Event-Reihenfolge wurde ergänzt, damit die konkrete Folgeplanung weiter mindestens zehn Schritte umfasst.
+
+---
+
+## 2026-10-03 – Manueller Tageslauf 4: NEXT-03 Schussereignisse
+
+**Ausgangszustand:** v0.1.7 war veröffentlicht; CI, Unit-/Regressionstests, Desktop/Mobile-E2E und Publish waren grün. NEXT-03 war als nächster Rolling-Backlog-Punkt markiert.
+
+**Umgesetzt:**
+- erfolgreiche Schüsse erzeugen jetzt echte `ShotEvent`-Einträge,
+- Shot-Events enthalten Tick, Angreifer-ID, Ziel-ID und Energiekosten,
+- die bestehenden Regeln für Reichweite, Energie und Cooldown bleiben unverändert und steuern nun zusätzlich die Event-Erzeugung,
+- Treffer und Schaden bleiben bewusst noch außerhalb dieses Schritts und folgen in NEXT-04.
+
+**Tests ergänzt:**
+- SHOT-001: gültiger Schuss erzeugt Shot-Event,
+- SHOT-002: kein Shot-Event außerhalb der Reichweite,
+- SHOT-003: kein Shot-Event ohne ausreichende Energie,
+- SHOT-004: kein Shot-Event bei weiterhin aktivem Cooldown.
+
+**Bedienung/Verhalten:** Sichtbar ändert sich für den Spieler noch nichts an Buttons oder Darstellung. Das beobachtbare Schussverhalten bleibt absichtlich gleich; neu ist, dass jede Schussentscheidung explizit als Event nachvollziehbar und gegen die drei Sperrbedingungen testbar ist.
+
+**Backlog:** NEXT-03 erledigt, NEXT-04 Treffer & Schaden ist neuer nächster Schritt. NEXT-13 Event-Stream-Determinismus wurde ergänzt, damit die konkrete Folgeplanung weiter ausreichend tief bleibt.
