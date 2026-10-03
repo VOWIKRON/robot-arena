@@ -15,8 +15,12 @@ test('arena is usable and exposes project information', async ({ page }) => {
 test('public information pages are reachable', async ({ page }) => {
   await page.goto('/testsuite.html');
   await expect(page.getByRole('heading', { name: 'Testsuite' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Letzter vollständiger Entwicklungs- und Testlauf' })).toBeVisible();
-  await expect(page.getByText('Auffälligkeiten / Fehler / Blocker')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Engine / Determinismus' })).toBeVisible();
+  await expect(page.getByText('RAND-001')).toBeVisible();
+  await expect(page.getByText('SIM-001')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Browser / Desktop' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Browser / Mobile' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Deployment / Online-Smoke' })).toBeVisible();
 
   await page.goto('/release-notes.html');
   await expect(page.getByRole('heading', { name: 'Release Notes' })).toBeVisible();
