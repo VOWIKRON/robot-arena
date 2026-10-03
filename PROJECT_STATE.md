@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.6
+- Aktuelle stabile Version: 0.1.7
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-02: Bewegungsereignisse in die Simulation integrieren und mit Geschwindigkeits-/Immutability-Tests absichern.
+NEXT-03: Schussereignisse in die Simulation integrieren und Reichweite, Energie sowie Cooldown absichern.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
@@ -65,3 +65,8 @@ Die Engine-Tests sichern aktuell deterministische Zufallsfolgen, reproduzierbare
 ## Ereignismodell
 
 Move-, Shot-, Hit- und Damage-Events sind als separates Datenmodell vorhanden und mit Unit-Tests abgesichert. Die Simulation selbst wird ab NEXT-02 schrittweise auf Event-Erzeugung erweitert.
+
+
+## Bewegungsereignisse
+
+NEXT-02 abgeschlossen: Bewegungen werden als Move-Events mit Tick, Roboter-ID sowie Vorher-/Nachher-Position ausgegeben. Bestehendes Spielverhalten bleibt unverändert; die Bewegung ist nun für Replay, Analyse und Refactoring explizit nachvollziehbar.
