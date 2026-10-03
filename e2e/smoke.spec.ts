@@ -19,6 +19,8 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('RAND-001')).toBeVisible();
   await expect(page.getByText('SIM-001')).toBeVisible();
   await expect(page.getByText('SIM-009')).toBeVisible();
+  await expect(page.getByText('EVT-001')).toBeVisible();
+  await expect(page.getByText('EVT-004')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browser / Desktop' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browser / Mobile' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Deployment / Online-Smoke' })).toBeVisible();
@@ -29,6 +31,7 @@ test('public information pages are reachable', async ({ page }) => {
   await page.goto('/backlog.html');
   await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
-  await expect(page.getByText('NEXT-01 · Ereignismodell-Grundtypen')).toBeVisible();
+  await expect(page.getByText('NEXT-02 · Bewegungsereignisse')).toBeVisible();
   await expect(page.getByText('NEXT-10 · Test-Review vor Refactoring')).toBeVisible();
+  await expect(page.getByText('NEXT-11 · Reichweite und Cooldown charakterisieren')).toBeVisible();
 });
