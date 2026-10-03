@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.8 – 2026-10-03
+
+- simulation emits explicit ShotEvents when range, energy and cooldown allow firing
+- ShotEvents contain tick, attacker, target and energy cost
+- behavior tests cover valid firing plus blocked firing by range, energy and cooldown
+- public testsuite adds SHOT-001 through SHOT-004
+- rolling backlog advances to NEXT-04 and adds NEXT-13
+
 ## 0.1.7 – 2026-10-03
 
 - simulation emits explicit movement events
