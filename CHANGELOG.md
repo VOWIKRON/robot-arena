@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.7 – 2026-10-03
+
+- simulation emits explicit movement events
+- move events contain tick, robot id, previous position and new position
+- new stepMatchWithEvents API preserves existing stepMatch behavior
+- behavior tests cover movement-event generation, per-tick speed limit and input-state immutability
+- public testsuite adds MOV-001 through MOV-003
+- rolling backlog advances to NEXT-03 and adds NEXT-12
+
 ## 0.1.6 – 2026-10-03
 
 - separates combat event model from simulation state
