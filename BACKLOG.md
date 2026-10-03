@@ -6,7 +6,7 @@ Der Backlog zeigt bewusst zuerst größere Entwicklungsblöcke. Wenn ein Block a
 
 **Phase:** Fundament und Veröffentlichung  
 **Aktuelle stabile Version:** 0.1.0  
-**Nächstes Ziel:** öffentliche Projektinformationen und sauberer Footer
+**Nächstes Ziel:** Kernsimulation mit nachvollziehbarem Ereignismodell
 
 ---
 
@@ -26,13 +26,13 @@ Der Backlog zeigt bewusst zuerst größere Entwicklungsblöcke. Wenn ein Block a
 - [x] versionierte Releases unter `releases/vX.Y.Z/`
 
 ### Als Nächstes
-- [ ] professionelle Footer-Struktur einbauen
-- [ ] `testsuite.html` automatisch erzeugen
-- [ ] `release-notes.html` kumulierend erzeugen
-- [ ] `backlog.html` aus Projektstatus/Backlog erzeugen
-- [ ] Publish-Zeitstempel im Footer anzeigen
-- [ ] Zeitpunkt des nächsten geplanten Laufs anzeigen
-- [ ] interne/metaartige Beschriftungen aus der öffentlichen Oberfläche entfernen
+- [x] professionelle Footer-Struktur einbauen
+- [x] `testsuite.html` veröffentlichen
+- [x] `release-notes.html` kumulierend veröffentlichen
+- [x] `backlog.html` als öffentliche Roadmap veröffentlichen
+- [x] Publish-Zeitstempel im Footer anzeigen
+- [x] Zeitpunkt des nächsten geplanten Laufs anzeigen
+- [x] interne/metaartige Beschriftungen aus der öffentlichen Oberfläche entfernen
 - [ ] Cache-/Versionsanzeige sauber machen
 - [ ] ESLint und Formatter ergänzen
 - [ ] Architekturgrenzen automatisiert prüfen
@@ -44,6 +44,7 @@ Der Backlog zeigt bewusst zuerst größere Entwicklungsblöcke. Wenn ein Block a
 Ziel: aus der aktuellen Demo eine nachvollziehbare, belastbare Kampfsimulation machen.
 
 Geplant:
+- [ ] **Nächster Schritt:** Ereignismodell-Grundstruktur für Bewegung, Schuss, Treffer und Schaden
 - [ ] vollständiges Ereignismodell
 - [ ] Waffenaktionen als Events
 - [ ] Trefferereignisse
