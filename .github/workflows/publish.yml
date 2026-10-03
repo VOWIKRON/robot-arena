@@ -119,7 +119,6 @@ jobs:
         run: |
           sleep 2
           curl --fail https://www.vowikron.de/try_folder/robot-arena/
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/testsutie.html || true
           curl --fail https://www.vowikron.de/try_folder/robot-arena/testsuite.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/release-notes.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/backlog.html
