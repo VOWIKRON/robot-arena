@@ -1,232 +1,132 @@
 # Backlog
 
-Der Backlog zeigt bewusst zuerst größere Entwicklungsblöcke. Wenn ein Block an die Reihe kommt, wird er in kleinere, täglich abarbeitbare Schritte zerlegt.
+Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro täglichem Lauf wird genau ein Schritt bearbeitet. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
 ## Aktueller Zustand
 
-**Phase:** Fundament und Veröffentlichung  
-**Aktuelle stabile Version:** 0.1.0  
-**Nächstes Ziel:** Kernsimulation mit nachvollziehbarem Ereignismodell
+**Phase:** Einstieg in Kernsimulation  
+**Aktuelle stabile Version:** 0.1.4  
+**Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
 
-## A. Fundament & Veröffentlichungsqualität
+## Konkrete nächste Läufe
 
-### Bereits erledigt
-- [x] Repository-Struktur
-- [x] TypeScript strict
-- [x] Vite-Build
-- [x] deterministische Seed-Quelle
-- [x] erste Simulationsengine
-- [x] Vitest-Grundtests
-- [x] Playwright Desktop
-- [x] Playwright Mobile
-- [x] GitHub Actions CI
-- [x] automatischer Publish nach grüner CI
-- [x] versionierte Releases unter `releases/vX.Y.Z/`
+### NEXT-01 · Ereignismodell-Grundtypen
+- [ ] Event-Typen für Bewegung, Schuss, Treffer und Schaden definieren
+- [ ] Event-Datenmodell von Simulationszustand trennen
+- [ ] Unit-Tests für Event-Erzeugung
+- [ ] Testsuite-Doku um Event-Testfälle ergänzen
 
-### Als Nächstes
-- [x] professionelle Footer-Struktur einbauen
-- [x] `testsuite.html` veröffentlichen
-- [x] `release-notes.html` kumulierend veröffentlichen
-- [x] `backlog.html` als öffentliche Roadmap veröffentlichen
-- [x] Publish-Zeitstempel im Footer anzeigen
-- [x] Zeitpunkt des nächsten geplanten Laufs anzeigen
-- [x] interne/metaartige Beschriftungen aus der öffentlichen Oberfläche entfernen
-- [ ] Cache-/Versionsanzeige sauber machen
-- [ ] ESLint und Formatter ergänzen
-- [ ] Architekturgrenzen automatisiert prüfen
+### NEXT-02 · Bewegungsereignisse
+- [ ] Bewegung als explizites Event erzeugen
+- [ ] Position vor/nach Bewegung nachvollziehbar machen
+- [ ] Verhaltenstest: Distanz verringert sich nur gemäß Geschwindigkeitslimit
+- [ ] Regressionstest für unveränderten Input-State
 
----
+### NEXT-03 · Schussereignisse
+- [ ] Schuss als Event mit Angreifer, Ziel und Tick
+- [ ] Bedingungen Reichweite, Energie und Cooldown explizit prüfen
+- [ ] Tests: kein Schuss außerhalb Reichweite
+- [ ] Tests: kein Schuss ohne Energie
+- [ ] Tests: kein Schuss während Cooldown
 
-## B. Kernsimulation
+### NEXT-04 · Treffer- und Schadensereignisse
+- [ ] Treffer vom Schuss trennen
+- [ ] Schaden als separates Event
+- [ ] Tests: Schaden nie negativ
+- [ ] Tests: Struktur nie unter 0
+- [ ] feste Seed-Regression für Schadensjitter
 
-Ziel: aus der aktuellen Demo eine nachvollziehbare, belastbare Kampfsimulation machen.
+### NEXT-05 · Sieg- und Kampfende
+- [ ] Sieg als Event
+- [ ] Kampf stoppt nach Zerstörung
+- [ ] Tests: besiegter Roboter führt keine Aktion mehr aus
+- [ ] Tests: fertiger Match-State bleibt stabil
 
-Geplant:
-- [ ] **Nächster Schritt:** Ereignismodell-Grundstruktur für Bewegung, Schuss, Treffer und Schaden
-- [ ] vollständiges Ereignismodell
-- [ ] Waffenaktionen als Events
-- [ ] Trefferereignisse
-- [ ] Schadensereignisse
-- [ ] Kampfende bei Zerstörung
-- [ ] Kampfende bei Zeitlimit
-- [ ] Unentschieden-Regeln
-- [ ] Energieverbrauch verfeinern
-- [ ] Bewegungsregeln stabilisieren
-- [ ] Arena-Grenzen und Kollisionen
-- [ ] deterministische Regression-Seeds festlegen
+### NEXT-06 · Zeitlimit und Unentschieden
+- [ ] explizites Match-Ende bei Tick-Limit
+- [ ] definierte Unentschieden-Regel
+- [ ] Tests für exakt letztes zulässiges Tick
+- [ ] feste Regression-Seeds für Timeout-Fälle
 
-Wenn dieser Block beginnt, wird er in einzelne tägliche Schritte zerlegt.
+### NEXT-07 · Energieverhalten härten
+- [ ] Regeneration und Verbrauch als Regeln dokumentieren
+- [ ] Grenzfälle 0/max testen
+- [ ] Tests über lange Läufe
+- [ ] Charakterisierungstests vor möglichem Engine-Refactoring
 
----
+### NEXT-08 · Bewegungs- und Arena-Grenzen
+- [ ] Arena-Grenzen erzwingen
+- [ ] Tests für x/y-Min/Max
+- [ ] Verhalten an identischen Positionen
+- [ ] Tests für hohe Geschwindigkeiten
 
-## C. Roboter- und Komponentensystem
+### NEXT-09 · Regression-Seeds
+- [ ] feste kleine Seed-Sammlung definieren
+- [ ] bekannte Gewinner/Endticks/Reststruktur dokumentieren
+- [ ] Regressionstest gegen unbeabsichtigte Verhaltensänderungen
+- [ ] Seeds in Testsuite sichtbar machen
 
-Ziel: unterschiedliche Roboterkonzepte ermöglichen.
-
-Geplant:
-- [ ] Chassis-System
-- [ ] Motoren
-- [ ] Panzerung
-- [ ] Energiesysteme
-- [ ] Sensorik
-- [ ] mehrere Waffen
-- [ ] Gewichtslimits
-- [ ] gültige/ungültige Konfigurationen
-- [ ] mehrere Preset-Roboter
+### NEXT-10 · Test-Review vor Engine-Refactoring
+- [ ] Abdeckung der Kernregeln prüfen
+- [ ] fehlende Charakterisierungstests ergänzen
+- [ ] Duplikation in Engine identifizieren
+- [ ] erst danach gezieltes Refactoring planen
 
 ---
 
-## D. Robot Builder
+## Parallel laufender Testausbau
 
-Ziel: Roboter ohne Code im Browser konfigurieren.
-
-Geplant:
-- [ ] Komponenten auswählen
-- [ ] Gewicht anzeigen
-- [ ] Energiebedarf anzeigen
-- [ ] Werte live berechnen
-- [ ] ungültige Kombinationen markieren
-- [ ] Roboter speichern
-- [ ] Roboter laden
-- [ ] JSON Export
-- [ ] JSON Import
+Bei **jedem** Feature-Schritt:
+- [ ] neue Regel mit Unit-/Verhaltenstest absichern
+- [ ] bei Bugfix einen Regressionstest ergänzen
+- [ ] Testsuite-HTML um reale Testfälle erweitern
+- [ ] feste Seeds verwenden, wenn Verhalten reproduzierbar sein muss
+- [ ] vor Refactoring fehlende Charakterisierungstests ergänzen
+- [ ] nach Refactoring komplette Testsuite erneut ausführen
 
 ---
 
-## E. Strategiesystem
+## Danach: größere Entwicklungsblöcke
 
-Ziel: Roboter unterscheiden sich nicht nur durch Hardware, sondern durch Verhalten.
+### C · Roboter- und Komponentensystem
+Chassis, Motoren, Panzerung, Energie, Sensorik, Waffen, Gewichtslimits und Presets.
 
-Geplant:
-- [ ] Strategy Interface
-- [ ] aggressiv
-- [ ] defensiv
-- [ ] Distanz halten
-- [ ] Nahkampf
-- [ ] Energie sparen
-- [ ] konfigurierbare Strategieparameter
-- [ ] Strategie-Telemetrie
+### D · Robot Builder
+Komponentenwahl, Live-Werte, Validierung, Speichern/Laden, Import/Export.
 
----
+### E · Strategiesystem
+Aggressiv, defensiv, Distanz, Nahkampf, Energieverwaltung und Strategieparameter.
 
-## F. Replay & Analyse
+### F · Replay & Analyse
+Event Recorder, Replay-Datei, Player, Zeitleiste und Kampfstatistiken.
 
-Ziel: Kämpfe verstehen und reproduzieren.
+### G · Turniere
+Round Robin, K.-o., Best-of-N, Tabellen, Seeds und Turnierstatistiken.
 
-Geplant:
-- [ ] Event Recorder
-- [ ] Replay-Dateiformat
-- [ ] Replay Player
-- [ ] Pause
-- [ ] Geschwindigkeit
-- [ ] Zeitleiste
-- [ ] Kampfstatistiken
-- [ ] Trefferquote
-- [ ] Energieanalyse
-- [ ] Debug-/Analyseansicht
+### H · Testlabor
+Batch-Simulationen, Siegquoten, Reststruktur, Energieverbrauch, Seed-Vergleiche.
+
+### I · Arenen & Spieltiefe
+Hindernisse, Arena-Größen, Engstellen, Gefahren- und Energiezonen.
+
+### J · Qualität, Performance & Refactoring
+Testabdeckung, Flaky Tests, Performance, Accessibility, Architektur und Dependencies.
+
+### K · Version 1.0
+Stabile Sandbox mit Editor, Strategien, Replay, Turnieren, Testlabor und reproduzierbarer Releasequalität.
 
 ---
 
-## G. Turniere
+## Öffentliche Backlog-Regel
 
-Ziel: mehrere Roboter automatisch gegeneinander antreten lassen.
+`backlog.html` zeigt:
+1. aktuelle Version,
+2. letzten Publish,
+3. nächsten geplanten Lauf,
+4. **den nächsten konkreten Schritt**,
+5. **mehrere danach folgende konkrete Schritte in Reihenfolge**,
+6. anschließend die größeren Entwicklungsblöcke.
 
-Geplant:
-- [ ] Round Robin
-- [ ] K.-o.
-- [ ] Best of N
-- [ ] Tabellen
-- [ ] Punktesystem
-- [ ] Turnier-Seeds
-- [ ] Wiederaufnahme abgebrochener Turniere
-- [ ] Turnierstatistiken
-
----
-
-## H. Testlabor
-
-Ziel: viele Kämpfe automatisiert auswerten.
-
-Geplant:
-- [ ] Batch-Simulation
-- [ ] 100 / 1.000 / 10.000 Kämpfe
-- [ ] Siegquoten
-- [ ] Durchschnittsschaden
-- [ ] Reststruktur
-- [ ] Energieverbrauch
-- [ ] Vergleich verschiedener Seeds
-- [ ] Stabilitätsprüfung
-
----
-
-## I. Arenen & Spieltiefe
-
-Geplant:
-- [ ] Hindernisse
-- [ ] Säulen
-- [ ] unterschiedliche Arena-Größen
-- [ ] Engstellen
-- [ ] Gefahrenzonen
-- [ ] Energiezonen
-- [ ] alternative Siegbedingungen
-
----
-
-## J. Qualität, Performance & Refactoring
-
-Dieser Block läuft nicht erst am Ende, sondern parallel zur gesamten Entwicklung.
-
-Regelmäßig:
-- [ ] Testabdeckung prüfen
-- [ ] Regressionstests ergänzen
-- [ ] Flaky Tests beseitigen
-- [ ] Refactoring-Sessions durchführen
-- [ ] Duplikation reduzieren
-- [ ] Kopplung prüfen
-- [ ] Performance messen
-- [ ] Memory-Leaks prüfen
-- [ ] Accessibility prüfen
-- [ ] Desktop-UX prüfen
-- [ ] Mobile-UX prüfen
-- [ ] Dependency Audit
-
----
-
-## K. Version 1.0
-
-Zielbild:
-- [ ] stabile Sandbox
-- [ ] Robotereditor
-- [ ] mehrere Komponenten
-- [ ] mehrere Strategien
-- [ ] Replay
-- [ ] Statistiken
-- [ ] Turniere
-- [ ] Testlabor
-- [ ] persistente Speicherung
-- [ ] responsive Desktop-/Mobile-Oberfläche
-- [ ] reproduzierbare Releases
-- [ ] vollständige Testsuite
-- [ ] dokumentierter Releaseprozess
-
----
-
-## Darstellungsregel für backlog.html
-
-Die öffentliche Backlog-Seite soll diese Struktur verständlich abbilden.
-
-Oben:
-1. aktuelle Version
-2. letzter Publish
-3. nächster geplanter Lauf
-4. nächster konkreter Entwicklungsschritt
-
-Darunter:
-- größere Entwicklungsblöcke,
-- Fortschritt,
-- erledigte Bereiche,
-- offene Bereiche.
-
-Detailaufgaben werden erst dann weiter zerlegt, wenn der jeweilige Block an die Reihe kommt.
+So bleibt jederzeit sichtbar, was beim nächsten Lauf passiert und was unmittelbar danach vorgesehen ist.
