@@ -39,6 +39,13 @@ export type RoundResultEvent = Readonly<{
 
 export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | RoundResultEvent;
 
+export function createRoundResultEvent(
+  tick: number,
+  robotId: string
+): RoundResultEvent {
+  return { type: 'round-result', tick, robotId };
+}
+
 export function createMoveEvent(
   tick: number,
   robotId: string,
