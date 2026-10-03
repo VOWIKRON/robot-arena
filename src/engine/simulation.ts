@@ -1,6 +1,6 @@
 import type { MatchState, RobotDefinition, RobotState, Vec2 } from './types';
 import type { CombatEvent, MoveEvent } from './events';
-import { createMoveEvent } from './events';
+import { createMoveEvent, createShotEvent } from './events';
 import { SeededRandom } from './random';
 
 export type StepResult = Readonly<{
@@ -73,6 +73,14 @@ function updateRobot(
 
   self.energy -= self.definition.weaponEnergy;
   self.cooldown = self.definition.cooldownTicks;
+  events.push(
+    createShotEvent(
+      tick,
+      self.definition.id,
+      enemy.definition.id,
+      self.definition.weaponEnergy
+    )
+  );
 
   const jitter = 0.9 + rng.next() * 0.2;
   enemy.structure = Math.max(0, enemy.structure - self.definition.weaponDamage * jitter);
