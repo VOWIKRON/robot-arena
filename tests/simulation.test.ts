@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { RAPTOR, TITAN } from '../src/engine/presets';
-import { createMatch, runMatch, stepMatch } from '../src/engine/simulation';
+import { createMatch, runMatch, stepMatch, stepMatchWithEvents } from '../src/engine/simulation';
 import { SeededRandom } from '../src/engine/random';
 
 const distance = (
@@ -47,6 +47,49 @@ describe('simulation', () => {
     const snapshot = structuredClone(state);
 
     stepMatch(state, new SeededRandom(4711));
+
+    expect(state).toEqual(snapshot);
+  });
+
+  it('emits movement events with before and after positions', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const moves = result.events.filter((event) => event.type === 'move');
+
+    expect(moves).toHaveLength(2);
+    expect(moves[0]).toMatchObject({
+      type: 'move',
+      tick: 1,
+      robotId: RAPTOR.id,
+      from: state.robotA.position,
+      to: result.state.robotA.position
+    });
+    expect(moves[1]).toMatchObject({
+      type: 'move',
+      tick: 1,
+      robotId: TITAN.id,
+      from: state.robotB.position,
+      to: result.state.robotB.position
+    });
+  });
+
+  it('never moves a robot farther than its configured speed in one tick', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const moves = result.events.filter((event) => event.type === 'move');
+
+    for (const move of moves) {
+      const robot = move.robotId === RAPTOR.id ? RAPTOR : TITAN;
+      const traveled = distance(move.from, move.to);
+      expect(traveled).toBeLessThanOrEqual(robot.speed + Number.EPSILON);
+    }
+  });
+
+  it('movement event generation does not mutate the input state', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    const snapshot = structuredClone(state);
+
+    stepMatchWithEvents(state, new SeededRandom(4711));
 
     expect(state).toEqual(snapshot);
   });
