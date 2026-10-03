@@ -74,4 +74,4 @@ Insbesondere:
 
 ## Öffentliche Testsuite-Dokumentation
 
-Nach jedem veröffentlichten Lauf muss `testsuite.html` zusätzlich zum technischen Status ein ausführliches Laufprotokoll enthalten. Die Struktur entspricht der Rückmeldung des Daily-Tasks mit den Punkten 1 bis 20. Fehler, Blocker, Umwege, verworfene Ansätze und Prozesskorrekturen werden sichtbar dokumentiert. Der jeweils neueste vollständige Lauf steht oben bzw. im Vordergrund; ältere relevante Laufprotokolle dürfen bei Bedarf archiviert oder kumuliert werden.
+Nach jedem veröffentlichten Lauf muss `testsuite.html` die tatsächlich ausgeführten Prüfungen als strukturierte Testsuite dokumentieren. Sie enthält konkrete Testfälle nach Bereichen wie Engine, Regression, Desktop, Mobile und Deployment. Jeder neu hinzugefügte Testfall wird mit Test-ID, Zweck, Prüfinhalt und Ergebnis sichtbar ergänzt. Die Testsuite ist kein Entwicklungs- oder Entscheidungsprotokoll; dafür bleibt `protokoll.md` zuständig.
