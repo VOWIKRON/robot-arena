@@ -164,3 +164,25 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Backlog:** NEXT-01 erledigt, NEXT-02 Bewegungsereignisse ist neuer nächster Schritt. NEXT-11 wurde ergänzt, damit weiterhin mindestens zehn konkrete Folgeschritte sichtbar bleiben.
 
 **Refactoring-Schutz:** Das Event-Datenmodell ist vom Match-State getrennt. Damit kann die Simulation in den nächsten Schritten schrittweise auf Events umgestellt werden, ohne die bestehenden Verhaltensregeln gleichzeitig umbauen zu müssen.
+
+---
+
+## 2026-10-03 – Manueller Tageslauf 3: NEXT-02 Bewegungsereignisse
+
+**Ausgangszustand:** v0.1.6 war veröffentlicht; CI, Unit-Tests, E2E und Publish waren grün. NEXT-02 war als nächster Rolling-Backlog-Punkt markiert.
+
+**Umgesetzt:**
+- `stepMatchWithEvents` ergänzt,
+- bestehendes `stepMatch` bleibt kompatibel und delegiert auf die neue Event-Variante,
+- Bewegungen erzeugen jetzt echte `MoveEvent`-Einträge,
+- Move-Events enthalten Tick, Roboter-ID, Position vorher und Position nachher,
+- bei keiner Bewegung entsteht kein Move-Event.
+
+**Tests ergänzt:**
+- MOV-001: Vorher-/Nachher-Positionen und Event-Daten,
+- MOV-002: Bewegung überschreitet pro Tick nie die konfigurierte Geschwindigkeit,
+- MOV-003: Event-Erzeugung mutiert den Input-State nicht.
+
+**Bedienung/Verhalten:** Für den Spieler ändert sich in diesem Schritt bewusst noch nichts an Buttons, Darstellung oder Kampfablauf. Das beobachtbare Bewegungsverhalten soll gleich bleiben. Neu ist die interne Nachvollziehbarkeit jeder Bewegung als Event – Grundlage für Replay, Analyse und sicheres Refactoring.
+
+**Backlog:** NEXT-02 erledigt, NEXT-03 Schussereignisse ist neuer nächster Schritt. NEXT-12 Event-Reihenfolge wurde ergänzt, damit die konkrete Folgeplanung weiter mindestens zehn Schritte umfasst.
