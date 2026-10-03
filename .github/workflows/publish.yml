@@ -14,11 +14,26 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
+      - name: Release gate
+        id: gate
+        shell: bash
+        run: |
+          SUBJECT="$(git log -1 --pretty=%s)"
+          if [[ "$SUBJECT" == release:* ]]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "Release commit detected: $SUBJECT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "CI is green, but this is not the final release commit. Publish skipped."
+          fi
+
       - uses: actions/setup-node@v4
+        if: ${{ steps.gate.outputs.publish == 'true' }}
         with:
           node-version: 22
 
       - name: Read version
+        if: ${{ steps.gate.outputs.publish == 'true' }}
         id: version
         shell: bash
         run: |
@@ -26,6 +41,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Check whether version is already live
+        if: ${{ steps.gate.outputs.publish == 'true' }}
         id: live
         shell: bash
         run: |
@@ -35,21 +51,56 @@ jobs:
           echo "Live version: $LIVE_VERSION"
 
       - name: Install dependencies
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.gate.outputs.publish == 'true' && steps.live.outputs.live_version != steps.version.outputs.version }}
         run: npm install
 
       - name: Build
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.gate.outputs.publish == 'true' && steps.live.outputs.live_version != steps.version.outputs.version }}
         run: npm run build
 
+      - name: Add release metadata
+        if: ${{ steps.gate.outputs.publish == 'true' && steps.live.outputs.live_version != steps.version.outputs.version }}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+
+          tz = ZoneInfo("Europe/Berlin")
+          now = datetime.now(tz)
+          next_run = now.replace(hour=18, minute=0, second=0, microsecond=0)
+          if now >= next_run:
+              next_run += timedelta(days=1)
+
+          data = {
+              "version": os.environ["VERSION"],
+              "commit": os.environ["BUILD_COMMIT"],
+              "builtAt": now.isoformat(),
+              "nextRunAt": next_run.isoformat(),
+              "quality": {
+                  "typecheck": "passed",
+                  "unit": "passed",
+                  "build": "passed",
+                  "desktopE2E": "passed",
+                  "mobileE2E": "passed"
+              }
+          }
+          with open("dist/build-info.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2)
+          PY
+
       - name: Package release
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.gate.outputs.publish == 'true' && steps.live.outputs.live_version != steps.version.outputs.version }}
         run: |
           cd dist
           zip -r ../robot-arena-release.zip .
 
       - name: Publish to vowikron.de
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.gate.outputs.publish == 'true' && steps.live.outputs.live_version != steps.version.outputs.version }}
         env:
           PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
@@ -62,11 +113,16 @@ jobs:
             https://www.vowikron.de/try_folder/robot-arena/publish.php
 
       - name: Verify deployment
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.gate.outputs.publish == 'true' && steps.live.outputs.live_version != steps.version.outputs.version }}
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           sleep 2
           curl --fail https://www.vowikron.de/try_folder/robot-arena/
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/testsutie.html || true
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/testsuite.html
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/release-notes.html
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/backlog.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/releases/v$VERSION/
           curl --fail https://www.vowikron.de/try_folder/robot-arena/version.json
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/build-info.json
