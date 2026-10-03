@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.6  
+**Aktuelle stabile Version:** 0.1.7  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -18,11 +18,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Unit-Tests für Event-Erzeugung ergänzt
 - [x] Testsuite-Doku um Event-Testfälle ergänzt
 
-### NEXT-02 · Bewegungsereignisse
-- [ ] Bewegung als explizites Event erzeugen
-- [ ] Position vor/nach Bewegung nachvollziehbar machen
-- [ ] Verhaltenstest: Distanz verringert sich nur gemäß Geschwindigkeitslimit
-- [ ] Regressionstest für unveränderten Input-State
+### Erledigt in v0.1.7 · Bewegungsereignisse
+- [x] Bewegung als explizites Event erzeugt
+- [x] Position vor/nach Bewegung im Event nachvollziehbar
+- [x] Verhaltenstest: Bewegungsdistanz überschreitet Geschwindigkeitslimit nicht
+- [x] Regressionstest: Event-Erzeugung mutiert Input-State nicht
 
 ### NEXT-03 · Schussereignisse
 - [ ] Schuss als Event mit Angreifer, Ziel und Tick
@@ -79,6 +79,12 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [ ] Cooldown-Abbau über mehrere Ticks charakterisieren
 - [ ] Regressionstest für ersten erlaubten Schuss nach Cooldown
 - [ ] Testsuite-Doku um Reichweiten-/Cooldown-Fälle ergänzen
+
+### NEXT-12 · Event-Reihenfolge charakterisieren
+- [ ] Reihenfolge mehrerer Events innerhalb eines Ticks festlegen
+- [ ] Tests für Move vor Shot/Hit/Damage
+- [ ] Verhalten bei zwei handelnden Robotern charakterisieren
+- [ ] Testsuite-Doku um Event-Reihenfolge ergänzen
 
 ---
 
