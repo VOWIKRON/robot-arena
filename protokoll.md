@@ -139,3 +139,28 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Backlog-Regel:** Der Backlog enthält künftig nicht nur den nächsten Punkt, sondern mindestens 5–10 konkret priorisierte Folgeschritte. Feature- und Testausbau werden dabei gekoppelt.
 
 **Konkrete nächste Schritte:** NEXT-01 bis NEXT-10 wurden für Ereignismodell, Bewegung, Schuss, Treffer/Schaden, Sieg, Timeout, Energie, Arena-Grenzen, Regression-Seeds und Test-Review definiert.
+
+---
+
+## 2026-10-03 – Manueller Tageslauf 2: NEXT-01 Ereignismodell-Grundtypen
+
+**Ausgangszustand:** v0.1.5 war veröffentlicht, CI und Publish waren grün. Der Rolling Backlog markierte NEXT-01 als nächsten Schritt.
+
+**Umgesetzt:**
+- neues separates Modul `src/engine/events.ts`,
+- diskriminierte Event-Typen `MoveEvent`, `ShotEvent`, `HitEvent`, `DamageEvent`,
+- gemeinsame Union `CombatEvent`,
+- Factory-Funktionen für alle vier Event-Arten,
+- Bewegungsereignisse kopieren Positionsdaten, damit keine unbeabsichtigte Referenzkopplung entsteht.
+
+**Tests ergänzt:**
+- EVT-001: Move-Event mit kopierten Positionen,
+- EVT-002: Shot-Event mit Angreifer, Ziel und Energieverbrauch,
+- EVT-003: Hit-Event mit Angreifer und Ziel,
+- EVT-004: Damage-Event mit Quelle, Ziel und Schadenshöhe.
+
+**Abgrenzung:** Die bestehende Simulation erzeugt diese Events noch nicht. Das ist bewusst erst NEXT-02 ff.; NEXT-01 schafft ausschließlich das stabile Event-Datenmodell und seine Tests.
+
+**Backlog:** NEXT-01 erledigt, NEXT-02 Bewegungsereignisse ist neuer nächster Schritt. NEXT-11 wurde ergänzt, damit weiterhin mindestens zehn konkrete Folgeschritte sichtbar bleiben.
+
+**Refactoring-Schutz:** Das Event-Datenmodell ist vom Match-State getrennt. Damit kann die Simulation in den nächsten Schritten schrittweise auf Events umgestellt werden, ohne die bestehenden Verhaltensregeln gleichzeitig umbauen zu müssen.
