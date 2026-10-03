@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.7  
+**Aktuelle stabile Version:** 0.1.8  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -24,12 +24,12 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Verhaltenstest: Bewegungsdistanz überschreitet Geschwindigkeitslimit nicht
 - [x] Regressionstest: Event-Erzeugung mutiert Input-State nicht
 
-### NEXT-03 · Schussereignisse
-- [ ] Schuss als Event mit Angreifer, Ziel und Tick
-- [ ] Bedingungen Reichweite, Energie und Cooldown explizit prüfen
-- [ ] Tests: kein Schuss außerhalb Reichweite
-- [ ] Tests: kein Schuss ohne Energie
-- [ ] Tests: kein Schuss während Cooldown
+### Erledigt in v0.1.8 · Schussereignisse
+- [x] Schuss als Event mit Angreifer, Ziel und Tick
+- [x] Bedingungen Reichweite, Energie und Cooldown explizit geprüft
+- [x] Test: kein Schuss außerhalb Reichweite
+- [x] Test: kein Schuss ohne ausreichende Energie
+- [x] Test: kein Schuss während aktivem Cooldown
 
 ### NEXT-04 · Treffer- und Schadensereignisse
 - [ ] Treffer vom Schuss trennen
@@ -85,6 +85,12 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [ ] Tests für Move vor Shot/Hit/Damage
 - [ ] Verhalten bei zwei handelnden Robotern charakterisieren
 - [ ] Testsuite-Doku um Event-Reihenfolge ergänzen
+
+### NEXT-13 · Event-Stream deterministisch absichern
+- [ ] gleichen Seed gegen identischen Event-Stream testen
+- [ ] Event-Anzahl und Reihenfolge für feste Seeds charakterisieren
+- [ ] Regressionstest gegen unbemerkte Event-Änderungen
+- [ ] Testsuite-Doku um Event-Stream-Testfälle ergänzen
 
 ---
 
