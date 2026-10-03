@@ -1,0 +1,70 @@
+name: Publish
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+jobs:
+  publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Read version
+        id: version
+        shell: bash
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether version is already live
+        id: live
+        shell: bash
+        run: |
+          LIVE_VERSION="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/version.json 2>/dev/null | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{try{console.log(JSON.parse(s).version||'')}catch{console.log('')}})" || true)"
+          echo "live_version=$LIVE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Repository version: ${{ steps.version.outputs.version }}"
+          echo "Live version: $LIVE_VERSION"
+
+      - name: Install dependencies
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        run: npm install
+
+      - name: Build
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        run: npm run build
+
+      - name: Package release
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        run: |
+          cd dist
+          zip -r ../robot-arena-release.zip .
+
+      - name: Publish to vowikron.de
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        env:
+          PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          test -n "$PUBLISH_TOKEN" || (echo "ROBOT_ARENA_PUBLISH_TOKEN is missing" && exit 1)
+          curl --fail-with-body \
+            -F "token=$PUBLISH_TOKEN" \
+            -F "version=v$VERSION" \
+            -F "file=@robot-arena-release.zip" \
+            https://www.vowikron.de/try_folder/robot-arena/publish.php
+
+      - name: Verify deployment
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          sleep 2
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/releases/v$VERSION/
+          curl --fail https://www.vowikron.de/try_folder/robot-arena/version.json
