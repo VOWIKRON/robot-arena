@@ -34,16 +34,18 @@ export type DamageEvent = Readonly<{
 export type VictoryEvent = Readonly<{
   type: 'victory';
   tick: number;
-  robotId: string;
+  winnerId: string;
+  destroyedRobotId: string;
 }>;
 
 export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | VictoryEvent;
 
 export function createVictoryEvent(
   tick: number,
-  robotId: string
+  winnerId: string,
+  destroyedRobotId: string
 ): VictoryEvent {
-  return { type: 'victory', tick, robotId };
+  return { type: 'victory', tick, winnerId, destroyedRobotId };
 }
 
 export function createMoveEvent(
