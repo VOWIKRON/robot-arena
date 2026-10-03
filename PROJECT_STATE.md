@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.3
+- Aktuelle stabile Version: 0.1.4
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -16,7 +16,7 @@
 
 Umgesetzt:
 - professioneller Footer,
-- Testsuite-HTML,
+- Testsuite-HTML als strukturierte Testfalldokumentation,
 - kumulierende Release Notes,
 - öffentliche Backlog-/Roadmap-Seite,
 - tatsächlicher Publish-Zeitpunkt,
