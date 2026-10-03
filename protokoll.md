@@ -76,3 +76,27 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Tests:** Die vorhandene Testsuite wurde um Footer- und Informationsseiten-Smoketests erweitert. CI war für die neuen E2E-Tests grün.
 
 **Nächster Entwicklungsschritt:** Kernsimulation – Ereignismodell-Grundstruktur für Bewegung, Schuss, Treffer und Schaden.
+
+---
+
+## 2026-10-03 – Testsuite als ausführliches öffentliches Laufprotokoll
+
+**Anforderung:** Die Online-Testsuite soll denselben Detailgrad wie die Rückmeldung nach einem Daily-Lauf besitzen.
+
+**Umgesetzt:**
+- technischer Ampelstatus bleibt erhalten,
+- zusätzlich vollständiges 20-Punkte-Laufprotokoll,
+- Ausgangszustand und gewählter Schritt,
+- umgesetzte Änderungen und ergänzte Tests,
+- Typecheck, Unit-/Regressionstests und Build,
+- Desktop- und Mobile-E2E getrennt,
+- Refactoring und erneute Gesamttestsuite,
+- Dokumentationsänderungen, Version und Commit,
+- CI und Publish,
+- Online-Smoke-Test,
+- Auffälligkeiten, Fehler und Blocker,
+- nächster Entwicklungsschritt und nächster geplanter Lauf.
+
+**Verbindliche Regel:** Diese ausführliche Darstellung wurde in UI_REQUIREMENTS.md und DAILY_DEVELOPMENT.md festgeschrieben. Fehler oder Umwege dürfen auf der öffentlichen Testsuite-Seite nicht verschwiegen werden.
+
+**Test:** Playwright prüft nun zusätzlich, dass der ausführliche Laufbericht und der Abschnitt zu Auffälligkeiten/Fehlern auf der Testsuite-Seite vorhanden sind.
