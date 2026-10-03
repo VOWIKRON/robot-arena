@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.5
+- Aktuelle stabile Version: 0.1.6
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-01: Ereignismodell-Grundtypen für Bewegung, Schuss, Treffer und Schaden inklusive Unit-Tests.
+NEXT-02: Bewegungsereignisse in die Simulation integrieren und mit Geschwindigkeits-/Immutability-Tests absichern.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
@@ -61,3 +61,7 @@ BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfol
 ## Aktueller Testausbau
 
 Die Engine-Tests sichern aktuell deterministische Zufallsfolgen, reproduzierbare Matches, Initialzustand, Tick-Fortschritt, Immutability, Annäherungsverhalten, Energiegrenzen, Strukturinvarianten und Verhalten nach Kampfende ab. Dieser Bereich wird bei jedem Entwicklungsschritt weiter ausgebaut.
+
+## Ereignismodell
+
+Move-, Shot-, Hit- und Damage-Events sind als separates Datenmodell vorhanden und mit Unit-Tests abgesichert. Die Simulation selbst wird ab NEXT-02 schrittweise auf Event-Erzeugung erweitert.
