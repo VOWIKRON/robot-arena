@@ -2,40 +2,45 @@
 
 ## Aktueller Stand
 
-- Projektphase: Fundament und Veröffentlichung
-- Aktuelle stabile Version: 0.1.0
+- Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
+- Aktuelle stabile Version: 0.1.2
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
+- Publish-Gate: nur explizite `release:`-Commits
 - Versionierte Releases: aktiv
 - Desktop-E2E: aktiv
 - Mobile-E2E: aktiv
 
-## Aktive Vorgabe
+## Öffentliche Projektinformationen
 
-Die öffentliche Seite wird ab dem nächsten Entwicklungsschritt gemäß `UI_REQUIREMENTS.md` weitergeführt.
-
-Nächster Funktionsblock:
-1. professioneller Footer,
-2. Testsuite-HTML,
-3. kumulierende Release-Notes-HTML,
-4. öffentliche Backlog-HTML,
-5. Publish- und Next-Run-Zeitstempel.
+Umgesetzt:
+- professioneller Footer,
+- Testsuite-HTML,
+- kumulierende Release Notes,
+- öffentliche Backlog-/Roadmap-Seite,
+- tatsächlicher Publish-Zeitpunkt,
+- nächster geplanter 18-Uhr-Lauf,
+- Version, Commit und Buildzeit über Build-Metadaten.
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 0
-- Entwicklungszyklen seit Refactoring: 0
-- Entwicklungszyklen seit Architektur-Review: 0
+- Entwicklungszyklen seit Test-Review: 1
+- Entwicklungszyklen seit Refactoring: 1
+- Entwicklungszyklen seit Architektur-Review: 1
 
 ## Öffentliche Metadaten
 
-Beim Publish künftig pflegen:
+Beim Publish werden gepflegt:
 - version
 - commit
-- publishedAt
+- builtAt
+- published
 - nextRunAt
+- Status der verpflichtenden Qualitätsgates
 
 ## Nächster Entwicklungsschritt
 
-Öffentliche Footer-/Informationsstruktur implementieren und mit Desktop-/Mobile-Tests absichern.
+Kernsimulation: Ereignismodell-Grundstruktur für Bewegung, Schuss, Treffer und Schaden.
+
+Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
