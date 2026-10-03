@@ -92,6 +92,7 @@ function updateRobot(
 }
 
 export function stepMatchWithEvents(state: MatchState, rng: SeededRandom): StepResult {
+  // Diagnostic characterization: completed matches must not advance.
   if (state.winner) return { state, events: [] };
 
   const next: MatchState = structuredClone(state);
