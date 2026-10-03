@@ -31,7 +31,7 @@ export type DamageEvent = Readonly<{
   amount: number;
 }>;
 
-export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent;
+export type VictoryEvent = Readonly<{\n  type: 'victory';\n  tick: number;\n  winnerId: string;\n  defeatedRobotId: string;\n}>;\n\nexport type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | VictoryEvent;
 
 export function createMoveEvent(
   tick: number,
@@ -66,4 +66,13 @@ export function createDamageEvent(
   amount: number
 ): DamageEvent {
   return { type: 'damage', tick, sourceId, targetId, amount };
+}
+
+
+export function createVictoryEvent(
+  tick: number,
+  winnerId: string,
+  defeatedRobotId: string
+): VictoryEvent {
+  return { type: 'victory', tick, winnerId, defeatedRobotId };
 }
