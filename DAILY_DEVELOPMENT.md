@@ -75,3 +75,25 @@ Insbesondere:
 ## Öffentliche Testsuite-Dokumentation
 
 Nach jedem veröffentlichten Lauf muss `testsuite.html` die tatsächlich ausgeführten Prüfungen als strukturierte Testsuite dokumentieren. Sie enthält konkrete Testfälle nach Bereichen wie Engine, Regression, Desktop, Mobile und Deployment. Jeder neu hinzugefügte Testfall wird mit Test-ID, Zweck, Prüfinhalt und Ergebnis sichtbar ergänzt. Die Testsuite ist kein Entwicklungs- oder Entscheidungsprotokoll; dafür bleibt `protokoll.md` zuständig.
+
+
+## Verhaltenssicherung für Refactoring
+
+Die Testsuite wird mit jedem Entwicklungsschritt gezielt erweitert. Neue Tests sollen nicht nur technische Ausführbarkeit prüfen, sondern beobachtbares Verhalten und Spielregeln absichern.
+
+Verbindlich:
+- jede neue Regel erhält passende Unit-/Verhaltenstests,
+- Bugfixes erhalten nach Möglichkeit Regressionstests,
+- vor größeren Refactorings werden fehlende Charakterisierungstests ergänzt,
+- feste Seeds werden für reproduzierbare Verhaltensprüfungen genutzt,
+- nach Refactoring wird die vollständige Testsuite erneut ausgeführt,
+- testsuite.html wird mit den tatsächlich hinzugekommenen Testfällen aktualisiert.
+
+## Backlog-Pflege
+
+Der Backlog zeigt nicht nur den nächsten Schritt, sondern mehrere konkrete Folgeschritte in Reihenfolge. Nach jedem Lauf:
+- erledigten Schritt abhaken,
+- neuen nächsten Schritt markieren,
+- mindestens die nächsten 5–10 Schritte konkret sichtbar halten,
+- erst dahinter größere Themenblöcke anzeigen,
+- jeden konkreten Feature-Schritt mit den dazugehörigen Tests koppeln.
