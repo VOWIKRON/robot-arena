@@ -31,7 +31,13 @@ export type DamageEvent = Readonly<{
   amount: number;
 }>;
 
-export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent;
+export type RoundResultEvent = Readonly<{
+  type: 'round-result';
+  tick: number;
+  robotId: string;
+}>;
+
+export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | RoundResultEvent;
 
 export function createMoveEvent(
   tick: number,
