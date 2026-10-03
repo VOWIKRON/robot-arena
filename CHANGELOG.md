@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 – 2026-10-03
+
+- öffentliche Testsuite zum ausführlichen 20-Punkte-Laufprotokoll erweitert
+- Fehler, Auffälligkeiten, Refactoring, CI, Publish und Online-Smoke-Test werden sichtbar dokumentiert
+- Daily- und UI-Anforderungen entsprechend verbindlich erweitert
+- E2E-Test prüft die ausführliche Testsuite-Dokumentation
+
 ## 0.1.2 – 2026-10-03
 
 - professioneller Footer mit Testsuite, Release Notes und Backlog
