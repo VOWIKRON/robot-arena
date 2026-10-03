@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.6 – 2026-10-03
+
+- separates combat event model from simulation state
+- adds Move, Shot, Hit and Damage event types
+- adds event factory functions and four unit tests for event creation
+- public testsuite documents EVT-001 through EVT-004
+- rolling backlog advances to NEXT-02 and adds NEXT-11
+- E2E verifies event-test documentation and updated backlog order
+
 ## 0.1.5 – 2026-10-03
 
 - Engine-Verhaltenstests für Initialzustand, Tick, Immutability, Bewegung, Energie, Struktur und Kampfende ergänzt
