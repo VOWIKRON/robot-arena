@@ -31,19 +31,19 @@ export type DamageEvent = Readonly<{
   amount: number;
 }>;
 
-export type RoundResultEvent = Readonly<{
-  type: 'round-result';
+export type VictoryEvent = Readonly<{
+  type: 'victory';
   tick: number;
   robotId: string;
 }>;
 
-export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | RoundResultEvent;
+export type CombatEvent = MoveEvent | ShotEvent | HitEvent | DamageEvent | VictoryEvent;
 
-export function createRoundResultEvent(
+export function createVictoryEvent(
   tick: number,
   robotId: string
-): RoundResultEvent {
-  return { type: 'round-result', tick, robotId };
+): VictoryEvent {
+  return { type: 'victory', tick, robotId };
 }
 
 export function createMoveEvent(
