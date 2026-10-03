@@ -1,3 +1,5 @@
 Robot Arena automation write-path diagnostic
 2026-10-03 19:xx Europe/Berlin
 This branch is diagnostic only; main is untouched.
+
+update_file diagnostic: SUCCESS candidate
