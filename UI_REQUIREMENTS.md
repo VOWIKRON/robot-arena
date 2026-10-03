@@ -61,7 +61,24 @@ Die Seite zeigt mindestens:
 - Build-Status,
 - optional Anzahl Tests und Dauer.
 
-Die Testsuite-Seite darf nur den tatsächlich geprüften Status anzeigen.\n\nZusätzlich ist dort der letzte vollständige Entwicklungs- und Testlauf in derselben Reihenfolge wie die Task-Rückmeldung ausführlich zu dokumentieren: Ausgangszustand, Vorabstatus, gewählter Schritt, Änderungen, Tests, Typecheck, Unit-/Regressionstests, Build, Desktop-E2E, Mobile-E2E, Refactoring, Gesamttestsuite nach Refactoring, Dokumentation, Version/Commits, CI, Publish, Online-Smoke-Test, Auffälligkeiten/Blocker, nächster Entwicklungsschritt und nächster Lauf. Fehler und Umwege dürfen nicht ausgelassen werden.
+Die Testsuite-Seite darf nur tatsächlich ausgeführte Prüfungen und deren Ergebnis anzeigen.
+
+Die Testsuite ist als echte Testfalldokumentation aufgebaut, nicht als Entwicklungsprotokoll. Sie gliedert die Prüfungen mindestens nach:
+- statische Qualitätsprüfungen,
+- Engine / Unit / Regression,
+- Desktop-E2E,
+- Mobile-E2E,
+- Deployment / Online-Smoke.
+
+Für jeden konkreten Testfall werden möglichst angegeben:
+- Test-ID,
+- Testbereich,
+- Testfall,
+- was konkret geprüft wird,
+- Ergebnis,
+- Zeitpunkt des letzten Testlaufs bzw. Builds.
+
+Neue Produktfunktionen erhalten beim Hinzufügen passende Testfälle und werden in dieser Testsuite ergänzt.
 
 ### Release Notes
 Linktext sinngemäß:
