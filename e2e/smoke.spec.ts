@@ -23,6 +23,8 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('EVT-004')).toBeVisible();
   await expect(page.getByText('MOV-001')).toBeVisible();
   await expect(page.getByText('MOV-003')).toBeVisible();
+  await expect(page.getByText('SHOT-001')).toBeVisible();
+  await expect(page.getByText('SHOT-004')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browser / Desktop' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browser / Mobile' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Deployment / Online-Smoke' })).toBeVisible();
@@ -33,8 +35,9 @@ test('public information pages are reachable', async ({ page }) => {
   await page.goto('/backlog.html');
   await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
-  await expect(page.getByText('NEXT-03 · Schussereignisse')).toBeVisible();
+  await expect(page.getByText('NEXT-04 · Treffer & Schaden')).toBeVisible();
   await expect(page.getByText('NEXT-10 · Test-Review vor Refactoring')).toBeVisible();
   await expect(page.getByText('NEXT-11 · Reichweite und Cooldown charakterisieren')).toBeVisible();
   await expect(page.getByText('NEXT-12 · Event-Reihenfolge charakterisieren')).toBeVisible();
+  await expect(page.getByText('NEXT-13 · Event-Stream deterministisch absichern')).toBeVisible();
 });
