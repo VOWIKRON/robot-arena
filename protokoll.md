@@ -100,3 +100,21 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Verbindliche Regel:** Diese ausführliche Darstellung wurde in UI_REQUIREMENTS.md und DAILY_DEVELOPMENT.md festgeschrieben. Fehler oder Umwege dürfen auf der öffentlichen Testsuite-Seite nicht verschwiegen werden.
 
 **Test:** Playwright prüft nun zusätzlich, dass der ausführliche Laufbericht und der Abschnitt zu Auffälligkeiten/Fehlern auf der Testsuite-Seite vorhanden sind.
+
+---
+
+## 2026-10-03 – Korrektur Testsuite-Darstellung
+
+**Klarstellung:** Die öffentliche Testsuite soll kein Entwicklungsablauf-Protokoll sein.
+
+**Korrigiert:**
+- 20-Punkte-Ablauf aus der öffentlichen Testsuite entfernt,
+- Tests nach Bereichen gegliedert,
+- konkrete Testfälle mit Test-IDs dokumentiert,
+- Prüfinhalt und Ergebnis je Testfall sichtbar,
+- statische Qualitätsprüfungen separat dargestellt,
+- Desktop und Mobile getrennt,
+- Deployment-/Online-Smoke-Checks als eigener Bereich,
+- Testzeitpunkt über Build-Metadaten sichtbar.
+
+**Regel:** Entwicklungsentscheidungen und Auffälligkeiten gehören in protokoll.md und in die Task-Rückmeldung; testsuite.html dokumentiert ausschließlich Tests und Qualitätsprüfungen.
