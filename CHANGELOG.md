@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4 – 2026-10-03
+
+- öffentliche Testsuite auf echte Testfalldokumentation umgestellt
+- strukturierte Bereiche: statische Qualität, Engine/Regression, Desktop-E2E, Mobile-E2E, Deployment-Smoke
+- Testfälle mit Test-ID, Bereich, Prüfinhalt und Ergebnis dokumentiert
+- Entwicklungsablauf aus der Testsuite entfernt; bleibt in protokoll.md
+- E2E-Test an die neue Testsuite-Struktur angepasst
+
 ## 0.1.3 – 2026-10-03
 
 - öffentliche Testsuite zum ausführlichen 20-Punkte-Laufprotokoll erweitert
