@@ -1,5 +1,12 @@
 import type { MatchState, RobotDefinition, RobotState, Vec2 } from './types';
+import type { CombatEvent, MoveEvent } from './events';
+import { createMoveEvent } from './events';
 import { SeededRandom } from './random';
+
+export type StepResult = Readonly<{
+  state: MatchState;
+  events: readonly CombatEvent[];
+}>;
 
 const distance = (a: Vec2, b: Vec2): number => Math.hypot(a.x - b.x, a.y - b.y);
 
@@ -24,29 +31,40 @@ export function createMatch(robotA: RobotDefinition, robotB: RobotDefinition): M
   };
 }
 
-function moveTowards(self: RobotState, enemy: RobotState): void {
+function moveTowards(self: RobotState, enemy: RobotState, tick: number): MoveEvent | null {
   const dx = enemy.position.x - self.position.x;
   const dy = enemy.position.y - self.position.y;
   const len = Math.hypot(dx, dy);
 
-  if (len === 0) return;
+  if (len === 0) return null;
 
   const desiredDistance = self.definition.weaponRange * 0.8;
 
-  if (len > desiredDistance) {
-    const step = Math.min(self.definition.speed, len - desiredDistance);
-    self.position = {
-      x: self.position.x + (dx / len) * step,
-      y: self.position.y + (dy / len) * step
-    };
-  }
+  if (len <= desiredDistance) return null;
+
+  const from = self.position;
+  const step = Math.min(self.definition.speed, len - desiredDistance);
+  const to = {
+    x: self.position.x + (dx / len) * step,
+    y: self.position.y + (dy / len) * step
+  };
+
+  self.position = to;
+  return createMoveEvent(tick, self.definition.id, from, to);
 }
 
-function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom): void {
+function updateRobot(
+  self: RobotState,
+  enemy: RobotState,
+  rng: SeededRandom,
+  tick: number,
+  events: CombatEvent[]
+): void {
   self.energy = Math.min(self.definition.maxEnergy, self.energy + self.definition.energyRegen);
   self.cooldown = Math.max(0, self.cooldown - 1);
 
-  moveTowards(self, enemy);
+  const moveEvent = moveTowards(self, enemy, tick);
+  if (moveEvent) events.push(moveEvent);
 
   const inRange = distance(self.position, enemy.position) <= self.definition.weaponRange;
   const canFire = inRange && self.cooldown === 0 && self.energy >= self.definition.weaponEnergy;
@@ -60,21 +78,26 @@ function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom): vo
   enemy.structure = Math.max(0, enemy.structure - self.definition.weaponDamage * jitter);
 }
 
-export function stepMatch(state: MatchState, rng: SeededRandom): MatchState {
-  if (state.winner) return state;
+export function stepMatchWithEvents(state: MatchState, rng: SeededRandom): StepResult {
+  if (state.winner) return { state, events: [] };
 
   const next: MatchState = structuredClone(state);
+  const events: CombatEvent[] = [];
   next.tick += 1;
 
-  updateRobot(next.robotA, next.robotB, rng);
+  updateRobot(next.robotA, next.robotB, rng, next.tick, events);
   if (next.robotB.structure > 0) {
-    updateRobot(next.robotB, next.robotA, rng);
+    updateRobot(next.robotB, next.robotA, rng, next.tick, events);
   }
 
   if (next.robotA.structure <= 0) next.winner = next.robotB.definition.id;
   if (next.robotB.structure <= 0) next.winner = next.robotA.definition.id;
 
-  return next;
+  return { state: next, events };
+}
+
+export function stepMatch(state: MatchState, rng: SeededRandom): MatchState {
+  return stepMatchWithEvents(state, rng).state;
 }
 
 export function runMatch(
