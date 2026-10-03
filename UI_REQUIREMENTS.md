@@ -78,7 +78,7 @@ Für jeden konkreten Testfall werden möglichst angegeben:
 - Ergebnis,
 - Zeitpunkt des letzten Testlaufs bzw. Builds.
 
-Neue Produktfunktionen erhalten beim Hinzufügen passende Testfälle und werden in dieser Testsuite ergänzt.
+Neue Produktfunktionen erhalten beim Hinzufügen passende Testfälle und werden in dieser Testsuite ergänzt. Die Testsuite soll mit dem Projekt schrittweise deutlich umfangreicher werden und insbesondere beobachtbares Verhalten absichern, damit interne Refactorings ohne unbemerkte Regeländerungen möglich sind. Charakterisierungs- und Regressionstests haben dafür ausdrücklich hohen Stellenwert.
 
 ### Release Notes
 Linktext sinngemäß:
@@ -112,7 +112,7 @@ Zielseite:
 Die Backlog-Seite zeigt:
 - aktuelle Phase,
 - nächsten Entwicklungsschritt,
-- kommende größere Entwicklungsblöcke,
+- mehrere konkret priorisierte nächste Entwicklungsschritte in Reihenfolge,\n- danach kommende größere Entwicklungsblöcke,
 - erledigte Bereiche,
 - bekannte Blocker,
 - Zeitpunkt des nächsten geplanten Laufs.
