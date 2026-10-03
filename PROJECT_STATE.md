@@ -25,9 +25,9 @@ Umgesetzt:
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 1
-- Entwicklungszyklen seit Refactoring: 1
-- Entwicklungszyklen seit Architektur-Review: 1
+- Entwicklungszyklen seit Test-Review: 2
+- Entwicklungszyklen seit Refactoring: 2
+- Entwicklungszyklen seit Architektur-Review: 2
 
 ## Öffentliche Metadaten
 
