@@ -67,5 +67,3 @@ export function createDamageEvent(
 ): DamageEvent {
   return { type: 'damage', tick, sourceId, targetId, amount };
 }
-
-// Diagnostic write-path check; no runtime behavior change.
