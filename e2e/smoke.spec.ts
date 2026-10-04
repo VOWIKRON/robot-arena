@@ -50,5 +50,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Engine-Refactoring vorbereiten')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Aktionslogik weiter entkoppeln')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Schussausführung kapseln')).toBeVisible();
-  await expect(page.getByText('NEXT-17 · Roboter- und Komponentensystem beginnen')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Roboter- und Komponentensystem beginnen')).toBeVisible();
+  await expect(page.getByText('NEXT-18 · Komponentenwahl sichtbar machen')).toBeVisible();
 });
