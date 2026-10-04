@@ -106,6 +106,34 @@ describe('simulation', () => {
   });
 
 
+
+  it('keeps movement inside the arena at minimum and maximum boundaries', () => {
+    const fast = { ...RAPTOR, speed: 500, weaponRange: 0 };
+    const state = createMatch(fast, TITAN);
+    state.robotA.position = { x: 0, y: 0 };
+    state.robotB.position = { x: 100, y: 100 };
+    state.robotB.cooldown = 99;
+    const next = stepMatch(state, new SeededRandom(4711));
+    for (const robot of [next.robotA, next.robotB]) {
+      expect(robot.position.x).toBeGreaterThanOrEqual(0);
+      expect(robot.position.x).toBeLessThanOrEqual(next.width);
+      expect(robot.position.y).toBeGreaterThanOrEqual(0);
+      expect(robot.position.y).toBeLessThanOrEqual(next.height);
+    }
+  });
+
+  it('does not move robots that occupy identical positions', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 50, y: 50 };
+    state.robotB.position = { x: 50, y: 50 };
+    state.robotA.cooldown = 99;
+    state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.state.robotA.position).toEqual({ x: 50, y: 50 });
+    expect(result.state.robotB.position).toEqual({ x: 50, y: 50 });
+    expect(result.events.filter((event) => event.type === 'move')).toHaveLength(0);
+  });
+
   it('emits a shot event when range, energy and cooldown allow firing', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.robotA.position = { x: 40, y: 50 };
