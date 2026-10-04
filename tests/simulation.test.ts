@@ -285,6 +285,38 @@ describe('simulation', () => {
     )).toBe(true);
   });
 
+  it.each([1, 12, 4711])('keeps the event stream deterministic for seed %s', (seed) => {
+    const collect = () => {
+      let state = createMatch(RAPTOR, TITAN);
+      const rng = new SeededRandom(seed);
+      const events = [];
+      while (!state.winner && state.outcome === 'active' && state.tick < 3600) {
+        const result = stepMatchWithEvents(state, rng);
+        state = result.state;
+        events.push(...result.events);
+      }
+      return events;
+    };
+
+    expect(collect()).toEqual(collect());
+  });
+
+  it.each([
+    { seed: 1, eventCount: 419 },
+    { seed: 12, eventCount: 419 },
+    { seed: 4711, eventCount: 419 }
+  ])('keeps event count stable for seed $seed', ({ seed, eventCount }) => {
+    let state = createMatch(RAPTOR, TITAN);
+    const rng = new SeededRandom(seed);
+    const events = [];
+    while (!state.winner && state.outcome === 'active' && state.tick < 3600) {
+      const result = stepMatchWithEvents(state, rng);
+      state = result.state;
+      events.push(...result.events);
+    }
+    expect(events).toHaveLength(eventCount);
+  });
+
   it('never emits negative damage and never reduces structure below zero', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
