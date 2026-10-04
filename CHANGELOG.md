@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.22 – 2026-10-04
+
+- introduces chassis and weapon as the first composable robot components
+- migrates Raptor and Titan presets to component composition without changing combat behavior
+- adds robot-configuration validation
+- adds regression tests for preset compatibility and mixed component configurations
+- advances to NEXT-18: visible component selection
+
 ## 0.1.21 – 2026-10-04
 
 - extracts firing, hit and damage execution from updateRobot into fire()
