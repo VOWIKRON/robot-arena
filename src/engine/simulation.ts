@@ -22,14 +22,17 @@ function moveTowards(self: RobotState, enemy: RobotState, tick: number, width: n
   self.position=to;
   return createMoveEvent(tick,self.definition.id,from,to);
 }
+function canFire(self: RobotState, enemy: RobotState): boolean {
+  return distance(self.position,enemy.position)<=self.definition.weaponRange
+    && self.cooldown===0
+    && self.energy>=self.definition.weaponEnergy;
+}
 function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[], width: number, height: number): void {
   if (self.structure<=0) return;
   self.energy=Math.min(self.definition.maxEnergy,self.energy+self.definition.energyRegen);
   self.cooldown=Math.max(0,self.cooldown-1);
   const moveEvent=moveTowards(self,enemy,tick,width,height); if (moveEvent) events.push(moveEvent);
-  const inRange=distance(self.position,enemy.position)<=self.definition.weaponRange;
-  const canFire=inRange&&self.cooldown===0&&self.energy>=self.definition.weaponEnergy;
-  if (!canFire) return;
+  if (!canFire(self,enemy)) return;
   self.energy-=self.definition.weaponEnergy;
   self.cooldown=self.definition.cooldownTicks;
   events.push(createShotEvent(tick,self.definition.id,enemy.definition.id,self.definition.weaponEnergy));
