@@ -12,21 +12,21 @@ function createRobot(definition: RobotDefinition, position: Vec2): RobotState {
 export function createMatch(robotA: RobotDefinition, robotB: RobotDefinition): MatchState {
   return { tick: 0, width: 100, height: 100, robotA: createRobot(robotA,{x:15,y:50}), robotB: createRobot(robotB,{x:85,y:50}), winner: null, outcome: 'active', endReason: null };
 }
-function moveTowards(self: RobotState, enemy: RobotState, tick: number): MoveEvent | null {
+function moveTowards(self: RobotState, enemy: RobotState, tick: number, width: number, height: number): MoveEvent | null {
   const dx=enemy.position.x-self.position.x, dy=enemy.position.y-self.position.y, len=Math.hypot(dx,dy);
   if (len===0) return null;
   const desiredDistance=self.definition.weaponRange*0.8;
   if (len<=desiredDistance) return null;
   const from=self.position, step=Math.min(self.definition.speed,len-desiredDistance);
-  const to={x:self.position.x+(dx/len)*step,y:self.position.y+(dy/len)*step};
+  const to={x:Math.max(0,Math.min(width,self.position.x+(dx/len)*step)),y:Math.max(0,Math.min(height,self.position.y+(dy/len)*step))};
   self.position=to;
   return createMoveEvent(tick,self.definition.id,from,to);
 }
-function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[]): void {
+function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[], width: number, height: number): void {
   if (self.structure<=0) return;
   self.energy=Math.min(self.definition.maxEnergy,self.energy+self.definition.energyRegen);
   self.cooldown=Math.max(0,self.cooldown-1);
-  const moveEvent=moveTowards(self,enemy,tick); if (moveEvent) events.push(moveEvent);
+  const moveEvent=moveTowards(self,enemy,tick,width,height); if (moveEvent) events.push(moveEvent);
   const inRange=distance(self.position,enemy.position)<=self.definition.weaponRange;
   const canFire=inRange&&self.cooldown===0&&self.energy>=self.definition.weaponEnergy;
   if (!canFire) return;
@@ -51,9 +51,9 @@ function finishIfDestroyed(winner: RobotState, loser: RobotState, state: MatchSt
 export function stepMatchWithEvents(state: MatchState, rng: SeededRandom): StepResult {
   if (state.outcome!=='active') return {state,events:[]};
   const next: MatchState=structuredClone(state), events: CombatEvent[]=[]; next.tick+=1;
-  updateRobot(next.robotA,next.robotB,rng,next.tick,events);
+  updateRobot(next.robotA,next.robotB,rng,next.tick,events,next.width,next.height);
   if (finishIfDestroyed(next.robotA,next.robotB,next,events)) return {state:next,events};
-  updateRobot(next.robotB,next.robotA,rng,next.tick,events);
+  updateRobot(next.robotB,next.robotA,rng,next.tick,events,next.width,next.height);
   finishIfDestroyed(next.robotB,next.robotA,next,events);
   return {state:next,events};
 }
