@@ -264,6 +264,27 @@ describe('simulation', () => {
     expect(combat[2]).toMatchObject({ type: 'damage', tick: 1, sourceId: RAPTOR.id, targetId: TITAN.id });
   });
 
+  it('keeps per-tick event order stable for two acting robots', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const types = result.events.map((event) => event.type);
+
+    expect(types).toEqual(['shot', 'hit', 'damage', 'shot', 'hit', 'damage']);
+    expect(result.events.slice(0, 3).every((event) =>
+      event.type === 'shot' ? event.attackerId === RAPTOR.id :
+      event.type === 'hit' ? event.attackerId === RAPTOR.id :
+      event.type === 'damage' ? event.sourceId === RAPTOR.id : false
+    )).toBe(true);
+    expect(result.events.slice(3).every((event) =>
+      event.type === 'shot' ? event.attackerId === TITAN.id :
+      event.type === 'hit' ? event.attackerId === TITAN.id :
+      event.type === 'damage' ? event.sourceId === TITAN.id : false
+    )).toBe(true);
+  });
+
   it('never emits negative damage and never reduces structure below zero', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
