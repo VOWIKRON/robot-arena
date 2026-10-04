@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.19  
+**Aktuelle stabile Version:** 0.1.20  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -98,10 +98,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Verhalten vor Umbau vollständig durch bestehende Charakterisierungs- und Regressionstests abgesichert
 - [x] keine sichtbare Verhaltensänderung
 
-### NEXT-15 · Aktionslogik weiter entkoppeln
-- [ ] nächsten kleinen Refactoring-Schnitt in updateRobot identifizieren
-- [ ] Verhalten weiterhin durch bestehende Regressionstests absichern
-- [ ] nur interne Struktur ändern
+### Erledigt in v0.1.20 · Aktionslogik weiter entkoppeln
+- [x] Energie-Regeneration, Cooldown-Abbau und Bewegung in prepareAction gekapselt
+- [x] Verhalten durch bestehende Regressionstests abgesichert
+- [x] nur interne Struktur geändert
+- [x] keine sichtbare Verhaltensänderung
+
+### NEXT-16 · Schussausführung kapseln
+- [ ] Schuss-/Treffer-/Schadensausführung aus updateRobot herauslösen
+- [ ] Energie- und Cooldown-Änderungen unverändert halten
+- [ ] Event-Reihenfolge unverändert halten
 - [ ] keine sichtbare Verhaltensänderung
 
 ---
