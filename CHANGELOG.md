@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.21 – 2026-10-04
+
+- extracts firing, hit and damage execution from updateRobot into fire()
+- preserves energy, cooldown, damage jitter and event ordering
+- keeps visible simulation behavior unchanged
+- closes NEXT-16 and advances to the robot/component system in NEXT-17
+
+## 0.1.20 – 2026-10-04
+
+- extracts energy regeneration, cooldown countdown and movement into prepareAction()
+- preserves existing deterministic behavior and event stream
+- no visible gameplay change
+
+## 0.1.19 – 2026-10-04
+
+- centralizes firing eligibility in canFire()
+- preserves characterized range, cooldown and energy behavior
+- begins the safe engine refactoring phase
+
 ## 0.1.18 – 2026-10-04
 
 - locks complete event streams deterministically for seeds 1, 12 and 4711
