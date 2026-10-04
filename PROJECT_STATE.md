@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.14
+- Aktuelle stabile Version: 0.1.15
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-10: Test-Review der Kernregeln durchführen und fehlende Charakterisierung vor Refactoring ergänzen.
+NEXT-11: Reichweite und Cooldown über mehrere Ticks weiter charakterisieren.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
