@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.15 – 2026-10-04
+
+- reviews core simulation rule coverage before refactoring
+- adds exact range-boundary characterization
+- adds cooldown=1 firing characterization
+- identifies updateRobot action-condition duplication as a later refactoring target
+- advances backlog to NEXT-11
+
+
 ## 0.1.14 – 2026-10-04
 
 - adds fixed regression seeds 1, 12 and 4711
