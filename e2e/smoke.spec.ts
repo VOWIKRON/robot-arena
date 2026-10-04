@@ -41,7 +41,7 @@ test('public information pages are reachable', async ({ page }) => {
   await page.goto('/backlog.html');
   await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
-  await expect(page.getByText('NEXT-07 · Energieverhalten härten')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Energieverhalten härten')).toBeVisible();
   await expect(page.getByText('NEXT-10 · Test-Review vor Refactoring')).toBeVisible();
   await expect(page.getByText('NEXT-11 · Reichweite und Cooldown charakterisieren')).toBeVisible();
   await expect(page.getByText('NEXT-12 · Event-Reihenfolge charakterisieren')).toBeVisible();
