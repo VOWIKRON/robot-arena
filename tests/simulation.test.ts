@@ -272,13 +272,13 @@ describe('simulation', () => {
     const result = stepMatchWithEvents(state, new SeededRandom(4711));
     const types = result.events.map((event) => event.type);
 
-    expect(types).toEqual(['shot', 'hit', 'damage', 'shot', 'hit', 'damage']);
+    expect(types).toEqual(['shot', 'hit', 'damage', 'move', 'shot', 'hit', 'damage']);
     expect(result.events.slice(0, 3).every((event) =>
       event.type === 'shot' ? event.attackerId === RAPTOR.id :
       event.type === 'hit' ? event.attackerId === RAPTOR.id :
       event.type === 'damage' ? event.sourceId === RAPTOR.id : false
     )).toBe(true);
-    expect(result.events.slice(3).every((event) =>
+    expect(result.events.slice(4).every((event) =>
       event.type === 'shot' ? event.attackerId === TITAN.id :
       event.type === 'hit' ? event.attackerId === TITAN.id :
       event.type === 'damage' ? event.sourceId === TITAN.id : false
