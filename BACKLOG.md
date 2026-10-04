@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.12  
+**Aktuelle stabile Version:** 0.1.13  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -56,11 +56,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] langer deterministischer Energietest vorhanden
 - [x] Charakterisierungstests vor Engine-Refactoring ergänzt
 
-### NEXT-08 · Bewegungs- und Arena-Grenzen
-- [ ] Arena-Grenzen erzwingen
-- [ ] Tests für x/y-Min/Max
-- [ ] Verhalten an identischen Positionen
-- [ ] Tests für hohe Geschwindigkeiten
+### Erledigt in v0.1.13 · Bewegungs- und Arena-Grenzen
+- [x] Arena-Grenzen erzwungen
+- [x] Tests für x/y-Min/Max
+- [x] Verhalten an identischen Positionen abgesichert
+- [x] hohe Geschwindigkeiten bleiben innerhalb der Arena
 
 ### NEXT-09 · Regression-Seeds
 - [ ] feste kleine Seed-Sammlung definieren
