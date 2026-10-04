@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.14  
+**Aktuelle stabile Version:** 0.1.15  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -68,11 +68,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Regressionstest gegen unbeabsichtigte Verhaltensänderungen ergänzt
 - [x] Seeds im Testcode sichtbar festgehalten
 
-### NEXT-10 · Test-Review vor Engine-Refactoring
-- [ ] Abdeckung der Kernregeln prüfen
-- [ ] fehlende Charakterisierungstests ergänzen
-- [ ] Duplikation in Engine identifizieren
-- [ ] erst danach gezieltes Refactoring planen
+### Erledigt in v0.1.15 · Test-Review vor Engine-Refactoring
+- [x] Abdeckung der Kernregeln geprüft
+- [x] Charakterisierung für exakte Reichweitengrenze und Cooldown=1 ergänzt
+- [x] wiederholte Aktionsbedingungen in updateRobot als Refactoring-Kandidat identifiziert
+- [x] gezieltes Refactoring erst nach Charakterisierung eingeplant
 
 ### NEXT-11 · Reichweite und Cooldown charakterisieren
 - [ ] Verhalten exakt an der Reichweitengrenze testen
