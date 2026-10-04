@@ -33,10 +33,7 @@ function prepareAction(self: RobotState, enemy: RobotState, tick: number, events
   const moveEvent=moveTowards(self,enemy,tick,width,height);
   if (moveEvent) events.push(moveEvent);
 }
-function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[], width: number, height: number): void {
-  if (self.structure<=0) return;
-  prepareAction(self,enemy,tick,events,width,height);
-  if (!canFire(self,enemy)) return;
+function fire(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[]): void {
   self.energy-=self.definition.weaponEnergy;
   self.cooldown=self.definition.cooldownTicks;
   events.push(createShotEvent(tick,self.definition.id,enemy.definition.id,self.definition.weaponEnergy));
@@ -46,6 +43,12 @@ function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tic
   const appliedDamage=Math.min(enemy.structure,rawDamage);
   enemy.structure=Math.max(0,enemy.structure-appliedDamage);
   events.push(createDamageEvent(tick,self.definition.id,enemy.definition.id,appliedDamage));
+}
+function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[], width: number, height: number): void {
+  if (self.structure<=0) return;
+  prepareAction(self,enemy,tick,events,width,height);
+  if (!canFire(self,enemy)) return;
+  fire(self,enemy,rng,tick,events);
 }
 function finishIfDestroyed(winner: RobotState, loser: RobotState, state: MatchState, events: CombatEvent[]): boolean {
   if (loser.structure>0) return false;
