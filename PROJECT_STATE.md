@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.21
+- Aktuelle stabile Version: 0.1.22
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-17: Roboter- und Komponentensystem beginnen.
+NEXT-18: Komponentenwahl in der Oberfläche vorbereiten.
 
-Nach Abschluss des Engine-Refactorings beginnt der nächste Entwicklungsblock mit einer kleinen, belastbaren Grundlage für konfigurierbare Roboterkomponenten. Sichtbare Spielfunktionalität hat nun wieder Vorrang.
+NEXT-17 hat Chassis und Waffen als kombinierbare, validierbare Komponenten eingeführt und die bestehenden Presets darauf migriert. NEXT-18 macht diese Auswahl erstmals in der Oberfläche sichtbar.
 
 
 ## Teststrategie
