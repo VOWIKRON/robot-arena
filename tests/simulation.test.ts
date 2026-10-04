@@ -231,6 +231,28 @@ describe('simulation', () => {
     expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(true);
   });
 
+
+  it('counts cooldown down over multiple ticks and fires on the first allowed tick', () => {
+    let state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotA.cooldown = 3;
+    state.robotB.cooldown = 99;
+    const rng = new SeededRandom(4711);
+
+    let result = stepMatchWithEvents(state, rng);
+    expect(result.state.robotA.cooldown).toBe(2);
+    expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(false);
+
+    result = stepMatchWithEvents(result.state, rng);
+    expect(result.state.robotA.cooldown).toBe(1);
+    expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(false);
+
+    result = stepMatchWithEvents(result.state, rng);
+    expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(true);
+    expect(result.state.robotA.cooldown).toBe(RAPTOR.cooldownTicks);
+  });
+
   it('emits separate hit and damage events after a successful shot', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
