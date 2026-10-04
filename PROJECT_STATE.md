@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.12
+- Aktuelle stabile Version: 0.1.13
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-08: Bewegungs- und Arena-Grenzen erzwingen und mit Grenztests absichern.
+NEXT-09: feste Regression-Seeds mit Gewinnern, Endticks und Reststruktur absichern.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
