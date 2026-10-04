@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.18 – 2026-10-04
+
+- locks complete event streams deterministically for seeds 1, 12 and 4711
+- characterizes stable event count of 98 for representative fixed seeds
+- adds regression protection against unnoticed event-stream changes
+- advances backlog to NEXT-14
+
+
 ## 0.1.17 – 2026-10-04
 
 - characterizes stable per-tick event ordering for two acting robots
