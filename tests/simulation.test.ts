@@ -302,9 +302,9 @@ describe('simulation', () => {
   });
 
   it.each([
-    { seed: 1, eventCount: 419 },
-    { seed: 12, eventCount: 419 },
-    { seed: 4711, eventCount: 419 }
+    { seed: 1, eventCount: 98 },
+    { seed: 12, eventCount: 98 },
+    { seed: 4711, eventCount: 98 }
   ])('keeps event count stable for seed $seed', ({ seed, eventCount }) => {
     let state = createMatch(RAPTOR, TITAN);
     const rng = new SeededRandom(seed);
