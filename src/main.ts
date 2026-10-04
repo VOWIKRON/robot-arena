@@ -1,5 +1,6 @@
 import './style.css';
-import { RAPTOR, TITAN } from './engine/presets';
+import { TITAN, RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON } from './engine/presets';
+import { buildRobotDefinition, type Chassis, type Weapon } from './engine/components';
 import { createMatch, stepMatch } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import type { MatchState } from './engine/types';
@@ -9,14 +10,14 @@ if (!app) throw new Error('App root missing');
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.22</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.23</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div class="bot bot-a" id="bot-a">R</div><div class="bot bot-b" id="bot-b">T</div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button></div>
 <div class="status" id="status"></div>
 </section>
-<aside class="card"><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
+<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis <select id="chassis"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Waffe <select id="weapon"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
 </div>
 <footer class="site-footer" aria-label="Projektinformationen">
   <a href="./testsuite.html">Testsuite</a>
@@ -48,9 +49,18 @@ function pause(): void {
   timer = null;
 }
 
+function selectedRobotA() {
+  const chassis: Chassis = el<HTMLSelectElement>('chassis').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
+  const weapon: Weapon = el<HTMLSelectElement>('weapon').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
+  return buildRobotDefinition({ id: 'robot-a', name: 'Robot A', chassis, weapon });
+}
+function renderPreview(): void {
+  const d = selectedRobotA();
+  el('preview').innerHTML = `<strong>Live-Werte</strong><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+}
 function reset(): void {
   pause();
-  state = createMatch(RAPTOR, TITAN);
+  state = createMatch(selectedRobotA(), TITAN);
   rng = new SeededRandom(seedValue());
   render();
 }
@@ -132,5 +142,8 @@ el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
 el('reset').addEventListener('click', reset);
 el('seed').addEventListener('change', reset);
+el('chassis').addEventListener('change', () => { renderPreview(); reset(); });
+el('weapon').addEventListener('change', () => { renderPreview(); reset(); });
+renderPreview();
 reset();
 void loadFooterMetadata();
