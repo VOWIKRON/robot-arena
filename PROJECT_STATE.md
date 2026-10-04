@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.15
+- Aktuelle stabile Version: 0.1.16
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-11: Reichweite und Cooldown über mehrere Ticks weiter charakterisieren.
+NEXT-12: Event-Reihenfolge innerhalb eines Ticks charakterisieren.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
