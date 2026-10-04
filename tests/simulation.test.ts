@@ -25,6 +25,8 @@ describe('simulation', () => {
 
     expect(state.tick).toBe(0);
     expect(state.winner).toBeNull();
+    expect(state.outcome).toBe('active');
+    expect(state.endReason).toBeNull();
     expect(state.width).toBe(100);
     expect(state.height).toBe(100);
     expect(state.robotA.position).toEqual({ x: 15, y: 50 });
@@ -262,8 +264,35 @@ describe('simulation', () => {
   it('freezes an already finished match including the event stream', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.winner = RAPTOR.id;
+    state.outcome = 'victory';
+    state.endReason = 'destroyed';
     const result = stepMatchWithEvents(state, new SeededRandom(4711));
 
+    expect(result.state).toBe(state);
+    expect(result.state.tick).toBe(0);
+    expect(result.events).toEqual([]);
+  });
+
+  it('ends as an explicit draw exactly at the tick limit', () => {
+    const result = runMatch(RAPTOR, TITAN, 4711, 1);
+    expect(result.tick).toBe(1);
+    expect(result.winner).toBeNull();
+    expect(result.outcome).toBe('draw');
+    expect(result.endReason).toBe('timeout');
+  });
+
+  it('allows victory on the last permitted tick before declaring a draw', () => {
+    const finisher = { ...RAPTOR, weaponRange: 100, weaponDamage: 999 };
+    const result = runMatch(finisher, TITAN, 4711, 1);
+    expect(result.tick).toBe(1);
+    expect(result.winner).toBe(finisher.id);
+    expect(result.outcome).toBe('victory');
+    expect(result.endReason).toBe('destroyed');
+  });
+
+  it('freezes a timeout draw on further simulation steps', () => {
+    const state = runMatch(RAPTOR, TITAN, 4711, 0);
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
     expect(result.state).toBe(state);
     expect(result.state.tick).toBe(0);
     expect(result.events).toEqual([]);

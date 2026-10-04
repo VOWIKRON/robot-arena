@@ -28,4 +28,6 @@ export type MatchState = {
   robotA: RobotState;
   robotB: RobotState;
   winner: string | null;
+  outcome: 'active' | 'victory' | 'draw';
+  endReason: 'destroyed' | 'timeout' | null;
 };

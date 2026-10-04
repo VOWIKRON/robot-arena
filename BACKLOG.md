@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.10  
+**Aktuelle stabile Version:** 0.1.11  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -44,11 +44,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Test: besiegter Roboter führt keine Aktion mehr aus
 - [x] Test: fertiger Match-State bleibt inklusive Event-Stream stabil
 
-### NEXT-06 · Zeitlimit und Unentschieden
-- [ ] explizites Match-Ende bei Tick-Limit
-- [ ] definierte Unentschieden-Regel
-- [ ] Tests für exakt letztes zulässiges Tick
-- [ ] feste Regression-Seeds für Timeout-Fälle
+### Erledigt in v0.1.11 · Zeitlimit und Unentschieden
+- [x] explizites Match-Ende bei Tick-Limit
+- [x] Unentschieden als outcome=draw mit endReason=timeout
+- [x] Test für Sieg im exakt letzten zulässigen Tick
+- [x] feste Seed-Regression für Timeout-Fälle
 
 ### NEXT-07 · Energieverhalten härten
 - [ ] Regeneration und Verbrauch als Regeln dokumentieren

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.11 – 2026-10-04
+
+- adds explicit match outcome and end reason for timeout draws
+- a victory on the last permitted tick takes precedence over timeout
+- timeout states stay frozen on later simulation steps
+- fixed-seed timeout regressions cover tick limit 0 and 1
+- fifth-cycle test review completed; rolling backlog advances to NEXT-07
+- public testsuite adds TIME-001 through TIME-003
+
+
 ## 0.1.10 – 2026-10-04
 
 - adds explicit VictoryEvent with winner, loser and tick

@@ -9,7 +9,7 @@ if (!app) throw new Error('App root missing');
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.10</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.11</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div class="bot bot-a" id="bot-a">R</div><div class="bot bot-b" id="bot-b">T</div></div>
@@ -56,7 +56,7 @@ function reset(): void {
 }
 
 function tick(): void {
-  if (state.winner) {
+  if (state.outcome !== 'active') {
     pause();
     return;
   }
@@ -90,7 +90,7 @@ function render(): void {
     robotStats('A', 'robot-a', state.robotA) +
     robotStats('B', 'robot-b', state.robotB) +
     `<div>Tick: ${state.tick}</div>`;
-  el('status').textContent = state.winner ? `Sieger: ${state.winner}` : 'Kampfbereit';
+  el('status').textContent = state.outcome === 'draw' ? 'Unentschieden: Zeitlimit' : state.winner ? `Sieger: ${state.winner}` : 'Kampfbereit';
 }
 
 function formatDate(value: string | undefined): string {

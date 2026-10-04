@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.10
+- Aktuelle stabile Version: 0.1.11
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -25,9 +25,9 @@ Umgesetzt:
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 4
-- Entwicklungszyklen seit Refactoring: 4
-- Entwicklungszyklen seit Architektur-Review: 4
+- Entwicklungszyklen seit Test-Review: 0
+- Entwicklungszyklen seit Refactoring: 5
+- Entwicklungszyklen seit Architektur-Review: 5
 
 ## Öffentliche Metadaten
 
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-06: Zeitlimit und Unentschieden als explizites Match-Ende modellieren und Grenzfälle am letzten Tick absichern.
+NEXT-07: Energieverhalten härten, Grenzfälle und lange Läufe als Charakterisierungstests absichern.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
@@ -85,3 +85,12 @@ NEXT-04 abgeschlossen: Erfolgreiche Schüsse erzeugen getrennte Shot-, Hit- und 
 ## Sieg und Kampfende
 
 NEXT-05 abgeschlossen: Zerstörung erzeugt unmittelbar ein Victory-Event mit Gewinner und Verlierer. Der besiegte Roboter führt im selben Tick keine weitere Aktion aus; bereits beendete Matches bleiben einschließlich leerem Event-Stream stabil.
+
+
+## Zeitlimit und Unentschieden
+
+NEXT-06 abgeschlossen: Erreicht ein Match sein Tick-Limit ohne Sieger, endet es explizit als Unentschieden mit `outcome: draw` und `endReason: timeout`. Ein Sieg im letzten zulässigen Tick hat Vorrang. Timeout-Zustände bleiben bei weiteren Schritten eingefroren.
+
+## Test-Review
+
+Der fällige 5-Läufe-Testreview wurde durchgeführt: NEXT-06 ergänzt Grenztests für den letzten zulässigen Tick, Timeout bei Tick 0 und den eingefrorenen Draw-Zustand; NEXT-10 bleibt als größerer Review vor dem geplanten Engine-Refactoring bestehen.
