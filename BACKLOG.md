@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.21  
+**Aktuelle stabile Version:** 0.1.22  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -110,11 +110,17 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Event-Reihenfolge durch bestehende Regressionstests unverändert gehalten
 - [x] keine sichtbare Verhaltensänderung
 
-### NEXT-17 · Roboter- und Komponentensystem beginnen
-- [ ] kleinsten tragfähigen Komponenten-Schnitt aus den bestehenden RobotDefinition-Werten ableiten
-- [ ] erste Komponente so einführen, dass bestehende Presets kompatibel bleiben
-- [ ] Validierung und Regressionstests ergänzen
-- [ ] nächsten sichtbaren Builder-/Konfigurationsschritt vorbereiten
+### Erledigt in v0.1.22 · Roboter- und Komponentensystem beginnen
+- [x] Chassis und Waffen als erste kombinierbare Komponenten eingeführt
+- [x] bestehende Raptor-/Titan-Presets ohne Verhaltensänderung auf Komponenten migriert
+- [x] Konfigurationsvalidierung und Regressionstests ergänzt
+- [x] Kombination unterschiedlicher Chassis/Waffen durch Test abgesichert
+
+### NEXT-18 · Komponentenwahl sichtbar machen
+- [ ] Chassis- und Waffenwahl für Roboter A in der Oberfläche anbieten
+- [ ] berechnete Roboterwerte live anzeigen
+- [ ] Reset/Matchstart mit gewählter Konfiguration verbinden
+- [ ] Desktop- und Mobile-Bedienung absichern
 
 ---
 
