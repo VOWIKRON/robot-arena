@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.22  
+**Aktuelle stabile Version:** 0.1.23  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -116,11 +116,17 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Konfigurationsvalidierung und Regressionstests ergänzt
 - [x] Kombination unterschiedlicher Chassis/Waffen durch Test abgesichert
 
-### NEXT-18 · Komponentenwahl sichtbar machen
-- [ ] Chassis- und Waffenwahl für Roboter A in der Oberfläche anbieten
-- [ ] berechnete Roboterwerte live anzeigen
-- [ ] Reset/Matchstart mit gewählter Konfiguration verbinden
-- [ ] Desktop- und Mobile-Bedienung absichern
+### Erledigt in v0.1.23 · Komponentenwahl sichtbar machen
+- [x] Chassis- und Waffenwahl für Roboter A in der Oberfläche anbieten
+- [x] berechnete Roboterwerte live anzeigen
+- [x] Reset/Matchstart mit gewählter Konfiguration verbinden
+- [x] Desktop- und Mobile-Bedienung absichern
+
+### NEXT-19 · Komponentenwahl für Roboter B
+- [ ] Chassis- und Waffenwahl für Roboter B in der Oberfläche anbieten
+- [ ] berechnete Werte von Roboter B live anzeigen
+- [ ] Reset/Matchstart mit beiden gewählten Konfigurationen verbinden
+- [ ] Desktop- und Mobile-Bedienung für beide Konfigurationen absichern
 
 ---
 
