@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.13 – 2026-10-04
+
+- clamps robot movement to arena x/y boundaries
+- covers extreme speed and identical-position movement cases
+- advances backlog to NEXT-09
+
+
 ## 0.1.12 – 2026-10-04
 
 - hardens energy regeneration and spending behavior with characterization tests
