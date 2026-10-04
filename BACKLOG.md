@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.17  
+**Aktuelle stabile Version:** 0.1.18  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -86,11 +86,17 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Verhalten bei zwei handelnden Robotern charakterisiert
 - [x] Testsuite-Doku um Event-Reihenfolge ergänzt
 
-### NEXT-13 · Event-Stream deterministisch absichern
-- [ ] gleichen Seed gegen identischen Event-Stream testen
-- [ ] Event-Anzahl und Reihenfolge für feste Seeds charakterisieren
-- [ ] Regressionstest gegen unbemerkte Event-Änderungen
-- [ ] Testsuite-Doku um Event-Stream-Testfälle ergänzen
+### Erledigt in v0.1.18 · Event-Stream deterministisch absichern
+- [x] gleichen Seed gegen identischen Event-Stream testen
+- [x] Event-Anzahl und Reihenfolge für feste Seeds charakterisieren
+- [x] Regressionstest gegen unbemerkte Event-Änderungen
+- [x] Testsuite-Doku um Event-Stream-Testfälle ergänzen
+
+### NEXT-14 · Engine-Refactoring vorbereiten
+- [ ] charakterisierte Aktionslogik prüfen
+- [ ] kleinsten sicheren Refactoring-Schnitt festlegen
+- [ ] Verhalten vor Umbau vollständig durch Tests absichern
+- [ ] keine sichtbare Verhaltensänderung
 
 ---
 
