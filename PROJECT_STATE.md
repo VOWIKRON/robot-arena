@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.17
+- Aktuelle stabile Version: 0.1.18
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-13: Event-Stream deterministisch absichern.
+NEXT-14: Engine-Refactoring vorbereiten.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
