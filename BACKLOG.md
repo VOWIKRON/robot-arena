@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.16  
+**Aktuelle stabile Version:** 0.1.17  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -80,11 +80,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Regressionstest für ersten erlaubten Schuss nach Cooldown
 - [x] Testsuite-Doku um Reichweiten-/Cooldown-Fälle ergänzt
 
-### NEXT-12 · Event-Reihenfolge charakterisieren
-- [ ] Reihenfolge mehrerer Events innerhalb eines Ticks festlegen
-- [ ] Tests für Move vor Shot/Hit/Damage
-- [ ] Verhalten bei zwei handelnden Robotern charakterisieren
-- [ ] Testsuite-Doku um Event-Reihenfolge ergänzen
+### Erledigt in v0.1.17 · Event-Reihenfolge charakterisieren
+- [x] Reihenfolge mehrerer Events innerhalb eines Ticks festgelegt
+- [x] Shot/Hit/Damage-Reihenfolge pro handelndem Roboter abgesichert
+- [x] Verhalten bei zwei handelnden Robotern charakterisiert
+- [x] Testsuite-Doku um Event-Reihenfolge ergänzt
 
 ### NEXT-13 · Event-Stream deterministisch absichern
 - [ ] gleichen Seed gegen identischen Event-Stream testen
