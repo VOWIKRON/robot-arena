@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.9  
+**Aktuelle stabile Version:** 0.1.10  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -38,11 +38,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Test: Struktur nie unter 0
 - [x] feste Seed-Regression für Schadensjitter
 
-### NEXT-05 · Sieg- und Kampfende
-- [ ] Sieg als Event
-- [ ] Kampf stoppt nach Zerstörung
-- [ ] Tests: besiegter Roboter führt keine Aktion mehr aus
-- [ ] Tests: fertiger Match-State bleibt stabil
+### Erledigt in v0.1.10 · Sieg- und Kampfende
+- [x] Sieg als explizites Victory-Event
+- [x] Kampf stoppt unmittelbar nach Zerstörung
+- [x] Test: besiegter Roboter führt keine Aktion mehr aus
+- [x] Test: fertiger Match-State bleibt inklusive Event-Stream stabil
 
 ### NEXT-06 · Zeitlimit und Unentschieden
 - [ ] explizites Match-Ende bei Tick-Limit

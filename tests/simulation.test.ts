@@ -230,12 +230,42 @@ describe('simulation', () => {
     }
   });
 
-  it('freezes an already finished match', () => {
+  it('emits victory immediately when a robot is destroyed', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotB.structure = 1;
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.state.winner).toBe(RAPTOR.id);
+    expect(result.events.find((event) => event.type === 'victory')).toEqual({
+      type: 'victory', tick: 1, winnerId: RAPTOR.id, loserId: TITAN.id
+    });
+  });
+
+  it('does not allow a destroyed robot to act later in the same tick', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotB.structure = 1;
+
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const titanActions = result.events.filter((event) =>
+      (event.type === 'move' && event.robotId === TITAN.id) ||
+      (event.type === 'shot' && event.attackerId === TITAN.id) ||
+      (event.type === 'hit' && event.attackerId === TITAN.id) ||
+      (event.type === 'damage' && event.sourceId === TITAN.id)
+    );
+    expect(titanActions).toHaveLength(0);
+  });
+
+  it('freezes an already finished match including the event stream', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.winner = RAPTOR.id;
-    const next = stepMatch(state, new SeededRandom(4711));
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
 
-    expect(next).toBe(state);
-    expect(next.tick).toBe(0);
+    expect(result.state).toBe(state);
+    expect(result.state.tick).toBe(0);
+    expect(result.events).toEqual([]);
   });
 });

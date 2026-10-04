@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.9
+- Aktuelle stabile Version: 0.1.10
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -25,9 +25,9 @@ Umgesetzt:
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 3
-- Entwicklungszyklen seit Refactoring: 3
-- Entwicklungszyklen seit Architektur-Review: 3
+- Entwicklungszyklen seit Test-Review: 4
+- Entwicklungszyklen seit Refactoring: 4
+- Entwicklungszyklen seit Architektur-Review: 4
 
 ## Öffentliche Metadaten
 
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-05: Sieg und Kampfende als explizites Ereignis modellieren und Aktionen nach Zerstörung absichern.
+NEXT-06: Zeitlimit und Unentschieden als explizites Match-Ende modellieren und Grenzfälle am letzten Tick absichern.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
@@ -64,7 +64,7 @@ Die Engine-Tests sichern aktuell deterministische Zufallsfolgen, reproduzierbare
 
 ## Ereignismodell
 
-Move-, Shot-, Hit- und Damage-Events sind als separates Datenmodell vorhanden und mit Unit-Tests abgesichert. Die Simulation selbst wird ab NEXT-02 schrittweise auf Event-Erzeugung erweitert.
+Move-, Shot-, Hit-, Damage- und Victory-Events sind als separates Datenmodell vorhanden und mit Unit-Tests abgesichert. Die Simulation selbst wird ab NEXT-02 schrittweise auf Event-Erzeugung erweitert.
 
 
 ## Bewegungsereignisse
@@ -80,3 +80,8 @@ NEXT-03 abgeschlossen: Erfolgreiche Schüsse werden als ShotEvents mit Tick, Ang
 ## Treffer- und Schadensereignisse
 
 NEXT-04 abgeschlossen: Erfolgreiche Schüsse erzeugen getrennte Shot-, Hit- und Damage-Events. Damage enthält den tatsächlich angewandten, nie negativen Schaden; Zielstruktur wird bei 0 geklemmt. Ein fester Seed sichert den Schadensjitter deterministisch ab.
+
+
+## Sieg und Kampfende
+
+NEXT-05 abgeschlossen: Zerstörung erzeugt unmittelbar ein Victory-Event mit Gewinner und Verlierer. Der besiegte Roboter führt im selben Tick keine weitere Aktion aus; bereits beendete Matches bleiben einschließlich leerem Event-Stream stabil.

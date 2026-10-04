@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.10 – 2026-10-04
+
+- adds explicit VictoryEvent with winner, loser and tick
+- match ends immediately when a robot reaches zero structure
+- destroyed robot cannot act later in the same tick
+- finished match state stays frozen and emits no further events
+- public testsuite adds EVT-005, END-001 and END-002
+- rolling backlog advances to NEXT-06
+
+
 ## 0.1.9 – 2026-10-03
 
 - successful shots emit separate HitEvents and DamageEvents
