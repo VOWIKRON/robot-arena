@@ -211,6 +211,26 @@ describe('simulation', () => {
     expect(raptorShots).toHaveLength(0);
   });
 
+
+  it('fires exactly at the weapon range boundary', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 40 + RAPTOR.weaponRange, y: 50 };
+    state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(true);
+  });
+
+  it('reduces cooldown before deciding whether firing is allowed', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotA.cooldown = 1;
+    state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(true);
+  });
+
   it('emits separate hit and damage events after a successful shot', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
