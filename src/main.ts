@@ -10,14 +10,14 @@ if (!app) throw new Error('App root missing');
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.23</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.24</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div class="bot bot-a" id="bot-a">R</div><div class="bot bot-b" id="bot-b">T</div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button></div>
 <div class="status" id="status"></div>
 </section>
-<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis <select id="chassis"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Waffe <select id="weapon"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
+<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview-a"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label><div class="preview" id="preview-b"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
 </div>
 <footer class="site-footer" aria-label="Projektinformationen">
   <a href="./testsuite.html">Testsuite</a>
@@ -50,17 +50,25 @@ function pause(): void {
 }
 
 function selectedRobotA() {
-  const chassis: Chassis = el<HTMLSelectElement>('chassis').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
-  const weapon: Weapon = el<HTMLSelectElement>('weapon').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
+  const chassis: Chassis = el<HTMLSelectElement>('chassis-a').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
+  const weapon: Weapon = el<HTMLSelectElement>('weapon-a').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
   return buildRobotDefinition({ id: 'robot-a', name: 'Robot A', chassis, weapon });
 }
+function selectedRobotB() {
+  const chassis: Chassis = el<HTMLSelectElement>('chassis-b').value === 'raptor' ? RAPTOR_CHASSIS : TITAN_CHASSIS;
+  const weapon: Weapon = el<HTMLSelectElement>('weapon-b').value === 'raptor' ? RAPTOR_WEAPON : TITAN_WEAPON;
+  return buildRobotDefinition({ id: 'robot-b', name: 'Robot B', chassis, weapon });
+}
+function previewHtml(d: ReturnType<typeof selectedRobotA>): string {
+  return `<strong>Live-Werte</strong><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+}
 function renderPreview(): void {
-  const d = selectedRobotA();
-  el('preview').innerHTML = `<strong>Live-Werte</strong><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+  el('preview-a').innerHTML = previewHtml(selectedRobotA());
+  el('preview-b').innerHTML = previewHtml(selectedRobotB());
 }
 function reset(): void {
   pause();
-  state = createMatch(selectedRobotA(), TITAN);
+  state = createMatch(selectedRobotA(), selectedRobotB());
   rng = new SeededRandom(seedValue());
   render();
 }
@@ -142,8 +150,9 @@ el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
 el('reset').addEventListener('click', reset);
 el('seed').addEventListener('change', reset);
-el('chassis').addEventListener('change', () => { renderPreview(); reset(); });
-el('weapon').addEventListener('change', () => { renderPreview(); reset(); });
+for (const id of ['chassis-a', 'weapon-a', 'chassis-b', 'weapon-b']) {
+  el(id).addEventListener('change', () => { renderPreview(); reset(); });
+}
 renderPreview();
 reset();
 void loadFooterMetadata();
