@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.12 – 2026-10-04
+
+- hardens energy regeneration and spending behavior with characterization tests
+- verifies regeneration clamps at maxEnergy
+- verifies weapon energy is spent after tick regeneration
+- advances the rolling backlog to NEXT-08
+
+
 ## 0.1.11 – 2026-10-04
 
 - adds explicit match outcome and end reason for timeout draws
