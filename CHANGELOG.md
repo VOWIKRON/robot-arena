@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.14 – 2026-10-04
+
+- adds fixed regression seeds 1, 12 and 4711
+- locks winner, end tick and remaining structure for representative matches
+- advances backlog to NEXT-10
+
+
 ## 0.1.13 – 2026-10-04
 
 - clamps robot movement to arena x/y boundaries
