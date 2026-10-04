@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.20
+- Aktuelle stabile Version: 0.1.21
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-16: Schussausführung kapseln.
+NEXT-17: Roboter- und Komponentensystem beginnen.
 
-Nach prepareAction wird die eigentliche Schussausführung als nächster kleiner Refactoring-Schnitt gekapselt.
+Nach Abschluss des Engine-Refactorings beginnt der nächste Entwicklungsblock mit einer kleinen, belastbaren Grundlage für konfigurierbare Roboterkomponenten. Sichtbare Spielfunktionalität hat nun wieder Vorrang.
 
 
 ## Teststrategie
