@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.11  
+**Aktuelle stabile Version:** 0.1.12  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -50,11 +50,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Test für Sieg im exakt letzten zulässigen Tick
 - [x] feste Seed-Regression für Timeout-Fälle
 
-### NEXT-07 · Energieverhalten härten
-- [ ] Regeneration und Verbrauch als Regeln dokumentieren
-- [ ] Grenzfälle 0/max testen
-- [ ] Tests über lange Läufe
-- [ ] Charakterisierungstests vor möglichem Engine-Refactoring
+### Erledigt in v0.1.12 · Energieverhalten härten
+- [x] Regeneration und Verbrauch durch Tests dokumentiert
+- [x] Grenzfälle am Energiemaximum getestet
+- [x] langer deterministischer Energietest vorhanden
+- [x] Charakterisierungstests vor Engine-Refactoring ergänzt
 
 ### NEXT-08 · Bewegungs- und Arena-Grenzen
 - [ ] Arena-Grenzen erzwingen
