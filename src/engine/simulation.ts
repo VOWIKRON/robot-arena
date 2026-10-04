@@ -27,11 +27,15 @@ function canFire(self: RobotState, enemy: RobotState): boolean {
     && self.cooldown===0
     && self.energy>=self.definition.weaponEnergy;
 }
-function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[], width: number, height: number): void {
-  if (self.structure<=0) return;
+function prepareAction(self: RobotState, enemy: RobotState, tick: number, events: CombatEvent[], width: number, height: number): void {
   self.energy=Math.min(self.definition.maxEnergy,self.energy+self.definition.energyRegen);
   self.cooldown=Math.max(0,self.cooldown-1);
-  const moveEvent=moveTowards(self,enemy,tick,width,height); if (moveEvent) events.push(moveEvent);
+  const moveEvent=moveTowards(self,enemy,tick,width,height);
+  if (moveEvent) events.push(moveEvent);
+}
+function updateRobot(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[], width: number, height: number): void {
+  if (self.structure<=0) return;
+  prepareAction(self,enemy,tick,events,width,height);
   if (!canFire(self,enemy)) return;
   self.energy-=self.definition.weaponEnergy;
   self.cooldown=self.definition.cooldownTicks;
