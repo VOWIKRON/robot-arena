@@ -31,6 +31,7 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('END-002')).toBeVisible();
   await expect(page.getByText('TIME-001')).toBeVisible();
   await expect(page.getByText('TIME-003')).toBeVisible();
+  await expect(page.getByText('EVT-ORDER-001')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browser / Desktop' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browser / Mobile' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Deployment / Online-Smoke' })).toBeVisible();
@@ -44,6 +45,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Energieverhalten härten')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Test-Review vor Refactoring')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Reichweite und Cooldown charakterisieren')).toBeVisible();
-  await expect(page.getByText('NEXT-12 · Event-Reihenfolge charakterisieren')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Event-Reihenfolge charakterisieren')).toBeVisible();
   await expect(page.getByText('NEXT-13 · Event-Stream deterministisch absichern')).toBeVisible();
 });
