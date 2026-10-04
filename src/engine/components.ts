@@ -1,0 +1,56 @@
+import type { RobotDefinition } from './types';
+
+export type Chassis = Readonly<{
+  id: string;
+  name: string;
+  maxStructure: number;
+  maxEnergy: number;
+  energyRegen: number;
+  speed: number;
+}>;
+
+export type Weapon = Readonly<{
+  id: string;
+  name: string;
+  range: number;
+  damage: number;
+  energy: number;
+  cooldownTicks: number;
+}>;
+
+export type RobotConfiguration = Readonly<{
+  id: string;
+  name: string;
+  chassis: Chassis;
+  weapon: Weapon;
+}>;
+
+export function buildRobotDefinition(configuration: RobotConfiguration): RobotDefinition {
+  return {
+    id: configuration.id,
+    name: configuration.name,
+    maxStructure: configuration.chassis.maxStructure,
+    maxEnergy: configuration.chassis.maxEnergy,
+    energyRegen: configuration.chassis.energyRegen,
+    speed: configuration.chassis.speed,
+    weaponRange: configuration.weapon.range,
+    weaponDamage: configuration.weapon.damage,
+    weaponEnergy: configuration.weapon.energy,
+    cooldownTicks: configuration.weapon.cooldownTicks
+  };
+}
+
+export function validateRobotConfiguration(configuration: RobotConfiguration): readonly string[] {
+  const errors: string[] = [];
+  if (!configuration.id.trim()) errors.push('Robot-ID fehlt');
+  if (!configuration.name.trim()) errors.push('Robotername fehlt');
+  if (configuration.chassis.maxStructure <= 0) errors.push('Struktur muss größer als 0 sein');
+  if (configuration.chassis.maxEnergy <= 0) errors.push('Energie muss größer als 0 sein');
+  if (configuration.chassis.energyRegen < 0) errors.push('Energieregeneration darf nicht negativ sein');
+  if (configuration.chassis.speed < 0) errors.push('Geschwindigkeit darf nicht negativ sein');
+  if (configuration.weapon.range < 0) errors.push('Waffenreichweite darf nicht negativ sein');
+  if (configuration.weapon.damage < 0) errors.push('Waffenschaden darf nicht negativ sein');
+  if (configuration.weapon.energy < 0) errors.push('Waffenenergie darf nicht negativ sein');
+  if (configuration.weapon.cooldownTicks < 0) errors.push('Cooldown darf nicht negativ sein');
+  return errors;
+}
