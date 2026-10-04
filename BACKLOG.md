@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.20  
+**Aktuelle stabile Version:** 0.1.21  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -104,11 +104,17 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] nur interne Struktur geändert
 - [x] keine sichtbare Verhaltensänderung
 
-### NEXT-16 · Schussausführung kapseln
-- [ ] Schuss-/Treffer-/Schadensausführung aus updateRobot herauslösen
-- [ ] Energie- und Cooldown-Änderungen unverändert halten
-- [ ] Event-Reihenfolge unverändert halten
-- [ ] keine sichtbare Verhaltensänderung
+### Erledigt in v0.1.21 · Schussausführung kapseln
+- [x] Schuss-/Treffer-/Schadensausführung aus updateRobot in fire() herausgelöst
+- [x] Energie- und Cooldown-Änderungen unverändert gehalten
+- [x] Event-Reihenfolge durch bestehende Regressionstests unverändert gehalten
+- [x] keine sichtbare Verhaltensänderung
+
+### NEXT-17 · Roboter- und Komponentensystem beginnen
+- [ ] kleinsten tragfähigen Komponenten-Schnitt aus den bestehenden RobotDefinition-Werten ableiten
+- [ ] erste Komponente so einführen, dass bestehende Presets kompatibel bleiben
+- [ ] Validierung und Regressionstests ergänzen
+- [ ] nächsten sichtbaren Builder-/Konfigurationsschritt vorbereiten
 
 ---
 
