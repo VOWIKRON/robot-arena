@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.22
+- Aktuelle stabile Version: 0.1.23
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-18: Komponentenwahl in der Oberfläche vorbereiten.
+NEXT-19: Komponentenwahl für Roboter B.
 
-NEXT-17 hat Chassis und Waffen als kombinierbare, validierbare Komponenten eingeführt und die bestehenden Presets darauf migriert. NEXT-18 macht diese Auswahl erstmals in der Oberfläche sichtbar.
+NEXT-18 hat Chassis- und Waffenwahl für Roboter A sichtbar gemacht, berechnete Werte live angebunden und Reset/Matchstart mit der gewählten Konfiguration verbunden. NEXT-19 erweitert dieselbe Bedienung auf Roboter B.
 
 
 ## Teststrategie
