@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.18  
+**Aktuelle stabile Version:** 0.1.19  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -92,10 +92,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Regressionstest gegen unbemerkte Event-Änderungen
 - [x] Testsuite-Doku um Event-Stream-Testfälle ergänzen
 
-### NEXT-14 · Engine-Refactoring vorbereiten
-- [ ] charakterisierte Aktionslogik prüfen
-- [ ] kleinsten sicheren Refactoring-Schnitt festlegen
-- [ ] Verhalten vor Umbau vollständig durch Tests absichern
+### Erledigt in v0.1.19 · Engine-Refactoring vorbereiten
+- [x] charakterisierte Aktionslogik geprüft
+- [x] kleinsten sicheren Refactoring-Schnitt festgelegt: Schussfreigabe in canFire zentralisiert
+- [x] Verhalten vor Umbau vollständig durch bestehende Charakterisierungs- und Regressionstests abgesichert
+- [x] keine sichtbare Verhaltensänderung
+
+### NEXT-15 · Aktionslogik weiter entkoppeln
+- [ ] nächsten kleinen Refactoring-Schnitt in updateRobot identifizieren
+- [ ] Verhalten weiterhin durch bestehende Regressionstests absichern
+- [ ] nur interne Struktur ändern
 - [ ] keine sichtbare Verhaltensänderung
 
 ---
