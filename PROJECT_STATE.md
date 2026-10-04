@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.13
+- Aktuelle stabile Version: 0.1.14
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-09: feste Regression-Seeds mit Gewinnern, Endticks und Reststruktur absichern.
+NEXT-10: Test-Review der Kernregeln durchführen und fehlende Charakterisierung vor Refactoring ergänzen.
 
 Dieser Block wird beim nächsten regulären Lauf in einen kleinen, täglich umsetzbaren Teil zerlegt.
 
