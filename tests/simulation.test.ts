@@ -217,6 +217,26 @@ describe('simulation', () => {
     }
   });
 
+
+  it('regenerates energy only up to the configured maximum', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.energy = RAPTOR.maxEnergy - 0.5;
+    state.robotA.cooldown = 99;
+    state.robotB.cooldown = 99;
+    const next = stepMatch(state, new SeededRandom(4711));
+    expect(next.robotA.energy).toBe(RAPTOR.maxEnergy);
+  });
+
+  it('spends weapon energy after the tick regeneration', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 };
+    state.robotB.position = { x: 60, y: 50 };
+    state.robotA.energy = RAPTOR.weaponEnergy;
+    state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.state.robotA.energy).toBeCloseTo(RAPTOR.energyRegen, 10);
+  });
+
   it('never increases structure during combat', () => {
     let state = createMatch(RAPTOR, TITAN);
     const rng = new SeededRandom(4711);
