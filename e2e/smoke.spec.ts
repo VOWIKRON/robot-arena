@@ -43,7 +43,7 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Energieverhalten härten')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Test-Review vor Refactoring')).toBeVisible();
-  await expect(page.getByText('NEXT-11 · Reichweite und Cooldown charakterisieren')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Reichweite und Cooldown charakterisieren')).toBeVisible();
   await expect(page.getByText('NEXT-12 · Event-Reihenfolge charakterisieren')).toBeVisible();
   await expect(page.getByText('NEXT-13 · Event-Stream deterministisch absichern')).toBeVisible();
 });

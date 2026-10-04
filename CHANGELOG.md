@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.16 – 2026-10-04
+
+- characterizes cooldown countdown across multiple ticks
+- verifies firing occurs on the first tick cooldown reaches zero
+- keeps exact range-boundary behavior covered
+- advances backlog to NEXT-12
+
+
 ## 0.1.15 – 2026-10-04
 
 - reviews core simulation rule coverage before refactoring

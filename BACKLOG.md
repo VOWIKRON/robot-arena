@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.15  
+**Aktuelle stabile Version:** 0.1.16  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -74,11 +74,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] wiederholte Aktionsbedingungen in updateRobot als Refactoring-Kandidat identifiziert
 - [x] gezieltes Refactoring erst nach Charakterisierung eingeplant
 
-### NEXT-11 · Reichweite und Cooldown charakterisieren
-- [ ] Verhalten exakt an der Reichweitengrenze testen
-- [ ] Cooldown-Abbau über mehrere Ticks charakterisieren
-- [ ] Regressionstest für ersten erlaubten Schuss nach Cooldown
-- [ ] Testsuite-Doku um Reichweiten-/Cooldown-Fälle ergänzen
+### Erledigt in v0.1.16 · Reichweite und Cooldown charakterisieren
+- [x] Verhalten exakt an der Reichweitengrenze getestet
+- [x] Cooldown-Abbau über mehrere Ticks charakterisiert
+- [x] Regressionstest für ersten erlaubten Schuss nach Cooldown
+- [x] Testsuite-Doku um Reichweiten-/Cooldown-Fälle ergänzt
 
 ### NEXT-12 · Event-Reihenfolge charakterisieren
 - [ ] Reihenfolge mehrerer Events innerhalb eines Ticks festlegen
