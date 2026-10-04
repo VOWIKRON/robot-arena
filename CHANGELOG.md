@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.23 – 2026-10-04
+
+- makes chassis and weapon selection for Robot A visible in the arena UI
+- shows calculated robot values live when the selected components change
+- connects reset and match start to the selected Robot A configuration
+- covers the component builder on desktop and mobile
+- advances to NEXT-19: component selection for Robot B
+
+
 ## 0.1.22 – 2026-10-04
 
 - introduces chassis and weapon as the first composable robot components
