@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.19
+- Aktuelle stabile Version: 0.1.20
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-15: Aktionslogik weiter entkoppeln.
+NEXT-16: Schussausführung kapseln.
 
-Nach dem sicheren canFire-Schnitt wird der nächste kleine Refactoring-Schnitt der Aktionslogik geprüft.
+Nach prepareAction wird die eigentliche Schussausführung als nächster kleiner Refactoring-Schnitt gekapselt.
 
 
 ## Teststrategie
