@@ -13,6 +13,19 @@ describe('simulation', () => {
     expect(runMatch(RAPTOR, TITAN, 4711)).toEqual(runMatch(RAPTOR, TITAN, 4711));
   });
 
+
+  it.each([
+    { seed: 1, winner: TITAN.id, tick: 93, titanStructure: 49.814735663309655 },
+    { seed: 12, winner: TITAN.id, tick: 93, titanStructure: 51.327303930744506 },
+    { seed: 4711, winner: TITAN.id, tick: 93, titanStructure: 51.8481166958809 }
+  ])('keeps seed $seed match outcome stable', ({ seed, winner, tick, titanStructure }) => {
+    const result = runMatch(RAPTOR, TITAN, seed);
+    expect(result.winner).toBe(winner);
+    expect(result.tick).toBe(tick);
+    expect(result.robotA.structure).toBe(0);
+    expect(result.robotB.structure).toBeCloseTo(titanStructure, 10);
+  });
+
   it('finishes without invalid numeric state', () => {
     const result = runMatch(RAPTOR, TITAN, 12);
     expect(Number.isFinite(result.robotA.structure)).toBe(true);
