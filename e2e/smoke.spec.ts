@@ -8,7 +8,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Roboter A' })).toBeVisible();
   await expect(page.getByText('Live-Werte')).toBeVisible();
   await page.getByLabel('Chassis').selectOption('titan');
-  await expect(page.getByText('Struktur 130')).toBeVisible();
+  await expect(page.getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
