@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.13  
+**Aktuelle stabile Version:** 0.1.14  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -62,11 +62,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Verhalten an identischen Positionen abgesichert
 - [x] hohe Geschwindigkeiten bleiben innerhalb der Arena
 
-### NEXT-09 · Regression-Seeds
-- [ ] feste kleine Seed-Sammlung definieren
-- [ ] bekannte Gewinner/Endticks/Reststruktur dokumentieren
-- [ ] Regressionstest gegen unbeabsichtigte Verhaltensänderungen
-- [ ] Seeds in Testsuite sichtbar machen
+### Erledigt in v0.1.14 · Regression-Seeds
+- [x] feste Seed-Sammlung 1, 12 und 4711 definiert
+- [x] bekannte Gewinner, Endticks und Reststruktur dokumentiert
+- [x] Regressionstest gegen unbeabsichtigte Verhaltensänderungen ergänzt
+- [x] Seeds im Testcode sichtbar festgehalten
 
 ### NEXT-10 · Test-Review vor Engine-Refactoring
 - [ ] Abdeckung der Kernregeln prüfen
