@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.17 – 2026-10-04
+
+- characterizes stable per-tick event ordering for two acting robots
+- locks Shot → Hit → Damage ordering per robot
+- advances backlog to NEXT-13
+
+
 ## 0.1.16 – 2026-10-04
 
 - characterizes cooldown countdown across multiple ticks
