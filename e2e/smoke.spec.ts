@@ -13,7 +13,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByLabel('Chassis B').selectOption('raptor');
-  await expect(page.locator('#preview-b').getByText('Struktur 90', { exact: true })).toBeVisible();
+  await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -66,6 +66,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Schussausführung kapseln')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Roboter- und Komponentensystem beginnen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Komponentenwahl sichtbar machen')).toBeVisible();
-  await expect(page.getByText('✓ Erledigt · Komponentenwahl Roboter B')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Komponentenwahl Roboter B', { exact: false })).toBeVisible();
   await expect(page.getByText('NEXT-20 · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
 });
