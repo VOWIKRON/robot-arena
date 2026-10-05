@@ -53,16 +53,20 @@ function configurationA() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-a').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
   const motorValue = el<HTMLSelectElement>('motor-a').value;
   const motor: Motor = motorValue === 'swift' ? SWIFT_MOTOR : motorValue === 'heavy' ? HEAVY_MOTOR : BALANCED_MOTOR;
+  const armorValue = el<HTMLSelectElement>('armor-a').value;
+  const armor: Armor = armorValue === 'light' ? LIGHT_ARMOR : armorValue === 'heavy' ? HEAVY_ARMOR : STANDARD_ARMOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-a').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
-  return { id: 'robot-a', name: 'Robot A', chassis, motor, weapon };
+  return { id: 'robot-a', name: 'Robot A', chassis, motor, armor, weapon };
 }
 function selectedRobotA() { return buildRobotDefinition(configurationA()); }
 function configurationB() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-b').value === 'raptor' ? RAPTOR_CHASSIS : TITAN_CHASSIS;
   const motorValue = el<HTMLSelectElement>('motor-b').value;
   const motor: Motor = motorValue === 'swift' ? SWIFT_MOTOR : motorValue === 'heavy' ? HEAVY_MOTOR : BALANCED_MOTOR;
+  const armorValue = el<HTMLSelectElement>('armor-b').value;
+  const armor: Armor = armorValue === 'light' ? LIGHT_ARMOR : armorValue === 'heavy' ? HEAVY_ARMOR : STANDARD_ARMOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-b').value === 'raptor' ? RAPTOR_WEAPON : TITAN_WEAPON;
-  return { id: 'robot-b', name: 'Robot B', chassis, motor, weapon };
+  return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, weapon };
 }
 function selectedRobotB() { return buildRobotDefinition(configurationB()); }
 function previewHtml(d: ReturnType<typeof selectedRobotA>): string {
@@ -162,7 +166,7 @@ el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
 el('reset').addEventListener('click', reset);
 el('seed').addEventListener('change', reset);
-for (const id of ['chassis-a', 'motor-a', 'weapon-a', 'chassis-b', 'motor-b', 'weapon-b']) {
+for (const id of ['chassis-a', 'motor-a', 'armor-a', 'weapon-a', 'chassis-b', 'motor-b', 'armor-b', 'weapon-b']) {
   el(id).addEventListener('change', () => { renderPreview(); reset(); });
 }
 renderPreview();
