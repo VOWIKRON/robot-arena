@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.26
+- Aktuelle stabile Version: 0.1.27
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-22: Panzerung als Komponente ergänzen.
+NEXT-23: Energieversorgung als Komponente ergänzen.
 
-NEXT-21 abgeschlossen: Motoren sind eigene Komponenten, für beide Roboter auswählbar und verändern die berechnete Geschwindigkeit live. NEXT-22 ergänzt Panzerung als nächste Komponente.
+NEXT-22 abgeschlossen: Panzerung ist eine eigene Komponente, für beide Roboter auswählbar und verändert die berechnete Struktur live. NEXT-23 ergänzt die Energieversorgung als nächste Komponente.
 
 
 ## Teststrategie
