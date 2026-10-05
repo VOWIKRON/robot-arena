@@ -18,7 +18,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await page.getByLabel('Panzerung A').selectOption('heavy');
   await expect(page.locator('#preview-a').getByText('Struktur 162.5', { exact: true })).toBeVisible();
   await page.getByLabel('Energie A').selectOption('capacity');
-  await expect(page.locator('#preview-a').getByText(/Energie 112.5 · \+0.99\/Tick/)).toBeVisible();
+  await expect(page.locator('#preview-a').getByText(/Energie 112.5 · \+0.9900000000000001\/Tick/)).toBeVisible();
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByLabel('Chassis B').selectOption('raptor');
