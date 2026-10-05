@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.25
+- Aktuelle stabile Version: 0.1.26
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-21: Robot-Builder um Motoren erweitern.
+NEXT-22: Panzerung als Komponente ergänzen.
 
-NEXT-20 abgeschlossen: Builder-Grenzen validieren Konfigurationen, beide Roboter zeigen ihren Validierungszustand und ungültige Konfigurationen können keinen Matchstart auslösen. NEXT-21 erweitert den Robot-Builder um Motoren.
+NEXT-21 abgeschlossen: Motoren sind eigene Komponenten, für beide Roboter auswählbar und verändern die berechnete Geschwindigkeit live. NEXT-22 ergänzt Panzerung als nächste Komponente.
 
 
 ## Teststrategie

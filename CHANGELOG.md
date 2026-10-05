@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.26 – 2026-10-05
+
+- adds motors as selectable robot components
+- adds balanced, swift and heavy motor presets
+- calculates robot speed from chassis and selected motor
+- exposes motor selection for Robot A and Robot B
+- covers motor behavior in unit and desktop/mobile browser tests
+- advances to NEXT-22: armor as a component
+
+
 ## 0.1.25 – 2026-10-05
 
 - enforces validation at the robot-builder boundary
