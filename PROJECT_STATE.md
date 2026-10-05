@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.27
+- Aktuelle stabile Version: 0.1.28
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-23: Energieversorgung als Komponente ergänzen.
+NEXT-24: Sensorik als Komponente ergänzen.
 
-NEXT-22 abgeschlossen: Panzerung ist eine eigene Komponente, für beide Roboter auswählbar und verändert die berechnete Struktur live. NEXT-23 ergänzt die Energieversorgung als nächste Komponente.
+NEXT-23 abgeschlossen: Energieversorgung ist eine eigene Komponente, für beide Roboter auswählbar und verändert Kapazität und Regeneration live. NEXT-24 ergänzt Sensorik als nächste Komponente.
 
 
 ## Teststrategie
