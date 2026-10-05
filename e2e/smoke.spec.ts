@@ -13,10 +13,14 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   await page.getByLabel('Chassis A').selectOption('titan');
   await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
+  await page.getByLabel('Motor A').selectOption('swift');
+  await expect(page.locator('#preview-a').getByText('Tempo 1')).toBeVisible();
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByLabel('Chassis B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
+  await page.getByLabel('Motor B').selectOption('heavy');
+  await expect(page.locator('#preview-b').getByText('Tempo 0.6')).toBeVisible();
   await page.getByLabel('Waffe B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
