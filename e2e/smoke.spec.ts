@@ -70,5 +70,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Roboter- und Komponentensystem beginnen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Komponentenwahl sichtbar machen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Komponentenwahl Roboter B', { exact: false })).toBeVisible();
-  await expect(page.getByText('NEXT-20 · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
+  await expect(page.getByText('NEXT-21 · Motoren als Komponente')).toBeVisible();
 });
