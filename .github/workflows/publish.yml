@@ -6,7 +6,7 @@ on:
     types: [completed]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -33,25 +33,29 @@ jobs:
         shell: bash
         run: |
           LIVE_VERSION="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/version.json 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("version", ""))' 2>/dev/null || true)"
+          LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))' 2>/dev/null || true)"
           echo "live_version=$LIVE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "live_commit=$LIVE_COMMIT" >> "$GITHUB_OUTPUT"
           echo "Repository version: ${{ steps.version.outputs.version }}"
+          echo "Target commit: ${{ github.event.workflow_run.head_sha }}"
           echo "Live version: $LIVE_VERSION"
-          if [[ "$LIVE_VERSION" == "${{ steps.version.outputs.version }}" ]]; then
-            echo "Version is already live. Publish will be skipped."
+          echo "Live commit: $LIVE_COMMIT"
+          if [[ "$LIVE_VERSION" == "${{ steps.version.outputs.version }}" && "$LIVE_COMMIT" == "${{ github.event.workflow_run.head_sha }}" ]]; then
+            echo "Exact version and commit are already live. Publish will be skipped."
           else
-            echo "New version detected. Green CI is the release gate; publish will proceed."
+            echo "Live deployment differs from the tested main SHA. Publish will proceed."
           fi
 
       - name: Install dependencies
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         run: npm install
 
       - name: Build
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         run: npm run build
 
       - name: Add release metadata
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         env:
           VERSION: ${{ steps.version.outputs.version }}
           BUILD_COMMIT: ${{ github.event.workflow_run.head_sha }}
@@ -86,13 +90,13 @@ jobs:
           PY
 
       - name: Package release
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         run: |
           cd dist
           zip -r ../robot-arena-release.zip .
 
       - name: Publish to vowikron.de
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         env:
           PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
@@ -105,7 +109,7 @@ jobs:
             https://www.vowikron.de/try_folder/robot-arena/publish.php
 
       - name: Verify deployment
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
@@ -117,3 +121,39 @@ jobs:
           curl --fail https://www.vowikron.de/try_folder/robot-arena/releases/v$VERSION/
           curl --fail https://www.vowikron.de/try_folder/robot-arena/version.json
           curl --fail https://www.vowikron.de/try_folder/robot-arena/build-info.json
+          LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))')"
+          test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
+
+      - name: Record deployment proof in GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          DEPLOYED_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          data = {
+              "version": os.environ["VERSION"],
+              "commit": os.environ["DEPLOYED_COMMIT"],
+              "tests": "passed",
+              "published": True,
+              "publishedAt": datetime.now(ZoneInfo("Europe/Berlin")).isoformat()
+          }
+          with open("/tmp/deployment-state.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2)
+              f.write("\n")
+          PY
+          CONTENT="$(base64 -w0 /tmp/deployment-state.json)"
+          CURRENT_SHA="$(gh api "repos/$GITHUB_REPOSITORY/contents/DEPLOYMENT_STATE.json?ref=deployment-state" --jq .sha 2>/dev/null || true)"
+          if [[ -n "$CURRENT_SHA" ]]; then
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/DEPLOYMENT_STATE.json" \
+              -f message="deploy: record v$VERSION $DEPLOYED_COMMIT" \
+              -f content="$CONTENT" -f branch="deployment-state" -f sha="$CURRENT_SHA"
+          else
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/DEPLOYMENT_STATE.json" \
+              -f message="deploy: record v$VERSION $DEPLOYED_COMMIT" \
+              -f content="$CONTENT" -f branch="deployment-state"
+          fi
