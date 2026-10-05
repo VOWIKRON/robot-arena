@@ -18,7 +18,7 @@ describe('robot components', () => {
 
   it('validates invalid component values', () => {
     const invalid = {
-      id: '', name: '', chassis: { ...RAPTOR_CHASSIS, maxStructure: 0, speed: -1 }, motor: BALANCED_MOTOR,
+      id: '', name: '', chassis: { ...RAPTOR_CHASSIS, maxStructure: 0, speed: -1 }, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR,
       weapon: { ...RAPTOR_WEAPON, damage: -1 }
     };
     expect(validateRobotConfiguration(invalid)).toEqual([
@@ -28,7 +28,7 @@ describe('robot components', () => {
   });
   it('rejects invalid configurations at the builder boundary', () => {
     const invalid = {
-      id: 'broken', name: 'Broken', chassis: { ...RAPTOR_CHASSIS, maxStructure: 0 }, motor: BALANCED_MOTOR,
+      id: 'broken', name: 'Broken', chassis: { ...RAPTOR_CHASSIS, maxStructure: 0 }, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR,
       weapon: RAPTOR_WEAPON
     };
     expect(() => buildRobotDefinition(invalid)).toThrow('Ungültige Roboterkonfiguration: Struktur muss größer als 0 sein');
