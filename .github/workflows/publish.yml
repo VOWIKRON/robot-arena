@@ -124,6 +124,7 @@ jobs:
           LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))')"
           test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
 
+      # deployment-state is pre-initialized; update it only after verified live deployment.
       - name: Record deployment proof in GitHub
         env:
           GH_TOKEN: ${{ github.token }}
