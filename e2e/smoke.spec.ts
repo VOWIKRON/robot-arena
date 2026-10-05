@@ -20,7 +20,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await page.getByLabel('Chassis B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
   await page.getByLabel('Motor B').selectOption('heavy');
-  await expect(page.locator('#preview-b').getByText('Tempo 0.6')).toBeVisible();
+  await expect(page.locator('#preview-b').getByText('Tempo 1.2')).toBeVisible();
   await page.getByLabel('Waffe B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -75,5 +75,7 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Komponentenwahl sichtbar machen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Komponentenwahl Roboter B', { exact: false })).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
-  await expect(page.getByText('NEXT-21 · Motoren als Komponente')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Motoren als Komponente')
+  ).toBeVisible();
+  await expect(page.getByText('NEXT-22 · Panzerung als Komponente')).toBeVisible();
 });
