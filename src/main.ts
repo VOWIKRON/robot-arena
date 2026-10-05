@@ -1,6 +1,6 @@
 import './style.css';
-import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR } from './engine/presets';
-import { buildRobotDefinition, validateRobotConfiguration, type Chassis, type Motor, type Weapon } from './engine/components';
+import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR, STANDARD_ARMOR, LIGHT_ARMOR, HEAVY_ARMOR } from './engine/presets';
+import { buildRobotDefinition, validateRobotConfiguration, type Armor, type Chassis, type Motor, type Weapon } from './engine/components';
 import { createMatch, stepMatch } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import type { MatchState } from './engine/types';
@@ -10,14 +10,14 @@ if (!app) throw new Error('App root missing');
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.24</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.27</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div class="bot bot-a" id="bot-a">R</div><div class="bot bot-b" id="bot-b">T</div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button></div>
 <div class="status" id="status"></div>
 </section>
-<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label><div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
+<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label><div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
 </div>
 <footer class="site-footer" aria-label="Projektinformationen">
   <a href="./testsuite.html">Testsuite</a>
@@ -53,16 +53,20 @@ function configurationA() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-a').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
   const motorValue = el<HTMLSelectElement>('motor-a').value;
   const motor: Motor = motorValue === 'swift' ? SWIFT_MOTOR : motorValue === 'heavy' ? HEAVY_MOTOR : BALANCED_MOTOR;
+  const armorValue = el<HTMLSelectElement>('armor-a').value;
+  const armor: Armor = armorValue === 'light' ? LIGHT_ARMOR : armorValue === 'heavy' ? HEAVY_ARMOR : STANDARD_ARMOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-a').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
-  return { id: 'robot-a', name: 'Robot A', chassis, motor, weapon };
+  return { id: 'robot-a', name: 'Robot A', chassis, motor, armor, weapon };
 }
 function selectedRobotA() { return buildRobotDefinition(configurationA()); }
 function configurationB() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-b').value === 'raptor' ? RAPTOR_CHASSIS : TITAN_CHASSIS;
   const motorValue = el<HTMLSelectElement>('motor-b').value;
   const motor: Motor = motorValue === 'swift' ? SWIFT_MOTOR : motorValue === 'heavy' ? HEAVY_MOTOR : BALANCED_MOTOR;
+  const armorValue = el<HTMLSelectElement>('armor-b').value;
+  const armor: Armor = armorValue === 'light' ? LIGHT_ARMOR : armorValue === 'heavy' ? HEAVY_ARMOR : STANDARD_ARMOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-b').value === 'raptor' ? RAPTOR_WEAPON : TITAN_WEAPON;
-  return { id: 'robot-b', name: 'Robot B', chassis, motor, weapon };
+  return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, weapon };
 }
 function selectedRobotB() { return buildRobotDefinition(configurationB()); }
 function previewHtml(d: ReturnType<typeof selectedRobotA>): string {
@@ -162,7 +166,7 @@ el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
 el('reset').addEventListener('click', reset);
 el('seed').addEventListener('change', reset);
-for (const id of ['chassis-a', 'motor-a', 'weapon-a', 'chassis-b', 'motor-b', 'weapon-b']) {
+for (const id of ['chassis-a', 'motor-a', 'armor-a', 'weapon-a', 'chassis-b', 'motor-b', 'armor-b', 'weapon-b']) {
   el(id).addEventListener('change', () => { renderPreview(); reset(); });
 }
 renderPreview();

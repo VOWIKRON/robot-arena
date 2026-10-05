@@ -15,12 +15,16 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Motor A').selectOption('swift');
   await expect(page.locator('#preview-a').getByText('Tempo 1')).toBeVisible();
+  await page.getByLabel('Panzerung A').selectOption('heavy');
+  await expect(page.locator('#preview-a').getByText('Struktur 162.5', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByLabel('Chassis B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
   await page.getByLabel('Motor B').selectOption('heavy');
   await expect(page.locator('#preview-b').getByText('Tempo 1.2')).toBeVisible();
+  await page.getByLabel('Panzerung B').selectOption('light');
+  await expect(page.locator('#preview-b').getByText('Struktur 60', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -77,5 +81,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Motoren als Komponente')
   ).toBeVisible();
-  await expect(page.getByText('NEXT-22 · Panzerung als Komponente')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Panzerung als Komponente')).toBeVisible();
+  await expect(page.getByText('NEXT-23 · Energieversorgung als Komponente')).toBeVisible();
 });
