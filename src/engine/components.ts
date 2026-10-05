@@ -26,6 +26,8 @@ export type RobotConfiguration = Readonly<{
 }>;
 
 export function buildRobotDefinition(configuration: RobotConfiguration): RobotDefinition {
+  const errors = validateRobotConfiguration(configuration);
+  if (errors.length > 0) throw new Error(`Ungültige Roboterkonfiguration: ${errors.join(', ')}`);
   return {
     id: configuration.id,
     name: configuration.name,

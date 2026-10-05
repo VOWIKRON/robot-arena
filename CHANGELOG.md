@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.25 – 2026-10-05
+
+- enforces validation at the robot-builder boundary
+- shows a validation state for Robot A and Robot B
+- prevents match start when a configuration is invalid
+- covers validation state in desktop and mobile browser tests
+- advances to NEXT-21: motors as a component
+
+
 ## 0.1.24 – 2026-10-05
 
 - extends chassis and weapon selection to Robot B

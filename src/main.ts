@@ -1,6 +1,6 @@
 import './style.css';
 import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON } from './engine/presets';
-import { buildRobotDefinition, type Chassis, type Weapon } from './engine/components';
+import { buildRobotDefinition, validateRobotConfiguration, type Chassis, type Weapon } from './engine/components';
 import { createMatch, stepMatch } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import type { MatchState } from './engine/types';
@@ -17,7 +17,7 @@ app.innerHTML = `
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button></div>
 <div class="status" id="status"></div>
 </section>
-<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview-a"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label><div class="preview" id="preview-b"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
+<aside class="card"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label><div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div id="stats"></div></aside>
 </div>
 <footer class="site-footer" aria-label="Projektinformationen">
   <a href="./testsuite.html">Testsuite</a>
@@ -49,22 +49,29 @@ function pause(): void {
   timer = null;
 }
 
-function selectedRobotA() {
+function configurationA() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-a').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-a').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
-  return buildRobotDefinition({ id: 'robot-a', name: 'Robot A', chassis, weapon });
+  return { id: 'robot-a', name: 'Robot A', chassis, weapon };
 }
-function selectedRobotB() {
+function selectedRobotA() { return buildRobotDefinition(configurationA()); }
+function configurationB() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-b').value === 'raptor' ? RAPTOR_CHASSIS : TITAN_CHASSIS;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-b').value === 'raptor' ? RAPTOR_WEAPON : TITAN_WEAPON;
-  return buildRobotDefinition({ id: 'robot-b', name: 'Robot B', chassis, weapon });
+  return { id: 'robot-b', name: 'Robot B', chassis, weapon };
 }
+function selectedRobotB() { return buildRobotDefinition(configurationB()); }
 function previewHtml(d: ReturnType<typeof selectedRobotA>): string {
   return `<strong>Live-Werte</strong><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
 }
 function renderPreview(): void {
-  el('preview-a').innerHTML = previewHtml(selectedRobotA());
-  el('preview-b').innerHTML = previewHtml(selectedRobotB());
+  const errorsA = validateRobotConfiguration(configurationA());
+  const errorsB = validateRobotConfiguration(configurationB());
+  el('validation-a').textContent = errorsA.length ? `Ungültig: ${errorsA.join(', ')}` : 'Konfiguration gültig';
+  el('validation-b').textContent = errorsB.length ? `Ungültig: ${errorsB.join(', ')}` : 'Konfiguration gültig';
+  el<HTMLButtonElement>('start').disabled = errorsA.length > 0 || errorsB.length > 0;
+  if (!errorsA.length) el('preview-a').innerHTML = previewHtml(selectedRobotA());
+  if (!errorsB.length) el('preview-b').innerHTML = previewHtml(selectedRobotB());
 }
 function reset(): void {
   pause();
@@ -83,6 +90,7 @@ function tick(): void {
 }
 
 function start(): void {
+  if (validateRobotConfiguration(configurationA()).length || validateRobotConfiguration(configurationB()).length) return;
   if (timer !== null) return;
   timer = window.setInterval(tick, 80);
 }
