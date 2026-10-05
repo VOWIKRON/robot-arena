@@ -6,7 +6,8 @@ on:
     types: [completed]
 
 permissions:
-  contents: write
+  contents: read
+  statuses: write
 
 jobs:
   publish:
@@ -124,37 +125,14 @@ jobs:
           LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))')"
           test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
 
-      # deployment-state is pre-initialized; update it only after verified live deployment.
-      - name: Record deployment proof in GitHub
+      - name: Record verified deployment status
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
           DEPLOYED_COMMIT: ${{ github.event.workflow_run.head_sha }}
         shell: bash
         run: |
-          python3 - <<'PY'
-          import json, os
-          from datetime import datetime
-          from zoneinfo import ZoneInfo
-          data = {
-              "version": os.environ["VERSION"],
-              "commit": os.environ["DEPLOYED_COMMIT"],
-              "tests": "passed",
-              "published": True,
-              "publishedAt": datetime.now(ZoneInfo("Europe/Berlin")).isoformat()
-          }
-          with open("/tmp/deployment-state.json", "w", encoding="utf-8") as f:
-              json.dump(data, f, indent=2)
-              f.write("\n")
-          PY
-          CONTENT="$(base64 -w0 /tmp/deployment-state.json)"
-          CURRENT_SHA="$(gh api "repos/$GITHUB_REPOSITORY/contents/DEPLOYMENT_STATE.json?ref=deployment-state" --jq .sha 2>/dev/null || true)"
-          if [[ -n "$CURRENT_SHA" ]]; then
-            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/DEPLOYMENT_STATE.json" \
-              -f message="deploy: record v$VERSION $DEPLOYED_COMMIT" \
-              -f content="$CONTENT" -f branch="deployment-state" -f sha="$CURRENT_SHA"
-          else
-            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/DEPLOYMENT_STATE.json" \
-              -f message="deploy: record v$VERSION $DEPLOYED_COMMIT" \
-              -f content="$CONTENT" -f branch="deployment-state"
-          fi
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$DEPLOYED_COMMIT" \
+            -f state="success" \
+            -f context="robot-arena/deployment" \
+            -f description="v$VERSION verified live on vowikron.de"
