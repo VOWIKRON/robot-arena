@@ -9,6 +9,12 @@ export type Chassis = Readonly<{
   speed: number;
 }>;
 
+export type Motor = Readonly<{
+  id: string;
+  name: string;
+  speedFactor: number;
+}>;
+
 export type Weapon = Readonly<{
   id: string;
   name: string;
@@ -22,6 +28,7 @@ export type RobotConfiguration = Readonly<{
   id: string;
   name: string;
   chassis: Chassis;
+  motor: Motor;
   weapon: Weapon;
 }>;
 
@@ -34,7 +41,7 @@ export function buildRobotDefinition(configuration: RobotConfiguration): RobotDe
     maxStructure: configuration.chassis.maxStructure,
     maxEnergy: configuration.chassis.maxEnergy,
     energyRegen: configuration.chassis.energyRegen,
-    speed: configuration.chassis.speed,
+    speed: configuration.chassis.speed * configuration.motor.speedFactor,
     weaponRange: configuration.weapon.range,
     weaponDamage: configuration.weapon.damage,
     weaponEnergy: configuration.weapon.energy,
@@ -50,6 +57,7 @@ export function validateRobotConfiguration(configuration: RobotConfiguration): r
   if (configuration.chassis.maxEnergy <= 0) errors.push('Energie muss größer als 0 sein');
   if (configuration.chassis.energyRegen < 0) errors.push('Energieregeneration darf nicht negativ sein');
   if (configuration.chassis.speed < 0) errors.push('Geschwindigkeit darf nicht negativ sein');
+  if (configuration.motor.speedFactor <= 0) errors.push('Motorfaktor muss größer als 0 sein');
   if (configuration.weapon.range < 0) errors.push('Waffenreichweite darf nicht negativ sein');
   if (configuration.weapon.damage < 0) errors.push('Waffenschaden darf nicht negativ sein');
   if (configuration.weapon.energy < 0) errors.push('Waffenenergie darf nicht negativ sein');
