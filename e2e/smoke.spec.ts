@@ -6,13 +6,19 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await page.getByRole('button', { name: '1 Tick' }).click();
   await expect(page.getByText('Tick: 1')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Roboter A' })).toBeVisible();
-  await expect(page.getByText('Live-Werte')).toBeVisible();
-  await page.getByLabel('Chassis').selectOption('titan');
-  await expect(page.getByText('Struktur 130', { exact: true })).toBeVisible();
-  await page.getByLabel('Waffe').selectOption('raptor');
+  await expect(page.locator('#preview-a').getByText('Live-Werte')).toBeVisible();
+  await expect(page.locator('#preview-b').getByText('Live-Werte')).toBeVisible();
+  await page.getByLabel('Chassis A').selectOption('titan');
+  await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
+  await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
+  await page.getByLabel('Chassis B').selectOption('raptor');
+  await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
+  await page.getByLabel('Waffe B').selectOption('raptor');
+  await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
   await expect(page.getByText('A: Robot A')).toBeVisible();
+  await expect(page.getByText('B: Robot B')).toBeVisible();
 
   await expect(page.getByRole('link', { name: 'Testsuite' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Release Notes' })).toBeVisible();
@@ -60,5 +66,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Schussausführung kapseln')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Roboter- und Komponentensystem beginnen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Komponentenwahl sichtbar machen')).toBeVisible();
-  await expect(page.getByText('NEXT-19 · Komponentenwahl für Roboter B')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Komponentenwahl Roboter B', { exact: false })).toBeVisible();
+  await expect(page.getByText('NEXT-20 · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
 });

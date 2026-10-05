@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.23
+- Aktuelle stabile Version: 0.1.24
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-19: Komponentenwahl für Roboter B.
+NEXT-20: Komponentenvalidierung und Builder-Grenzen.
 
-NEXT-18 hat Chassis- und Waffenwahl für Roboter A sichtbar gemacht, berechnete Werte live angebunden und Reset/Matchstart mit der gewählten Konfiguration verbunden. NEXT-19 erweitert dieselbe Bedienung auf Roboter B.
+NEXT-19 erweitert die Komponentenwahl auf Roboter B, zeigt dessen berechnete Werte live und verbindet Reset/Matchstart mit beiden gewählten Konfigurationen. NEXT-20 härtet als nächstes Validierung und Builder-Grenzen.
 
 
 ## Teststrategie
