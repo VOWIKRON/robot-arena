@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.26  
+**Aktuelle stabile Version:** 0.1.27  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -140,10 +140,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] berechnete Geschwindigkeitswerte live aktualisiert
 - [x] Desktop- und Mobile-Bedienung abgesichert
 
-### NEXT-22 · Panzerung als Komponente
-- [ ] Panzerung als eigene Komponente modellieren
-- [ ] Panzerungswahl für beide Roboter im Builder anbieten
-- [ ] berechnete Strukturwerte live aktualisieren
+### Erledigt in v0.1.27 · Panzerung als Komponente
+- [x] Panzerung als eigene Komponente modelliert
+- [x] Panzerungswahl für beide Roboter im Builder angeboten
+- [x] berechnete Strukturwerte live aktualisiert
+- [x] Desktop- und Mobile-Bedienung abgesichert
+
+### NEXT-23 · Energieversorgung als Komponente
+- [ ] Energieversorgung als eigene Komponente modellieren
+- [ ] Energieauswahl für beide Roboter im Builder anbieten
+- [ ] berechnete Energiewerte live aktualisieren
 - [ ] Desktop- und Mobile-Bedienung absichern
 
 ---
