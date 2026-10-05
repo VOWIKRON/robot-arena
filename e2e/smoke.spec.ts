@@ -86,5 +86,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Motoren als Komponente')
   ).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Panzerung als Komponente')).toBeVisible();
-  await expect(page.getByText('NEXT-23 · Energieversorgung als Komponente')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Energieversorgung als Komponente')).toBeVisible();
+  await expect(page.getByText('NEXT-24 · Sensorik als Komponente')).toBeVisible();
 });
