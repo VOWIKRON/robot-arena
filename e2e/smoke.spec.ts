@@ -9,7 +9,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#preview-a').getByText('Live-Werte')).toBeVisible();
   await expect(page.locator('#preview-b').getByText('Live-Werte')).toBeVisible();
   await page.getByLabel('Chassis A').selectOption('titan');
-  await expect(page.getByText('Struktur 130', { exact: true })).toBeVisible();
+  await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByLabel('Chassis B').selectOption('raptor');
