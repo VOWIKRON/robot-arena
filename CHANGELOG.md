@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.28 – 2026-10-05
+
+- adds energy supply as a selectable robot component
+- adds standard, capacity and regeneration energy presets
+- calculates energy capacity and regeneration from chassis and selected supply
+- exposes energy selection for Robot A and Robot B
+- covers energy behavior in unit and desktop/mobile browser tests
+- advances to NEXT-24: sensors as a component
+
+
 ## 0.1.27 – 2026-10-05
 
 - adds armor as a selectable robot component

@@ -21,6 +21,13 @@ export type Armor = Readonly<{
   structureFactor: number;
 }>;
 
+export type EnergySupply = Readonly<{
+  id: string;
+  name: string;
+  energyFactor: number;
+  regenFactor: number;
+}>;
+
 export type Weapon = Readonly<{
   id: string;
   name: string;
@@ -36,6 +43,7 @@ export type RobotConfiguration = Readonly<{
   chassis: Chassis;
   motor: Motor;
   armor: Armor;
+  energySupply: EnergySupply;
   weapon: Weapon;
 }>;
 
@@ -46,8 +54,8 @@ export function buildRobotDefinition(configuration: RobotConfiguration): RobotDe
     id: configuration.id,
     name: configuration.name,
     maxStructure: configuration.chassis.maxStructure * configuration.armor.structureFactor,
-    maxEnergy: configuration.chassis.maxEnergy,
-    energyRegen: configuration.chassis.energyRegen,
+    maxEnergy: configuration.chassis.maxEnergy * configuration.energySupply.energyFactor,
+    energyRegen: configuration.chassis.energyRegen * configuration.energySupply.regenFactor,
     speed: configuration.chassis.speed * configuration.motor.speedFactor,
     weaponRange: configuration.weapon.range,
     weaponDamage: configuration.weapon.damage,
@@ -66,6 +74,8 @@ export function validateRobotConfiguration(configuration: RobotConfiguration): r
   if (configuration.chassis.speed < 0) errors.push('Geschwindigkeit darf nicht negativ sein');
   if (configuration.motor.speedFactor <= 0) errors.push('Motorfaktor muss größer als 0 sein');
   if (configuration.armor.structureFactor <= 0) errors.push('Panzerungsfaktor muss größer als 0 sein');
+  if (configuration.energySupply.energyFactor <= 0) errors.push('Energiefaktor muss größer als 0 sein');
+  if (configuration.energySupply.regenFactor <= 0) errors.push('Regenerationsfaktor muss größer als 0 sein');
   if (configuration.weapon.range < 0) errors.push('Waffenreichweite darf nicht negativ sein');
   if (configuration.weapon.damage < 0) errors.push('Waffenschaden darf nicht negativ sein');
   if (configuration.weapon.energy < 0) errors.push('Waffenenergie darf nicht negativ sein');

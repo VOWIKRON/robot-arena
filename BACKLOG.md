@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.27  
+**Aktuelle stabile Version:** 0.1.28  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -146,10 +146,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] berechnete Strukturwerte live aktualisiert
 - [x] Desktop- und Mobile-Bedienung abgesichert
 
-### NEXT-23 · Energieversorgung als Komponente
-- [ ] Energieversorgung als eigene Komponente modellieren
-- [ ] Energieauswahl für beide Roboter im Builder anbieten
-- [ ] berechnete Energiewerte live aktualisieren
+### Erledigt in v0.1.28 · Energieversorgung als Komponente
+- [x] Energieversorgung als eigene Komponente modelliert
+- [x] Energieauswahl für beide Roboter im Builder angeboten
+- [x] berechnete Energiewerte live aktualisiert
+- [x] Desktop- und Mobile-Bedienung abgesichert
+
+### NEXT-24 · Sensorik als Komponente
+- [ ] Sensorik als eigene Komponente modellieren
+- [ ] Sensorwahl für beide Roboter im Builder anbieten
+- [ ] berechnete Sensorwerte live aktualisieren
 - [ ] Desktop- und Mobile-Bedienung absichern
 
 ---
