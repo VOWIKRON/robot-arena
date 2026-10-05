@@ -1,5 +1,5 @@
 import './style.css';
-import { TITAN, RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON } from './engine/presets';
+import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON } from './engine/presets';
 import { buildRobotDefinition, type Chassis, type Weapon } from './engine/components';
 import { createMatch, stepMatch } from './engine/simulation';
 import { SeededRandom } from './engine/random';
