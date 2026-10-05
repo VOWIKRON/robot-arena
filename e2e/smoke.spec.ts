@@ -8,6 +8,9 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Roboter A' })).toBeVisible();
   await expect(page.locator('#preview-a').getByText('Live-Werte')).toBeVisible();
   await expect(page.locator('#preview-b').getByText('Live-Werte')).toBeVisible();
+  await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
+  await expect(page.locator('#validation-b')).toHaveText('Konfiguration gültig');
+  await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   await page.getByLabel('Chassis A').selectOption('titan');
   await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe A').selectOption('raptor');
