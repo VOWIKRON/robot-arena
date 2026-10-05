@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.27 – 2026-10-05
+
+- adds armor as a selectable robot component
+- adds standard, light and heavy armor presets
+- calculates robot structure from chassis and selected armor
+- exposes armor selection for Robot A and Robot B
+- covers armor behavior in unit and desktop/mobile browser tests
+- advances to NEXT-23: energy supply as a component
+
+
 ## 0.1.26 – 2026-10-05
 
 - adds motors as selectable robot components
