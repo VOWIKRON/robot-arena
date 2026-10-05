@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.24
+- Aktuelle stabile Version: 0.1.25
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-20: Komponentenvalidierung und Builder-Grenzen.
+NEXT-21: Robot-Builder um Motoren erweitern.
 
-NEXT-19 erweitert die Komponentenwahl auf Roboter B, zeigt dessen berechnete Werte live und verbindet Reset/Matchstart mit beiden gewählten Konfigurationen. NEXT-20 härtet als nächstes Validierung und Builder-Grenzen.
+NEXT-20 abgeschlossen: Builder-Grenzen validieren Konfigurationen, beide Roboter zeigen ihren Validierungszustand und ungültige Konfigurationen können keinen Matchstart auslösen. NEXT-21 erweitert den Robot-Builder um Motoren.
 
 
 ## Teststrategie
