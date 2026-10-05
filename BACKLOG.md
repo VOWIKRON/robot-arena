@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.24  
+**Aktuelle stabile Version:** 0.1.25  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -128,11 +128,17 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Reset/Matchstart mit beiden gewählten Konfigurationen verbinden
 - [x] Desktop- und Mobile-Bedienung für beide Konfigurationen absichern
 
-### NEXT-20 · Komponentenvalidierung und Builder-Grenzen
-- [ ] ungültige Komponentenkombinationen im Builder sichtbar behandeln
-- [ ] Validierungszustand für beide Roboter anzeigen
-- [ ] Matchstart bei ungültiger Konfiguration verhindern
-- [ ] Desktop- und Mobile-Verhalten für Validierungsfälle absichern
+### Erledigt in v0.1.25 · Komponentenvalidierung und Builder-Grenzen
+- [x] ungültige Roboterkonfigurationen an der Builder-Grenze ablehnen
+- [x] Validierungszustand für beide Roboter anzeigen
+- [x] Matchstart bei ungültiger Konfiguration verhindern
+- [x] Desktop- und Mobile-Verhalten für Validierungszustände absichern
+
+### NEXT-21 · Motoren als Komponente
+- [ ] Motoren als eigene Komponente modellieren
+- [ ] Motorwahl für beide Roboter im Builder anbieten
+- [ ] berechnete Geschwindigkeitswerte live aktualisieren
+- [ ] Desktop- und Mobile-Bedienung absichern
 
 ---
 
