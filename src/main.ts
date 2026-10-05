@@ -1,6 +1,6 @@
 import './style.css';
-import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR } from './engine/presets';
-import { buildRobotDefinition, validateRobotConfiguration, type Chassis, type Motor, type Weapon } from './engine/components';
+import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR, STANDARD_ARMOR, LIGHT_ARMOR, HEAVY_ARMOR } from './engine/presets';
+import { buildRobotDefinition, validateRobotConfiguration, type Armor, type Chassis, type Motor, type Weapon } from './engine/components';
 import { createMatch, stepMatch } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import type { MatchState } from './engine/types';
