@@ -81,5 +81,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Komponentenvalidierung und Builder-Grenzen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Motoren als Komponente')
   ).toBeVisible();
-  await expect(page.getByText('NEXT-22 · Panzerung als Komponente')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Panzerung als Komponente')).toBeVisible();
+  await expect(page.getByText('NEXT-23 · Energieversorgung als Komponente')).toBeVisible();
 });
