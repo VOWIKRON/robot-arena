@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.25  
+**Aktuelle stabile Version:** 0.1.26  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -134,10 +134,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Matchstart bei ungültiger Konfiguration verhindern
 - [x] Desktop- und Mobile-Verhalten für Validierungszustände absichern
 
-### NEXT-21 · Motoren als Komponente
-- [ ] Motoren als eigene Komponente modellieren
-- [ ] Motorwahl für beide Roboter im Builder anbieten
-- [ ] berechnete Geschwindigkeitswerte live aktualisieren
+### Erledigt in v0.1.26 · Motoren als Komponente
+- [x] Motoren als eigene Komponente modelliert
+- [x] Motorwahl für beide Roboter im Builder angeboten
+- [x] berechnete Geschwindigkeitswerte live aktualisiert
+- [x] Desktop- und Mobile-Bedienung abgesichert
+
+### NEXT-22 · Panzerung als Komponente
+- [ ] Panzerung als eigene Komponente modellieren
+- [ ] Panzerungswahl für beide Roboter im Builder anbieten
+- [ ] berechnete Strukturwerte live aktualisieren
 - [ ] Desktop- und Mobile-Bedienung absichern
 
 ---
