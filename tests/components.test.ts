@@ -18,7 +18,7 @@ describe('robot components', () => {
 
   it('validates invalid component values', () => {
     const invalid = {
-      id: '', name: '', chassis: { ...RAPTOR_CHASSIS, maxStructure: 0, speed: -1 }, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR, energySupply: STANDARD_ENERGY,
+      id: '', name: '', chassis: { ...RAPTOR_CHASSIS, maxStructure: 0, speed: -1 }, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR, energySupply: STANDARD_ENERGY, sensor: STANDARD_SENSOR,
       weapon: { ...RAPTOR_WEAPON, damage: -1 }
     };
     expect(validateRobotConfiguration(invalid)).toEqual([
