@@ -11,6 +11,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
   await expect(page.locator('#validation-b')).toHaveText('Konfiguration gültig');
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
+  await expect(page.locator('#preview-a').getByText(/Gewicht \d+ \/ 80/)).toBeVisible();
   await page.getByLabel('Chassis A').selectOption('titan');
   await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Motor A').selectOption('swift');
@@ -24,6 +25,17 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await page.getByLabel('Sensor A').selectOption('standard');
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
+  await page.getByLabel('Chassis A').selectOption('raptor');
+  await page.getByLabel('Motor A').selectOption('heavy');
+  await page.getByLabel('Panzerung A').selectOption('heavy');
+  await page.getByLabel('Energie A').selectOption('capacity');
+  await page.getByLabel('Sensor A').selectOption('long');
+  await page.getByLabel('Waffe A').selectOption('titan');
+  await expect(page.locator('#validation-a')).toContainText('überschreitet Limit 80');
+  await expect(page.getByRole('button', { name: 'Start' })).toBeDisabled();
+  await page.getByLabel('Chassis A').selectOption('titan');
+  await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
+  await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   await page.getByLabel('Chassis B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
   await page.getByLabel('Motor B').selectOption('heavy');
