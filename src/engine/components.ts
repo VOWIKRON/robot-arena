@@ -28,6 +28,12 @@ export type EnergySupply = Readonly<{
   regenFactor: number;
 }>;
 
+export type Sensor = Readonly<{
+  id: string;
+  name: string;
+  rangeFactor: number;
+}>;
+
 export type Weapon = Readonly<{
   id: string;
   name: string;
