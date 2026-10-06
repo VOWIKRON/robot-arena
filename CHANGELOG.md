@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.31 – 2026-10-06
+
+- adds weights to robot components and weight limits to chassis
+- rejects overweight robot configurations at the builder boundary
+- shows current weight versus chassis limit live for both robots
+- prevents match start for overweight configurations
+- covers the rule in unit and desktop/mobile browser tests
+- advances to NEXT-26: visible robot differentiation
+
+
 ## 0.1.30 – 2026-10-06
 
 - adds sensor systems as selectable robot components
