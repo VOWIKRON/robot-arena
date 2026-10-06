@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildRobotDefinition, validateRobotConfiguration } from '../src/engine/components';
+import { buildRobotDefinition, validateRobotConfiguration, configurationWeight } from '../src/engine/components';
 import { BALANCED_MOTOR, SWIFT_MOTOR, STANDARD_ARMOR, STANDARD_ENERGY, CAPACITY_ENERGY, STANDARD_SENSOR, SHORT_SENSOR, RAPTOR, RAPTOR_CHASSIS, RAPTOR_WEAPON, TITAN, TITAN_CHASSIS, TITAN_WEAPON } from '../src/engine/presets';
 
 describe('robot components', () => {
@@ -41,6 +41,12 @@ describe('robot components', () => {
     const robot = buildRobotDefinition({ id: 'energy', name: 'Energy', chassis: RAPTOR_CHASSIS, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR, energySupply: CAPACITY_ENERGY, sensor: STANDARD_SENSOR, weapon: RAPTOR_WEAPON });
     expect(robot.maxEnergy).toBe(RAPTOR_CHASSIS.maxEnergy * CAPACITY_ENERGY.energyFactor);
     expect(robot.energyRegen).toBe(RAPTOR_CHASSIS.energyRegen * CAPACITY_ENERGY.regenFactor);
+  });
+  it('rejects configurations above the chassis weight limit', () => {
+    const overweight = { id: 'heavy', name: 'Heavy', chassis: RAPTOR_CHASSIS, motor: { ...BALANCED_MOTOR, weight: 40 }, armor: { ...STANDARD_ARMOR, weight: 40 }, energySupply: STANDARD_ENERGY, sensor: STANDARD_SENSOR, weapon: RAPTOR_WEAPON };
+    expect(configurationWeight(overweight)).toBeGreaterThan(RAPTOR_CHASSIS.maxWeight);
+    expect(validateRobotConfiguration(overweight)).toContain(`Gewicht ${configurationWeight(overweight)} überschreitet Limit ${RAPTOR_CHASSIS.maxWeight}`);
+    expect(() => buildRobotDefinition(overweight)).toThrow('Gewicht');
   });
   it('applies sensor range and limits effective weapon range', () => {
     const robot = buildRobotDefinition({ id: 'sensor', name: 'Sensor', chassis: RAPTOR_CHASSIS, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR, energySupply: STANDARD_ENERGY, sensor: SHORT_SENSOR, weapon: RAPTOR_WEAPON });
