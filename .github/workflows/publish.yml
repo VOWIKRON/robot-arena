@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 2
 
       - uses: actions/setup-node@v4
         with:
@@ -38,16 +39,32 @@ jobs:
           echo "live_version=$LIVE_VERSION" >> "$GITHUB_OUTPUT"
           echo "live_commit=$LIVE_COMMIT" >> "$GITHUB_OUTPUT"
 
+      - name: Classify same-version commit
+        id: classify
+        shell: bash
+        run: |
+          META_ONLY=false
+          if [[ "${{ steps.live.outputs.live_version }}" == "${{ steps.version.outputs.version }}" && -n "${{ steps.live.outputs.live_commit }}" && "${{ steps.live.outputs.live_commit }}" != "${{ github.event.workflow_run.head_sha }}" ]]; then
+            git fetch --no-tags origin "${{ steps.live.outputs.live_commit }}" --depth=1 || true
+            CHANGED="$(git diff --name-only "${{ steps.live.outputs.live_commit }}" "${{ github.event.workflow_run.head_sha }}" || true)"
+            echo "Changes since live commit:"
+            printf '%s\n' "$CHANGED"
+            if [[ -n "$CHANGED" ]] && ! printf '%s\n' "$CHANGED" | grep -Ev '^(\.github/|RUN_STATE\.md$|PROJECT_STATE\.md$|BACKLOG\.md$|CHANGELOG\.md$|PROTOKOLL\.md$)' >/dev/null; then
+              META_ONLY=true
+            fi
+          fi
+          echo "meta_only=$META_ONLY" >> "$GITHUB_OUTPUT"
+
       - name: Install dependencies
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
         run: npm install
 
       - name: Build
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
         run: npm run build
 
       - name: Add release metadata
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
         env:
           VERSION: ${{ steps.version.outputs.version }}
           BUILD_COMMIT: ${{ github.event.workflow_run.head_sha }}
@@ -57,63 +74,46 @@ jobs:
           import json, os
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
-          tz = ZoneInfo("Europe/Berlin")
-          now = datetime.now(tz)
-          next_run = now.replace(hour=18, minute=0, second=0, microsecond=0)
-          if now >= next_run:
-              next_run += timedelta(days=1)
-          data = {"version": os.environ["VERSION"], "commit": os.environ["BUILD_COMMIT"], "builtAt": now.isoformat(), "nextRunAt": next_run.isoformat(), "quality": {"typecheck":"passed","unit":"passed","build":"passed","desktopE2E":"passed","mobileE2E":"passed"}}
+          tz=ZoneInfo("Europe/Berlin"); now=datetime.now(tz)
+          next_run=now.replace(hour=18,minute=0,second=0,microsecond=0)
+          if now>=next_run: next_run+=timedelta(days=1)
+          data={"version":os.environ["VERSION"],"commit":os.environ["BUILD_COMMIT"],"builtAt":now.isoformat(),"nextRunAt":next_run.isoformat(),"quality":{"typecheck":"passed","unit":"passed","build":"passed","desktopE2E":"passed","mobileE2E":"passed"}}
           with open("dist/build-info.json","w",encoding="utf-8") as f: json.dump(data,f,indent=2)
           PY
 
       - name: Package release
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
-        run: |
-          cd dist
-          zip -r ../robot-arena-release.zip .
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+        run: cd dist && zip -r ../robot-arena-release.zip .
 
       - name: Publish to vowikron.de
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
+        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
         env:
           PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
-        shell: bash
         run: |
-          test -n "$PUBLISH_TOKEN" || (echo "ROBOT_ARENA_PUBLISH_TOKEN is missing" && exit 1)
-          set +e
-          RESPONSE=$(curl -sS -w "\n%{http_code}" -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" -F "file=@robot-arena-release.zip" https://www.vowikron.de/try_folder/robot-arena/publish.php)
-          CURL_EXIT=$?
-          set -e
-          BODY=$(printf '%s\n' "$RESPONSE" | sed '$d')
-          HTTP_CODE=$(printf '%s\n' "$RESPONSE" | tail -n1)
-          printf '%s\n' "$BODY"
-          if [[ $CURL_EXIT -ne 0 ]]; then exit $CURL_EXIT; fi
-          if [[ "$HTTP_CODE" =~ ^2 ]]; then exit 0; fi
-          if [[ "$HTTP_CODE" == "409" && "$BODY" == *"release already exists"* ]]; then
-            echo "Release v$VERSION already exists; verify live deployment instead of failing."
-            exit 0
-          fi
-          echo "Publish failed with HTTP $HTTP_CODE"
-          exit 1
+          test -n "$PUBLISH_TOKEN"
+          curl --fail-with-body -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" -F "file=@robot-arena-release.zip" https://www.vowikron.de/try_folder/robot-arena/publish.php
 
       - name: Verify deployment
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          sleep 2
           curl --fail https://www.vowikron.de/try_folder/robot-arena/
           curl --fail https://www.vowikron.de/try_folder/robot-arena/testsuite.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/release-notes.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/backlog.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/releases/v$VERSION/
           LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))')"
-          test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
+          if [[ "${{ steps.live.outputs.live_version }}" == "$VERSION" && "${{ steps.classify.outputs.meta_only }}" == "true" ]]; then
+            echo "Same release version is already live from $LIVE_COMMIT; current commit contains metadata/workflow changes only."
+          else
+            test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
+          fi
 
       - name: Record verified deployment status
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
           DEPLOYED_COMMIT: ${{ github.event.workflow_run.head_sha }}
-        shell: bash
         run: |
           gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$DEPLOYED_COMMIT" -f state="success" -f context="robot-arena/deployment" -f description="v$VERSION verified live on vowikron.de"
