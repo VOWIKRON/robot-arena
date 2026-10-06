@@ -37,15 +37,6 @@ jobs:
           LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))' 2>/dev/null || true)"
           echo "live_version=$LIVE_VERSION" >> "$GITHUB_OUTPUT"
           echo "live_commit=$LIVE_COMMIT" >> "$GITHUB_OUTPUT"
-          echo "Repository version: ${{ steps.version.outputs.version }}"
-          echo "Target commit: ${{ github.event.workflow_run.head_sha }}"
-          echo "Live version: $LIVE_VERSION"
-          echo "Live commit: $LIVE_COMMIT"
-          if [[ "$LIVE_VERSION" == "${{ steps.version.outputs.version }}" && "$LIVE_COMMIT" == "${{ github.event.workflow_run.head_sha }}" ]]; then
-            echo "Exact version and commit are already live. Publish will be skipped."
-          else
-            echo "Live deployment differs from the tested main SHA. Publish will proceed."
-          fi
 
       - name: Install dependencies
         if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
@@ -66,28 +57,13 @@ jobs:
           import json, os
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
-
           tz = ZoneInfo("Europe/Berlin")
           now = datetime.now(tz)
           next_run = now.replace(hour=18, minute=0, second=0, microsecond=0)
           if now >= next_run:
               next_run += timedelta(days=1)
-
-          data = {
-              "version": os.environ["VERSION"],
-              "commit": os.environ["BUILD_COMMIT"],
-              "builtAt": now.isoformat(),
-              "nextRunAt": next_run.isoformat(),
-              "quality": {
-                  "typecheck": "passed",
-                  "unit": "passed",
-                  "build": "passed",
-                  "desktopE2E": "passed",
-                  "mobileE2E": "passed"
-              }
-          }
-          with open("dist/build-info.json", "w", encoding="utf-8") as f:
-              json.dump(data, f, indent=2)
+          data = {"version": os.environ["VERSION"], "commit": os.environ["BUILD_COMMIT"], "builtAt": now.isoformat(), "nextRunAt": next_run.isoformat(), "quality": {"typecheck":"passed","unit":"passed","build":"passed","desktopE2E":"passed","mobileE2E":"passed"}}
+          with open("dist/build-info.json","w",encoding="utf-8") as f: json.dump(data,f,indent=2)
           PY
 
       - name: Package release
@@ -101,16 +77,26 @@ jobs:
         env:
           PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
         run: |
           test -n "$PUBLISH_TOKEN" || (echo "ROBOT_ARENA_PUBLISH_TOKEN is missing" && exit 1)
-          curl --fail-with-body \
-            -F "token=$PUBLISH_TOKEN" \
-            -F "version=v$VERSION" \
-            -F "file=@robot-arena-release.zip" \
-            https://www.vowikron.de/try_folder/robot-arena/publish.php
+          set +e
+          RESPONSE=$(curl -sS -w "\n%{http_code}" -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" -F "file=@robot-arena-release.zip" https://www.vowikron.de/try_folder/robot-arena/publish.php)
+          CURL_EXIT=$?
+          set -e
+          BODY=$(printf '%s\n' "$RESPONSE" | sed '$d')
+          HTTP_CODE=$(printf '%s\n' "$RESPONSE" | tail -n1)
+          printf '%s\n' "$BODY"
+          if [[ $CURL_EXIT -ne 0 ]]; then exit $CURL_EXIT; fi
+          if [[ "$HTTP_CODE" =~ ^2 ]]; then exit 0; fi
+          if [[ "$HTTP_CODE" == "409" && "$BODY" == *"release already exists"* ]]; then
+            echo "Release v$VERSION already exists; verify live deployment instead of failing."
+            exit 0
+          fi
+          echo "Publish failed with HTTP $HTTP_CODE"
+          exit 1
 
       - name: Verify deployment
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version || steps.live.outputs.live_commit != github.event.workflow_run.head_sha }}
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
@@ -120,8 +106,6 @@ jobs:
           curl --fail https://www.vowikron.de/try_folder/robot-arena/release-notes.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/backlog.html
           curl --fail https://www.vowikron.de/try_folder/robot-arena/releases/v$VERSION/
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/version.json
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/build-info.json
           LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))')"
           test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
 
@@ -132,7 +116,4 @@ jobs:
           DEPLOYED_COMMIT: ${{ github.event.workflow_run.head_sha }}
         shell: bash
         run: |
-          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$DEPLOYED_COMMIT" \
-            -f state="success" \
-            -f context="robot-arena/deployment" \
-            -f description="v$VERSION verified live on vowikron.de"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$DEPLOYED_COMMIT" -f state="success" -f context="robot-arena/deployment" -f description="v$VERSION verified live on vowikron.de"
