@@ -3,9 +3,9 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.32
+- Aktuelle stabile Version: 0.1.33
 - Branch: main
-- Tests: aktiv
+- CI: aktiv
 - Auto-Publish: aktiv
 - Publish-Gate: grüne CI + neue, noch nicht live befindliche Version
 - Versionierte Releases: aktiv
