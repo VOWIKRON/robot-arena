@@ -38,8 +38,8 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   await page.getByLabel('Chassis B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
-  await page.getByLabel('Motor B').selectOption('heavy');
-  await expect(page.locator('#preview-b').getByText('Tempo 1.2')).toBeVisible();
+  await page.getByLabel('Motor B').selectOption('swift');
+  await expect(page.locator('#preview-b').getByText('Tempo 1.875')).toBeVisible();
   await page.getByLabel('Panzerung B').selectOption('light');
   await expect(page.locator('#preview-b').getByText('Struktur 60', { exact: true })).toBeVisible();
   await page.getByLabel('Energie B').selectOption('regen');
