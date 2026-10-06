@@ -113,5 +113,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Sensorik als Komponente')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Gewichtslimits und gültige Komponentenkombinationen')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Roboter optisch unterscheidbarer machen', { exact: false })).toBeVisible();
-  await expect(page.getByText('NEXT-27 · Waffen am Roboter sichtbar machen')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Start/Reset repariert und Tests massiv ausgebaut', { exact: false })).toBeVisible();
+  await expect(page.getByText('NEXT-28 · Waffen am Roboter sichtbar machen')).toBeVisible();
 });
