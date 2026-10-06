@@ -120,7 +120,7 @@ function renderRobot(id: string, x: number, y: number, chassisId: string): void 
   node.style.left = `${x}%`;
   node.style.top = `${y}%`;
   node.dataset.chassis = chassisId;
-  node.title = `${id === 'bot-a' ? 'Roboter A' : 'Roboter B'} · ${chassisId === 'titan' ? 'Titan' : 'Raptor'} Chassis`;
+  node.title = `${id === 'bot-a' ? 'Roboter A' : 'Roboter B'} · ${chassisId === 'titan-chassis' ? 'Titan' : 'Raptor'} Chassis`;
 }
 
 function robotStats(label: string, css: string, s: MatchState['robotA']): string {
