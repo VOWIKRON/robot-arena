@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.34 – 2026-10-06
+
+- recovery release for completed NEXT-26
+- republishes the tested robot/chassis visual state under a fresh immutable release version
+- keeps gameplay behavior unchanged
+- aligns main SHA, tested state and published deployment
+- advances to NEXT-27: visible weapons
+
 ## 0.1.32 – 2026-10-06
 
 - makes Robot A and Robot B immediately distinguishable in the arena
