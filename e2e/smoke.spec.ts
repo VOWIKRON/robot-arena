@@ -11,8 +11,13 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
   await expect(page.locator('#validation-b')).toHaveText('Konfiguration gültig');
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
+  await expect(page.locator('#bot-a')).toHaveAttribute('data-chassis', 'raptor');
+  await expect(page.locator('#bot-b')).toHaveAttribute('data-chassis', 'titan');
+  await expect(page.locator('#bot-a .bot-mark')).toHaveText('A');
+  await expect(page.locator('#bot-b .bot-mark')).toHaveText('B');
   await expect(page.locator('#preview-a').getByText(/Gewicht \d+ \/ 90/)).toBeVisible();
   await page.getByLabel('Chassis A').selectOption('titan');
+  await expect(page.locator('#bot-a')).toHaveAttribute('data-chassis', 'titan');
   await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Motor A').selectOption('swift');
   await expect(page.locator('#preview-a').getByText('Tempo 1')).toBeVisible();
@@ -37,6 +42,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   await page.getByLabel('Chassis B').selectOption('raptor');
+  await expect(page.locator('#bot-b')).toHaveAttribute('data-chassis', 'raptor');
   await expect(page.locator('#preview-b').getByText('Struktur 75', { exact: true })).toBeVisible();
   await page.getByLabel('Motor B').selectOption('swift');
   await expect(page.locator('#preview-b').getByText('Tempo 1.875')).toBeVisible();
