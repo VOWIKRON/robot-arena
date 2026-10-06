@@ -105,5 +105,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Panzerung als Komponente')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Energieversorgung als Komponente')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Sensorik als Komponente')).toBeVisible();
-  await expect(page.getByText('NEXT-25 · Gewichtslimits und gültige Komponentenkombinationen')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Gewichtslimits und gültige Komponentenkombinationen')).toBeVisible();
+  await expect(page.getByText('NEXT-26 · Roboter optisch unterscheidbarer machen')).toBeVisible();
 });
