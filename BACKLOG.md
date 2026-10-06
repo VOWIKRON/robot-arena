@@ -186,6 +186,14 @@ Chassis, Motoren, Panzerung, Energie, Sensorik, Waffen, Gewichtslimits und Prese
 ### D · Robot Builder
 Komponentenwahl, Live-Werte, Validierung, Speichern/Laden, Import/Export.
 
+**Späterer UI-Aufräumblock · niedrige Priorität**
+- [ ] Roboter-Konfiguration aus dem rechten Kampfbereich herauslösen
+- [ ] eigenen Config-Dialog für Chassis, Motor, Panzerung, Energie, Sensorik und Waffen anlegen
+- [ ] Config-Dialog vor dem Kampf bzw. bei bewusster Neukonfiguration öffnen
+- [ ] während des Kampfes rechts nur kampfrelevante Live-Werte anzeigen (z. B. aktuelle Struktur/Panzerung, Energie, Status)
+- [ ] Kampfanzeige kompakter und klar von der Konfiguration trennen
+- [ ] Desktop- und Mobile-Bedienung des Dialogs absichern
+
 ### E · Strategiesystem
 Aggressiv, defensiv, Distanz, Nahkampf, Energieverwaltung und Strategieparameter.
 
