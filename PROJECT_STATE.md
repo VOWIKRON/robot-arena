@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.31
+- Aktuelle stabile Version: 0.1.32
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-26: Roboter optisch unterscheidbarer machen.
+NEXT-27: Waffen am Roboter sichtbar machen.
 
-NEXT-25 abgeschlossen: Komponenten besitzen Gewichte, Chassis Gewichtslimits und übergewichtige Konfigurationen werden im Builder abgelehnt. NEXT-26 beginnt die sichtbare Roboter-Visualisierung.
+NEXT-26 abgeschlossen: Roboter A/B sind eindeutig markiert; Raptor- und Titan-Chassis besitzen unterschiedliche Silhouetten. Die Kampflogik bleibt unverändert.
 
 
 ## Teststrategie

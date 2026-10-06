@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.32 – 2026-10-06
+
+- makes Robot A and Robot B immediately distinguishable in the arena
+- renders Raptor and Titan chassis with different silhouettes
+- updates the arena visual when either chassis selection changes
+- keeps deterministic combat behavior unchanged
+- covers the visuals in desktop and mobile browser tests
+- advances to NEXT-27: visible weapons
+
 ## 0.1.31 – 2026-10-06
 
 - adds weights to robot components and weight limits to chassis

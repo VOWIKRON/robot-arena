@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.31  
+**Aktuelle stabile Version:** 0.1.32  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -164,11 +164,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] ungültige Kombinationen im Builder angezeigt und Matchstart gesperrt
 - [x] Desktop- und Mobile-Bedienung abgesichert
 
-### NEXT-26 · Roboter optisch unterscheidbarer machen
-- [ ] Roboter in der Arena visuell klar unterscheiden
-- [ ] Chassis-Auswahl in der Darstellung erkennbar machen
-- [ ] bestehende Kampflogik unverändert lassen
-- [ ] Desktop- und Mobile-Darstellung absichern
+### Erledigt in v0.1.32 · Roboter optisch unterscheidbarer machen
+- [x] Roboter in der Arena visuell klar unterscheiden
+- [x] Chassis-Auswahl in der Darstellung erkennbar machen
+- [x] bestehende Kampflogik unverändert lassen
+- [x] Desktop- und Mobile-Darstellung absichern
 
 ### NEXT-27 · Waffen am Roboter sichtbar machen
 - [ ] gewählte Waffe visuell am Roboter darstellen
