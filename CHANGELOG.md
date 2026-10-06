@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.29 – 2026-10-06
+
+- maintenance release for the completed NEXT-23 energy-supply step
+- republishes the tested NEXT-23 state under a fresh immutable release version after the v0.1.28 release-path conflict
+- keeps gameplay behavior unchanged
+- includes the verified deployment-status mechanism for future release confirmation
+
 ## 0.1.28 – 2026-10-05
 
 - adds energy supply as a selectable robot component
