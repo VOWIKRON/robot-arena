@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.35 – 2026-10-06
+
+- fixes Start so a click advances the fight immediately and continues automatically
+- fixes Reset so it stops the fight and restores tick 0, seed 4711 and default robot configurations
+- adds 8 browser behavior scenarios executed on desktop and mobile
+- adds 18 component-validation boundary tests
+- expands the suite from 59 to at least 93 test executions
+- keeps deterministic engine behavior covered
+- advances to NEXT-28: visible weapons
+
 ## 0.1.34 – 2026-10-06
 
 - recovery release for completed NEXT-26
