@@ -64,7 +64,8 @@ export function buildRobotDefinition(configuration: RobotConfiguration): RobotDe
     maxEnergy: configuration.chassis.maxEnergy * configuration.energySupply.energyFactor,
     energyRegen: configuration.chassis.energyRegen * configuration.energySupply.regenFactor,
     speed: configuration.chassis.speed * configuration.motor.speedFactor,
-    weaponRange: configuration.weapon.range,
+    sensorRange: 30 * configuration.sensor.rangeFactor,
+    weaponRange: Math.min(configuration.weapon.range, 30 * configuration.sensor.rangeFactor),
     weaponDamage: configuration.weapon.damage,
     weaponEnergy: configuration.weapon.energy,
     cooldownTicks: configuration.weapon.cooldownTicks
@@ -83,6 +84,7 @@ export function validateRobotConfiguration(configuration: RobotConfiguration): r
   if (configuration.armor.structureFactor <= 0) errors.push('Panzerungsfaktor muss größer als 0 sein');
   if (configuration.energySupply.energyFactor <= 0) errors.push('Energiefaktor muss größer als 0 sein');
   if (configuration.energySupply.regenFactor <= 0) errors.push('Regenerationsfaktor muss größer als 0 sein');
+  if (configuration.sensor.rangeFactor <= 0) errors.push('Sensorfaktor muss größer als 0 sein');
   if (configuration.weapon.range < 0) errors.push('Waffenreichweite darf nicht negativ sein');
   if (configuration.weapon.damage < 0) errors.push('Waffenschaden darf nicht negativ sein');
   if (configuration.weapon.energy < 0) errors.push('Waffenenergie darf nicht negativ sein');
