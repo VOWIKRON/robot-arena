@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.30
+- Aktuelle stabile Version: 0.1.31
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-25: Gewichtslimits und gültige Komponentenkombinationen ergänzen.
+NEXT-26: Roboter optisch unterscheidbarer machen.
 
-NEXT-24 abgeschlossen: Sensorik ist eine eigene Komponente, für beide Roboter auswählbar und verändert die berechnete Sensorreichweite live. NEXT-25 ergänzt Gewichtslimits und gültige Komponentenkombinationen.
+NEXT-25 abgeschlossen: Komponenten besitzen Gewichte, Chassis Gewichtslimits und übergewichtige Konfigurationen werden im Builder abgelehnt. NEXT-26 beginnt die sichtbare Roboter-Visualisierung.
 
 
 ## Teststrategie
