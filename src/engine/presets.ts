@@ -2,7 +2,7 @@ import type { RobotDefinition } from './types';
 import { buildRobotDefinition, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './components';
 
 export const RAPTOR_CHASSIS: Chassis = {
-  id: 'raptor-chassis', name: 'Raptor Chassis', maxStructure: 75, maxEnergy: 100, energyRegen: 1.5, speed: 1.5, maxWeight: 80
+  id: 'raptor-chassis', name: 'Raptor Chassis', maxStructure: 75, maxEnergy: 100, energyRegen: 1.5, speed: 1.5, maxWeight: 90
 };
 export const TITAN_CHASSIS: Chassis = {
   id: 'titan-chassis', name: 'Titan Chassis', maxStructure: 130, maxEnergy: 90, energyRegen: 1.1, speed: 0.8, maxWeight: 110
