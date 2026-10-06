@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.32  
+**Aktuelle stabile Version:** 0.1.34  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -164,7 +164,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] ungültige Kombinationen im Builder angezeigt und Matchstart gesperrt
 - [x] Desktop- und Mobile-Bedienung abgesichert
 
-### Erledigt in v0.1.32 · Roboter optisch unterscheidbarer machen
+### Erledigt in v0.1.34 · Roboter optisch unterscheidbarer machen
 - [x] Roboter in der Arena visuell klar unterscheiden
 - [x] Chassis-Auswahl in der Darstellung erkennbar machen
 - [x] bestehende Kampflogik unverändert lassen
