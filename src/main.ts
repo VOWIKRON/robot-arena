@@ -89,11 +89,30 @@ function renderPreview(): void {
   el('preview-a').innerHTML = errorsA.length ? `<strong>Live-Werte</strong><span>Gewicht ${configurationWeight(configurationA())} / ${configurationA().chassis.maxWeight}</span>` : previewHtml(selectedRobotA(), configurationWeight(configurationA()), configurationA().chassis.maxWeight);
   el('preview-b').innerHTML = errorsB.length ? `<strong>Live-Werte</strong><span>Gewicht ${configurationWeight(configurationB())} / ${configurationB().chassis.maxWeight}</span>` : previewHtml(selectedRobotB(), configurationWeight(configurationB()), configurationB().chassis.maxWeight);
 }
-function reset(): void {
+function resetMatch(): void {
   pause();
   state = createMatch(selectedRobotA(), selectedRobotB());
   rng = new SeededRandom(seedValue());
   render();
+}
+
+function resetAll(): void {
+  pause();
+  el<HTMLSelectElement>('chassis-a').value = 'raptor';
+  el<HTMLSelectElement>('motor-a').value = 'balanced';
+  el<HTMLSelectElement>('armor-a').value = 'standard';
+  el<HTMLSelectElement>('energy-a').value = 'standard';
+  el<HTMLSelectElement>('sensor-a').value = 'standard';
+  el<HTMLSelectElement>('weapon-a').value = 'raptor';
+  el<HTMLSelectElement>('chassis-b').value = 'titan';
+  el<HTMLSelectElement>('motor-b').value = 'balanced';
+  el<HTMLSelectElement>('armor-b').value = 'standard';
+  el<HTMLSelectElement>('energy-b').value = 'standard';
+  el<HTMLSelectElement>('sensor-b').value = 'standard';
+  el<HTMLSelectElement>('weapon-b').value = 'titan';
+  el<HTMLInputElement>('seed').value = '4711';
+  renderPreview();
+  resetMatch();
 }
 
 function tick(): void {
@@ -108,7 +127,9 @@ function tick(): void {
 function start(): void {
   if (validateRobotConfiguration(configurationA()).length || validateRobotConfiguration(configurationB()).length) return;
   if (timer !== null) return;
-  timer = window.setInterval(tick, 80);
+  if (state.outcome !== 'active') resetMatch();
+  tick();
+  if (state.outcome === 'active') timer = window.setInterval(tick, 80);
 }
 
 function pct(value: number, max: number): string {
@@ -174,11 +195,11 @@ async function loadFooterMetadata(): Promise<void> {
 el('start').addEventListener('click', start);
 el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
-el('reset').addEventListener('click', reset);
-el('seed').addEventListener('change', reset);
+el('reset').addEventListener('click', resetAll);
+el('seed').addEventListener('change', resetMatch);
 for (const id of ['chassis-a', 'motor-a', 'armor-a', 'energy-a', 'sensor-a', 'weapon-a', 'chassis-b', 'motor-b', 'armor-b', 'energy-b', 'sensor-b', 'weapon-b']) {
-  el(id).addEventListener('change', () => { renderPreview(); reset(); });
+  el(id).addEventListener('change', () => { renderPreview(); resetMatch(); });
 }
 renderPreview();
-reset();
+resetMatch();
 void loadFooterMetadata();
