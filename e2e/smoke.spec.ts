@@ -31,7 +31,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await page.getByLabel('Energie A').selectOption('capacity');
   await page.getByLabel('Sensor A').selectOption('long');
   await page.getByLabel('Waffe A').selectOption('titan');
-  await expect(page.locator('#validation-a')).toContainText('überschreitet Limit 80');
+  await expect(page.locator('#validation-a')).toContainText('überschreitet Limit 90');
   await expect(page.getByRole('button', { name: 'Start' })).toBeDisabled();
   await page.getByLabel('Chassis A').selectOption('titan');
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
