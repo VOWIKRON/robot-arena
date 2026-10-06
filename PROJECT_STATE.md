@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.34
+- Aktuelle stabile Version: 0.1.35
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-27: Waffen am Roboter sichtbar machen.
+NEXT-28: Waffen am Roboter sichtbar machen.
 
-NEXT-26 abgeschlossen: Roboter A/B sind eindeutig markiert; Raptor- und Titan-Chassis besitzen unterschiedliche Silhouetten. Die Kampflogik bleibt unverändert.
+NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
 
 ## Teststrategie

@@ -3,28 +3,19 @@
 Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
 
 ## Aktueller Lauf
-- step: NEXT-26
-- status: COMPLETED
+- step: NEXT-27
+- status: IN_PROGRESS
+- scope: Start/Reset reparieren und Verhaltenstests massiv ausbauen
 - version: 0.1.34
-- main_sha: f48d383f68040cfbda536975f89e91f24ec152c9
-- pr: 30
-- pr_tests: SUCCESS
-- main_tests: SUCCESS
-- publish: SUCCESS
-- published_sha: f48d383f68040cfbda536975f89e91f24ec152c9
-- live_verified: true
-- next_step: NEXT-27
+- branch: fix/next-27-controls-test-expansion-20261006
+- base_main_sha: 9545bb94e4e5aec10fc5f73aa67f6600b0ef9a70
+- baseline_tests: 59
+- baseline_test_time: 3.6s
+- baseline_full_test_run: 52s
+- pr_tests: PENDING
+- main_tests: PENDING
+- publish: PENDING
 - blocker: none
 
-## Benutzeränderung
-Roboter A und B sind klar unterscheidbar. Raptor und Titan besitzen unterschiedliche Chassis-Silhouetten.
-
-## Regeln
-1. Zuerst RUN_STATE.md lesen.
-2. IN_PROGRESS oder BLOCKED: nur diesen Schritt fortsetzen.
-3. Erfolgreiche Gates nicht erneut prüfen, solange der zugehörige SHA unverändert ist.
-4. COMPLETED: nur main_sha minimal gegen main prüfen, danach next_step beginnen.
-5. Beim Start RUN_STATE.md sofort auf IN_PROGRESS setzen.
-6. Nach PR-Tests, Merge, Tests auf main, Publish und Live-Verifikation den Checkpoint aktualisieren.
-7. Erst nach erfolgreicher Live-Verifikation desselben main-SHA auf COMPLETED setzen.
-8. BACKLOG.md, PROJECT_STATE.md und CHANGELOG.md bleiben die fachlichen Release-Dokumente.
+## Nächstes Gate
+Start/Reset-Verhalten reproduzieren, reparieren und mit expliziten Browser-Verhaltenstests absichern.

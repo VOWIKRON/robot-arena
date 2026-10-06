@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.34  
+**Aktuelle stabile Version:** 0.1.35  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -170,18 +170,25 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] bestehende Kampflogik unverändert lassen
 - [x] Desktop- und Mobile-Darstellung absichern
 
-### NEXT-27 · Waffen am Roboter sichtbar machen
+### Erledigt in v0.1.35 · Start/Reset reparieren und Tests massiv ausbauen
+- [x] Start führt sofort einen sichtbaren Tick aus und startet anschließend den Lauf
+- [x] Reset stoppt den Lauf und stellt Match, Seed und Standardkonfigurationen zuverlässig wieder her
+- [x] Start/Pause/Einzelschritt/Reset und deterministischer Reset auf Desktop und Mobile absichern
+- [x] Validierungs-Grenzfälle systematisch erweitern
+- [x] Testsuite von 59 auf mindestens 93 Testausführungen erweitern
+
+### NEXT-28 · Waffen am Roboter sichtbar machen
 - [ ] gewählte Waffe visuell am Roboter darstellen
 - [ ] Raptor- und Titan-Waffe unterscheidbar machen
 - [ ] Desktop- und Mobile-Darstellung absichern
 
-### NEXT-28 · Projektil- und Schusseffekte
+### NEXT-29 · Projektil- und Schusseffekte
 - [ ] Shot-Events als sichtbare Projektile/Schusslinien darstellen
 - [ ] Effekt zeitlich mit der Simulation koppeln
 - [ ] deterministisches Kampfverhalten unverändert lassen
 - [ ] Desktop- und Mobile-Darstellung absichern
 
-### NEXT-29 · Treffer- und Schadenseffekte
+### NEXT-30 · Treffer- und Schadenseffekte
 - [ ] Hit-/Damage-Events sichtbar machen
 - [ ] Trefferfeedback am Zielroboter darstellen
 - [ ] Desktop- und Mobile-Darstellung absichern
