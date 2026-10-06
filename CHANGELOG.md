@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.30 – 2026-10-06
+
+- adds sensor systems as selectable robot components
+- adds standard, short-range and long-range sensor presets
+- calculates sensor range live and lets short-range sensors limit effective weapon range
+- exposes sensor selection for Robot A and Robot B
+- covers sensor behavior in unit and desktop/mobile browser tests
+- advances to NEXT-25: component weight limits
+
+
 ## 0.1.29 – 2026-10-06
 
 - maintenance release for the completed NEXT-23 energy-supply step
