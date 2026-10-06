@@ -7,6 +7,7 @@ export type RobotDefinition = Readonly<{
   maxEnergy: number;
   energyRegen: number;
   speed: number;
+  sensorRange: number;
   weaponRange: number;
   weaponDamage: number;
   weaponEnergy: number;

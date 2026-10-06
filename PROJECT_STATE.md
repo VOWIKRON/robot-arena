@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.29
+- Aktuelle stabile Version: 0.1.30
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-24: Sensorik als Komponente ergänzen.
+NEXT-25: Gewichtslimits und gültige Komponentenkombinationen ergänzen.
 
-NEXT-23 abgeschlossen: Energieversorgung ist eine eigene Komponente, für beide Roboter auswählbar und verändert Kapazität und Regeneration live. NEXT-24 ergänzt Sensorik als nächste Komponente.
+NEXT-24 abgeschlossen: Sensorik ist eine eigene Komponente, für beide Roboter auswählbar und verändert die berechnete Sensorreichweite live. NEXT-25 ergänzt Gewichtslimits und gültige Komponentenkombinationen.
 
 
 ## Teststrategie

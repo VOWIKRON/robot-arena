@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.29  
+**Aktuelle stabile Version:** 0.1.30  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -152,10 +152,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] berechnete Energiewerte live aktualisiert
 - [x] Desktop- und Mobile-Bedienung abgesichert
 
-### NEXT-24 · Sensorik als Komponente
-- [ ] Sensorik als eigene Komponente modellieren
-- [ ] Sensorwahl für beide Roboter im Builder anbieten
-- [ ] berechnete Sensorwerte live aktualisieren
+### Erledigt in v0.1.30 · Sensorik als Komponente
+- [x] Sensorik als eigene Komponente modelliert
+- [x] Sensorwahl für beide Roboter im Builder angeboten
+- [x] berechnete Sensorwerte live aktualisiert
+- [x] Desktop- und Mobile-Bedienung abgesichert
+
+### NEXT-25 · Gewichtslimits und gültige Komponentenkombinationen
+- [ ] Komponenten um Gewichtswerte ergänzen
+- [ ] zulässiges Gesamtgewicht je Chassis definieren
+- [ ] ungültige Kombinationen im Builder anzeigen und Matchstart sperren
 - [ ] Desktop- und Mobile-Bedienung absichern
 
 ---

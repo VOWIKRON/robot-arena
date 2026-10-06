@@ -19,6 +19,9 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#preview-a').getByText('Struktur 162.5', { exact: true })).toBeVisible();
   await page.getByLabel('Energie A').selectOption('capacity');
   await expect(page.locator('#preview-a').getByText(/Energie 112.5 · \+0.9900000000000001\/Tick/)).toBeVisible();
+  await page.getByLabel('Sensor A').selectOption('short');
+  await expect(page.locator('#preview-a').getByText('Sensor 21', { exact: true })).toBeVisible();
+  await page.getByLabel('Sensor A').selectOption('standard');
   await page.getByLabel('Waffe A').selectOption('raptor');
   await expect(page.getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByLabel('Chassis B').selectOption('raptor');
@@ -29,6 +32,8 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#preview-b').getByText('Struktur 60', { exact: true })).toBeVisible();
   await page.getByLabel('Energie B').selectOption('regen');
   await expect(page.locator('#preview-b').getByText(/Energie 90 · \+1.875\/Tick/)).toBeVisible();
+  await page.getByLabel('Sensor B').selectOption('long');
+  await expect(page.locator('#preview-b').getByText('Sensor 39', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -87,5 +92,6 @@ test('public information pages are reachable', async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Panzerung als Komponente')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Energieversorgung als Komponente')).toBeVisible();
-  await expect(page.getByText('NEXT-24 · Sensorik als Komponente')).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Sensorik als Komponente')).toBeVisible();
+  await expect(page.getByText('NEXT-25 · Gewichtslimits und gültige Komponentenkombinationen')).toBeVisible();
 });
