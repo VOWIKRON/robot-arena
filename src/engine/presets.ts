@@ -5,7 +5,7 @@ export const RAPTOR_CHASSIS: Chassis = {
   id: 'raptor-chassis', name: 'Raptor Chassis', maxStructure: 75, maxEnergy: 100, energyRegen: 1.5, speed: 1.5, maxWeight: 90
 };
 export const TITAN_CHASSIS: Chassis = {
-  id: 'titan-chassis', name: 'Titan Chassis', maxStructure: 130, maxEnergy: 90, energyRegen: 1.1, speed: 0.8, maxWeight: 120
+  id: 'titan-chassis', name: 'Titan Chassis', maxStructure: 130, maxEnergy: 90, energyRegen: 1.1, speed: 0.8, maxWeight: 130
 };
 export const BALANCED_MOTOR: Motor = { id: 'balanced-motor', name: 'Balanced Motor', speedFactor: 1, weight: 18 };
 export const SWIFT_MOTOR: Motor = { id: 'swift-motor', name: 'Swift Motor', speedFactor: 1.25, weight: 14 };
