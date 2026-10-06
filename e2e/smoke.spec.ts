@@ -11,7 +11,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
   await expect(page.locator('#validation-b')).toHaveText('Konfiguration gültig');
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
-  await expect(page.locator('#preview-a').getByText(/Gewicht \\d+ \\/ 90/)).toBeVisible();
+  await expect(page.locator('#preview-a').getByText(/Gewicht \d+ \/ 90/)).toBeVisible();
   await page.getByLabel('Chassis A').selectOption('titan');
   await expect(page.locator('#preview-a').getByText('Struktur 130', { exact: true })).toBeVisible();
   await page.getByLabel('Motor A').selectOption('swift');
