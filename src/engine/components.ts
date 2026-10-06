@@ -7,18 +7,21 @@ export type Chassis = Readonly<{
   maxEnergy: number;
   energyRegen: number;
   speed: number;
+  maxWeight: number;
 }>;
 
 export type Motor = Readonly<{
   id: string;
   name: string;
   speedFactor: number;
+  weight: number;
 }>;
 
 export type Armor = Readonly<{
   id: string;
   name: string;
   structureFactor: number;
+  weight: number;
 }>;
 
 export type EnergySupply = Readonly<{
@@ -26,12 +29,14 @@ export type EnergySupply = Readonly<{
   name: string;
   energyFactor: number;
   regenFactor: number;
+  weight: number;
 }>;
 
 export type Sensor = Readonly<{
   id: string;
   name: string;
   rangeFactor: number;
+  weight: number;
 }>;
 
 export type Weapon = Readonly<{
@@ -41,6 +46,7 @@ export type Weapon = Readonly<{
   damage: number;
   energy: number;
   cooldownTicks: number;
+  weight: number;
 }>;
 
 export type RobotConfiguration = Readonly<{
@@ -53,6 +59,10 @@ export type RobotConfiguration = Readonly<{
   sensor: Sensor;
   weapon: Weapon;
 }>;
+
+export function configurationWeight(configuration: RobotConfiguration): number {
+  return configuration.motor.weight + configuration.armor.weight + configuration.energySupply.weight + configuration.sensor.weight + configuration.weapon.weight;
+}
 
 export function buildRobotDefinition(configuration: RobotConfiguration): RobotDefinition {
   const errors = validateRobotConfiguration(configuration);
@@ -89,5 +99,6 @@ export function validateRobotConfiguration(configuration: RobotConfiguration): r
   if (configuration.weapon.damage < 0) errors.push('Waffenschaden darf nicht negativ sein');
   if (configuration.weapon.energy < 0) errors.push('Waffenenergie darf nicht negativ sein');
   if (configuration.weapon.cooldownTicks < 0) errors.push('Cooldown darf nicht negativ sein');
+  if (configurationWeight(configuration) > configuration.chassis.maxWeight) errors.push(`Gewicht ${configurationWeight(configuration)} überschreitet Limit ${configuration.chassis.maxWeight}`);
   return errors;
 }

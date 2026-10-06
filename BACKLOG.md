@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.30  
+**Aktuelle stabile Version:** 0.1.31  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -158,11 +158,33 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] berechnete Sensorwerte live aktualisiert
 - [x] Desktop- und Mobile-Bedienung abgesichert
 
-### NEXT-25 · Gewichtslimits und gültige Komponentenkombinationen
-- [ ] Komponenten um Gewichtswerte ergänzen
-- [ ] zulässiges Gesamtgewicht je Chassis definieren
-- [ ] ungültige Kombinationen im Builder anzeigen und Matchstart sperren
-- [ ] Desktop- und Mobile-Bedienung absichern
+### Erledigt in v0.1.31 · Gewichtslimits und gültige Komponentenkombinationen
+- [x] Komponenten um Gewichtswerte ergänzt
+- [x] zulässiges Gesamtgewicht je Chassis definiert
+- [x] ungültige Kombinationen im Builder angezeigt und Matchstart gesperrt
+- [x] Desktop- und Mobile-Bedienung abgesichert
+
+### NEXT-26 · Roboter optisch unterscheidbarer machen
+- [ ] Roboter in der Arena visuell klar unterscheiden
+- [ ] Chassis-Auswahl in der Darstellung erkennbar machen
+- [ ] bestehende Kampflogik unverändert lassen
+- [ ] Desktop- und Mobile-Darstellung absichern
+
+### NEXT-27 · Waffen am Roboter sichtbar machen
+- [ ] gewählte Waffe visuell am Roboter darstellen
+- [ ] Raptor- und Titan-Waffe unterscheidbar machen
+- [ ] Desktop- und Mobile-Darstellung absichern
+
+### NEXT-28 · Projektil- und Schusseffekte
+- [ ] Shot-Events als sichtbare Projektile/Schusslinien darstellen
+- [ ] Effekt zeitlich mit der Simulation koppeln
+- [ ] deterministisches Kampfverhalten unverändert lassen
+- [ ] Desktop- und Mobile-Darstellung absichern
+
+### NEXT-29 · Treffer- und Schadenseffekte
+- [ ] Hit-/Damage-Events sichtbar machen
+- [ ] Trefferfeedback am Zielroboter darstellen
+- [ ] Desktop- und Mobile-Darstellung absichern
 
 ---
 

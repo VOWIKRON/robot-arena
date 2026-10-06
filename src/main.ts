@@ -1,6 +1,6 @@
 import './style.css';
 import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR, STANDARD_ARMOR, LIGHT_ARMOR, HEAVY_ARMOR, STANDARD_ENERGY, CAPACITY_ENERGY, REGEN_ENERGY, STANDARD_SENSOR, SHORT_SENSOR, LONG_SENSOR } from './engine/presets';
-import { buildRobotDefinition, validateRobotConfiguration, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
+import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
 import { createMatch, stepMatch } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import type { MatchState } from './engine/types';
@@ -77,8 +77,8 @@ function configurationB() {
   return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, energySupply, sensor, weapon };
 }
 function selectedRobotB() { return buildRobotDefinition(configurationB()); }
-function previewHtml(d: ReturnType<typeof selectedRobotA>): string {
-  return `<strong>Live-Werte</strong><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+function previewHtml(d: ReturnType<typeof selectedRobotA>, weight: number, maxWeight: number): string {
+  return `<strong>Live-Werte</strong><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
 }
 function renderPreview(): void {
   const errorsA = validateRobotConfiguration(configurationA());
@@ -86,8 +86,8 @@ function renderPreview(): void {
   el('validation-a').textContent = errorsA.length ? `Ungültig: ${errorsA.join(', ')}` : 'Konfiguration gültig';
   el('validation-b').textContent = errorsB.length ? `Ungültig: ${errorsB.join(', ')}` : 'Konfiguration gültig';
   el<HTMLButtonElement>('start').disabled = errorsA.length > 0 || errorsB.length > 0;
-  if (!errorsA.length) el('preview-a').innerHTML = previewHtml(selectedRobotA());
-  if (!errorsB.length) el('preview-b').innerHTML = previewHtml(selectedRobotB());
+  el('preview-a').innerHTML = errorsA.length ? `<strong>Live-Werte</strong><span>Gewicht ${configurationWeight(configurationA())} / ${configurationA().chassis.maxWeight}</span>` : previewHtml(selectedRobotA(), configurationWeight(configurationA()), configurationA().chassis.maxWeight);
+  el('preview-b').innerHTML = errorsB.length ? `<strong>Live-Werte</strong><span>Gewicht ${configurationWeight(configurationB())} / ${configurationB().chassis.maxWeight}</span>` : previewHtml(selectedRobotB(), configurationWeight(configurationB()), configurationB().chassis.maxWeight);
 }
 function reset(): void {
   pause();
