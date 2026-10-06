@@ -50,6 +50,7 @@ export type RobotConfiguration = Readonly<{
   motor: Motor;
   armor: Armor;
   energySupply: EnergySupply;
+  sensor: Sensor;
   weapon: Weapon;
 }>;
 
