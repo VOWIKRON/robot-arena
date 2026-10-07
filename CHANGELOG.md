@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.40 – 2026-10-07
+
+- adds a live structure/health bar directly above each robot
+- derives bar width from actual current structure versus configured maximum
+- updates immediately with combat damage and highlights during hit feedback
+- covers health-bar behavior on desktop and mobile
+- advances to NEXT-33: visibly smooth robot movement
+
 ## 0.1.39 – 2026-10-07
 
 - moves both robot builders into a dedicated responsive configuration dialog
