@@ -1,63 +1,21 @@
 import type { RobotDefinition } from './types';
 
+export const STRATEGY_TYPES = ['aggressive', 'defensive', 'distance', 'melee'] as const;
+export type StrategyType = typeof STRATEGY_TYPES[number];
+export const DEFAULT_STRATEGY: StrategyType = 'aggressive';
+
 export type Chassis = Readonly<{
-  id: string;
-  name: string;
-  maxStructure: number;
-  maxEnergy: number;
-  energyRegen: number;
-  speed: number;
-  maxWeight: number;
+  id: string; name: string; maxStructure: number; maxEnergy: number; energyRegen: number; speed: number; maxWeight: number;
 }>;
-
-export type Motor = Readonly<{
-  id: string;
-  name: string;
-  speedFactor: number;
-  weight: number;
-}>;
-
-export type Armor = Readonly<{
-  id: string;
-  name: string;
-  structureFactor: number;
-  weight: number;
-}>;
-
-export type EnergySupply = Readonly<{
-  id: string;
-  name: string;
-  energyFactor: number;
-  regenFactor: number;
-  weight: number;
-}>;
-
-export type Sensor = Readonly<{
-  id: string;
-  name: string;
-  rangeFactor: number;
-  weight: number;
-}>;
-
-export type Weapon = Readonly<{
-  id: string;
-  name: string;
-  range: number;
-  damage: number;
-  energy: number;
-  cooldownTicks: number;
-  weight: number;
-}>;
+export type Motor = Readonly<{ id: string; name: string; speedFactor: number; weight: number }>;
+export type Armor = Readonly<{ id: string; name: string; structureFactor: number; weight: number }>;
+export type EnergySupply = Readonly<{ id: string; name: string; energyFactor: number; regenFactor: number; weight: number }>;
+export type Sensor = Readonly<{ id: string; name: string; rangeFactor: number; weight: number }>;
+export type Weapon = Readonly<{ id: string; name: string; range: number; damage: number; energy: number; cooldownTicks: number; weight: number }>;
 
 export type RobotConfiguration = Readonly<{
-  id: string;
-  name: string;
-  chassis: Chassis;
-  motor: Motor;
-  armor: Armor;
-  energySupply: EnergySupply;
-  sensor: Sensor;
-  weapon: Weapon;
+  id: string; name: string; chassis: Chassis; motor: Motor; armor: Armor; energySupply: EnergySupply; sensor: Sensor; weapon: Weapon;
+  strategy?: StrategyType;
 }>;
 
 export function configurationWeight(configuration: RobotConfiguration): number {
@@ -68,17 +26,15 @@ export function buildRobotDefinition(configuration: RobotConfiguration): RobotDe
   const errors = validateRobotConfiguration(configuration);
   if (errors.length > 0) throw new Error(`Ungültige Roboterkonfiguration: ${errors.join(', ')}`);
   return {
-    id: configuration.id,
-    name: configuration.name,
+    id: configuration.id, name: configuration.name,
+    strategy: configuration.strategy ?? DEFAULT_STRATEGY,
     maxStructure: configuration.chassis.maxStructure * configuration.armor.structureFactor,
     maxEnergy: configuration.chassis.maxEnergy * configuration.energySupply.energyFactor,
     energyRegen: configuration.chassis.energyRegen * configuration.energySupply.regenFactor,
     speed: configuration.chassis.speed * configuration.motor.speedFactor,
     sensorRange: 30 * configuration.sensor.rangeFactor,
     weaponRange: Math.min(configuration.weapon.range, 30 * configuration.sensor.rangeFactor),
-    weaponDamage: configuration.weapon.damage,
-    weaponEnergy: configuration.weapon.energy,
-    cooldownTicks: configuration.weapon.cooldownTicks
+    weaponDamage: configuration.weapon.damage, weaponEnergy: configuration.weapon.energy, cooldownTicks: configuration.weapon.cooldownTicks
   };
 }
 
@@ -86,6 +42,7 @@ export function validateRobotConfiguration(configuration: RobotConfiguration): r
   const errors: string[] = [];
   if (!configuration.id.trim()) errors.push('Robot-ID fehlt');
   if (!configuration.name.trim()) errors.push('Robotername fehlt');
+  if (configuration.strategy !== undefined && !STRATEGY_TYPES.includes(configuration.strategy)) errors.push('Strategietyp ist ungültig');
   if (configuration.chassis.maxStructure <= 0) errors.push('Struktur muss größer als 0 sein');
   if (configuration.chassis.maxEnergy <= 0) errors.push('Energie muss größer als 0 sein');
   if (configuration.chassis.energyRegen < 0) errors.push('Energieregeneration darf nicht negativ sein');
