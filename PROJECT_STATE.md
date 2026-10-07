@@ -20,7 +20,7 @@ Umgesetzt:
 - kumulierende Release Notes,
 - öffentliche Backlog-/Roadmap-Seite,
 - tatsächlicher Publish-Zeitpunkt,
-- nächster geplanter 18-Uhr-Lauf,
+- nächster planmäßiger Lauf gemäß aktiver Automation,
 - Version, Commit und Buildzeit über Build-Metadaten.
 
 ## Qualitätszähler
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-Nächster Schritt: Strategiesystem konkretisieren und den nächsten kleinen Entwicklungsschritt aus Backlog-Block E ableiten.
+NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.43 getestet und veröffentlicht. Der nächste Schritt wird erst in einem Folgelauf begonnen.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
