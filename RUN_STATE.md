@@ -6,7 +6,7 @@ Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese 
 - step: NEXT-33
 - status: COMPLETED
 - scope: Sichtbar flüssige Fahrbewegung
-- version: 0.1.43
+- version: 0.1.44
 - branch: daily/next-33-smooth-movement-20261007
 - pr_tests: GREEN
 - main_tests: GREEN
