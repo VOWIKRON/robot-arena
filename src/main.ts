@@ -123,7 +123,7 @@ function tick(): void {
   const result = stepMatchWithEvents(state, rng);
   state = result.state;
   render();
-  renderShotEffects(result.events);
+  renderCombatEffects(result.events);
 }
 
 function start(): void {
@@ -147,7 +147,7 @@ function renderRobot(id: string, x: number, y: number, chassisId: string, weapon
   node.title = `${id === 'bot-a' ? 'Roboter A' : 'Roboter B'} · ${chassisId === 'titan-chassis' ? 'Titan' : 'Raptor'} Chassis`;
 }
 
-function renderShotEffects(events: readonly { type: string; attackerId?: string; targetId?: string }[]): void {
+function renderCombatEffects(events: readonly { type: string; attackerId?: string; targetId?: string; sourceId?: string; amount?: number }[]): void {
   const layer = el<HTMLDivElement>('shot-layer');
   layer.replaceChildren();
   for (const event of events) {
@@ -164,6 +164,22 @@ function renderShotEffects(events: readonly { type: string; attackerId?: string;
     beam.style.width = Math.hypot(dx, dy) + '%';
     beam.style.transform = 'rotate(' + Math.atan2(dy, dx) + 'rad)';
     layer.append(beam);
+  }
+  for (const event of events) {
+    if (event.type !== 'damage' || !event.targetId || event.amount === undefined) continue;
+    const target = event.targetId === state.robotA.definition.id ? state.robotA : state.robotB;
+    const hit = document.createElement('span');
+    hit.className = 'hit-effect';
+    hit.dataset.target = event.targetId;
+    hit.style.left = target.position.x + '%';
+    hit.style.top = target.position.y + '%';
+    hit.textContent = '-' + event.amount.toFixed(1);
+    layer.append(hit);
+    const botId = event.targetId === state.robotA.definition.id ? 'bot-a' : 'bot-b';
+    const bot = el<HTMLDivElement>(botId);
+    bot.classList.remove('is-hit');
+    void bot.offsetWidth;
+    bot.classList.add('is-hit');
   }
 }
 
