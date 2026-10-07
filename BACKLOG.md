@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.36  
+**Aktuelle stabile Version:** 0.1.37  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -182,11 +182,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Raptor- und Titan-Waffe unterscheidbar machen
 - [x] Desktop- und Mobile-Darstellung absichern
 
-### NEXT-29 · Projektil- und Schusseffekte
-- [ ] Shot-Events als sichtbare Projektile/Schusslinien darstellen
-- [ ] Effekt zeitlich mit der Simulation koppeln
-- [ ] deterministisches Kampfverhalten unverändert lassen
-- [ ] Desktop- und Mobile-Darstellung absichern
+### Erledigt in v0.1.37 · Projektil- und Schusseffekte
+- [x] Shot-Events als sichtbare Schusslinien darstellen
+- [x] Effekt zeitlich mit der Simulation koppeln
+- [x] deterministisches Kampfverhalten unverändert lassen
+- [x] Desktop- und Mobile-Darstellung absichern
 
 ### NEXT-30 · Treffer- und Schadenseffekte
 - [ ] Hit-/Damage-Events sichtbar machen
