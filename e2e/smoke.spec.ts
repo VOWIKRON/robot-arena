@@ -101,6 +101,20 @@ test('health bars track actual robot structure', async ({ page }) => {
   await expect(page.locator('#bot-b .bot-health-fill')).toHaveCSS('width', /.+/);
 });
 
+test('robot movement is visually interpolated while positions stay deterministic', async ({ page }) => {
+  await page.goto('/');
+  const botA = page.locator('#bot-a');
+  const botB = page.locator('#bot-b');
+  const startA = await botA.getAttribute('data-x');
+  const startB = await botB.getAttribute('data-x');
+  await page.getByRole('button', { name: '1 Tick' }).click();
+  expect(await botA.getAttribute('data-x')).not.toBe(startA);
+  expect(await botB.getAttribute('data-x')).not.toBe(startB);
+  await expect(botA).toHaveCSS('transition-property', /left/);
+  await expect(botB).toHaveCSS('transition-property', /left/);
+  await expect(botA).toHaveAttribute('data-speed', /\d+\.\d{3}/);
+});
+
 test('public information pages are reachable', async ({ page }) => {
   await page.goto('/testsuite.html');
   await expect(page.getByRole('heading', { name: 'Testsuite' })).toBeVisible();
