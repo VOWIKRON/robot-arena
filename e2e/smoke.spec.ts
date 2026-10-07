@@ -58,6 +58,7 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.locator('#preview-b').getByText('Sensor 39', { exact: true })).toBeVisible();
   await page.getByLabel('Waffe B').selectOption('raptor');
   await expect(page.locator('#preview-b').getByText(/Reichweite 28 · Schaden 8/)).toBeVisible();
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Reset' }).click();
   await expect(page.getByText('A: Robot A')).toBeVisible();
   await expect(page.getByText('B: Robot B')).toBeVisible();
