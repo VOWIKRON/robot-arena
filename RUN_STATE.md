@@ -4,14 +4,15 @@ Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese 
 
 ## Aktueller Lauf
 - step: NEXT-29
-- status: IN_PROGRESS
+- status: COMPLETED
 - scope: Projektil- und Schusseffekte
 - version: 0.1.37
 - branch: daily/next-29-shot-effects-20261007
-- pr_tests: PENDING
-- main_tests: PENDING
-- publish: PENDING
+- main_sha: aede83cc3ef42ef04b20aa968b7cfccd05d3358a
+- pr_tests: GREEN
+- main_tests: GREEN
+- publish: SUCCESS
 - blocker: none
 
 ## Nächstes Gate
-NEXT-29 wird getestet und veröffentlicht.
+NEXT-29 abgeschlossen. Ein Folgelauf darf NEXT-30 beginnen.
