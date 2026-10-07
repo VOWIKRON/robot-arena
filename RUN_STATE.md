@@ -3,16 +3,15 @@
 Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
 
 ## Aktueller Lauf
-- step: NEXT-28
-- status: COMPLETED
-- scope: Waffen am Roboter sichtbar machen
-- version: 0.1.36
-- branch: daily/next-28-visible-weapons-20261006
-- main_sha: abcbddb102a63cb14c07cfb33ae016421af67ecc
-- pr_tests: GREEN
-- main_tests: GREEN
-- publish: SUCCESS
+- step: NEXT-29
+- status: IN_PROGRESS
+- scope: Projektil- und Schusseffekte
+- version: 0.1.37
+- branch: daily/next-29-shot-effects-20261007
+- pr_tests: PENDING
+- main_tests: PENDING
+- publish: PENDING
 - blocker: none
 
 ## Nächstes Gate
-NEXT-28 abgeschlossen. Ein Folgelauf darf NEXT-29 beginnen.
+NEXT-29 wird getestet und veröffentlicht.
