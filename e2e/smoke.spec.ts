@@ -93,7 +93,11 @@ test('health bars track actual robot structure', async ({ page }) => {
   await page.goto('/');
   const healthA = page.locator('#bot-a .bot-health');
   const healthB = page.locator('#bot-b .bot-health');
+  await expect(healthA).toBeVisible();
+  await expect(healthA).toHaveCSS('opacity', '1');
   await expect(healthA).toHaveAttribute('aria-valuenow', '100');
+  await expect(healthB).toBeVisible();
+  await expect(healthB).toHaveCSS('opacity', '1');
   await expect(healthB).toHaveAttribute('aria-valuenow', '100');
   const before = Number(await healthB.getAttribute('aria-valuenow'));
   for (let i = 0; i < 20 && Number(await healthB.getAttribute('aria-valuenow')) === before; i++) await page.getByRole('button', { name: '1 Tick' }).click();
