@@ -1,8 +1,11 @@
+import type { StrategyType } from './components';
+
 export type Vec2 = Readonly<{ x: number; y: number }>;
 
 export type RobotDefinition = Readonly<{
   id: string;
   name: string;
+  strategy: StrategyType;
   maxStructure: number;
   maxEnergy: number;
   energyRegen: number;
