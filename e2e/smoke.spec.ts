@@ -117,5 +117,5 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Roboter optisch unterscheidbarer machen', { exact: false })).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Start/Reset repariert und Tests massiv ausgebaut', { exact: false })).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Waffen am Roboter sichtbar machen', { exact: false })).toBeVisible();
-  await expect(page.getByText('NEXT-29 · Projektil- und Schusseffekte', { exact: false })).toBeVisible();
+  await expect(page.getByText('NEXT-29: Projektil- und Schusseffekte', { exact: false })).toBeVisible();
 });
