@@ -1,7 +1,7 @@
 import './style.css';
 import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR, STANDARD_ARMOR, LIGHT_ARMOR, HEAVY_ARMOR, STANDARD_ENERGY, CAPACITY_ENERGY, REGEN_ENERGY, STANDARD_SENSOR, SHORT_SENSOR, LONG_SENSOR } from './engine/presets';
 import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
-import { createMatch, stepMatch } from './engine/simulation';
+import { createMatch, stepMatchWithEvents } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import type { MatchState } from './engine/types';
 
@@ -13,7 +13,7 @@ app.innerHTML = `
 <header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.28</div></header>
 <div class="grid">
 <section class="card">
-<div class="arena" id="arena"><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
+<div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button></div>
 <div class="status" id="status"></div>
 </section>
@@ -120,8 +120,10 @@ function tick(): void {
     pause();
     return;
   }
-  state = stepMatch(state, rng);
+  const result = stepMatchWithEvents(state, rng);
+  state = result.state;
   render();
+  renderShotEffects(result.events);
 }
 
 function start(): void {
@@ -143,6 +145,26 @@ function renderRobot(id: string, x: number, y: number, chassisId: string, weapon
   node.dataset.chassis = chassisId;
   node.dataset.weapon = weaponId;
   node.title = `${id === 'bot-a' ? 'Roboter A' : 'Roboter B'} · ${chassisId === 'titan-chassis' ? 'Titan' : 'Raptor'} Chassis`;
+}
+
+function renderShotEffects(events: readonly { type: string; attackerId?: string; targetId?: string }[]): void {
+  const layer = el<HTMLDivElement>('shot-layer');
+  layer.replaceChildren();
+  for (const event of events) {
+    if (event.type !== 'shot' || !event.attackerId || !event.targetId) continue;
+    const attacker = event.attackerId === state.robotA.definition.id ? state.robotA : state.robotB;
+    const target = event.targetId === state.robotA.definition.id ? state.robotA : state.robotB;
+    const dx = target.position.x - attacker.position.x;
+    const dy = target.position.y - attacker.position.y;
+    const beam = document.createElement('span');
+    beam.className = 'shot-effect';
+    beam.dataset.attacker = event.attackerId;
+    beam.style.left = attacker.position.x + '%';
+    beam.style.top = attacker.position.y + '%';
+    beam.style.width = Math.hypot(dx, dy) + '%';
+    beam.style.transform = 'rotate(' + Math.atan2(dy, dx) + 'rad)';
+    layer.append(beam);
+  }
 }
 
 function robotStats(label: string, css: string, s: MatchState['robotA']): string {
