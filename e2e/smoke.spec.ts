@@ -76,6 +76,16 @@ test('shot events are rendered visibly', async ({ page }) => {
   await expect(shot.first()).toHaveAttribute('data-attacker', /robot-[ab]/);
 });
 
+test('hit and damage events are visible', async ({ page }) => {
+  await page.goto('/');
+  const damage = page.locator('.hit-effect');
+  for (let i = 0; i < 20 && await damage.count() === 0; i++) await page.getByRole('button', { name: '1 Tick' }).click();
+  await expect(damage.first()).toBeAttached();
+  await expect(damage.first()).toHaveAttribute('data-target', /robot-[ab]/);
+  await expect(damage.first()).toContainText(/-\d/);
+  await expect(page.locator('.bot.is-hit')).toBeAttached();
+});
+
 test('public information pages are reachable', async ({ page }) => {
   await page.goto('/testsuite.html');
   await expect(page.getByRole('heading', { name: 'Testsuite' })).toBeVisible();
