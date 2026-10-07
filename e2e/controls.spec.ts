@@ -41,7 +41,9 @@ test('Reset restores default robot configurations and seed', async ({ page }) =>
   await page.getByLabel('Motor A').selectOption('swift');
   await page.getByLabel('Waffe B').selectOption('raptor');
   await page.getByLabel('Seed').fill('123');
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Reset' }).click();
+  await page.getByRole('button', { name: 'Konfiguration' }).click();
 
   await expect(page.getByLabel('Chassis A')).toHaveValue('raptor');
   await expect(page.getByLabel('Motor A')).toHaveValue('balanced');
@@ -61,13 +63,14 @@ test('Reset recovers from an invalid overweight configuration', async ({ page })
   await page.getByLabel('Waffe A').selectOption('titan');
   await expect(page.getByRole('button', { name: 'Start' })).toBeDisabled();
 
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Reset' }).click();
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Konfiguration' }).click();
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
 });
 
 test('configuration changes reset the active match safely', async ({ page }) => {
-  await page.getByRole('button', { name: 'Konfiguration' }).click();
   await page.getByRole('button', { name: 'Start' }).click();
   await page.getByRole('button', { name: 'Konfiguration' }).click();
   await expect(page.getByText('Tick: 0')).toHaveCount(0);
@@ -94,6 +97,7 @@ test('configuration lives in a dedicated dialog', async ({ page }) => {
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByLabel('Chassis A')).toBeVisible();
   await expect(page.getByLabel('Chassis B')).toBeVisible();
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(page.getByRole('heading', { name: 'Kampfstatus' })).toBeVisible();
 });
