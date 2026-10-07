@@ -4,14 +4,14 @@ Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese 
 
 ## Aktueller Lauf
 - step: PLANNING-REPAIR
-- status: IN_PROGRESS
-- scope: Planungszyklus NEXT-34 bis NEXT-43 veröffentlichen
-- version: 0.1.45
-- branch: repair/planning-publish-20261007
-- pr_tests: PENDING
-- main_tests: PENDING
-- publish: PENDING
+- status: COMPLETE
+- scope: Planungszyklus NEXT-34 bis NEXT-43 veröffentlicht
+- version: 0.1.46
+- branch: main
+- pr_tests: GREEN
+- main_tests: GREEN
+- publish: SUCCESS
 - blocker: none
 
 ## Nächstes Gate
-Planungs-/Publish-Reparatur abschließen. NEXT-34 erst danach beginnen.
+Planungs-/Publish-Reparatur abgeschlossen. Der nächste planmäßige Lauf darf NEXT-34 beginnen.
