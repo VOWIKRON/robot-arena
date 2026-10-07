@@ -1,6 +1,6 @@
 # Backlog
 
-Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro täglichem Lauf wird genau ein Schritt bearbeitet. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
+Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro planmäßigem Lauf wird genau ein Schritt bearbeitet. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
 ## Aktueller Zustand
 
@@ -210,6 +210,78 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Fahrbewegung ohne Änderung der deterministischen Engine darstellen
 - [x] unterschiedliche Motorgeschwindigkeiten visuell nachvollziehbar machen
 - [x] Desktop- und Mobile-Darstellung absichern
+
+---
+
+## Geplanter nächster Zyklus
+
+### NEXT-34 · Strategietyp als Engine-Datenmodell
+- [ ] Strategietypen `aggressive`, `defensive`, `distance` und `melee` definieren
+- [ ] Strategie explizit je Roboterkonfiguration speichern
+- [ ] bestehendes Kampfverhalten als Default unverändert halten
+- [ ] Unit-/Regressionstests für Default und Serialisierbarkeit ergänzen
+
+### NEXT-35 · Aggressive Strategie
+- [ ] aggressive Zielannäherung als erste echte Strategie implementieren
+- [ ] Schussentscheidung mit bestehender Reichweiten-/Energielogik verbinden
+- [ ] deterministische Verhaltenstests mit festen Seeds ergänzen
+- [ ] Desktop/Mobile-Auswahl vorbereiten, ohne weitere Strategien vorwegzunehmen
+
+### NEXT-36 · Distanzstrategie
+- [ ] gewünschte Kampfdistanz modellieren
+- [ ] Roboter bei zu großer Distanz annähern und bei zu kleiner Distanz Abstand gewinnen lassen
+- [ ] Arena-Grenzen und deterministische Bewegung absichern
+- [ ] Verhaltenstests für beide Distanzrichtungen ergänzen
+
+### NEXT-37 · Defensive Strategie
+- [ ] defensive Entscheidungsregel auf Basis von Struktur und Distanz einführen
+- [ ] Rückzugsbewegung innerhalb der Arena absichern
+- [ ] Schießen während defensiver Bewegung eindeutig festlegen
+- [ ] feste Seed-Regressionen ergänzen
+
+### NEXT-38 · Nahkampfstrategie
+- [ ] konsequentes Schließen der Distanz implementieren
+- [ ] Nahkampfverhalten mit Waffenreichweite koppeln
+- [ ] Stillstand/identische Positionen robust behandeln
+- [ ] deterministische Verhaltenstests ergänzen
+
+### NEXT-39 · Strategieauswahl im Config-Dialog
+- [ ] Strategie für Roboter A und B auswählbar machen
+- [ ] Auswahl beim Start und Reset korrekt übernehmen
+- [ ] aktuelle Strategie in der Konfiguration sichtbar machen
+- [ ] Desktop- und Mobile-E2E ergänzen
+
+### NEXT-40 · Energieverwaltungsparameter
+- [ ] Strategieparameter für Energiereserve definieren
+- [ ] Schussfreigabe abhängig von Reserve modellieren
+- [ ] Grenzfälle 0 %, Maximum und Regeneration testen
+- [ ] deterministisches Verhalten absichern
+
+### NEXT-41 · Strategieparameter im Config-Dialog
+- [ ] relevante Strategieparameter abhängig vom Strategietyp anzeigen
+- [ ] Werte validieren und ungültigen Matchstart verhindern
+- [ ] Reset auf stabile Defaults absichern
+- [ ] Desktop- und Mobile-E2E ergänzen
+
+### NEXT-42 · Strategievergleich in der Kampfanzeige
+- [ ] gewählte Strategien während des Kampfes kompakt sichtbar machen
+- [ ] keine Builder-Details zurück in die Kampfanzeige verschieben
+- [ ] Layout für kleine Displays absichern
+- [ ] bestehende Kampfanzeige regressionssicher halten
+
+### NEXT-43 · Strategie-Testreview und Refactoring
+- [ ] Strategie-Verhaltensmatrix auf Lücken prüfen
+- [ ] feste Seed-Vergleiche aller Strategiepaarungen ergänzen
+- [ ] wiederholte Entscheidungslogik nur nach Charakterisierung refactoren
+- [ ] nächsten Planungszyklus aus F · Replay & Analyse konkretisieren
+
+## Planungszyklus
+
+- Nach spätestens 10 konkreten NEXT-Schritten oder sobald weniger als 5 konkrete NEXT-Schritte übrig sind, wird ein Planungszyklus fällig.
+- Der Planungszyklus erzeugt wieder mindestens 5 und höchstens 10 kleine, eindeutig abschließbare NEXT-Schritte aus dem nächsten priorisierten Entwicklungsblock.
+- Er bereinigt dabei bereits erledigte/stale Backlog-Punkte und prüft Test-/Refactoring-Bedarf.
+- Ein Planungszyklus ist kein Feature-Lauf und verändert kein Spielverhalten.
+- Der jeweils letzte Schritt eines Zyklus plant den nächsten Block konkret vor, damit kein planmäßiger Lauf ohne eindeutigen NEXT-Schritt endet.
 
 ---
 
