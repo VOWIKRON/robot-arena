@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.39 – 2026-10-07
+
+- moves both robot builders into a dedicated responsive configuration dialog
+- keeps the battle side panel focused on live combat status
+- expands core simulation behavior coverage with six additional invariants
+- preserves deterministic engine behavior and existing controls
+- advances to NEXT-32: health bars above robots
+
 ## 0.1.38 – 2026-10-07
 
 - visualizes Damage events as floating damage values at the target robot
