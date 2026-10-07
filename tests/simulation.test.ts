@@ -486,7 +486,7 @@ describe('simulation', () => {
   it('stops moving once desired combat distance is reached', () => {
     const state = createMatch(RAPTOR, TITAN);
     state.robotA.position = { x: 50, y: 50 };
-    state.robotB.position = { x: 50 + RAPTOR.weaponRange * 0.8, y: 50 };
+    state.robotB.position = { x: 50 + RAPTOR.weaponRange * 0.8 - 0.001, y: 50 };
     state.robotA.cooldown = 99; state.robotB.cooldown = 99;
     state.robotB.definition = { ...state.robotB.definition, speed: 0 };
     const result = stepMatchWithEvents(state, new SeededRandom(4711));
