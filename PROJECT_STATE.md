@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.46
+- Aktuelle stabile Version: 0.1.47
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,9 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.44 getestet und veröffentlicht.
+NEXT-34 abgeschlossen: Strategietypen `aggressive`, `defensive`, `distance` und `melee` sind als Engine-Datenmodell vorhanden. Jede Roboterkonfiguration trägt eine explizite Strategie; das bisherige Kampfverhalten bleibt über den Default unverändert. Unit-/Regressionstests sichern Default und Serialisierbarkeit ab.
 
-Der Planungszyklus ist mit v0.1.46 vollständig veröffentlicht. Nächster konkreter Entwicklungsschritt: NEXT-34 · Strategietyp als Engine-Datenmodell. Danach sind NEXT-35 bis NEXT-43 als konkreter Strategiesystem-Zyklus vorgeplant.
+Nächster konkreter Entwicklungsschritt: NEXT-35 · Aggressive Strategie.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
