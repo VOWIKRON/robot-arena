@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.44 getestet und veröffentlicht. Der nächste Schritt wird erst in einem Folgelauf begonnen.
+NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.44 getestet und veröffentlicht.\n\nNächster konkreter Entwicklungsschritt: NEXT-34 · Strategietyp als Engine-Datenmodell. Danach sind NEXT-35 bis NEXT-43 als konkreter Strategiesystem-Zyklus vorgeplant.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
@@ -55,7 +55,7 @@ NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministis
 
 ## Rolling Backlog
 
-BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Der jeweils nächste Lauf bearbeitet genau einen davon.
+BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Der jeweils nächste Lauf bearbeitet genau einen davon. Sobald weniger als 5 konkrete Schritte verbleiben, wird vor dem Leerlaufen ein Planungszyklus fällig.
 
 
 ## Aktueller Testausbau
