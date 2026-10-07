@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.41 – 2026-10-07
+
+- smoothly interpolates robot positions between deterministic simulation ticks
+- preserves the engine's exact movement and combat calculations
+- exposes deterministic position and speed state for browser behavior tests
+- respects reduced-motion preferences
+- covers movement on desktop and mobile
+
 ## 0.1.40 – 2026-10-07
 
 - adds a live structure/health bar directly above each robot
