@@ -13,7 +13,7 @@ app.innerHTML = `
 <header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.28</div></header>
 <div class="grid">
 <section class="card">
-<div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
+<div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button></div>
 <div class="status" id="status"></div>
 </section>
@@ -138,12 +138,17 @@ function pct(value: number, max: number): string {
   return `${Math.max(0, Math.min(100, (value / max) * 100))}%`;
 }
 
-function renderRobot(id: string, x: number, y: number, chassisId: string, weaponId: string): void {
+function renderRobot(id: string, x: number, y: number, chassisId: string, weaponId: string, structure: number, maxStructure: number): void {
   const node = el<HTMLDivElement>(id);
   node.style.left = `${x}%`;
   node.style.top = `${y}%`;
   node.dataset.chassis = chassisId;
   node.dataset.weapon = weaponId;
+  const health = node.querySelector<HTMLElement>('.bot-health-fill');
+  const healthBar = node.querySelector<HTMLElement>('.bot-health');
+  const healthPct = Math.max(0, Math.min(100, (structure / maxStructure) * 100));
+  if (health) health.style.width = `${healthPct}%`;
+  if (healthBar) healthBar.setAttribute('aria-valuenow', healthPct.toFixed(0));
   node.title = `${id === 'bot-a' ? 'Roboter A' : 'Roboter B'} · ${chassisId === 'titan-chassis' ? 'Titan' : 'Raptor'} Chassis`;
 }
 
@@ -188,8 +193,8 @@ function robotStats(label: string, css: string, s: MatchState['robotA']): string
 }
 
 function render(): void {
-  renderRobot('bot-a', state.robotA.position.x, state.robotA.position.y, configurationA().chassis.id, configurationA().weapon.id);
-  renderRobot('bot-b', state.robotB.position.x, state.robotB.position.y, configurationB().chassis.id, configurationB().weapon.id);
+  renderRobot('bot-a', state.robotA.position.x, state.robotA.position.y, configurationA().chassis.id, configurationA().weapon.id, state.robotA.structure, state.robotA.definition.maxStructure);
+  renderRobot('bot-b', state.robotB.position.x, state.robotB.position.y, configurationB().chassis.id, configurationB().weapon.id, state.robotB.structure, state.robotB.definition.maxStructure);
   el('stats').innerHTML =
     robotStats('A', 'robot-a', state.robotA) +
     robotStats('B', 'robot-b', state.robotB) +
