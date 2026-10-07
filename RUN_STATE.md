@@ -3,16 +3,15 @@
 Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
 
 ## Aktueller Lauf
-- step: NEXT-31
-- status: COMPLETED
-- scope: Konfiguration in eigenen Dialog auslagern plus Behavior-Testausbau
-- version: 0.1.39
-- branch: daily/next-31-config-dialog-20261007
-- main_sha: 9edab095d6bc9df11ceea73b66d434604a594d63
-- pr_tests: GREEN
-- main_tests: GREEN
-- publish: SUCCESS
+- step: NEXT-32
+- status: IN_PROGRESS
+- scope: Lebensbalken direkt über den Robotern
+- version: 0.1.40
+- branch: daily/next-32-health-bars-20261007
+- pr_tests: PENDING
+- main_tests: PENDING
+- publish: PENDING
 - blocker: none
 
 ## Nächstes Gate
-NEXT-31 abgeschlossen. Ein Folgelauf darf NEXT-32 beginnen.
+NEXT-32 wird final getestet und veröffentlicht.
