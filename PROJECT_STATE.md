@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.43
+- Aktuelle stabile Version: 0.1.44
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.43 getestet und veröffentlicht. Der nächste Schritt wird erst in einem Folgelauf begonnen.
+NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.44 getestet und veröffentlicht. Der nächste Schritt wird erst in einem Folgelauf begonnen.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
