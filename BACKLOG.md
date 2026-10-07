@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.39  
+**Aktuelle stabile Version:** 0.1.40  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -199,11 +199,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] während des Kampfes nur kampfrelevante Live-Werte anzeigen
 - [x] Desktop- und Mobile-Bedienung absichern
 
-### NEXT-32 · Lebensbalken direkt über den Robotern
-- [ ] Lebens-/Strukturbalken über jedem Roboter anzeigen
-- [ ] Balken synchron zum tatsächlichen Strukturwert aktualisieren
-- [ ] bei Schaden sofort sichtbar reagieren
-- [ ] Desktop- und Mobile-Darstellung absichern
+### Erledigt in v0.1.40 · Lebensbalken direkt über den Robotern
+- [x] Lebens-/Strukturbalken über jedem Roboter anzeigen
+- [x] Balken synchron zum tatsächlichen Strukturwert aktualisieren
+- [x] bei Schaden sofort sichtbar reagieren
+- [x] Desktop- und Mobile-Darstellung absichern
 
 ### NEXT-33 · Sichtbar flüssige Fahrbewegung
 - [ ] vorhandene Move-Events zwischen den Simulationsticks sichtbar animieren
