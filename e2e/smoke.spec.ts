@@ -13,6 +13,8 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   await expect(page.locator('#bot-a')).toHaveAttribute('data-chassis', 'raptor-chassis');
   await expect(page.locator('#bot-b')).toHaveAttribute('data-chassis', 'titan-chassis');
+  await expect(page.locator('#bot-a')).toHaveAttribute('data-weapon', 'raptor-cannon');
+  await expect(page.locator('#bot-b')).toHaveAttribute('data-weapon', 'titan-cannon');
   await expect(page.locator('#bot-a .bot-mark')).toHaveText('A');
   await expect(page.locator('#bot-b .bot-mark')).toHaveText('B');
   await expect(page.locator('#preview-a').getByText(/Gewicht \d+ \/ 90/)).toBeVisible();
