@@ -4,14 +4,15 @@ Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese 
 
 ## Aktueller Lauf
 - step: NEXT-28
-- status: IN_PROGRESS
+- status: COMPLETED
 - scope: Waffen am Roboter sichtbar machen
 - version: 0.1.36
 - branch: daily/next-28-visible-weapons-20261006
-- pr_tests: PENDING
-- main_tests: PENDING
-- publish: PENDING
+- main_sha: abcbddb102a63cb14c07cfb33ae016421af67ecc
+- pr_tests: GREEN
+- main_tests: GREEN
+- publish: SUCCESS
 - blocker: none
 
 ## Nächstes Gate
-Vollständigen NEXT-28-Branch testen; danach exakt getesteten Stand nach main übernehmen, auf main testen und v0.1.36 veröffentlichen.
+NEXT-28 abgeschlossen. Ein Folgelauf darf NEXT-29 beginnen.
