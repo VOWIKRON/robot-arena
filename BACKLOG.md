@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.43  
+**Aktuelle stabile Version:** 0.1.44  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -205,7 +205,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] bei Schaden sofort sichtbar reagieren
 - [x] Desktop- und Mobile-Darstellung absichern
 
-### Erledigt in v0.1.43 · Sichtbar flüssige Fahrbewegung
+### Erledigt in v0.1.44 · Sichtbar flüssige Fahrbewegung
 - [x] vorhandene Bewegungspositionen zwischen den Simulationsticks sichtbar animieren
 - [x] Fahrbewegung ohne Änderung der deterministischen Engine darstellen
 - [x] unterschiedliche Motorgeschwindigkeiten visuell nachvollziehbar machen
