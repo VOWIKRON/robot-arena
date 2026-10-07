@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.35  
+**Aktuelle stabile Version:** 0.1.36  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -180,7 +180,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ### Erledigt in v0.1.36 · Waffen am Roboter sichtbar machen
 - [x] gewählte Waffe visuell am Roboter darstellen
 - [x] Raptor- und Titan-Waffe unterscheidbar machen
-- [ ] Desktop- und Mobile-Darstellung absichern
+- [x] Desktop- und Mobile-Darstellung absichern
 
 ### NEXT-29 · Projektil- und Schusseffekte
 - [ ] Shot-Events als sichtbare Projektile/Schusslinien darstellen
