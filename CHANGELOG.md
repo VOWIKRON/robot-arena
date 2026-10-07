@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.46 – 2026-10-07
+- Planungs-/Publish-Reparatur vollständig abgeschlossen und RUN_STATE auf COMPLETE gesetzt.
+- PR-Tests, Tests auf main und Veröffentlichung des exakt getesteten Stands als Release-Gates dokumentiert.
+- NEXT-34 bleibt der nächste Entwicklungsschritt; keine Änderung am Spielverhalten.
+
 ## 0.1.45
 - Planungszyklus nach NEXT-33 veröffentlicht.
 - NEXT-34 bis NEXT-43 als zehn konkrete Strategiesystem-Schritte festgelegt.
