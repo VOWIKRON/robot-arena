@@ -3,16 +3,15 @@
 Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
 
 ## Aktueller Lauf
-- step: NEXT-30
-- status: COMPLETED
-- scope: Treffer- und Schadenseffekte
-- version: 0.1.38
-- branch: daily/next-30-hit-damage-effects-20261007
-- main_sha: 0446825cca271b3016af16aa4b3b59ea087b55fc
-- pr_tests: GREEN
-- main_tests: GREEN
-- publish: SUCCESS
+- step: NEXT-31
+- status: IN_PROGRESS
+- scope: Konfiguration in eigenen Dialog auslagern plus Behavior-Testausbau
+- version: 0.1.39
+- branch: daily/next-31-config-dialog-20261007
+- pr_tests: PENDING
+- main_tests: PENDING
+- publish: PENDING
 - blocker: none
 
 ## Nächstes Gate
-NEXT-30 abgeschlossen. Ein Folgelauf darf NEXT-31 beginnen.
+NEXT-31 wird final getestet und veröffentlicht.
