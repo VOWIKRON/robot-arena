@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.45
+- Planungszyklus nach NEXT-33 veröffentlicht.
+- NEXT-34 bis NEXT-43 als zehn konkrete Strategiesystem-Schritte festgelegt.
+- Rolling-Backlog-Regel ergänzt: spätestens bei weniger als fünf verbleibenden konkreten Schritten wird der Folgezyklus geplant.
+- Keine Änderung am Spielverhalten.
+
 ## 0.1.44 – 2026-10-07
 
 - recovery/finalization release for NEXT-33

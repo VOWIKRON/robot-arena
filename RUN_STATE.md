@@ -3,15 +3,15 @@
 Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
 
 ## Aktueller Lauf
-- step: NEXT-33
-- status: COMPLETED
-- scope: Sichtbar flüssige Fahrbewegung
-- version: 0.1.44
-- branch: daily/next-33-smooth-movement-20261007
-- pr_tests: GREEN
-- main_tests: GREEN
-- publish: SUCCESS
+- step: PLANNING-REPAIR
+- status: IN_PROGRESS
+- scope: Planungszyklus NEXT-34 bis NEXT-43 veröffentlichen
+- version: 0.1.45
+- branch: repair/planning-publish-20261007
+- pr_tests: PENDING
+- main_tests: PENDING
+- publish: PENDING
 - blocker: none
 
 ## Nächstes Gate
-NEXT-33 abgeschlossen. Flüssige Fahrbewegung und sichtbare Lebensbalken sind getestet und veröffentlicht. Ein Folgelauf darf den nächsten Backlog-Schritt beginnen.
+Planungs-/Publish-Reparatur abschließen. NEXT-34 erst danach beginnen.
