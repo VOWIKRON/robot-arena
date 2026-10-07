@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.37 – 2026-10-07
+
+- renders Shot events as short-lived visible shot lines in the arena
+- derives effects directly from the existing deterministic event stream
+- keeps combat state and deterministic simulation behavior unchanged
+- covers visible shot effects on desktop and mobile
+- advances to NEXT-30: hit and damage effects
+
 ## 0.1.36 – 2026-10-07
 
 - renders the selected weapon visibly on both robots
