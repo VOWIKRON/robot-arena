@@ -3,15 +3,15 @@
 Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
 
 ## Aktueller Lauf
-- step: PLANNING-REPAIR
-- status: COMPLETE
-- scope: Planungszyklus NEXT-34 bis NEXT-43 veröffentlicht
-- version: 0.1.46
-- branch: main
-- pr_tests: GREEN
-- main_tests: GREEN
-- publish: SUCCESS
+- step: NEXT-34
+- status: VERIFYING_PR
+- scope: Strategietyp als Engine-Datenmodell
+- version: 0.1.47
+- branch: next-34-strategy-model
+- pr_tests: PENDING
+- main_tests: PENDING
+- publish: PENDING
 - blocker: none
 
 ## Nächstes Gate
-Planungs-/Publish-Reparatur vollständig abgeschlossen. Der nächste planmäßige Lauf darf NEXT-34 beginnen.
+PR-Tests für NEXT-34 vollständig grün abschließen, exakt getesteten Stand nach main übernehmen, Tests auf main und Veröffentlichung desselben main-SHA nachweisen. NEXT-35 erst danach beginnen.
