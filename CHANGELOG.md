@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.36 – 2026-10-07
+
+- renders the selected weapon visibly on both robots
+- gives Raptor and Titan distinct weapon silhouettes
+- updates weapon visuals with the selected robot configuration
+- keeps deterministic combat behavior unchanged
+- covers visible weapons on desktop and mobile
+- advances to NEXT-29: projectile and shot effects
+
 ## 0.1.35 – 2026-10-06
 
 - fixes Start so a click advances the fight immediately and continues automatically
