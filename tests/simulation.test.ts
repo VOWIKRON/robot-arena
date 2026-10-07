@@ -453,4 +453,66 @@ describe('simulation', () => {
     expect(result.state.tick).toBe(0);
     expect(result.events).toEqual([]);
   });
+
+  it('applies damage amount exactly to target structure', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
+    state.robotB.energy = 0; state.robotB.cooldown = 99;
+    const before = state.robotB.structure;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    const damage = result.events.find((event) => event.type === 'damage');
+    if (damage?.type !== 'damage') throw new Error('damage event missing');
+    expect(result.state.robotB.structure).toBeCloseTo(before - damage.amount, 10);
+  });
+
+  it('spends energy and resets cooldown exactly when a shot is emitted', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
+    state.robotA.energy = 50; state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.events.some((event) => event.type === 'shot' && event.attackerId === RAPTOR.id)).toBe(true);
+    expect(result.state.robotA.energy).toBeCloseTo(Math.min(RAPTOR.maxEnergy, 50 + RAPTOR.energyRegen) - RAPTOR.weaponEnergy, 10);
+    expect(result.state.robotA.cooldown).toBe(RAPTOR.cooldownTicks);
+  });
+
+  it('does not spend weapon energy when no shot is possible', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.energy = 50; state.robotA.cooldown = 99; state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.events.some((event) => event.type === 'shot')).toBe(false);
+    expect(result.state.robotA.energy).toBeCloseTo(Math.min(RAPTOR.maxEnergy, 50 + RAPTOR.energyRegen), 10);
+  });
+
+  it('stops moving once desired combat distance is reached', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 50, y: 50 };
+    state.robotB.position = { x: 50 + RAPTOR.weaponRange * 0.8, y: 50 };
+    state.robotA.cooldown = 99; state.robotB.cooldown = 99;
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.events.some((event) => event.type === 'move' && event.robotId === RAPTOR.id)).toBe(false);
+    expect(result.state.robotA.position).toEqual(state.robotA.position);
+  });
+
+  it('keeps all emitted combat events on the current tick', () => {
+    const state = createMatch(RAPTOR, TITAN);
+    state.robotA.position = { x: 40, y: 50 }; state.robotB.position = { x: 60, y: 50 };
+    const result = stepMatchWithEvents(state, new SeededRandom(4711));
+    expect(result.events.length).toBeGreaterThan(0);
+    expect(result.events.every((event) => event.tick === result.state.tick)).toBe(true);
+  });
+
+  it('never emits damage without a preceding hit from the same source to target', () => {
+    let state = createMatch(RAPTOR, TITAN); const rng = new SeededRandom(4711);
+    for (let i = 0; i < 120 && state.outcome === 'active'; i += 1) {
+      const result = stepMatchWithEvents(state, rng);
+      result.events.forEach((event, index) => {
+        if (event.type !== 'damage') return;
+        const hit = result.events[index - 1];
+        expect(hit?.type).toBe('hit');
+        if (hit?.type === 'hit') { expect(hit.attackerId).toBe(event.sourceId); expect(hit.targetId).toBe(event.targetId); }
+      });
+      state = result.state;
+    }
+  });
+
 });
