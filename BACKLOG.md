@@ -193,6 +193,24 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Trefferfeedback am Zielroboter darstellen
 - [x] Desktop- und Mobile-Darstellung absichern
 
+### NEXT-31 · Konfiguration in eigenen Dialog auslagern
+- [ ] Roboter-Konfiguration aus der Kampfanzeige herauslösen
+- [ ] eigenen Config-Dialog für beide Roboter anlegen
+- [ ] während des Kampfes nur kampfrelevante Live-Werte anzeigen
+- [ ] Desktop- und Mobile-Bedienung absichern
+
+### NEXT-32 · Lebensbalken direkt über den Robotern
+- [ ] Lebens-/Strukturbalken über jedem Roboter anzeigen
+- [ ] Balken synchron zum tatsächlichen Strukturwert aktualisieren
+- [ ] bei Schaden sofort sichtbar reagieren
+- [ ] Desktop- und Mobile-Darstellung absichern
+
+### NEXT-33 · Sichtbar flüssige Fahrbewegung
+- [ ] vorhandene Move-Events zwischen den Simulationsticks sichtbar animieren
+- [ ] Fahrbewegung ohne Änderung der deterministischen Engine darstellen
+- [ ] unterschiedliche Motorgeschwindigkeiten visuell nachvollziehbar machen
+- [ ] Desktop- und Mobile-Darstellung absichern
+
 ---
 
 ## Parallel laufender Testausbau
