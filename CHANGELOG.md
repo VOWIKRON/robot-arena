@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.47 – 2026-10-08
+- NEXT-34: Strategietypen `aggressive`, `defensive`, `distance` und `melee` als Engine-Datenmodell eingeführt.
+- Strategie wird explizit je Roboterkonfiguration gespeichert; bestehendes Kampfverhalten bleibt als Default unverändert.
+- Unit-/Regressionstests sichern Default und Serialisierbarkeit ab.
+- Nächster Schritt: NEXT-35 · Aggressive Strategie.
+
 ## 0.1.46 – 2026-10-07
 - Planungs-/Publish-Reparatur vollständig abgeschlossen und RUN_STATE auf COMPLETE gesetzt.
 - PR-Tests, Tests auf main und Veröffentlichung des exakt getesteten Stands als Release-Gates dokumentiert.
