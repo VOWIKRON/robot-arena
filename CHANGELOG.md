@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.38 – 2026-10-07
+
+- visualizes Damage events as floating damage values at the target robot
+- flashes the target robot briefly on a hit
+- derives feedback directly from the deterministic event stream without changing combat logic
+- covers hit and damage feedback on desktop and mobile
+- advances to NEXT-31: move configuration into a dedicated dialog
+
 ## 0.1.37 – 2026-10-07
 
 - renders Shot events as short-lived visible shot lines in the arena
