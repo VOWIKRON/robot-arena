@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.43 – 2026-10-07
+## 0.1.44 – 2026-10-07
 
 - recovery/finalization release for NEXT-33
 - keeps the tested smooth robot movement unchanged
