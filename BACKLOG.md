@@ -5,8 +5,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.44  
-**Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
+**Aktuelle stabile Version:** 0.1.45  
+**Nächstes Ziel:** Strategiesystem – beginnend mit NEXT-34 · Strategietyp als Engine-Datenmodell
 
 ---
 
