@@ -3,15 +3,18 @@ import { expect, test } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('Tick: 0')).toBeVisible();
+  await page.getByRole('button', { name: 'Konfiguration' }).click();
 });
 
 test('Start advances the fight immediately', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page.getByText('Tick: 0')).toHaveCount(0);
   await expect(page.locator('#stats')).toContainText(/Tick: [1-9]\d*/);
 });
 
 test('Pause stops automatic ticks', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page.locator('#stats')).toContainText(/Tick: [2-9]\d*/);
   await page.getByRole('button', { name: 'Pause' }).click();
@@ -21,6 +24,7 @@ test('Pause stops automatic ticks', async ({ page }) => {
 });
 
 test('single tick advances exactly once', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: '1 Tick' }).click();
   await expect(page.getByText('Tick: 1')).toBeVisible();
   await page.waitForTimeout(150);
@@ -28,6 +32,7 @@ test('single tick advances exactly once', async ({ page }) => {
 });
 
 test('Reset restores tick zero and ready state', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page.getByText('Tick: 0')).toHaveCount(0);
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -65,7 +70,9 @@ test('Reset recovers from an invalid overweight configuration', async ({ page })
 });
 
 test('configuration changes reset the active match safely', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: 'Start' }).click();
+  await page.getByRole('button', { name: 'Konfiguration' }).click();
   await expect(page.getByText('Tick: 0')).toHaveCount(0);
   await page.getByLabel('Chassis A').selectOption('titan');
   await expect(page.getByText('Tick: 0')).toBeVisible();
@@ -75,6 +82,7 @@ test('configuration changes reset the active match safely', async ({ page }) => 
 });
 
 test('same seed and Reset reproduce the same first tick', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   await page.getByRole('button', { name: '1 Tick' }).click();
   const firstA = await page.locator('#bot-a').getAttribute('style');
   const firstB = await page.locator('#bot-b').getAttribute('style');
@@ -83,4 +91,13 @@ test('same seed and Reset reproduce the same first tick', async ({ page }) => {
   await page.getByRole('button', { name: '1 Tick' }).click();
   await expect(page.locator('#bot-a')).toHaveAttribute('style', firstA ?? '');
   await expect(page.locator('#bot-b')).toHaveAttribute('style', firstB ?? '');
+});
+
+test('configuration lives in a dedicated dialog', async ({ page }) => {
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByLabel('Chassis A')).toBeVisible();
+  await expect(page.getByLabel('Chassis B')).toBeVisible();
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Kampfstatus' })).toBeVisible();
 });
