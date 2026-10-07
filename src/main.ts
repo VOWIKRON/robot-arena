@@ -144,6 +144,9 @@ function renderRobot(id: string, x: number, y: number, chassisId: string, weapon
   node.style.top = `${y}%`;
   node.dataset.chassis = chassisId;
   node.dataset.weapon = weaponId;
+  node.dataset.x = x.toFixed(3);
+  node.dataset.y = y.toFixed(3);
+  node.dataset.speed = (id === 'bot-a' ? state.robotA.definition.speed : state.robotB.definition.speed).toFixed(3);
   const health = node.querySelector<HTMLElement>('.bot-health-fill');
   const healthBar = node.querySelector<HTMLElement>('.bot-health');
   const healthPct = Math.max(0, Math.min(100, (structure / maxStructure) * 100));
