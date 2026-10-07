@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.38  
+**Aktuelle stabile Version:** 0.1.39  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -193,11 +193,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Trefferfeedback am Zielroboter darstellen
 - [x] Desktop- und Mobile-Darstellung absichern
 
-### NEXT-31 · Konfiguration in eigenen Dialog auslagern
-- [ ] Roboter-Konfiguration aus der Kampfanzeige herauslösen
-- [ ] eigenen Config-Dialog für beide Roboter anlegen
-- [ ] während des Kampfes nur kampfrelevante Live-Werte anzeigen
-- [ ] Desktop- und Mobile-Bedienung absichern
+### Erledigt in v0.1.39 · Konfiguration in eigenen Dialog auslagern
+- [x] Roboter-Konfiguration aus der Kampfanzeige herauslösen
+- [x] eigenen Config-Dialog für beide Roboter anlegen
+- [x] während des Kampfes nur kampfrelevante Live-Werte anzeigen
+- [x] Desktop- und Mobile-Bedienung absichern
 
 ### NEXT-32 · Lebensbalken direkt über den Robotern
 - [ ] Lebens-/Strukturbalken über jedem Roboter anzeigen
