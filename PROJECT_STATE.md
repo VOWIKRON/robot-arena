@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.38
+- Aktuelle stabile Version: 0.1.39
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,7 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-31: Konfiguration aus der Kampfanzeige in einen eigenen Dialog auslagern.
+NEXT-32: Lebensbalken direkt über den Robotern.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
