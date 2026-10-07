@@ -170,5 +170,6 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('✓ Erledigt · Treffer- und Schadenseffekte', { exact: false })).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Konfiguration in eigenen Dialog auslagern', { exact: false })).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Lebensbalken direkt über den Robotern', { exact: false })).toBeVisible();
-  await expect(page.getByText('NEXT-33: Sichtbar flüssige Fahrbewegung', { exact: false })).toBeVisible();
+  await expect(page.getByText('✓ Erledigt · Sichtbar flüssige Fahrbewegung', { exact: false })).toBeVisible();
+  await expect(page.getByText('Nächster Schwerpunkt: Strategiesystem', { exact: false })).toBeVisible();
 });
