@@ -177,9 +177,9 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Validierungs-Grenzfälle systematisch erweitern
 - [x] Testsuite von 59 auf mindestens 93 Testausführungen erweitern
 
-### NEXT-28 · Waffen am Roboter sichtbar machen
-- [ ] gewählte Waffe visuell am Roboter darstellen
-- [ ] Raptor- und Titan-Waffe unterscheidbar machen
+### Erledigt in v0.1.36 · Waffen am Roboter sichtbar machen
+- [x] gewählte Waffe visuell am Roboter darstellen
+- [x] Raptor- und Titan-Waffe unterscheidbar machen
 - [ ] Desktop- und Mobile-Darstellung absichern
 
 ### NEXT-29 · Projektil- und Schusseffekte
