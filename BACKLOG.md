@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.37  
+**Aktuelle stabile Version:** 0.1.38  
 **Nächstes Ziel:** belastbares Ereignismodell mit wachsender Verhaltens-Testsuite
 
 ---
@@ -188,10 +188,10 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] deterministisches Kampfverhalten unverändert lassen
 - [x] Desktop- und Mobile-Darstellung absichern
 
-### NEXT-30 · Treffer- und Schadenseffekte
-- [ ] Hit-/Damage-Events sichtbar machen
-- [ ] Trefferfeedback am Zielroboter darstellen
-- [ ] Desktop- und Mobile-Darstellung absichern
+### Erledigt in v0.1.38 · Treffer- und Schadenseffekte
+- [x] Hit-/Damage-Events sichtbar machen
+- [x] Trefferfeedback am Zielroboter darstellen
+- [x] Desktop- und Mobile-Darstellung absichern
 
 ---
 
