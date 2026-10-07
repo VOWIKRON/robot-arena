@@ -66,6 +66,16 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByText('Bootstrap')).toHaveCount(0);
 });
 
+test('shot events are rendered visibly', async ({ page }) => {
+  await page.goto('/');
+  const shot = page.locator('.shot-effect');
+  for (let i = 0; i < 20 && await shot.count() === 0; i++) {
+    await page.getByRole('button', { name: '1 Tick' }).click();
+  }
+  await expect(shot.first()).toBeAttached();
+  await expect(shot.first()).toHaveAttribute('data-attacker', /robot-[ab]/);
+});
+
 test('public information pages are reachable', async ({ page }) => {
   await page.goto('/testsuite.html');
   await expect(page.getByRole('heading', { name: 'Testsuite' })).toBeVisible();
