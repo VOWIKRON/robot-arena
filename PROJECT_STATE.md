@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.44
+- Aktuelle stabile Version: 0.1.45
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -41,7 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Nächster Entwicklungsschritt
 
-NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.44 getestet und veröffentlicht.\n\nNächster konkreter Entwicklungsschritt: NEXT-34 · Strategietyp als Engine-Datenmodell. Danach sind NEXT-35 bis NEXT-43 als konkreter Strategiesystem-Zyklus vorgeplant.
+NEXT-33 abgeschlossen: Sichtbar flüssige Fahrbewegung ist in v0.1.44 getestet und veröffentlicht.
+
+Der Planungszyklus wird mit v0.1.45 veröffentlicht. Nächster konkreter Entwicklungsschritt: NEXT-34 · Strategietyp als Engine-Datenmodell. Danach sind NEXT-35 bis NEXT-43 als konkreter Strategiesystem-Zyklus vorgeplant.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
