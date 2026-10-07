@@ -5,8 +5,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.46  
-**Nächstes Ziel:** Strategiesystem – beginnend mit NEXT-34 · Strategietyp als Engine-Datenmodell
+**Aktuelle stabile Version:** 0.1.47  
+**Nächstes Ziel:** Strategiesystem – NEXT-35 · Aggressive Strategie
 
 ---
 
@@ -215,11 +215,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Geplanter nächster Zyklus
 
-### NEXT-34 · Strategietyp als Engine-Datenmodell
-- [ ] Strategietypen `aggressive`, `defensive`, `distance` und `melee` definieren
-- [ ] Strategie explizit je Roboterkonfiguration speichern
-- [ ] bestehendes Kampfverhalten als Default unverändert halten
-- [ ] Unit-/Regressionstests für Default und Serialisierbarkeit ergänzen
+### Erledigt in v0.1.47 · NEXT-34 · Strategietyp als Engine-Datenmodell
+- [x] Strategietypen `aggressive`, `defensive`, `distance` und `melee` definiert
+- [x] Strategie explizit je Roboterkonfiguration gespeichert
+- [x] bestehendes Kampfverhalten als Default unverändert gehalten
+- [x] Unit-/Regressionstests für Default und Serialisierbarkeit ergänzt
 
 ### NEXT-35 · Aggressive Strategie
 - [ ] aggressive Zielannäherung als erste echte Strategie implementieren
