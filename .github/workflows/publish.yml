@@ -75,8 +75,7 @@ jobs:
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
           tz=ZoneInfo("Europe/Berlin"); now=datetime.now(tz)
-          next_run=now.replace(hour=18,minute=0,second=0,microsecond=0)
-          if now>=next_run: next_run+=timedelta(days=1)
+          next_run=now.replace(minute=0,second=0,microsecond=0)+timedelta(hours=1)
           data={"version":os.environ["VERSION"],"commit":os.environ["BUILD_COMMIT"],"builtAt":now.isoformat(),"nextRunAt":next_run.isoformat(),"quality":{"typecheck":"passed","unit":"passed","build":"passed","desktopE2E":"passed","mobileE2E":"passed"}}
           with open("dist/build-info.json","w",encoding="utf-8") as f: json.dump(data,f,indent=2)
           PY

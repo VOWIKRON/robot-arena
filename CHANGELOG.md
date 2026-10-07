@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.44 – 2026-10-07
+
+- recovery/finalization release for NEXT-33
+- keeps the tested smooth robot movement unchanged
+- aligns backlog, project state and public release metadata with the published version
+- removes the stale fixed 18:00 next-run wording from project documentation
+
 ## 0.1.41 – 2026-10-07
 
 - smoothly interpolates robot positions between deterministic simulation ticks
