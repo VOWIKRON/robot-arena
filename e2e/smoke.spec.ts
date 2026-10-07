@@ -5,6 +5,8 @@ test('arena is usable and exposes project information', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Robot Arena' })).toBeVisible();
   await page.getByRole('button', { name: '1 Tick' }).click();
   await expect(page.getByText('Tick: 1')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Kampfstatus' })).toBeVisible();
+  await page.getByRole('button', { name: 'Konfiguration' }).click();
   await expect(page.getByRole('heading', { name: 'Roboter A' })).toBeVisible();
   await expect(page.locator('#preview-a').getByText('Live-Werte')).toBeVisible();
   await expect(page.locator('#preview-b').getByText('Live-Werte')).toBeVisible();
