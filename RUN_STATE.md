@@ -4,14 +4,14 @@ Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese 
 
 ## Aktueller Lauf
 - step: NEXT-34
-- status: VERIFYING_PR
-- scope: Strategietyp als Engine-Datenmodell
-- version: 0.1.47
-- branch: next-34-strategy-model
-- pr_tests: PENDING
-- main_tests: PENDING
-- publish: PENDING
+- status: COMPLETE
+- scope: Strategietyp als Engine-Datenmodell und verifizierter Release-Abschluss
+- version: 0.1.48
+- branch: main
+- pr_tests: GREEN
+- main_tests: GREEN
+- publish: SUCCESS
 - blocker: none
 
 ## Nächstes Gate
-PR-Tests für NEXT-34 vollständig grün abschließen, exakt getesteten Stand nach main übernehmen, Tests auf main und Veröffentlichung desselben main-SHA nachweisen. NEXT-35 erst danach beginnen.
+NEXT-34 ist abgeschlossen. Der nächste planmäßige Lauf darf genau NEXT-35 (Aggressive Strategie) beginnen. Vor Beginn muss er den tatsächlichen main-/Publish-Zustand prüfen.
