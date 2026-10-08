@@ -15,7 +15,7 @@ export function createMatch(robotA: RobotDefinition, robotB: RobotDefinition): M
 function moveTowards(self: RobotState, enemy: RobotState, tick: number, width: number, height: number): MoveEvent | null {
   const dx=enemy.position.x-self.position.x, dy=enemy.position.y-self.position.y, len=Math.hypot(dx,dy);
   if (len===0) return null;
-  const desiredDistance=self.definition.weaponRange*0.8;
+  const desiredDistance=self.definition.weaponRange*0.6;
   if (len<=desiredDistance) return null;
   const from=self.position, step=Math.min(self.definition.speed,len-desiredDistance);
   const to={x:Math.max(0,Math.min(width,self.position.x+(dx/len)*step)),y:Math.max(0,Math.min(height,self.position.y+(dy/len)*step))};
