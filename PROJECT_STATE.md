@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.47
+- Aktuelle stabile Version: 0.1.48
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
