@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.47  
+**Aktuelle stabile Version:** 0.1.48  
 **Nächstes Ziel:** Strategiesystem – NEXT-35 · Aggressive Strategie
 
 ---
