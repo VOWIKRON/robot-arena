@@ -11,7 +11,7 @@ Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese 
 - pr_tests: GREEN
 - main_tests: GREEN
 - publish: SUCCESS
-- blocker: src/engine/simulation.ts update_file Sicherheitsprüfung
+- blocker: Korrektur der Nicht-aggressive-Stoppdistanz 1 -> 0.8 durch GitHub-Sicherheitsprüfung verweigert
 
 ## Nächstes Gate
-NEXT-35 fortsetzen: Simulation aktualisieren, Tests und Release prüfen. Bestehende Teständerung bewahren.
+NEXT-35 fortsetzen: Stoppdistanz für andere Strategien auf 0.8 korrigieren; Tests für NEXT-35 noch nicht grün. Bestehende Teständerung bewahren.
