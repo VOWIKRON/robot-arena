@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.48 – 2026-10-08
+- Formaler Abschluss von NEXT-34: RUN_STATE auf COMPLETE gesetzt und Release-Metadaten synchronisiert.
+- Keine Änderung am Kampfverhalten. NEXT-35 bleibt der nächste Entwicklungsschritt.
+
 ## 0.1.47 – 2026-10-08
 - NEXT-34: Strategietypen `aggressive`, `defensive`, `distance` und `melee` als Engine-Datenmodell eingeführt.
 - Strategie wird explizit je Roboterkonfiguration gespeichert; bestehendes Kampfverhalten bleibt als Default unverändert.
