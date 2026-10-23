@@ -152,7 +152,7 @@ test('public information pages are reachable', async ({ page }) => {
   await page.goto('/release-notes.html');
   await expect(page.getByRole('heading', { name: 'Release Notes' })).toBeVisible();
 
-  await expect(page.getByRole('heading', { name: 'v0.1.52 · Strategieauswahl und Parameter', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'v0.1.53 · Vorausschauende Defensive', exact: true })).toBeVisible();
 
   await page.goto('/backlog.html');
   await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();

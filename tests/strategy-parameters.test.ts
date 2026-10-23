@@ -11,7 +11,7 @@ describe('strategy parameters', () => {
   it.each(STRATEGY_TYPES)('%s resolves stable defaults without modifying overrides', strategy => {
     const overrides = {};
     expect(strategyParameters(strategy, overrides).targetDistanceRatio).toBe(strategy === 'distance' ? 0.9 : strategy === 'melee' ? 0.2 : 0.8);
-    expect(strategyParameters(strategy, overrides).retreatStructureRatio).toBe(0.35);
+    expect(strategyParameters(strategy, overrides).retreatStructureRatio).toBe(0.7);
     expect(overrides).toEqual({});
   });
   it.each([
@@ -44,11 +44,13 @@ describe('strategy parameters', () => {
     expect(state).toEqual(snapshot);
   });
   it('custom defensive threshold and safety distance affect retreat together', () => {
-    const state=createMatch({...RAPTOR,maxStructure:100,strategy:'defensive',weaponRange:20,speed:100,strategyParameters:{retreatStructureRatio:0.6,retreatDistanceFactor:1.5}}, {...TITAN,speed:0,weaponRange:20,weaponDamage:0});
-    state.robotA.structure=60;state.robotA.position={x:40,y:50};state.robotB.position={x:60,y:50};
-    expect(stepMatchWithEvents(state,new SeededRandom(12)).state.robotA.position.x).toBe(30);
+    const state=createMatch({...RAPTOR,maxStructure:100,strategy:'defensive',weaponRange:40,speed:100,strategyParameters:{retreatStructureRatio:0.6,retreatDistanceFactor:1.5}}, {...TITAN,speed:0,weaponRange:20,weaponDamage:0});
+    state.robotA.structure=60;state.robotA.position={x:40,y:50};state.robotB.position={x:50,y:50};
+    expect(stepMatchWithEvents(state,new SeededRandom(12)).state.robotA.position.x).toBe(20);
+    state.robotB.position={x:90,y:50};
+    expect(stepMatchWithEvents(state,new SeededRandom(12)).state.robotA.position.x).toBe(40);
     state.robotA.structure=61;
-    expect(stepMatchWithEvents(state,new SeededRandom(12)).state.robotA.position.x).toBe(44);
+    expect(stepMatchWithEvents(state,new SeededRandom(12)).state.robotA.position.x).toBe(60);
   });
 });
 
