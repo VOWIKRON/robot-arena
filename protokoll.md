@@ -241,3 +241,18 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Nächster Schritt:** NEXT-36 · Distanzstrategie nach Abschluss der Release-Gates.
 
 **PR-CI Korrektur:** Erster CI-Lauf: 96 Unit-Tests und 30/32 Browser-Tests grün; ausschließlich Navigation scheitert auf beiden Profilen an der veralteten exakten NEXT-34-Erwartung. Test auf erledigtes NEXT-34/NEXT-35 und nächsten Schritt NEXT-36 angepasst; neue Testsuite-IDs und Release-Überschrift ebenfalls im Navigationstest geprüft. Vollständiger CI-Wiederholungslauf erforderlich.
+
+
+## 2026-10-23 – NEXT-36 bis NEXT-38 · Strategiesystem (v0.1.50)
+
+**Auftrag:** Nutzer beauftragt explizit drei Schritte gemeinsam und fordert Refactoring. Ausgang main 99334fa, veröffentlichte v0.1.49; Baseline Typecheck, 96 Tests und Build grün.
+
+**Regeln:** Distanz hält 90 % effektiver Reichweite bidirektional. Defensiv oberhalb 35 % Struktur wie Aggressiv, sonst Rückzug auf 110 % der größeren effektiven Waffenreichweite; in sicherer Distanz kein Nachsetzen. Nahkampf nähert sich bis 20 % effektiver Reichweite, ohne Rückzug oder neue Schadensregel. Jede Schussentscheidung erfolgt nach Bewegung durch die unveränderten Reichweiten-/Energie-/Cooldown-Gates.
+
+**Refactoring und Charakterisierung:** Bestehende 96 Tests grün bestätigt; neue Verhaltenstests vor Implementierung rot bestätigt. Bewegungsgeometrie als reine Funktion ausgelagert und alle 96 bestehenden Tests erneut grün bestätigt. Danach Strategieentscheidung mit signiertem Bewegungsschritt ergänzt. Gemeinsame Tempobegrenzung, Arenaklemmung und deterministische Überlappungsauflösung; keine Move-Events bei unveränderter Position. Keine zusätzliche RNG-Nutzung. Vollständige Suite nach Umbau erneut ausgeführt. Das größere NEXT-43-Review bleibt bestehen.
+
+**Tests:** Distanzrichtungen/Teilbewegung, exakt 35 % Struktur, Strategiewechsel nach Schaden, gegnerische Reichweite, Schüsse während Rückzug bzw. außerhalb Reichweite, Energie/Cooldown, alle Arenaränder, Ecken, Nulltempo/-reichweite, identische Positionen, Immutability und A/B-Symmetrie. Neun feste Endergebnisse (Gewinner/Endtick/Reststruktur) plus alle 16 Strategiepaarungen mit Seeds 1/12/4711 und reproduzierbaren Zuständen/Event-Streams. Bestehende aggressive Ergebnisse unverändert.
+
+**UI und Scope:** Katalog umfasst alle implementierten Strategien; Dialog bleibt beim aggressiven Default. NEXT-39 bleibt die echte A/B-Auswahl, NEXT-40/41 die Parameterverwaltung. Desktop-/Mobile-Navigation prüft neue Dokumentation und nächsten Schritt.
+
+**Release:** 0.1.50 ist bis zu grüner PR-/main-CI und bestätigtem Publish ein Kandidat. Lokaler Browserdownload ist weiterhin nicht verfügbar; CI muss beide Browserprofile prüfen.

@@ -144,18 +144,22 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Deployment / Online-Smoke' })).toBeVisible();
 
   await expect(page.getByText('STRAT-002', { exact: true })).toBeVisible();
+  await expect(page.getByText('STRAT-010', { exact: true })).toBeVisible();
   await expect(page.getByText('E2E-STRAT-001', { exact: true })).toBeVisible();
 
   await page.goto('/release-notes.html');
   await expect(page.getByRole('heading', { name: 'Release Notes' })).toBeVisible();
 
-  await expect(page.getByRole('heading', { name: 'v0.1.49 · Aggressive Strategie', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'v0.1.50 · Distanz, Defensive und Nahkampf', exact: true })).toBeVisible();
 
   await page.goto('/backlog.html');
   await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
-  await expect(page.locator('.meta-grid').getByText('NEXT-36 · Distanzstrategie', { exact: true })).toBeVisible();
+  await expect(page.locator('.meta-grid').getByText('NEXT-39 · Strategieauswahl im Config-Dialog', { exact: true })).toBeVisible();
   await expect(page.getByText('✓ NEXT-35 · Aggressive Strategie (v0.1.49)', { exact: true })).toBeVisible();
+  for (const label of ['✓ NEXT-36 · Distanzstrategie (v0.1.50)', '✓ NEXT-37 · Defensive Strategie (v0.1.50)', '✓ NEXT-38 · Nahkampfstrategie (v0.1.50)']) {
+    await expect(page.getByText(label, { exact: true })).toBeVisible();
+  }
   await expect(page.getByText('✓ Erledigt · Energieverhalten härten')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Test-Review vor Refactoring')).toBeVisible();
   await expect(page.getByText('✓ Erledigt · Reichweite und Cooldown charakterisieren')).toBeVisible();

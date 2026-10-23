@@ -6,7 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Einstieg in Kernsimulation  
 **Aktuelle stabile Version:** 0.1.49  
-**Nächstes Ziel:** Strategiesystem – NEXT-36 · Distanzstrategie
+**Release-Kandidat:** 0.1.50
+**Nächstes Ziel:** Strategiesystem – NEXT-39 · Strategieauswahl im Config-Dialog
 
 ---
 
@@ -227,23 +228,23 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] deterministische Verhaltenstests mit festen Seeds ergänzen
 - [x] Desktop/Mobile-Auswahl vorbereiten, ohne weitere Strategien vorwegzunehmen
 
-### NEXT-36 · Distanzstrategie
-- [ ] gewünschte Kampfdistanz modellieren
-- [ ] Roboter bei zu großer Distanz annähern und bei zu kleiner Distanz Abstand gewinnen lassen
-- [ ] Arena-Grenzen und deterministische Bewegung absichern
-- [ ] Verhaltenstests für beide Distanzrichtungen ergänzen
+### Implementiert in v0.1.50 · NEXT-36 · Distanzstrategie
+- [x] gewünschte Kampfdistanz modellieren
+- [x] Roboter bei zu großer Distanz annähern und bei zu kleiner Distanz Abstand gewinnen lassen
+- [x] Arena-Grenzen und deterministische Bewegung absichern
+- [x] Verhaltenstests für beide Distanzrichtungen ergänzen
 
-### NEXT-37 · Defensive Strategie
-- [ ] defensive Entscheidungsregel auf Basis von Struktur und Distanz einführen
-- [ ] Rückzugsbewegung innerhalb der Arena absichern
-- [ ] Schießen während defensiver Bewegung eindeutig festlegen
-- [ ] feste Seed-Regressionen ergänzen
+### Implementiert in v0.1.50 · NEXT-37 · Defensive Strategie
+- [x] defensive Entscheidungsregel auf Basis von Struktur und Distanz einführen
+- [x] Rückzugsbewegung innerhalb der Arena absichern
+- [x] Schießen während defensiver Bewegung eindeutig festlegen
+- [x] feste Seed-Regressionen ergänzen
 
-### NEXT-38 · Nahkampfstrategie
-- [ ] konsequentes Schließen der Distanz implementieren
-- [ ] Nahkampfverhalten mit Waffenreichweite koppeln
-- [ ] Stillstand/identische Positionen robust behandeln
-- [ ] deterministische Verhaltenstests ergänzen
+### Implementiert in v0.1.50 · NEXT-38 · Nahkampfstrategie
+- [x] konsequentes Schließen der Distanz implementieren
+- [x] Nahkampfverhalten mit Waffenreichweite koppeln
+- [x] Stillstand/identische Positionen robust behandeln
+- [x] deterministische Verhaltenstests ergänzen
 
 ### NEXT-39 · Strategieauswahl im Config-Dialog
 - [ ] Strategie für Roboter A und B auswählbar machen
