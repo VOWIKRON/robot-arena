@@ -5,7 +5,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Strategiesystem / Replay-Planung  
-**Aktuelle stabile Version:** 0.1.52 (0.1.53 in Prüfung)
+**Aktuelle stabile Version:** 0.1.53
 **Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (in diesem Auftrag ausdrücklich nicht bearbeitet)
 
 ---
@@ -14,7 +14,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Frühes Abstandhalten statt Warten bis 35 % Struktur
 - [x] Verfolgungsstopp standardmäßig bei 70 %; Gegenfeuer innerhalb eigener Reichweite
 - [x] Deterministische Engine-/Balance- und Desktop-/Mobile-Regressionen ergänzt
-- [ ] CI, Integration und Veröffentlichung verifizieren
+- [x] PR-/main-CI grün: 225 Unit-/Verhaltenstests und 46 Desktop-/Mobile-E2E; PR #45 integriert
+- [x] 0.1.53 veröffentlicht, Infoseiten, Versionsarchiv und Build-Commit durch Online-Smoke verifiziert
 
 ## Konkrete nächste Läufe
 
