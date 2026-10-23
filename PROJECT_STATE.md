@@ -3,8 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.50
-- Release-Kandidat: 0.1.51 (Energieanzeigen-Bugfix, CI/Publish ausstehend)
+- Aktuelle stabile Version: 0.1.51
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -26,9 +25,9 @@ Umgesetzt:
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 4
-- Entwicklungszyklen seit Refactoring: 0
-- Entwicklungszyklen seit Architektur-Review: 10
+- Entwicklungszyklen seit Test-Review: 0
+- Entwicklungszyklen seit Refactoring: 1
+- Entwicklungszyklen seit Architektur-Review: 11
 
 ## Öffentliche Metadaten
 
@@ -42,7 +41,9 @@ Beim Publish werden gepflegt:
 
 ## Energieanzeigen-Bugfix
 
-0.1.51 trennt die Raptor-Form von Energie-/Lebensbalken und zeigt die aktuelle Energie direkt an beiden Robotern sowie im Kampfstatus. Browser-Regressionen prüfen tatsächliche Darstellung (Hit-Test statt nur DOM-Sichtbarkeit), Chassiswechsel, Verbrauch/Regeneration, Konfiguration und Reset. Keine Engine-Änderung; Release-Gates siehe RUN_STATE.md.
+0.1.51 veröffentlicht: trennt die Raptor-Form von Energie-/Lebensbalken und zeigt die aktuelle Energie direkt an beiden Robotern sowie im Kampfstatus. Browser-Regressionen prüfen tatsächliche Darstellung (Hit-Test statt nur DOM-Sichtbarkeit), Chassiswechsel, Verbrauch/Regeneration, Konfiguration und Reset. Keine Engine-Änderung. PR-/main-CI grün: 191 Unit-/Verhaltenstests und 36 Desktop-/Mobile-E2E. Publish und Online-Smoke erfolgreich; Produktcommit 1213296167558f6f8ab2d3525879034521902a6d.
+
+Fälliger Test-Review: toBeVisible allein erkennt Clipping nicht. Neue Paint-Hit-Tests und Energie-Lebenszyklustests sichern beide Roboter und Chassis ab. CI prüft den tatsächlichen Chromium-Start vor einer optionalen Paketinstallation; ältere CI-Stände dürfen nicht mehr veröffentlichen.
 
 ## Nächster Entwicklungsschritt
 
