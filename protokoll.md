@@ -225,3 +225,19 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Publishprinzip:** ein gebündelter Entwicklungscommit, CI als Gate, automatischer Publish nur für neue Version 0.1.9.
 
 **Nächster Schritt:** NEXT-05 Sieg und Kampfende.
+
+## 2026-10-23 – NEXT-35 · Aggressive Strategie (v0.1.49)
+
+**Ausgangszustand:** main v0.1.48, NEXT-34 abgeschlossen. Vor Änderung Typecheck, 81 Unit-/Regressionstests und Build grün. Kein offener NEXT-35-PR gefunden.
+
+**Schnitt/Entscheidung:** Die bisher implizite Annäherung wird als explizite aggressive Strategie gekapselt: Zielabstand 80 % der effektiven, bereits sensorbegrenzten Waffenreichweite. Das hält die bisherigen Default-Ergebnisse stabil und grenzt die spätere Nahkampfstrategie ab. Andere Strategietypen behalten bis zu ihrem eigenen NEXT-Schritt das Legacy-Verhalten. Bewegung findet vor der bestehenden zentralen Schussfreigabe statt; auch bei Energiemangel/Cooldown wird weiter angenähert. Keine neue Zufallsquelle und keine geänderte Event-Reihenfolge.
+
+**UI-Vorbereitung:** Gemeinsamer Katalog enthält ausschließlich implementiertes Aggressiv. Beide UI-Konfigurationen übergeben den Default explizit; beide Vorschauen zeigen Aggressiv. Keine verfrühte Auswahl unfertiger Strategien; vollständige Auswahl bleibt NEXT-39.
+
+**Tests:** 15 neue Unit-/Verhaltenstest-Ausführungen: Annäherung, Teilbewegung, Stillstand ohne Rückzug, identische Position, Immutability, Event-Reihenfolge, Reichweiten-/Energie-/Cooldown-Sperren und Grenzfreigabe nach Regeneration. Vollständige Event-Stream-Reproduzierbarkeit mit Seeds 1/12/4711. Bestehende Gewinner-/Endtick-/Reststruktur-Regressionen unverändert grün. Neuer Vorschau-/Apply-/Reset-E2E für beide Roboter auf Desktop und Mobile.
+
+**Lokale Prüfung:** Typecheck, 96 Unit-/Regressionstests und Build grün. Browser-E2E durch fehlendes Chromium blockiert; Installationsversuch liefert ungültiges ZIP. Das ist kein bestandener Browser-Test. CI auf dem PR bleibt erforderlich; kein Publish-Erfolg behauptet.
+
+**Nächster Schritt:** NEXT-36 · Distanzstrategie nach Abschluss der Release-Gates.
+
+**PR-CI Korrektur:** Erster CI-Lauf: 96 Unit-Tests und 30/32 Browser-Tests grün; ausschließlich Navigation scheitert auf beiden Profilen an der veralteten exakten NEXT-34-Erwartung. Test auf erledigtes NEXT-34/NEXT-35 und nächsten Schritt NEXT-36 angepasst; neue Testsuite-IDs und Release-Überschrift ebenfalls im Navigationstest geprüft. Vollständiger CI-Wiederholungslauf erforderlich.

@@ -1,17 +1,19 @@
 # RUN_STATE
 
-Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
-
 ## Aktueller Lauf
-- step: NEXT-34
-- status: COMPLETE
-- scope: Strategietyp als Engine-Datenmodell und verifizierter Release-Abschluss
-- version: 0.1.48
-- branch: main
-- pr_tests: GREEN
-- main_tests: GREEN
-- publish: SUCCESS
-- blocker: none
+- step: NEXT-35
+- status: IMPLEMENTED_AWAITING_CI
+- scope: Aggressive Strategie, deterministische Tests und UI-Vorbereitung
+- version: 0.1.49
+- branch: codex/next-35-aggressive-strategy
+- local_typecheck: GREEN
+- local_unit_tests: GREEN (96)
+- local_build: GREEN
+- local_e2e: BLOCKED (Chromium fehlt; Download liefert ungültiges ZIP)
+- pr_tests: PENDING
+- main_tests: NOT_RUN
+- publish: NOT_RUN
+- blocker: Desktop-/Mobile-E2E in CI sowie anschließende main-/Publish-Gates ausstehend
 
 ## Nächstes Gate
-NEXT-34 ist abgeschlossen. Der nächste planmäßige Lauf darf genau NEXT-35 (Aggressive Strategie) beginnen. Vor Beginn muss er den tatsächlichen main-/Publish-Zustand prüfen.
+PR-CI für den konkreten Commit prüfen. Erst bei vollständig grünen Gates zusammenführen/veröffentlichen. NEXT-35 nicht als veröffentlicht markieren, solange main-CI und Publish nicht bestätigt sind. Danach NEXT-36 · Distanzstrategie.

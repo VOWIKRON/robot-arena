@@ -101,3 +101,17 @@ test('configuration lives in a dedicated dialog', async ({ page }) => {
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(page.getByRole('heading', { name: 'Kampfstatus' })).toBeVisible();
 });
+
+test('configuration previews expose the aggressive default for both robots after apply and reset', async ({ page }) => {
+  await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
+  for (const id of ['a', 'b']) {
+    await expect(page.locator(`#preview-${id}`)).toContainText('Strategie: Aggressiv');
+  }
+  await page.getByRole('button', { name: 'Übernehmen & Kampf zurücksetzen' }).click();
+  await page.getByRole('button', { name: '1 Tick', exact: true }).click();
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
+  for (const id of ['a', 'b']) {
+    await expect(page.locator(`#preview-${id}`)).toContainText('Strategie: Aggressiv');
+  }
+});

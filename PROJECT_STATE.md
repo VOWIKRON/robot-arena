@@ -4,6 +4,7 @@
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
 - Aktuelle stabile Version: 0.1.48
+- Release-Kandidat: 0.1.49 (CI/Publish ausstehend)
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -25,9 +26,9 @@ Umgesetzt:
 
 ## Qualitätszähler
 
-- Entwicklungszyklen seit Test-Review: 0
-- Entwicklungszyklen seit Refactoring: 0
-- Entwicklungszyklen seit Architektur-Review: 6
+- Entwicklungszyklen seit Test-Review: 1
+- Entwicklungszyklen seit Refactoring: 1
+- Entwicklungszyklen seit Architektur-Review: 7
 
 ## Öffentliche Metadaten
 
@@ -43,7 +44,11 @@ Beim Publish werden gepflegt:
 
 NEXT-34 abgeschlossen: Strategietypen `aggressive`, `defensive`, `distance` und `melee` sind als Engine-Datenmodell vorhanden. Jede Roboterkonfiguration trägt eine explizite Strategie; das bisherige Kampfverhalten bleibt über den Default unverändert. Unit-/Regressionstests sichern Default und Serialisierbarkeit ab.
 
-Nächster konkreter Entwicklungsschritt: NEXT-35 · Aggressive Strategie.
+NEXT-35 implementiert: explizite aggressive Bewegungspolitik mit Zielabstand 80 % der effektiven Waffenreichweite; Annäherung auch während Cooldown/Energiemangel, Schussfreigabe nach Bewegung weiterhin zentral. Die Default-Kampfergebnisse bleiben kompatibel. Gemeinsamer Katalog ausschließlich implementierter Strategien und expliziter UI-Default bereiten NEXT-39 vor; Vorschau zeigt Aggressiv für A/B.
+
+Nächster konkreter Entwicklungsschritt: NEXT-36 · Distanzstrategie.
+
+Release-Gates für 0.1.49: siehe RUN_STATE.md; kein Publish-Erfolg vorweggenommen.
 
 NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministischer Reset und Validierungsgrenzen massiv erweitert und auf Desktop/Mobile abgesichert.
 
