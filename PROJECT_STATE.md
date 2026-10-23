@@ -4,6 +4,7 @@
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
 - Aktuelle stabile Version: 0.1.50
+- Release-Kandidat: 0.1.51 (Energieanzeigen-Bugfix, CI/Publish ausstehend)
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -38,6 +39,10 @@ Beim Publish werden gepflegt:
 - published
 - nextRunAt
 - Status der verpflichtenden Qualitätsgates
+
+## Energieanzeigen-Bugfix
+
+0.1.51 trennt die Raptor-Form von Energie-/Lebensbalken und zeigt die aktuelle Energie direkt an beiden Robotern sowie im Kampfstatus. Browser-Regressionen prüfen tatsächliche Darstellung (Hit-Test statt nur DOM-Sichtbarkeit), Chassiswechsel, Verbrauch/Regeneration, Konfiguration und Reset. Keine Engine-Änderung; Release-Gates siehe RUN_STATE.md.
 
 ## Nächster Entwicklungsschritt
 

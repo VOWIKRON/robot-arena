@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.51 – 2026-10-23
+- Energiebalken direkt über beiden Robotern ergänzt; Verbrauch, Regeneration und gewählte Versorgung aktualisieren sie aus dem Match-State.
+- Raptor-Körper wird getrennt von den Anzeigen beschnitten: Energie- und Lebensbalken von Robot A bleiben sichtbar, auch beim Chassiswechsel.
+- Kampfstatus zeigt Energie zusätzlich als Balken; zugängliche Energiewerte mit aktuellem Wert und Maximum.
+- Desktop-/Mobile-Regressionen prüfen tatsächliche Sichtbarkeit ohne Clipping, beide Chassis sowie Verbrauch, Regeneration, Konfigurationswechsel und Reset.
+- Keine Änderung an der Engine; NEXT-39 bleibt der nächste Strategieschritt.
+
 ## 0.1.50 – 2026-10-23
 - NEXT-36: Distanzstrategie nähert sich auf 90 % der effektiven Reichweite an und weicht bei Unterschreitung zurück.
 - NEXT-37: Defensive Strategie zieht sich ab 35 % Struktur auf 110 % der größeren effektiven Waffenreichweite zurück; bei größerer Distanz kein Nachsetzen. Schüsse bleiben während des Rückzugs erlaubt, sofern Reichweite, Energie und Cooldown nach Bewegung passen.

@@ -256,3 +256,14 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **UI und Scope:** Katalog umfasst alle implementierten Strategien; Dialog bleibt beim aggressiven Default. NEXT-39 bleibt die echte A/B-Auswahl, NEXT-40/41 die Parameterverwaltung. Desktop-/Mobile-Navigation prüft neue Dokumentation und nächsten Schritt.
 
 **Release:** 0.1.50 ist bis zu grüner PR-/main-CI und bestätigtem Publish ein Kandidat. Lokaler Browserdownload ist weiterhin nicht verfügbar; CI muss beide Browserprofile prüfen.
+
+
+## 2026-10-23 – Bugfix Energieanzeigen (v0.1.51)
+
+**Befund:** Bisher nur Energie-Text im Kampfstatus, kein Energiebalken am Roboter. Der clip-path auf dem gesamten Raptor-Roboter schneidet außerhalb liegende Kindanzeigen ab; die alten toBeVisible-Prüfungen erkennen dieses Painting-Problem nicht.
+
+**Fix:** Raptor-Form in eigenes dekoratives Körperelement verschoben. Elterncontainer bleibt unbeschnitten, beide Lebens-/Energiebalken liegen als Geschwister darüber. Blaue Energieanzeige für A/B und zusätzliche Balken im Kampfstatus; aktuelle Werte und Maximum kommen ausschließlich aus Match-State. Verbrauch/Regeneration/Konfiguration/Reset bleiben Engine-gesteuert. Keine Engine-Änderung.
+
+**Regressionen:** Browser-Hit-Test in der Mitte der Anzeigen prüft die tatsächliche Darstellung und würde die alte Raptor-Clipping-Regel erkennen. Prüfung für beide Roboter und beide Chassis. Zweiter Verhaltenstest prüft Energieabfall nach Schüssen, Regeneration im Folgetick, Balkenanteile/Textwerte, Versorgungswechsel und Reset. Beide Tests laufen auf Desktop und Mobile. Lokaler Typecheck, 191 Tests und Build grün; Browser-/Publish-Gates folgen in CI.
+
+**Scope:** Energieanzeigen-Bugfix; NEXT-39 bleibt als nächster Strategieschritt bestehen.
