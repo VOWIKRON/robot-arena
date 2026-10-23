@@ -1,8 +1,9 @@
 import './style.css';
 import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR, STANDARD_ARMOR, LIGHT_ARMOR, HEAVY_ARMOR, STANDARD_ENERGY, CAPACITY_ENERGY, REGEN_ENERGY, STANDARD_SENSOR, SHORT_SENSOR, LONG_SENSOR } from './engine/presets';
-import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
+import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, DEFAULT_STRATEGY, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
 import { createMatch, stepMatchWithEvents } from './engine/simulation';
 import { SeededRandom } from './engine/random';
+import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import type { MatchState } from './engine/types';
 
 const app = document.querySelector<HTMLDivElement>('#app');
@@ -10,7 +11,7 @@ if (!app) throw new Error('App root missing');
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.28</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.49</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
@@ -60,7 +61,7 @@ function configurationA() {
   const sensorValue = el<HTMLSelectElement>('sensor-a').value;
   const sensor: Sensor = sensorValue === 'short' ? SHORT_SENSOR : sensorValue === 'long' ? LONG_SENSOR : STANDARD_SENSOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-a').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
-  return { id: 'robot-a', name: 'Robot A', chassis, motor, armor, energySupply, sensor, weapon };
+  return { id: 'robot-a', name: 'Robot A', chassis, motor, armor, energySupply, sensor, weapon, strategy: DEFAULT_STRATEGY };
 }
 function selectedRobotA() { return buildRobotDefinition(configurationA()); }
 function configurationB() {
@@ -74,11 +75,11 @@ function configurationB() {
   const sensorValue = el<HTMLSelectElement>('sensor-b').value;
   const sensor: Sensor = sensorValue === 'short' ? SHORT_SENSOR : sensorValue === 'long' ? LONG_SENSOR : STANDARD_SENSOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-b').value === 'raptor' ? RAPTOR_WEAPON : TITAN_WEAPON;
-  return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, energySupply, sensor, weapon };
+  return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, energySupply, sensor, weapon, strategy: DEFAULT_STRATEGY };
 }
 function selectedRobotB() { return buildRobotDefinition(configurationB()); }
 function previewHtml(d: ReturnType<typeof selectedRobotA>, weight: number, maxWeight: number): string {
-  return `<strong>Live-Werte</strong><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+  return `<strong>Live-Werte</strong><span>Strategie: ${AVAILABLE_STRATEGIES.find(option => option.value === d.strategy)?.label ?? d.strategy}</span><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
 }
 function renderPreview(): void {
   const errorsA = validateRobotConfiguration(configurationA());

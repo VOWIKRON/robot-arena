@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.49 – 2026-10-23
+- NEXT-35: aggressive Zielannäherung als explizite Strategie mit 80 % der effektiven Waffenreichweite gekapselt.
+- Bestehende Schussfreigabe nach Bewegung berücksichtigt weiterhin Reichweite, Regeneration, Energie und Cooldown. Default-Ergebnisse bleiben stabil.
+- Gemeinsamer Auswahlkatalog bietet nur Aggressiv; UI übergibt den Default explizit und zeigt ihn in beiden Konfigurationsvorschauen. Vollständige Auswahl folgt in NEXT-39.
+- Deterministische Verhaltenstests mit Seeds 1, 12 und 4711 sowie Desktop-/Mobile-Vorschautest ergänzt.
+- Nächster Schritt: NEXT-36 · Distanzstrategie.
+
 ## 0.1.48 – 2026-10-08
 - Formaler Abschluss von NEXT-34: RUN_STATE auf COMPLETE gesetzt und Release-Metadaten synchronisiert.
 - Keine Änderung am Kampfverhalten. NEXT-35 bleibt der nächste Entwicklungsschritt.

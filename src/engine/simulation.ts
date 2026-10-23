@@ -2,6 +2,7 @@ import type { MatchState, RobotDefinition, RobotState, Vec2 } from './types';
 import type { CombatEvent, MoveEvent } from './events';
 import { createDamageEvent, createHitEvent, createMoveEvent, createShotEvent, createVictoryEvent } from './events';
 import { SeededRandom } from './random';
+import { desiredCombatDistance } from './strategies';
 
 export type StepResult = Readonly<{ state: MatchState; events: readonly CombatEvent[]; }>;
 const distance = (a: Vec2, b: Vec2): number => Math.hypot(a.x - b.x, a.y - b.y);
@@ -15,7 +16,7 @@ export function createMatch(robotA: RobotDefinition, robotB: RobotDefinition): M
 function moveTowards(self: RobotState, enemy: RobotState, tick: number, width: number, height: number): MoveEvent | null {
   const dx=enemy.position.x-self.position.x, dy=enemy.position.y-self.position.y, len=Math.hypot(dx,dy);
   if (len===0) return null;
-  const desiredDistance=self.definition.weaponRange*0.8;
+  const desiredDistance=desiredCombatDistance(self.definition);
   if (len<=desiredDistance) return null;
   const from=self.position, step=Math.min(self.definition.speed,len-desiredDistance);
   const to={x:Math.max(0,Math.min(width,self.position.x+(dx/len)*step)),y:Math.max(0,Math.min(height,self.position.y+(dy/len)*step))};

@@ -6,7 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Einstieg in Kernsimulation  
 **Aktuelle stabile Version:** 0.1.48  
-**Nächstes Ziel:** Strategiesystem – NEXT-35 · Aggressive Strategie
+**Release-Kandidat:** 0.1.49
+**Nächstes Ziel:** Strategiesystem – NEXT-36 · Distanzstrategie
 
 ---
 
@@ -221,11 +222,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] bestehendes Kampfverhalten als Default unverändert gehalten
 - [x] Unit-/Regressionstests für Default und Serialisierbarkeit ergänzt
 
-### NEXT-35 · Aggressive Strategie
-- [ ] aggressive Zielannäherung als erste echte Strategie implementieren
-- [ ] Schussentscheidung mit bestehender Reichweiten-/Energielogik verbinden
-- [ ] deterministische Verhaltenstests mit festen Seeds ergänzen
-- [ ] Desktop/Mobile-Auswahl vorbereiten, ohne weitere Strategien vorwegzunehmen
+### Implementiert in v0.1.49 · NEXT-35 · Aggressive Strategie
+- [x] aggressive Zielannäherung als erste echte Strategie implementieren
+- [x] Schussentscheidung mit bestehender Reichweiten-/Energielogik verbinden
+- [x] deterministische Verhaltenstests mit festen Seeds ergänzen
+- [x] Desktop/Mobile-Auswahl vorbereiten, ohne weitere Strategien vorwegzunehmen
 
 ### NEXT-36 · Distanzstrategie
 - [ ] gewünschte Kampfdistanz modellieren
