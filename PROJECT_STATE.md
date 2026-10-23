@@ -3,8 +3,7 @@
 ## Aktueller Stand
 
 - Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.49
-- Release-Kandidat: 0.1.50 (CI/Publish ausstehend)
+- Aktuelle stabile Version: 0.1.50
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -46,13 +45,13 @@ NEXT-34 abgeschlossen: Strategietypen `aggressive`, `defensive`, `distance` und 
 
 NEXT-35 abgeschlossen und veröffentlicht: explizite aggressive Bewegungspolitik mit Zielabstand 80 % der effektiven Waffenreichweite; Annäherung auch während Cooldown/Energiemangel, Schussfreigabe nach Bewegung weiterhin zentral. Die Default-Kampfergebnisse bleiben kompatibel. Gemeinsamer Katalog ausschließlich implementierter Strategien und expliziter UI-Default bereiten NEXT-39 vor; Vorschau zeigt Aggressiv für A/B.
 
-NEXT-36 bis NEXT-38 implementiert: Distanz hält 90 % der effektiven Reichweite durch Annäherung/Rückzug. Defensiv greift bei mehr als 35 % Struktur wie Aggressiv an; ab 35 % Rückzug auf 110 % der größeren effektiven Waffenreichweite beider Roboter, ohne erneutes Nachsetzen. Nahkampf schließt bis auf 20 % der effektiven Waffenreichweite auf, ohne Rückzug. Schussfreigabe nach Bewegung bleibt zentral und gilt auch während Rückzug.
+NEXT-36 bis NEXT-38 abgeschlossen und veröffentlicht: Distanz hält 90 % der effektiven Reichweite durch Annäherung/Rückzug. Defensiv greift bei mehr als 35 % Struktur wie Aggressiv an; ab 35 % Rückzug auf 110 % der größeren effektiven Waffenreichweite beider Roboter, ohne erneutes Nachsetzen. Nahkampf schließt bis auf 20 % der effektiven Waffenreichweite auf, ohne Rückzug. Schussfreigabe nach Bewegung bleibt zentral und gilt auch während Rückzug.
 
 Refactoring: reine Strategieentscheidung (signierte Bewegung), gemeinsame reine Bewegungsgeometrie und Event-/Kampfausführung getrennt. Keine RNG-Nutzung in Entscheidungen. Identische Positionen mit deterministischer Ausweichrichtung; keine Move-Events ohne Ortsänderung. Default-Ergebnis-/Event-Regressionen unverändert.
 
 Nächster konkreter Entwicklungsschritt: NEXT-39 · Strategieauswahl im Config-Dialog. Der gemeinsame Katalog enthält jetzt alle vier implementierten Strategien; die UI bleibt bis NEXT-39 beim aggressiven Default.
 
-Release-Gates 0.1.50: siehe RUN_STATE.md; keine Veröffentlichung vorweggenommen.
+Release-Gates 0.1.50 bestanden: PR-CI und main-CI grün (191 Unit-/Verhaltenstests, 32 Desktop-/Mobile-E2E), Publish inklusive Online-Smoke erfolgreich. Veröffentlichter Commit: ea747a3624b71cb2725dd35e288675a938bc120a. Der erste main-Runner hing bei Browser-Systempaketen; der aktualisierte Übergabestand wurde vollständig auf einem weiteren Runner geprüft.
 
 Release-Gates für 0.1.49 bestanden: PR-CI und main-CI grün (96 Unit-/Regressionstests, 32 Desktop-/Mobile-E2E), Publish und Online-Smoke erfolgreich. Veröffentlichter Commit: a41af00d95ac1cd72f256f8da445ae208ad9a646.
 
