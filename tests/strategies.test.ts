@@ -14,8 +14,8 @@ function scenario(distance: number) {
 }
 
 describe('aggressive strategy', () => {
-  it('offers only the implemented default for future selectors', () => {
-    expect(AVAILABLE_STRATEGIES).toEqual([{ value: DEFAULT_STRATEGY, label: 'Aggressiv' }]);
+  it('offers exactly the implemented strategies for future selectors', () => {
+    expect(AVAILABLE_STRATEGIES.map(option => option.value)).toEqual([DEFAULT_STRATEGY, 'distance', 'defensive', 'melee']);
     expect(desiredCombatDistance({ ...RAPTOR, weaponRange: 20 })).toBe(16);
   });
 

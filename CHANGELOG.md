@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.50 – 2026-10-23
+- NEXT-36: Distanzstrategie nähert sich auf 90 % der effektiven Reichweite an und weicht bei Unterschreitung zurück.
+- NEXT-37: Defensive Strategie zieht sich ab 35 % Struktur auf 110 % der größeren effektiven Waffenreichweite zurück; bei größerer Distanz kein Nachsetzen. Schüsse bleiben während des Rückzugs erlaubt, sofern Reichweite, Energie und Cooldown nach Bewegung passen.
+- NEXT-38: Nahkampfstrategie schließt bis auf 20 % der effektiven Waffenreichweite auf; kein Rückzug. Kein zusätzlicher Nahkampfschaden oder neuer Waffentyp.
+- Refactoring trennt reine Strategieentscheidung, gemeinsame Bewegungsgeometrie und Kampf-/Eventausführung. Überlappung löst deterministisches Ausweichen aus, stationäre Roboter erzeugen keine leeren Move-Events.
+- Alle 16 Strategiepaarungen mit Seeds 1/12/4711 sowie feste Gewinner-/Endtick-/Reststruktur-Regressionen und Grenzfälle ergänzt. Aggressive Standardkämpfe bleiben unverändert.
+- Nächster Schritt: NEXT-39 · Strategieauswahl im Config-Dialog.
+
 ## 0.1.49 – 2026-10-23
 - NEXT-35: aggressive Zielannäherung als explizite Strategie mit 80 % der effektiven Waffenreichweite gekapselt.
 - Bestehende Schussfreigabe nach Bewegung berücksichtigt weiterhin Reichweite, Regeneration, Energie und Cooldown. Default-Ergebnisse bleiben stabil.

@@ -1,22 +1,18 @@
 # RUN_STATE
 
-Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
-
 ## Aktueller Lauf
-- step: NEXT-35
-- status: COMPLETE
-- scope: Aggressive Strategie, deterministische Tests und UI-Vorbereitung
-- version: 0.1.49
-- branch: main
-- pr_tests: GREEN (96 Unit-/Regressionstests, 32 Desktop-/Mobile-E2E)
-- pr_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40004253697
-- main_tests: GREEN
-- main_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40005154460
-- publish: SUCCESS
-- publish_run: https://github.com/VOWIKRON/robot-arena/actions/runs/40005306993
-- published_commit: a41af00d95ac1cd72f256f8da445ae208ad9a646
-- online_smoke: GREEN (Publish-Workflow verifiziert Hauptseite, Infoseiten, Versionsarchiv und Commit)
-- blocker: none
+- step: NEXT-36 bis NEXT-38 (gemeinsam vom Nutzer beauftragt)
+- status: IMPLEMENTED_AWAITING_CI
+- version: 0.1.50
+- branch: codex/next-36-38-strategies
+- local_typecheck: GREEN
+- local_unit_tests: GREEN (191)
+- local_build: GREEN
+- local_e2e: BLOCKED (Chromium lokal nicht verfügbar; Browserprüfung durch CI)
+- pr_tests: PENDING
+- main_tests: NOT_RUN
+- publish: NOT_RUN
+- blocker: CI und Publish-Gates offen
 
 ## Nächstes Gate
-NEXT-35 ist abgeschlossen. Nächster konkreter Schritt: NEXT-36 · Distanzstrategie. Vor Beginn tatsächlichen main-/Publish-Zustand prüfen. Dieser Abschlusscommit ändert ausschließlich Projektmetadaten; der veröffentlichte Produktcommit bleibt unverändert.
+Finalen PR-Stand vollständig prüfen; erst bei grüner CI integrieren, main-CI und Publish verifizieren. Danach NEXT-39 · Strategieauswahl im Config-Dialog. Die Engine unterstützt alle vier Strategien, die UI-Auswahl ist noch nicht implementiert.

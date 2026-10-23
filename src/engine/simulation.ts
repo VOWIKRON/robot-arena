@@ -2,7 +2,7 @@ import type { MatchState, RobotDefinition, RobotState, Vec2 } from './types';
 import type { CombatEvent, MoveEvent } from './events';
 import { createDamageEvent, createHitEvent, createMoveEvent, createShotEvent, createVictoryEvent } from './events';
 import { SeededRandom } from './random';
-import { desiredCombatDistance } from './strategies';
+import { nextCombatPosition } from './movement';
 
 export type StepResult = Readonly<{ state: MatchState; events: readonly CombatEvent[]; }>;
 const distance = (a: Vec2, b: Vec2): number => Math.hypot(a.x - b.x, a.y - b.y);
@@ -13,15 +13,12 @@ function createRobot(definition: RobotDefinition, position: Vec2): RobotState {
 export function createMatch(robotA: RobotDefinition, robotB: RobotDefinition): MatchState {
   return { tick: 0, width: 100, height: 100, robotA: createRobot(robotA,{x:15,y:50}), robotB: createRobot(robotB,{x:85,y:50}), winner: null, outcome: 'active', endReason: null };
 }
-function moveTowards(self: RobotState, enemy: RobotState, tick: number, width: number, height: number): MoveEvent | null {
-  const dx=enemy.position.x-self.position.x, dy=enemy.position.y-self.position.y, len=Math.hypot(dx,dy);
-  if (len===0) return null;
-  const desiredDistance=desiredCombatDistance(self.definition);
-  if (len<=desiredDistance) return null;
-  const from=self.position, step=Math.min(self.definition.speed,len-desiredDistance);
-  const to={x:Math.max(0,Math.min(width,self.position.x+(dx/len)*step)),y:Math.max(0,Math.min(height,self.position.y+(dy/len)*step))};
-  self.position=to;
-  return createMoveEvent(tick,self.definition.id,from,to);
+function moveRobot(self: RobotState, enemy: RobotState, tick: number, width: number, height: number): MoveEvent | null {
+  const to = nextCombatPosition(self, enemy, width, height);
+  if (!to) return null;
+  const from = self.position;
+  self.position = to;
+  return createMoveEvent(tick, self.definition.id, from, to);
 }
 function canFire(self: RobotState, enemy: RobotState): boolean {
   return distance(self.position,enemy.position)<=self.definition.weaponRange
@@ -31,7 +28,7 @@ function canFire(self: RobotState, enemy: RobotState): boolean {
 function prepareAction(self: RobotState, enemy: RobotState, tick: number, events: CombatEvent[], width: number, height: number): void {
   self.energy=Math.min(self.definition.maxEnergy,self.energy+self.definition.energyRegen);
   self.cooldown=Math.max(0,self.cooldown-1);
-  const moveEvent=moveTowards(self,enemy,tick,width,height);
+  const moveEvent=moveRobot(self,enemy,tick,width,height);
   if (moveEvent) events.push(moveEvent);
 }
 function fire(self: RobotState, enemy: RobotState, rng: SeededRandom, tick: number, events: CombatEvent[]): void {
