@@ -14,7 +14,10 @@
 - main_tests: IN_PROGRESS (Typecheck/191 Tests/Build grün; Browser-Systeminstallation wartet)
 - main_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40011098907
 - publish: NOT_RUN
-- blocker: main-Runner wartet bei Browser-Systempaketen; Veröffentlichung noch nicht freigegeben
+- blocker: Vollständige CI des aktualisierten Browser-Setups und Veröffentlichung offen
 
 ## Nächstes Gate
 PR-CI prüfen, bei grünen Gates integrieren und main-/Publish-Gates verifizieren. NEXT-39 bleibt nächster Strategieschritt.
+
+## CI-Korrektur
+Die pauschale Systempaketinstallation hielt mehrere main-Runner auf. CI installiert Chromium und prüft seinen tatsächlichen Start. Nur bei fehlgeschlagenem Start werden Systempakete nachinstalliert (maximal drei Minuten), danach ist ein erfolgreicher Start verpflichtend. Alle 191 Unit- und 36 Desktop-/Mobile-Tests bleiben Pflicht. Publish akzeptiert nur den aktuellen main-SHA im workflow_run-Kontext, damit spät beendete ältere Läufe keinen alten Produktstand veröffentlichen.
