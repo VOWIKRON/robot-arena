@@ -6,6 +6,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Einstieg in Kernsimulation  
 **Aktuelle stabile Version:** 0.1.50  
+**Release-Kandidat:** 0.1.51 (Energieanzeigen-Bugfix)
 **Nächstes Ziel:** Strategiesystem – NEXT-39 · Strategieauswahl im Config-Dialog
 
 ---
