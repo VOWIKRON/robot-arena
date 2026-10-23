@@ -26,9 +26,9 @@ test('both robots paint energy and health bars with either chassis', async ({ pa
     expect(await page.locator(`#bot-${id} .bot-energy-fill`).evaluate(el => (el as HTMLElement).style.width)).toBe('100%');
   }
   await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
-  await page.getByLabel('Chassis A', { exact: true }).selectOption('titan');
-  await page.getByLabel('Chassis B', { exact: true }).selectOption('raptor');
-  await page.getByLabel('Waffe B', { exact: true }).selectOption('raptor');
+  await page.getByLabel('Chassis A').selectOption('titan');
+  await page.getByLabel('Chassis B').selectOption('raptor');
+  await page.getByLabel('Waffe B').selectOption('raptor');
   await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
   for (const id of ['a', 'b']) await assertPaintedBars(page, id);
 });
@@ -54,8 +54,8 @@ test('energy bars follow spending, regeneration, configuration and reset for A a
   expect(Number(await barA.getAttribute('aria-valuenow'))).toBeCloseTo(Math.min(100, beforeA + 1.5));
   expect(Number(await barB.getAttribute('aria-valuenow'))).toBeCloseTo(Math.min(90, beforeB + 1.1));
   await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
-  await page.getByLabel('Energie A', { exact: true }).selectOption('regen');
-  await page.getByLabel('Energie B', { exact: true }).selectOption('capacity');
+  await page.getByLabel('Energie A').selectOption('regen');
+  await page.getByLabel('Energie B').selectOption('capacity');
   await page.getByRole('button', { name: 'Übernehmen & Kampf zurücksetzen' }).click();
   await expect(barA).toHaveAttribute('aria-valuemax', '90');
   await expect(barA).toHaveAttribute('aria-valuenow', '90');
