@@ -51,3 +51,13 @@ describe('strategy parameters', () => {
     expect(stepMatchWithEvents(state,new SeededRandom(12)).state.robotA.position.x).toBe(44);
   });
 });
+
+
+it('keeps the combined 100 % aggressive / 0 % melee UI scenario reproducible', () => {
+  let state = createMatch({...RAPTOR, strategy:'aggressive', strategyParameters:{targetDistanceRatio:1}}, {...TITAN, strategy:'melee', strategyParameters:{targetDistanceRatio:0}});
+  const rng = new SeededRandom(4711);
+  for (let i=0;i<54;i++) state=stepMatchWithEvents(state,rng).state;
+  expect(state.outcome).toBe('active');
+  expect(state.robotA.position.x).toBeCloseTo(42.6, 9);
+  expect(state.robotB.position).toEqual(state.robotA.position);
+});

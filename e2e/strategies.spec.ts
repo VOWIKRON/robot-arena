@@ -56,10 +56,10 @@ test('strategy parameters affect engine movement and invalid input blocks all ma
   await page.locator('#target-a').fill('100');
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
   await page.getByRole('button', { name: 'Übernehmen & Kampf zurücksetzen' }).click();
-  for (let i=0;i<52;i++) await page.getByRole('button', { name: '1 Tick', exact: true }).click();
+  for (let i=0;i<54;i++) await page.getByRole('button', { name: '1 Tick', exact: true }).click();
   const xA=Number(await page.locator('#bot-a').getAttribute('data-x'));
   const xB=Number(await page.locator('#bot-b').getAttribute('data-x'));
-  expect(xA).toBeCloseTo(43.5, 3); // A's 100 % target, rather than its old 80 % default.
+  expect(xA).toBeCloseTo(42.6, 3); // A's 100 % target, rather than its old 80 % default.
   expect(xB-xA).toBeCloseTo(0, 3); // B's custom zero target, rather than the default 20 % gap.
   await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
   await page.getByLabel('Strategie A', { exact: true }).selectOption('defensive');

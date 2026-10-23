@@ -6,7 +6,7 @@
 - version: 0.1.52
 - branch: codex/next-39-41-43
 - local_typecheck: GREEN
-- local_unit_tests: GREEN (214)
+- local_unit_tests: GREEN (215)
 - local_build: GREEN
 - pr_tests: PENDING (42 Desktop-/Mobile-Ausführungen erwartet)
 - main_tests: NOT_RUN
