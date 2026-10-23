@@ -4,21 +4,29 @@ import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, 
 import { createMatch, stepMatchWithEvents } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
+import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('App root missing');
 
+function strategyControls(side: 'a' | 'b'): string {
+  const label = side.toUpperCase();
+  return `<div class="strategy-controls"><label for="strategy-${side}">Strategie ${label}</label><select id="strategy-${side}">${AVAILABLE_STRATEGIES.map(item => `<option value="${item.value}">${item.label}</option>`).join('')}</select>
+  <label id="target-field-${side}">Zielabstand ${label} (% Waffenreichweite)<input id="target-${side}" type="number" min="0" max="100" step="any" value="80"></label>
+  <div id="defensive-fields-${side}" hidden><label>Rückzugsschwelle ${label} (% Struktur)<input id="threshold-${side}" type="number" min="0" max="100" step="any" value="35"></label><label>Sicherheitsabstand ${label} (% größere Waffenreichweite)<input id="retreat-${side}" type="number" min="100" max="200" step="any" value="110"></label></div></div>`;
+}
+
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.51</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.52</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button></div>
 <div class="status" id="status"></div>
 </section>
-<aside class="card battle-panel"><h2>Kampfstatus</h2><div id="stats"></div><div class="battle-hint">Konfiguration über den Button unter der Arena ändern.</div></aside>\n<dialog id="config-dialog" aria-labelledby="config-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="config-title">Roboter konfigurieren</h2><button id="close-config" aria-label="Konfiguration schließen">×</button></div><div class="config-grid"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie A <select id="energy-a"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor A <select id="sensor-a"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label><div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie B <select id="energy-b"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor B <select id="sensor-b"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label><div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div class="dialog-actions"><button id="apply-config">Übernehmen &amp; Kampf zurücksetzen</button></div></div></dialog>
+<aside class="card battle-panel"><h2>Kampfstatus</h2><div id="stats"></div><div class="battle-hint">Konfiguration über den Button unter der Arena ändern.</div></aside>\n<dialog id="config-dialog" aria-labelledby="config-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="config-title">Roboter konfigurieren</h2><button id="close-config" aria-label="Konfiguration schließen">×</button></div><div class="config-grid"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie A <select id="energy-a"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor A <select id="sensor-a"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label>${strategyControls('a')}<div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie B <select id="energy-b"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor B <select id="sensor-b"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label>${strategyControls('b')}<div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div class="dialog-actions"><button id="apply-config">Übernehmen &amp; Kampf zurücksetzen</button></div></div></dialog>
 </div>
 <footer class="site-footer" aria-label="Projektinformationen">
   <a href="./testsuite.html">Testsuite</a>
@@ -50,6 +58,37 @@ function pause(): void {
   timer = null;
 }
 
+function selectedStrategy(side: 'a' | 'b') {
+  const strategy = el<HTMLSelectElement>(`strategy-${side}`).value as StrategyType;
+  const percent = (name: string) => el<HTMLInputElement>(`${name}-${side}`).valueAsNumber / 100;
+  return {
+    strategy,
+    strategyParameters: strategy === 'defensive'
+      ? { retreatStructureRatio: percent('threshold'), retreatDistanceFactor: percent('retreat') }
+      : { targetDistanceRatio: percent('target') }
+  };
+}
+
+function updateStrategyFields(side: 'a' | 'b', resetDefaults = false): void {
+  const { strategy } = selectedStrategy(side);
+  const defensive = strategy === 'defensive';
+  el(`target-field-${side}`).hidden = defensive;
+  el(`defensive-fields-${side}`).hidden = !defensive;
+  el<HTMLInputElement>(`target-${side}`).disabled = defensive;
+  el<HTMLInputElement>(`threshold-${side}`).disabled = !defensive;
+  el<HTMLInputElement>(`retreat-${side}`).disabled = !defensive;
+  if (resetDefaults) {
+    const defaults = strategyParameters(strategy);
+    el<HTMLInputElement>(`target-${side}`).value = String(defaults.targetDistanceRatio * 100);
+    el<HTMLInputElement>(`threshold-${side}`).value = String(defaults.retreatStructureRatio * 100);
+    el<HTMLInputElement>(`retreat-${side}`).value = String(Math.round(defaults.retreatDistanceFactor * 100));
+  }
+}
+
+function configurationValid(): boolean {
+  return !validateRobotConfiguration(configurationA()).length && !validateRobotConfiguration(configurationB()).length;
+}
+
 function configurationA() {
   const chassis: Chassis = el<HTMLSelectElement>('chassis-a').value === 'titan' ? TITAN_CHASSIS : RAPTOR_CHASSIS;
   const motorValue = el<HTMLSelectElement>('motor-a').value;
@@ -61,7 +100,7 @@ function configurationA() {
   const sensorValue = el<HTMLSelectElement>('sensor-a').value;
   const sensor: Sensor = sensorValue === 'short' ? SHORT_SENSOR : sensorValue === 'long' ? LONG_SENSOR : STANDARD_SENSOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-a').value === 'titan' ? TITAN_WEAPON : RAPTOR_WEAPON;
-  return { id: 'robot-a', name: 'Robot A', chassis, motor, armor, energySupply, sensor, weapon, strategy: DEFAULT_STRATEGY };
+  return { id: 'robot-a', name: 'Robot A', chassis, motor, armor, energySupply, sensor, weapon, ...selectedStrategy('a') };
 }
 function selectedRobotA() { return buildRobotDefinition(configurationA()); }
 function configurationB() {
@@ -75,23 +114,25 @@ function configurationB() {
   const sensorValue = el<HTMLSelectElement>('sensor-b').value;
   const sensor: Sensor = sensorValue === 'short' ? SHORT_SENSOR : sensorValue === 'long' ? LONG_SENSOR : STANDARD_SENSOR;
   const weapon: Weapon = el<HTMLSelectElement>('weapon-b').value === 'raptor' ? RAPTOR_WEAPON : TITAN_WEAPON;
-  return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, energySupply, sensor, weapon, strategy: DEFAULT_STRATEGY };
+  return { id: 'robot-b', name: 'Robot B', chassis, motor, armor, energySupply, sensor, weapon, ...selectedStrategy('b') };
 }
 function selectedRobotB() { return buildRobotDefinition(configurationB()); }
 function previewHtml(d: ReturnType<typeof selectedRobotA>, weight: number, maxWeight: number): string {
-  return `<strong>Live-Werte</strong><span>Strategie: ${AVAILABLE_STRATEGIES.find(option => option.value === d.strategy)?.label ?? d.strategy}</span><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+  return `<strong>Live-Werte</strong><span>Strategie: ${strategyLabel(d.strategy)}</span><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
 }
 function renderPreview(): void {
   const errorsA = validateRobotConfiguration(configurationA());
   const errorsB = validateRobotConfiguration(configurationB());
   el('validation-a').textContent = errorsA.length ? `Ungültig: ${errorsA.join(', ')}` : 'Konfiguration gültig';
   el('validation-b').textContent = errorsB.length ? `Ungültig: ${errorsB.join(', ')}` : 'Konfiguration gültig';
-  el<HTMLButtonElement>('start').disabled = errorsA.length > 0 || errorsB.length > 0;
+  const invalid = errorsA.length > 0 || errorsB.length > 0;
+  for (const id of ['start', 'step', 'apply-config']) el<HTMLButtonElement>(id).disabled = invalid;
   el('preview-a').innerHTML = errorsA.length ? `<strong>Live-Werte</strong><span>Gewicht ${configurationWeight(configurationA())} / ${configurationA().chassis.maxWeight}</span>` : previewHtml(selectedRobotA(), configurationWeight(configurationA()), configurationA().chassis.maxWeight);
   el('preview-b').innerHTML = errorsB.length ? `<strong>Live-Werte</strong><span>Gewicht ${configurationWeight(configurationB())} / ${configurationB().chassis.maxWeight}</span>` : previewHtml(selectedRobotB(), configurationWeight(configurationB()), configurationB().chassis.maxWeight);
 }
 function resetMatch(): void {
   pause();
+  if (!configurationValid()) return;
   state = createMatch(selectedRobotA(), selectedRobotB());
   rng = new SeededRandom(seedValue());
   render();
@@ -111,12 +152,17 @@ function resetAll(): void {
   el<HTMLSelectElement>('energy-b').value = 'standard';
   el<HTMLSelectElement>('sensor-b').value = 'standard';
   el<HTMLSelectElement>('weapon-b').value = 'titan';
+  for (const side of ['a', 'b'] as const) {
+    el<HTMLSelectElement>(`strategy-${side}`).value = DEFAULT_STRATEGY;
+    updateStrategyFields(side, true);
+  }
   el<HTMLInputElement>('seed').value = '4711';
   renderPreview();
   resetMatch();
 }
 
 function tick(): void {
+  if (!configurationValid()) return;
   if (state.outcome !== 'active') {
     pause();
     return;
@@ -202,7 +248,7 @@ function renderCombatEffects(events: readonly { type: string; attackerId?: strin
 }
 
 function robotStats(label: string, css: string, s: MatchState['robotA']): string {
-  return `<div class="stat ${css}"><strong>${label}: ${s.definition.name}</strong><div>Struktur ${s.structure.toFixed(1)} / ${s.definition.maxStructure}</div><div class="bar"><div class="fill" style="width:${pct(s.structure, s.definition.maxStructure)}"></div></div><div class="energy-value">Energie ${s.energy.toFixed(1)} / ${s.definition.maxEnergy}</div><div class="bar energy-bar"><div class="fill" style="width:${pct(s.energy, s.definition.maxEnergy)}"></div></div></div>`;
+  return `<div class="stat ${css}"><strong>${label}: ${s.definition.name}</strong><div class="battle-strategy">Strategie: ${strategyLabel(s.definition.strategy)}</div><div>Struktur ${s.structure.toFixed(1)} / ${s.definition.maxStructure}</div><div class="bar"><div class="fill" style="width:${pct(s.structure, s.definition.maxStructure)}"></div></div><div class="energy-value">Energie ${s.energy.toFixed(1)} / ${s.definition.maxEnergy}</div><div class="bar energy-bar"><div class="fill" style="width:${pct(s.energy, s.definition.maxEnergy)}"></div></div></div>`;
 }
 
 function render(): void {
@@ -251,7 +297,7 @@ async function loadFooterMetadata(): Promise<void> {
 
 el<HTMLButtonElement>('open-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').showModal());
 el<HTMLButtonElement>('close-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').close());
-el<HTMLButtonElement>('apply-config').addEventListener('click', () => { renderPreview(); resetMatch(); el<HTMLDialogElement>('config-dialog').close(); });
+el<HTMLButtonElement>('apply-config').addEventListener('click', () => { renderPreview(); if (configurationValid()) { resetMatch(); el<HTMLDialogElement>('config-dialog').close(); } });
 el('start').addEventListener('click', start);
 el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
@@ -259,6 +305,21 @@ el('reset').addEventListener('click', resetAll);
 el('seed').addEventListener('change', resetMatch);
 for (const id of ['chassis-a', 'motor-a', 'armor-a', 'energy-a', 'sensor-a', 'weapon-a', 'chassis-b', 'motor-b', 'armor-b', 'energy-b', 'sensor-b', 'weapon-b']) {
   el(id).addEventListener('change', () => { renderPreview(); resetMatch(); });
+}
+for (const side of ['a', 'b'] as const) {
+  updateStrategyFields(side, true);
+  el(`strategy-${side}`).addEventListener('change', () => {
+    updateStrategyFields(side, true);
+    renderPreview();
+    resetMatch();
+  });
+  for (const name of ['target', 'threshold', 'retreat']) {
+    el(`${name}-${side}`).addEventListener('input', () => {
+      pause();
+      renderPreview();
+      resetMatch();
+    });
+  }
 }
 renderPreview();
 resetMatch();

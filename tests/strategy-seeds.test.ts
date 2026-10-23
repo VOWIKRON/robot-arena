@@ -3,6 +3,8 @@ import { createMatch, runMatch, stepMatchWithEvents } from '../src/engine/simula
 import { RAPTOR, TITAN } from '../src/engine/presets';
 import { STRATEGY_TYPES } from '../src/engine/components';
 import { SeededRandom } from '../src/engine/random';
+import fixtures from './strategy-stream-fixtures.json';
+import { strategyDigest } from './strategy-digest';
 import type { CombatEvent } from '../src/engine/events';
 
 describe('strategy fixed-seed regressions', () => {
@@ -48,6 +50,7 @@ describe('strategy fixed-seed regressions', () => {
         };
         const result = play();
         expect(play()).toEqual(result);
+        expect(strategyDigest(result.state, result.events)).toBe((fixtures as Record<string,string>)[`${strategyA}/${strategyB}/${seed}`]);
         if (result.state.outcome !== 'active') expect(stepMatchWithEvents(result.state, new SeededRandom(seed))).toEqual({state: result.state,events:[]});
       });
     }

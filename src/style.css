@@ -19,3 +19,5 @@
 .bot-energy{position:absolute;left:50%;top:-29px;transform:translateX(-50%);width:44px;height:7px;border:1px solid #d7e0ef;border-radius:999px;background:#101c30;overflow:hidden;z-index:8;display:block;pointer-events:none;box-shadow:0 1px 5px #0008}
 .bot-energy-fill{display:block;height:100%;background:#59c9ff;transition:width .12s linear}
 .energy-bar .fill{background:#59c9ff}
+
+.strategy-controls{display:grid;gap:6px;border-top:1px solid #2d3954;padding-top:10px}.strategy-controls [hidden]{display:none}.strategy-controls input{min-width:0}.battle-strategy{font-size:.86rem;font-weight:600;overflow-wrap:anywhere}#defensive-fields-a,#defensive-fields-b{display:grid;gap:6px}#defensive-fields-a[hidden],#defensive-fields-b[hidden]{display:none}

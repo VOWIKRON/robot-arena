@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.52 – 2026-10-23
+- NEXT-39: unabhängige Strategieauswahl für A/B im Config-Dialog, mit korrekter Übernahme und Reset.
+- NEXT-41: strategieabhängige Zielabstands-/Rückzugsparameter mit zentraler Validierung; ungültige Werte pausieren und sperren Match-Aktionen.
+- NEXT-42: tatsächliche Strategien kompakt im Kampfstatus, ohne Konfigurationsfelder.
+- NEXT-43: gemeinsame Strategie-Metadaten/Defaults refactort; 48 feste Zustands-/Event-Digests aus 0.1.51 sichern alle Paarungen und Seeds gegen Änderungen ab. Replay-Folgezyklus NEXT-44 bis NEXT-51 konkretisiert.
+- NEXT-40 bleibt ausdrücklich offen: keine Energiereserve oder geänderte Schussfreigabe eingeführt.
+
 ## 0.1.51 – 2026-10-23
 - Energiebalken direkt über beiden Robotern ergänzt; Verbrauch, Regeneration und gewählte Versorgung aktualisieren sie aus dem Match-State.
 - Raptor-Körper wird getrennt von den Anzeigen beschnitten: Energie- und Lebensbalken von Robot A bleiben sichtbar, auch beim Chassiswechsel.

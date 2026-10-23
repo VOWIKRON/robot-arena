@@ -5,8 +5,9 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.51  
-**Nächstes Ziel:** Strategiesystem – NEXT-39 · Strategieauswahl im Config-Dialog
+**Aktuelle stabile Version:** 0.1.51
+**Release-Kandidat:** 0.1.52
+**Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (in diesem Auftrag ausdrücklich nicht bearbeitet)
 
 ---
 
@@ -245,11 +246,11 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Stillstand/identische Positionen robust behandeln
 - [x] deterministische Verhaltenstests ergänzen
 
-### NEXT-39 · Strategieauswahl im Config-Dialog
-- [ ] Strategie für Roboter A und B auswählbar machen
-- [ ] Auswahl beim Start und Reset korrekt übernehmen
-- [ ] aktuelle Strategie in der Konfiguration sichtbar machen
-- [ ] Desktop- und Mobile-E2E ergänzen
+### Implementiert in v0.1.52 · NEXT-39 · Strategieauswahl im Config-Dialog
+- [x] Strategie für Roboter A und B auswählbar machen
+- [x] Auswahl beim Start und Reset korrekt übernehmen
+- [x] aktuelle Strategie in der Konfiguration sichtbar machen
+- [x] Desktop- und Mobile-E2E ergänzen
 
 ### NEXT-40 · Energieverwaltungsparameter
 - [ ] Strategieparameter für Energiereserve definieren
@@ -257,23 +258,51 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [ ] Grenzfälle 0 %, Maximum und Regeneration testen
 - [ ] deterministisches Verhalten absichern
 
-### NEXT-41 · Strategieparameter im Config-Dialog
-- [ ] relevante Strategieparameter abhängig vom Strategietyp anzeigen
-- [ ] Werte validieren und ungültigen Matchstart verhindern
-- [ ] Reset auf stabile Defaults absichern
-- [ ] Desktop- und Mobile-E2E ergänzen
+### Implementiert in v0.1.52 · NEXT-41 · Strategieparameter im Config-Dialog
+- [x] relevante Strategieparameter abhängig vom Strategietyp anzeigen
+- [x] Werte validieren und ungültigen Matchstart verhindern
+- [x] Reset auf stabile Defaults absichern
+- [x] Desktop- und Mobile-E2E ergänzen
 
-### NEXT-42 · Strategievergleich in der Kampfanzeige
-- [ ] gewählte Strategien während des Kampfes kompakt sichtbar machen
-- [ ] keine Builder-Details zurück in die Kampfanzeige verschieben
-- [ ] Layout für kleine Displays absichern
-- [ ] bestehende Kampfanzeige regressionssicher halten
+### Implementiert in v0.1.52 · NEXT-42 · Strategievergleich in der Kampfanzeige
+- [x] gewählte Strategien während des Kampfes kompakt sichtbar machen
+- [x] keine Builder-Details zurück in die Kampfanzeige verschieben
+- [x] Layout für kleine Displays absichern
+- [x] bestehende Kampfanzeige regressionssicher halten
 
-### NEXT-43 · Strategie-Testreview und Refactoring
-- [ ] Strategie-Verhaltensmatrix auf Lücken prüfen
-- [ ] feste Seed-Vergleiche aller Strategiepaarungen ergänzen
-- [ ] wiederholte Entscheidungslogik nur nach Charakterisierung refactoren
-- [ ] nächsten Planungszyklus aus F · Replay & Analyse konkretisieren
+### Implementiert in v0.1.52 · NEXT-43 · Strategie-Testreview und Refactoring
+- [x] Strategie-Verhaltensmatrix auf Lücken prüfen
+- [x] feste Seed-Vergleiche aller Strategiepaarungen ergänzen
+- [x] wiederholte Entscheidungslogik nur nach Charakterisierung refactoren
+- [x] nächsten Planungszyklus aus F · Replay & Analyse konkretisieren
+
+## Folgezyklus · F · Replay & Analyse
+
+NEXT-40 bleibt zuvor offen; die folgenden Schritte sind geplant und noch nicht implementiert.
+
+### NEXT-44 · Event Recorder
+- [ ] Events pro Tick mit Seed und Ausgangskonfiguration unveränderlich aufzeichnen; Reihenfolge und Abschlusszustand testen.
+
+### NEXT-45 · Replay-Dateiformat und Validierung
+- [ ] Versioniertes JSON-Format mit Metadaten definieren; ungültige Versionen und inkonsistente Tick-/Robot-Referenzen ablehnen.
+
+### NEXT-46 · Replay exportieren und importieren
+- [ ] Download/Dateiimport im separaten Dialog anbieten; validierte Dateien und verständliche Fehler auf Desktop/Mobile absichern.
+
+### NEXT-47 · Replay-Player
+- [ ] Play/Pause/Einzelschritt aus aufgezeichneten Daten statt neuer Simulation; Abbruch und Kampfende absichern.
+
+### NEXT-48 · Replay-Zeitleiste
+- [ ] Zu aufgezeichneten Ticks springen; konsistente Anzeigen und reproduzierbares Vor-/Zurückspringen testen.
+
+### NEXT-49 · Kampfstatistiken
+- [ ] Schüsse, Schaden und Energieverbrauch aus Events berechnen; keine unbelegten oder doppelt gezählten Werte.
+
+### NEXT-50 · Replay-Roundtrip und Testreview
+- [ ] Alle Strategiepaarungen Aufnahme→Export→Import→Wiedergabe vergleichen; Desktop/Mobile-Regressionen erweitern.
+
+### NEXT-51 · Replay-Refactoring und Turnierplanung
+- [ ] Recorder/Player nach Charakterisierung refactoren; nächsten Turnierblock in 5–10 konkrete Schritte zerlegen.
 
 ## Planungszyklus
 
@@ -288,12 +317,12 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Parallel laufender Testausbau
 
 Bei **jedem** Feature-Schritt:
-- [ ] neue Regel mit Unit-/Verhaltenstest absichern
-- [ ] bei Bugfix einen Regressionstest ergänzen
-- [ ] Testsuite-HTML um reale Testfälle erweitern
-- [ ] feste Seeds verwenden, wenn Verhalten reproduzierbar sein muss
-- [ ] vor Refactoring fehlende Charakterisierungstests ergänzen
-- [ ] nach Refactoring komplette Testsuite erneut ausführen
+- [x] neue Regel mit Unit-/Verhaltenstest absichern
+- [x] bei Bugfix einen Regressionstest ergänzen
+- [x] Testsuite-HTML um reale Testfälle erweitern
+- [x] feste Seeds verwenden, wenn Verhalten reproduzierbar sein muss
+- [x] vor Refactoring fehlende Charakterisierungstests ergänzen
+- [x] nach Refactoring komplette Testsuite erneut ausführen
 
 ---
 
