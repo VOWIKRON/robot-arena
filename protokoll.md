@@ -239,3 +239,5 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Lokale Prüfung:** Typecheck, 96 Unit-/Regressionstests und Build grün. Browser-E2E durch fehlendes Chromium blockiert; Installationsversuch liefert ungültiges ZIP. Das ist kein bestandener Browser-Test. CI auf dem PR bleibt erforderlich; kein Publish-Erfolg behauptet.
 
 **Nächster Schritt:** NEXT-36 · Distanzstrategie nach Abschluss der Release-Gates.
+
+**PR-CI Korrektur:** Erster CI-Lauf: 96 Unit-Tests und 30/32 Browser-Tests grün; ausschließlich Navigation scheitert auf beiden Profilen an der veralteten exakten NEXT-34-Erwartung. Test auf erledigtes NEXT-34/NEXT-35 und nächsten Schritt NEXT-36 angepasst; neue Testsuite-IDs und Release-Überschrift ebenfalls im Navigationstest geprüft. Vollständiger CI-Wiederholungslauf erforderlich.
