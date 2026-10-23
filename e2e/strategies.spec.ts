@@ -39,8 +39,8 @@ test('independent strategy selection reaches the actual battle and Reset restore
 test('strategy parameters affect engine movement and invalid input blocks all match actions', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
-  // A holds still at 100 % range, while a zero-range target makes B close much further.
-  await page.getByLabel('Strategie A', { exact: true }).selectOption('distance');
+  // Aggressive A stops at 100 % range without retreat; melee B must close all the way to zero.
+  await page.getByLabel('Strategie A', { exact: true }).selectOption('aggressive');
   await page.locator('#target-a').fill('100');
   await page.getByLabel('Strategie B', { exact: true }).selectOption('melee');
   await page.locator('#target-b').fill('-1');
@@ -56,10 +56,11 @@ test('strategy parameters affect engine movement and invalid input blocks all ma
   await page.locator('#target-a').fill('100');
   await expect(page.locator('#validation-a')).toHaveText('Konfiguration gültig');
   await page.getByRole('button', { name: 'Übernehmen & Kampf zurücksetzen' }).click();
-  for (let i=0;i<30;i++) await page.getByRole('button', { name: '1 Tick', exact: true }).click();
+  for (let i=0;i<52;i++) await page.getByRole('button', { name: '1 Tick', exact: true }).click();
   const xA=Number(await page.locator('#bot-a').getAttribute('data-x'));
   const xB=Number(await page.locator('#bot-b').getAttribute('data-x'));
-  expect(xB-xA).toBeLessThan(20); // B really follows its zero target, beyond legacy 80 % range.
+  expect(xA).toBeCloseTo(43.5, 3); // A's 100 % target, rather than its old 80 % default.
+  expect(xB-xA).toBeCloseTo(0, 3); // B's custom zero target, rather than the default 20 % gap.
   await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
   await page.getByLabel('Strategie A', { exact: true }).selectOption('defensive');
   await page.locator('#threshold-a').fill('101');
