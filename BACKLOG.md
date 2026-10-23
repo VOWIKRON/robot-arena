@@ -5,10 +5,16 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Strategiesystem / Replay-Planung  
-**Aktuelle stabile Version:** 0.1.52
+**Aktuelle stabile Version:** 0.1.52 (0.1.53 in Prüfung)
 **Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (in diesem Auftrag ausdrücklich nicht bearbeitet)
 
 ---
+
+## Defensive-Korrektur · v0.1.53
+- [x] Frühes Abstandhalten statt Warten bis 35 % Struktur
+- [x] Verfolgungsstopp standardmäßig bei 70 %; Gegenfeuer innerhalb eigener Reichweite
+- [x] Deterministische Engine-/Balance- und Desktop-/Mobile-Regressionen ergänzt
+- [ ] CI, Integration und Veröffentlichung verifizieren
 
 ## Konkrete nächste Läufe
 

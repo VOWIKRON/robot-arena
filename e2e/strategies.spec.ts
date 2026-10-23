@@ -20,6 +20,7 @@ test('independent strategy selection reaches the actual battle and Reset restore
   await page.getByLabel('Strategie A', { exact: true }).selectOption('defensive');
   await expect(page.locator('#target-a')).toBeHidden();
   await expect(page.locator('#threshold-a')).toBeVisible();
+  await expect(page.locator('#threshold-a')).toHaveValue('70');
   await expect(page.locator('#retreat-a')).toHaveValue('110');
   await expect(page.getByLabel('Strategie B', { exact: true })).toHaveValue('melee');
   await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
@@ -99,3 +100,22 @@ test('invalid live edits pause the fight without throwing or replacing the last 
   await expect(page.getByRole('button', { name: 'Start', exact: true })).toBeEnabled();
   expect(errors).toEqual([]);
 });
+
+for (const [side, firstRetreatTick] of [['a',20],['b',21]] as const) {
+  test(`defensive robot ${side.toUpperCase()} visibly retreats before critical damage`, async ({page}) => {
+    await page.goto('/');
+    await page.getByRole('button', {name:'Konfiguration',exact:true}).click();
+    await page.getByLabel(`Strategie ${side.toUpperCase()}`, {exact:true}).selectOption('defensive');
+    await expect(page.locator(`#threshold-${side}`)).toHaveValue('70');
+    await expect(page.locator(`#defensive-fields-${side}`)).toContainText('maximal 95 %');
+    await page.getByRole('button', {name:'Übernehmen & Kampf zurücksetzen'}).click();
+    for(let i=1;i<firstRetreatTick;i++) await page.getByRole('button',{name:'1 Tick',exact:true}).click();
+    const robot=page.locator(`#bot-${side}`);
+    const previousX=Number(await robot.getAttribute('data-x'));
+    await page.getByRole('button',{name:'1 Tick',exact:true}).click();
+    const x=Number(await robot.getAttribute('data-x'));
+    expect(side==='a'?x<previousX:x>previousX).toBe(true);
+    expect(Number(await robot.locator('.bot-health').getAttribute('aria-valuenow'))).toBeGreaterThan(70);
+    await expect(page.locator(`#stats .robot-${side} .battle-strategy`)).toHaveText('Strategie: Defensiv');
+  });
+}

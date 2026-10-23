@@ -20,8 +20,8 @@ describe('strategy movement behavior', () => {
     ['distance', 30, 100, 45], ['distance', 20, 100, 42],
     ['distance', 18, 100, 40], ['distance', 15, 100, 37],
     ['distance', 5, 100, 35],
-    ['defensive', 30, 36, 45], ['defensive', 10, 36, 40],
-    ['defensive', 10, 35, 35], ['defensive', 20, 35, 38],
+    ['defensive', 30, 71, 45], ['defensive', 10, 71, 35],
+    ['defensive', 10, 35, 35], ['defensive', 20, 35, 40],
     ['defensive', 22, 35, 40], ['defensive', 30, 35, 40],
     ['melee', 30, 100, 45], ['melee', 8, 100, 44],
     ['melee', 4, 100, 40], ['melee', 2, 100, 40]
@@ -32,19 +32,19 @@ describe('strategy movement behavior', () => {
     expect(state).toEqual(snapshot);
   });
 
-  it('defensive retreat considers the opponent weapon range', () => {
+  it('defensive retreat never sacrifices its own firing range even against longer weapons', () => {
     const state = scenario('defensive', 24, 35);
     state.robotB.definition = { ...state.robotB.definition, weaponRange: 30 };
-    expect(step(state).state.robotA.position.x).toBe(35);
+    expect(step(state).state.robotA.position.x).toBe(40);
   });
 
-  it('switches to retreat on the next action after damage crosses the threshold', () => {
-    const state = scenario('defensive', 10, 36);
+  it('stops chasing on the next action after damage crosses the threshold', () => {
+    const state = scenario('defensive', 30, 71);
     state.robotA.definition = { ...state.robotA.definition, weaponDamage: 0 };
-    state.robotB.definition = { ...state.robotB.definition, weaponDamage: 2 };
+    state.robotB.definition = { ...state.robotB.definition, weaponDamage: 2, weaponRange: 40 };
     const next = step(state).state;
-    expect(next.robotA.structure).toBeLessThan(35);
-    expect(step(next).state.robotA.position.x).toBeLessThan(next.robotA.position.x);
+    expect(next.robotA.structure).toBeLessThan(70);
+    expect(step(next).state.robotA.position).toEqual(next.robotA.position);
   });
 
   it.each(['distance', 'defensive'] as const)('%s can shoot while retreating within range', strategy => {
@@ -53,10 +53,10 @@ describe('strategy movement behavior', () => {
     expect(result.events.slice(0, 4).map(e => e.type)).toEqual(['move', 'shot', 'hit', 'damage']);
   });
 
-  it('does not fire when defensive retreat leaves weapon range', () => {
+  it('keeps firing when an opponent is at the edge of its own range', () => {
     const result = step(scenario('defensive', 20, 35));
-    expect(result.events.some(e => e.type === 'shot' && e.attackerId === RAPTOR.id)).toBe(false);
-    expect(result.state.robotA.energy).toBe(RAPTOR.maxEnergy);
+    expect(result.events.some(e => e.type === 'shot' && e.attackerId === RAPTOR.id)).toBe(true);
+    expect(result.state.robotA.energy).toBe(RAPTOR.maxEnergy - RAPTOR.weaponEnergy);
   });
 
   it.each(['distance', 'defensive', 'melee'] as const)('%s respects energy and cooldown while moving', strategy => {

@@ -22,7 +22,7 @@ export function strategyLabel(strategy: StrategyType): string {
 export function strategyParameters(strategy: StrategyType, overrides: StrategyParameters = {}) {
   return {
     targetDistanceRatio: overrides.targetDistanceRatio ?? STRATEGY_CATALOG.find(item => item.value === strategy)!.targetDistanceRatio,
-    retreatStructureRatio: overrides.retreatStructureRatio ?? 0.35,
+    retreatStructureRatio: overrides.retreatStructureRatio ?? 0.7,
     retreatDistanceFactor: overrides.retreatDistanceFactor ?? 1.1
   };
 }

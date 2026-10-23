@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.53 – 2026-10-23
+- Defensive hält Sicherheitsabstand bereits vor kritischem Schaden; ab standardmäßig 70 % Struktur kein Nachsetzen mehr (zuvor erst 35 %).
+- Sicherheitsabstand bezieht sich auf die gegnerische Waffenreichweite und bleibt auf 95 % der eigenen begrenzt: Rückzug opfert nicht mehr die Schussmöglichkeit.
+- Reine defensive Abstandspolitik gekapselt; Energie, Cooldown, Schaden, Tempo und andere Strategien unverändert.
+- Frühzeitiger Rückzug beider Roboter, Schussfreigabe, Parametergrenzen und 100 feste Balance-Seeds getestet; 21 defensive Referenzstreams bewusst neu eingefroren, 27 andere Altversionsreferenzen bleiben unverändert.
+- UI-Hinweise, Desktop-/Mobile-Regressionen und öffentliche Projektdokumentation ergänzt. NEXT-40 bleibt offen.
+
 ## 0.1.52 – 2026-10-23
 - NEXT-39: unabhängige Strategieauswahl für A/B im Config-Dialog, mit korrekter Übernahme und Reset.
 - NEXT-41: strategieabhängige Zielabstands-/Rückzugsparameter mit zentraler Validierung; ungültige Werte pausieren und sperren Match-Aktionen.

@@ -282,3 +282,14 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Planung:** NEXT-40 bleibt offen und ist nächster Schritt; NEXT-44 bis NEXT-51 konkretisieren Recorder, Format, Import/Export, Player, Zeitleiste, Statistiken, Roundtrip-Review und anschließende Turnierplanung. Keine Replayfunktion in diesem Release vorweggenommen.
 
 **Gates:** Lokaler Typecheck, 215 Unit-/Verhaltenstests und Build grün. PR-/main-/Publish-Prüfungen folgen; kein Publish-Erfolg vorweggenommen.
+
+
+## 2026-10-23 – Defensive-Korrektur (v0.1.53)
+
+**Befund:** Rückzug ab 35 % Struktur kommt zu spät; Ziel außerhalb beider Reichweiten verhindert eigenes Gegenfeuer. Baseline: defensiver Raptor verliert alle 100 Standardkämpfe mit Seeds 1–100. Bloßes Anheben der Schwelle auf 70/80/85/90 % reicht nicht.
+
+**Entscheidung:** Defensive hält Sicherheitsabstand frühzeitig durch Annäherung und Zurückweichen. Abstand berücksichtigt gegnerische Reichweite × einstellbaren Faktor, begrenzt auf 95 % eigene Reichweite. Ab standardmäßig 70 % Struktur kein Nachsetzen mehr. Reine Abstandspolitik als Funktion gekapselt; gemeinsame Geometrie und Schussfreigabe bleiben unverändert. Keine Stat-Verstärkung.
+
+**Nachweis:** Standard-Raptor zieht erstmals bei Tick 20 zurück (vorher im Mittel 66,4), Titan bei Tick 21. Raptor gewinnt 93 von 100 festen Seeds; keine allgemeine Sieggarantie. Geprüfte Ergebnisreferenzen 1/12/4711, Schwellen 69/70/71, Sicherheitsfaktoren 1/1.1/1.5/2, Schüsse, Randfälle und beide Seiten. 21 defensive Digests neu eingefroren, ursprüngliche Datei mit 48 Referenzen unverändert; 27 unbetroffene werden weiterhin gegen die Altversion geprüft. Browsertests prüfen sichtbare Bewegung über 70 % Struktur.
+
+**Gates:** Lokale und CI-Prüfungen sowie Publish müssen vor Abschluss grün sein. NEXT-40 bleibt offen.
