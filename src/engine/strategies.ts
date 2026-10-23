@@ -1,30 +1,19 @@
-import type { StrategyType } from './components';
 import type { RobotDefinition, RobotState } from './types';
 
-export const AVAILABLE_STRATEGIES = [
-  { value: 'aggressive', label: 'Aggressiv' },
-  { value: 'distance', label: 'Distanz' },
-  { value: 'defensive', label: 'Defensiv' },
-  { value: 'melee', label: 'Nahkampf' }
-] as const satisfies readonly { value: StrategyType; label: string }[];
-
-export const DEFENSIVE_STRUCTURE_THRESHOLD = 0.35;
+import { STRATEGY_CATALOG, strategyParameters } from './strategy-config';
+export const AVAILABLE_STRATEGIES = STRATEGY_CATALOG.map(({ value, label }) => ({ value, label }));
 
 export function desiredCombatDistance(robot: RobotDefinition): number {
-  switch (robot.strategy) {
-    case 'distance': return robot.weaponRange * 0.9;
-    case 'melee': return robot.weaponRange * 0.2;
-    case 'aggressive':
-    case 'defensive': return robot.weaponRange * 0.8;
-  }
+  return robot.weaponRange * strategyParameters(robot.strategy, robot.strategyParameters).targetDistanceRatio;
 }
 
 /** Signed movement request, capped once for every strategy. No RNG or state mutation. */
 export function movementDelta(self: RobotState, enemy: RobotState, distance: number): number {
+  const parameters = strategyParameters(self.definition.strategy, self.definition.strategyParameters);
   const wounded = self.definition.strategy === 'defensive'
-    && self.structure <= self.definition.maxStructure * DEFENSIVE_STRUCTURE_THRESHOLD;
+    && self.structure <= self.definition.maxStructure * parameters.retreatStructureRatio;
   const target = wounded
-    ? Math.max(self.definition.weaponRange, enemy.definition.weaponRange) * 1.1
+    ? Math.max(self.definition.weaponRange, enemy.definition.weaponRange) * parameters.retreatDistanceFactor
     : desiredCombatDistance(self.definition);
   const gap = distance - target;
   // Wounded defenders never chase. Distance robots actively correct both directions.

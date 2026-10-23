@@ -267,3 +267,18 @@ Footer- und Informationsseiten implementieren und in die Publish-Pipeline integr
 **Regressionen:** Browser-Hit-Test in der Mitte der Anzeigen prüft die tatsächliche Darstellung und würde die alte Raptor-Clipping-Regel erkennen. Prüfung für beide Roboter und beide Chassis. Zweiter Verhaltenstest prüft Energieabfall nach Schüssen, Regeneration im Folgetick, Balkenanteile/Textwerte, Versorgungswechsel und Reset. Beide Tests laufen auf Desktop und Mobile. Lokaler Typecheck, 191 Tests und Build grün; Browser-/Publish-Gates folgen in CI.
 
 **Scope:** Energieanzeigen-Bugfix; NEXT-39 bleibt als nächster Strategieschritt bestehen.
+
+
+## 2026-10-23 – NEXT-39, NEXT-41, NEXT-42, NEXT-43 (v0.1.52)
+
+**Auftrag/Abgrenzung:** Vier Schritte explizit beauftragt. NEXT-40 bewusst nicht enthalten. NEXT-41 parametrisiert die bereits vorhandenen Bewegungs-/Rückzugsregeln statt eine ungeprüfte Energiereserve vorzutäuschen.
+
+**Umsetzung:** Strategieauswahl A/B; Zielabstand Aggressiv/Distanz/Nahkampf 0–100 %, defensive Strukturgrenze 0–100 % und Sicherheitsabstand 100–200 %. Defaults 80/90/20 %, defensiv 35/110 %. Unabhängige Auswahl, passende aktive Felder, zentrale Builder-Validierung, sichere Pause und Aktionssperre bei ungültigen Eingaben. Letztes gültiges Match bleibt erhalten; gültige Änderungen übernehmen Konfiguration mit Reset. Reset All stellt Aggressiv und stabile Defaults her. Kampfstatus nutzt echte Match-Strategien, keine Builderfelder.
+
+**Refactoring/Testreview:** Baseline 191 Tests grün. Strategie-Metadaten, Labels, Defaults und Parametervalidierung zentralisiert; bisherige Schusslogik unverändert. Separater Worktree auf 732cefd (v0.1.51) erzeugt 48 feste Zustands-/Event-Digests für alle 16 Paarungen und Seeds 1/12/4711 bis maximal 500 Ticks. Kanonische Schlüssel und 1e-9-Zahlenpräzision frieren Verhalten statt Objekt-Reihenfolge ein. Alle neuen Defaults stimmen mit diesen Altversions-Digests überein. 23 neue Unit-Ausführungen prüfen Wertebereiche, nicht endliche Werte, Kopieren/Serialisierung und Parameterwirkung.
+
+**Browser:** Drei zusätzliche Verhaltenstests je Desktop/Mobile (einschließlich sicherer Pause ohne Exceptions bei ungültiger Live-Eingabe): A/B-Auswahl, Start, passende Parameterfelder, Statusvergleich, Reset, Validierung/Aktionssperren und tatsächliche Bewegungswirkung. Bestehende Energie-/Lebensbalkenregressionen bleiben Pflicht.
+
+**Planung:** NEXT-40 bleibt offen und ist nächster Schritt; NEXT-44 bis NEXT-51 konkretisieren Recorder, Format, Import/Export, Player, Zeitleiste, Statistiken, Roundtrip-Review und anschließende Turnierplanung. Keine Replayfunktion in diesem Release vorweggenommen.
+
+**Gates:** Lokaler Typecheck, 214 Unit-/Verhaltenstests und Build grün. PR-/main-/Publish-Prüfungen folgen; kein Publish-Erfolg vorweggenommen.

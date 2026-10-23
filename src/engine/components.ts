@@ -1,8 +1,7 @@
 import type { RobotDefinition } from './types';
 
-export const STRATEGY_TYPES = ['aggressive', 'defensive', 'distance', 'melee'] as const;
-export type StrategyType = typeof STRATEGY_TYPES[number];
-export const DEFAULT_STRATEGY: StrategyType = 'aggressive';
+import { DEFAULT_STRATEGY, STRATEGY_TYPES, validateStrategyParameters, type StrategyType, type StrategyParameters } from './strategy-config';
+export { DEFAULT_STRATEGY, STRATEGY_TYPES, type StrategyType, type StrategyParameters } from './strategy-config';
 
 export type Chassis = Readonly<{
   id: string; name: string; maxStructure: number; maxEnergy: number; energyRegen: number; speed: number; maxWeight: number;
@@ -16,6 +15,7 @@ export type Weapon = Readonly<{ id: string; name: string; range: number; damage:
 export type RobotConfiguration = Readonly<{
   id: string; name: string; chassis: Chassis; motor: Motor; armor: Armor; energySupply: EnergySupply; sensor: Sensor; weapon: Weapon;
   strategy?: StrategyType;
+  strategyParameters?: StrategyParameters;
 }>;
 
 export function configurationWeight(configuration: RobotConfiguration): number {
@@ -28,6 +28,7 @@ export function buildRobotDefinition(configuration: RobotConfiguration): RobotDe
   return {
     id: configuration.id, name: configuration.name,
     strategy: configuration.strategy ?? DEFAULT_STRATEGY,
+    strategyParameters: { ...configuration.strategyParameters },
     maxStructure: configuration.chassis.maxStructure * configuration.armor.structureFactor,
     maxEnergy: configuration.chassis.maxEnergy * configuration.energySupply.energyFactor,
     energyRegen: configuration.chassis.energyRegen * configuration.energySupply.regenFactor,
@@ -39,7 +40,7 @@ export function buildRobotDefinition(configuration: RobotConfiguration): RobotDe
 }
 
 export function validateRobotConfiguration(configuration: RobotConfiguration): readonly string[] {
-  const errors: string[] = [];
+  const errors: string[] = [...validateStrategyParameters(configuration.strategyParameters)];
   if (!configuration.id.trim()) errors.push('Robot-ID fehlt');
   if (!configuration.name.trim()) errors.push('Robotername fehlt');
   if (configuration.strategy !== undefined && !STRATEGY_TYPES.includes(configuration.strategy)) errors.push('Strategietyp ist ungültig');
