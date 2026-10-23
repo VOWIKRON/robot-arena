@@ -1,19 +1,22 @@
 # RUN_STATE
 
+Operative Übergabe zwischen Robot-Arena-Läufen. Jeder Lauf liest zuerst diese Datei.
+
 ## Aktueller Lauf
 - step: NEXT-35
-- status: IMPLEMENTED_AWAITING_CI
+- status: COMPLETE
 - scope: Aggressive Strategie, deterministische Tests und UI-Vorbereitung
 - version: 0.1.49
-- branch: codex/next-35-aggressive-strategy
-- local_typecheck: GREEN
-- local_unit_tests: GREEN (96)
-- local_build: GREEN
-- local_e2e: BLOCKED (Chromium fehlt; Download liefert ungültiges ZIP)
-- pr_tests: PENDING
-- main_tests: NOT_RUN
-- publish: NOT_RUN
-- blocker: Desktop-/Mobile-E2E in CI sowie anschließende main-/Publish-Gates ausstehend
+- branch: main
+- pr_tests: GREEN (96 Unit-/Regressionstests, 32 Desktop-/Mobile-E2E)
+- pr_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40004253697
+- main_tests: GREEN
+- main_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40005154460
+- publish: SUCCESS
+- publish_run: https://github.com/VOWIKRON/robot-arena/actions/runs/40005306993
+- published_commit: a41af00d95ac1cd72f256f8da445ae208ad9a646
+- online_smoke: GREEN (Publish-Workflow verifiziert Hauptseite, Infoseiten, Versionsarchiv und Commit)
+- blocker: none
 
 ## Nächstes Gate
-PR-CI für den konkreten Commit prüfen. Erst bei vollständig grünen Gates zusammenführen/veröffentlichen. NEXT-35 nicht als veröffentlicht markieren, solange main-CI und Publish nicht bestätigt sind. Danach NEXT-36 · Distanzstrategie.
+NEXT-35 ist abgeschlossen. Nächster konkreter Schritt: NEXT-36 · Distanzstrategie. Vor Beginn tatsächlichen main-/Publish-Zustand prüfen. Dieser Abschlusscommit ändert ausschließlich Projektmetadaten; der veröffentlichte Produktcommit bleibt unverändert.
