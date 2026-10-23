@@ -4,9 +4,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Aktueller Zustand
 
-**Phase:** Einstieg in Kernsimulation  
-**Aktuelle stabile Version:** 0.1.51
-**Release-Kandidat:** 0.1.52
+**Phase:** Strategiesystem / Replay-Planung  
+**Aktuelle stabile Version:** 0.1.52
 **Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (in diesem Auftrag ausdrücklich nicht bearbeitet)
 
 ---
@@ -246,7 +245,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] Stillstand/identische Positionen robust behandeln
 - [x] deterministische Verhaltenstests ergänzen
 
-### Implementiert in v0.1.52 · NEXT-39 · Strategieauswahl im Config-Dialog
+### Erledigt in v0.1.52 · NEXT-39 · Strategieauswahl im Config-Dialog
 - [x] Strategie für Roboter A und B auswählbar machen
 - [x] Auswahl beim Start und Reset korrekt übernehmen
 - [x] aktuelle Strategie in der Konfiguration sichtbar machen
@@ -258,19 +257,19 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [ ] Grenzfälle 0 %, Maximum und Regeneration testen
 - [ ] deterministisches Verhalten absichern
 
-### Implementiert in v0.1.52 · NEXT-41 · Strategieparameter im Config-Dialog
+### Erledigt in v0.1.52 · NEXT-41 · Strategieparameter im Config-Dialog
 - [x] relevante Strategieparameter abhängig vom Strategietyp anzeigen
 - [x] Werte validieren und ungültigen Matchstart verhindern
 - [x] Reset auf stabile Defaults absichern
 - [x] Desktop- und Mobile-E2E ergänzen
 
-### Implementiert in v0.1.52 · NEXT-42 · Strategievergleich in der Kampfanzeige
+### Erledigt in v0.1.52 · NEXT-42 · Strategievergleich in der Kampfanzeige
 - [x] gewählte Strategien während des Kampfes kompakt sichtbar machen
 - [x] keine Builder-Details zurück in die Kampfanzeige verschieben
 - [x] Layout für kleine Displays absichern
 - [x] bestehende Kampfanzeige regressionssicher halten
 
-### Implementiert in v0.1.52 · NEXT-43 · Strategie-Testreview und Refactoring
+### Erledigt in v0.1.52 · NEXT-43 · Strategie-Testreview und Refactoring
 - [x] Strategie-Verhaltensmatrix auf Lücken prüfen
 - [x] feste Seed-Vergleiche aller Strategiepaarungen ergänzen
 - [x] wiederholte Entscheidungslogik nur nach Charakterisierung refactoren

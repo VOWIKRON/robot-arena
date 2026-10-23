@@ -2,9 +2,8 @@
 
 ## Aktueller Stand
 
-- Projektphase: Fundament abgeschlossen, Einstieg in Kernsimulation
-- Aktuelle stabile Version: 0.1.51
-- Release-Kandidat: 0.1.52 (CI/Publish ausstehend)
+- Projektphase: Strategiesystem ausgebaut; Energieverwaltung offen, Replay geplant
+- Aktuelle stabile Version: 0.1.52
 - Branch: main
 - CI: aktiv
 - Auto-Publish: aktiv
@@ -56,11 +55,11 @@ NEXT-36 bis NEXT-38 abgeschlossen und veröffentlicht: Distanz hält 90 % der ef
 
 Refactoring: reine Strategieentscheidung (signierte Bewegung), gemeinsame reine Bewegungsgeometrie und Event-/Kampfausführung getrennt. Keine RNG-Nutzung in Entscheidungen. Identische Positionen mit deterministischer Ausweichrichtung; keine Move-Events ohne Ortsänderung. Default-Ergebnis-/Event-Regressionen unverändert.
 
-NEXT-39, NEXT-41, NEXT-42 und NEXT-43 implementiert: A/B wählen Strategien getrennt im Config-Dialog. Zielabstand ist für Aggressiv/Distanz/Nahkampf einstellbar (0–100 % effektive Waffenreichweite); Defensiv bietet Rückzugsschwelle (0–100 % Struktur) und Sicherheitsabstand (100–200 % größere Waffenreichweite). Ungültige/leere/nicht endliche Werte sperren Start, Schritt und Übernehmen und pausieren den Lauf. Reset stellt Aggressiv und stabile Defaults wieder her. Kampfstatus zeigt die tatsächlichen Strategien aus dem Match-State ohne Builderfelder.
+NEXT-39, NEXT-41, NEXT-42 und NEXT-43 abgeschlossen und veröffentlicht: A/B wählen Strategien getrennt im Config-Dialog. Zielabstand ist für Aggressiv/Distanz/Nahkampf einstellbar (0–100 % effektive Waffenreichweite); Defensiv bietet Rückzugsschwelle (0–100 % Struktur) und Sicherheitsabstand (100–200 % größere Waffenreichweite). Ungültige/leere/nicht endliche Werte sperren Start, Schritt und Übernehmen und pausieren den Lauf. Reset stellt Aggressiv und stabile Defaults wieder her. Kampfstatus zeigt die tatsächlichen Strategien aus dem Match-State ohne Builderfelder.
 
 Refactoring/Testreview: gemeinsame Strategie-Metadaten, Defaults, Labels und Validierung; keine kopierten Schussregeln. 48 feste, aus 0.1.51 gewonnene Zustands-/Event-Digests ergänzen die 16 Paarungen mit Seeds 1/12/4711. Alle Defaults bleiben verhaltensgleich. Replay-Schritte NEXT-44 bis NEXT-51 konkret geplant.
 
-Nächster konkreter Entwicklungsschritt: NEXT-40 · Energieverwaltungsparameter. Nicht beauftragt, nicht implementiert; NEXT-41 verwendet ausschließlich die vorhandenen Bewegungsparameter. Release-Gates 0.1.52 siehe RUN_STATE.md.
+Nächster konkreter Entwicklungsschritt: NEXT-40 · Energieverwaltungsparameter. Nicht beauftragt, nicht implementiert; NEXT-41 verwendet ausschließlich die vorhandenen Bewegungsparameter. Release-Gates 0.1.52 bestanden: PR-/main-CI grün (215 Unit-/Verhaltenstests und 42 Desktop-/Mobile-E2E), Publish und Online-Smoke erfolgreich. Produktcommit ec6f40dba8f625b08efe968b6458b1b814d05f6f.
 
 Release-Gates 0.1.50 bestanden: PR-CI und main-CI grün (191 Unit-/Verhaltenstests, 32 Desktop-/Mobile-E2E), Publish inklusive Online-Smoke erfolgreich. Veröffentlichter Commit: ea747a3624b71cb2725dd35e288675a938bc120a. Der erste main-Runner hing bei Browser-Systempaketen; der aktualisierte Übergabestand wurde vollständig auf einem weiteren Runner geprüft.
 
