@@ -37,10 +37,10 @@ describe('NEXT-59 golden references and bounded execution', () => {
   it('round-robin standings have stable SHA256 reference', () => {
     const definition = create('round-robin');
     const result = computeRoundRobinStandings(definition, finishTournamentRun(createTournamentRun(definition)).results);
-    expect(digest(result)).toBe('GOLDEN_ROUND_ROBIN');
+    expect(digest(result)).toBe('079051ea6a23533702a98b74eafbb82b1d972c7748f685bf6b480f4860fcf769');
   });
   it('knockout bracket has stable SHA256 reference', () => {
-    expect(digest(runKnockoutBracket(create('knockout')))).toBe('GOLDEN_KNOCKOUT');
+    expect(digest(runKnockoutBracket(create('knockout')))).toBe('d8d1f8c8662b32760a009045ce4b1c6634378c93224e36d764d207538e1cfb5a');
   });
   it('16-player engine execution stays within a documented generous CI limit', () => {
     const start = performance.now();
