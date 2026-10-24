@@ -24,16 +24,27 @@ describe('NEXT-78: arena boundaries during defensive retreat', () => {
     const match = createMatch(defender, TITAN);
     match.robotA.position = start;
     match.robotB.position = threat;
+    let moved = false;
+    let reachedEdge = false;
     for (let tick = 0; tick < 1000; tick++) {
+      const before = match.robotA.position;
       const next = nextCombatPosition(match.robotA, match.robotB, 100, 100);
-      if (next) match.robotA.position = next;
+      if (next) {
+        moved ||= next.x !== before.x || next.y !== before.y;
+        match.robotA.position = next;
+      }
       const { x, y } = match.robotA.position;
       expect(Number.isFinite(x) && Number.isFinite(y)).toBe(true);
       expect(x).toBeGreaterThanOrEqual(0);
       expect(x).toBeLessThanOrEqual(100);
       expect(y).toBeGreaterThanOrEqual(0);
       expect(y).toBeLessThanOrEqual(100);
+      reachedEdge ||= x === 0 || x === 100 || y === 0 || y === 100;
     }
+    // Avoid a vacuous test: this scenario must actually exercise retreat,
+    // and the defender must eventually reach an arena edge without crossing it.
+    expect(moved).toBe(true);
+    expect(reachedEdge).toBe(true);
   });
 
   it.each([1, 12, 4711])('keeps seeded combat positions finite and inside the world (seed %i)', seed => {
