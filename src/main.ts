@@ -640,7 +640,7 @@ function scheduleTournamentAuto(): void {
         tournamentRun.status === 'completed') return;
     const before = tournamentRun;
     tournamentAction(advanceTournamentRun);
-    if (tournamentRun === before || tournamentRun?.status === 'completed') {
+    if (tournamentRun === before || tournamentRun?.nextMatchIndex === tournamentRun?.totalMatches) {
       stopTournamentAuto();
       return;
     }
