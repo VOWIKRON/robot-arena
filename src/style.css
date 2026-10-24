@@ -94,3 +94,17 @@
   cursor: pointer;
 }
 .tournament-replay-button:focus-visible { outline: 3px solid #f8d35a; outline-offset: 2px; }
+
+/* NEXT-78: keep the *whole* chassis, weapon and overhead energy/health HUD inside
+   the visible arena. The engine still uses unmodified 0..100 world coordinates.
+   Body: 48px (Raptor) / 54px (Titan); energy bar starts 29px above its top. */
+#arena .bot {
+  --bot-half: 24px;
+  --bot-hud-top: 53px;
+  left: clamp(var(--bot-half), var(--arena-x, 50%), calc(100% - var(--bot-half)));
+  top: clamp(var(--bot-hud-top), var(--arena-y, 50%), calc(100% - var(--bot-half)));
+}
+#arena .bot[data-chassis="titan-chassis"] {
+  --bot-half: 27px;
+  --bot-hud-top: 56px;
+}
