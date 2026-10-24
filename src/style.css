@@ -75,3 +75,18 @@
   #tournament-dialog .controls button { flex: 1 1 100%; }
   #tournament-dialog .config-dialog-card { padding: 12px; }
 }
+
+/* NEXT-67: accessible replay affordance, isolated from the sandbox controls. */
+.tournament-replay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  margin: 6px 0 4px 10px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tournament-replay-button:focus-visible { outline: 3px solid #f8d35a; outline-offset: 2px; }
