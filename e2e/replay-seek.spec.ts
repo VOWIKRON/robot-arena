@@ -49,6 +49,11 @@ test('NEXT-48 seek redraws recorded shot and damage effects from imported instan
   });
   const timeline = page.getByRole('slider', { name: 'Replay-Zeitleiste' });
   await expect(timeline).toHaveValue('0');
+  await expect(page.getByRole('region', { name: 'Replay-Kampfstatistik' })).toBeVisible();
+  await expect(page.locator('#replay-stat-a')).toContainText('Schüsse 1');
+  await expect(page.locator('#replay-stat-a')).toContainText('Treffer 1');
+  await expect(page.locator('#replay-stat-b')).toContainText('Schüsse 0');
+  await expect(page.locator('#replay-result')).toContainText('Sieger');
   await expect(page.locator('#replay-effects .replay-shot')).toHaveCount(0);
   await timeline.focus();
   await timeline.press('End');
@@ -59,4 +64,19 @@ test('NEXT-48 seek redraws recorded shot and damage effects from imported instan
   await timeline.press('Home');
   await expect(page.locator('#replay-effects .replay-shot')).toHaveCount(0);
   await expect(page.locator('#replay-effects .replay-damage')).toHaveCount(0);
+});
+
+test('NEXT-49 shows zero statistics and draw for empty timeout on desktop/mobile', async ({ page }) => {
+  const json = serializeReplay(recordMatch(RAPTOR, TITAN, 4711, 0));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  await page.locator('#replay-file').setInputFiles({
+    name: 'empty.json', mimeType: 'application/json', buffer: Buffer.from(json)
+  });
+  await expect(page.locator('#replay-stat-a')).toContainText('Schüsse 0');
+  await expect(page.locator('#replay-stat-a')).toContainText('Effektiver Schaden 0.0');
+  await expect(page.locator('#replay-stat-b')).toContainText('Energieverbrauch 0.0');
+  await expect(page.locator('#replay-result')).toContainText('Unentschieden');
+  await expect(page.getByRole('slider', { name: 'Replay-Zeitleiste' })).toBeDisabled();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
