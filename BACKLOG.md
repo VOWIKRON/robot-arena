@@ -6,8 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-54 · Turnierauswertung (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50, NEXT-51, NEXT-52, NEXT-53 (11 Aufgaben).
+**Nächstes Ziel:** NEXT-55 · Responsives Turnier-UI (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50, NEXT-51, NEXT-52, NEXT-53, NEXT-54 (12 Aufgaben).
 
 ---
 
@@ -349,11 +349,13 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Paarungsreihenfolge und Seeds allein aus Turnierdefinition und Matchindex ableiten, ohne globalen RNG; unabhängig von UI-/Ausführungsreihenfolge.
 - [x] Gerade/ungerade Teilnehmerzahl, 2/3/4/16 Teilnehmer und Seed-Grenzen testen; Snapshot-Digests für feste Referenzturniere.
 
-### NEXT-54 · Turnierauswertung und Rangfolge (nächster Schritt)
-- [ ] Ergebnisse als unveränderliche Datensätze (Teilnehmer-IDs, Seed, Gewinner/Unentschieden, Ticks, Reststruktur) erfassen; doppelte Match-IDs ablehnen.
-- [ ] Tabelle aus Ergebnissen berechnen: Spiele, Siege, Unentschieden, Niederlagen, Punkte 3/1/0, Struktur-Differenz.
-- [ ] Gleichstand deterministisch nach Punkten, Struktur-Differenz und stabiler Teilnehmer-ID auflösen; unvollständige Turniere anzeigen.
-- [ ] Unit-/Behavior-Tests: 0 Matches, Draw, Sieg, Überzählung, Duplikate, stabile Sortierung, keine Eingabemutation.
+### NEXT-54 · Turnierauswertung und Rangfolge (abgeschlossen und getestet)
+- [x] Ergebnisse als unveränderliche Datensätze (Teilnehmer-IDs, Seed, Gewinner/Unentschieden, Ticks, Reststruktur) erfassen; doppelte Match-IDs ablehnen.
+- [x] Tabelle aus Ergebnissen berechnen: Spiele, Siege, Unentschieden, Niederlagen, Punkte 3/1/0, Struktur-Differenz.
+- [x] Gleichstand deterministisch nach Punkten, Struktur-Differenz und stabiler Teilnehmer-ID auflösen; unvollständige Turniere anzeigen.
+- [x] Unit-/Behavior-Tests: 0 Matches, Draw, Sieg, Überzählung, Duplikate, stabile Sortierung, keine Eingabemutation.
+
+- Qualitätsnachweis: Development Tests #40109944097 (303 Unit/Behavior, 60 Desktop/Mobile, Typecheck/Build erfolgreich); unveröffentlicht.
 
 ### NEXT-55 · Responsives Turnier-UI-Grundgerüst
 - [ ] Eigenständiger Dialog mit Teilnehmern, Paarungen, Fortschritt und Tabelle; Sandbox-Kampfzustand strikt unverändert.
@@ -382,7 +384,28 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [ ] Folgende 5–10 NEXT-Aufgaben anhand Test- und Nutzerfeedback detailliert planen.
 
 **Qualitätsnachweise für NEXT-52 und NEXT-53:** Development Tests #40105438397: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün; #40105486356: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün. Beide unveröffentlicht.
-\n## Planungszyklus
+\n
+### NEXT-60 · Turnier-Fairness und Seed-Audit
+- [ ] Paarungsreihenfolge, Seitenzuweisung A/B und deterministische Seed-Ableitung auf Verzerrungen prüfen; bestehendes Verhalten zuerst charakterisieren.
+- [ ] Alternierende Startseiten als optionalen Modus entwerfen, ohne bestehende Round-Robin-Snapshots zu ändern.
+- [ ] Referenztests mit 2/3/4/16 Teilnehmern, festen Seeds und identischen Roboterdefinitionen; keine versteckte RNG-Nutzung.
+
+### NEXT-61 · Exportierbare Turniertabelle
+- [ ] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
+- [ ] Spaltenreihenfolge, Dezimalformat, Unicode-Namen, Formel-Injection-Schutz und unvollständige Turniere dokumentieren.
+- [ ] Unit-/Behavior-Tests für Roundtrip, Sonderzeichen, 0 Ergebnisse und 16 Teilnehmer; Desktop-/Mobile-Download prüfen.
+
+### NEXT-62 · Turnier-Leistung und Abbruchgrenzen
+- [ ] 16-Teilnehmer-Round-Robin mit 120 Paarungen unter reproduzierbaren Bedingungen benchmarken; CPU-/Speicherbedarf erfassen.
+- [ ] Matchgrenzen für Pause/Resume/Cancel und deterministische Zwischenspeicherung unter Last prüfen.
+- [ ] Keine UI-Blockade: Ausführungsstrategie und Fortschrittsanzeige nach Messergebnissen festlegen; Regressionen absichern.
+
+### NEXT-63 · Turnier-Zugänglichkeit und Robustheit
+- [ ] Tastaturfokus, Screenreader-Status, Kontrast und Touch-Ziele in Dialog, Tabelle und Bracket prüfen.
+- [ ] Ungültige Konfigurationen, Doppelklicks, wiederholtes Starten und Fenstergrößen 375px/Desktop abfangen.
+- [ ] Browser-Behavior-Tests für Bedienung, Fehlerzustände und unveränderte Sandbox; vollständige Regression.
+
+## Planungszyklus
 
 - Nach spätestens 10 konkreten NEXT-Schritten oder sobald weniger als 5 konkrete NEXT-Schritte übrig sind, wird ein Planungszyklus fällig.
 - Der Planungszyklus erzeugt wieder mindestens 5 und höchstens 10 kleine, eindeutig abschließbare NEXT-Schritte aus dem nächsten priorisierten Entwicklungsblock.

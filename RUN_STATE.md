@@ -1,5 +1,18 @@
 # RUN_STATE
 
+## Aktuelle Entwicklungsrunde · 24.10.2026, 18:00 Europe/Berlin
+- branch: `automation/next-40-energy-reserve-unpublished`; PR #46 Draft, main bleibt bei b90c7448 / v0.1.53.
+- completed_this_round: NEXT-54 (1 von maximal 3); NEXT-55/56 nicht begonnen.
+- verified: #40109944097 auf Code-SHA 431ee335: 303 Unit-/Behavior-/Regressionstests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- functionality: immutable Result-Snapshots, 3/1/0-Punkte, Struktur-Differenz, stabile Rangfolge, unvollständige Tabellen; strenge Match-/Seed-/ID-/Werteprüfung.
+- refactoring: Tabellenberechnung in reines, von UI/Simulation entkoppeltes Modul `src/engine/tournament-standings.ts` ausgelagert; vollständige Tests danach erfolgreich.
+- current_next: NEXT-55 (responsives Turnier-UI), danach NEXT-56 (Runner).
+- cumulative_unpublished: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 (12).
+- final_documentation_head_ci: ausstehend; Code-HEAD ist verifiziert, Dokumentationsänderungen werden separat getestet.
+- live_website_status: Veröffentlichung extern nicht unabhängig bestätigt; bei manueller Veröffentlichung ohne GitHub-Merge **Veröffentlichungsstatus ungeklärt**.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, kein Deployment, kein publish.php.
+
+
 ## Aktuelle Entwicklungsrunde · 24.10.2026, 17:00 Europe/Berlin
 - branch: `automation/next-40-energy-reserve-unpublished`
 - pull_request: #46 (Draft; NICHT MERGEN)
@@ -34,8 +47,10 @@
 | **52 – NEU** | Validiertes, unveränderliches Turnierdatenmodell | #40105438397 · 290 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
 | **53 – NEU** | Deterministischer Round-Robin-Spielplan und Seeds | #40105486356 · 297 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
 
-**Gesamtzahl vollständig getesteter, seit v0.1.53 nicht in main integrierter Aufgaben: 11.**
-- NEXT-54 bis NEXT-59 sind geplant, noch nicht implementiert.
+| **54 – NEU** | Turnierauswertung, 3/1/0 Punkte, Reststruktur-Differenz, immutable Ergebnis-Snapshots | #40109944097 · 303 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+
+**Gesamtzahl vollständig getesteter, seit v0.1.53 nicht in main integrierter Aufgaben: 12.**
+- NEXT-54 abgeschlossen; NEXT-55 bis NEXT-63 geplant, noch nicht implementiert.
 - Veröffentlichung auf der externen Website konnte in diesem Lauf nicht unabhängig abgerufen werden; falls eine manuelle externe Veröffentlichung ohne GitHub-Merge erfolgt ist, ist deren Status **Veröffentlichungsstatus ungeklärt**.
 - **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
 
