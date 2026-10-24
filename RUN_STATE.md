@@ -1,3 +1,18 @@
+## Entwicklungsrunde 25.10.2026, 01:00 MESZ · P0 NEXT-78 in Prüfung, NEXT-79 Audit · KEIN PUBLISHING
+- **Aktuelle Runde (2 von maximal 3 Aufgaben):** NEXT-78 P0 Rand-/Fluchtfehler und NEXT-79 P1 Usability-Analyse priorisiert. NEXT-69 zurückgestellt; Fehler vor Features.
+- **NEXT-78:** Ursache aus Quellcode identifiziert: Engine-Zentrum auf 0..100 begrenzt, aber CSS zeichnet Raptor (48px), Titan (54px), Waffe und HUD über die Kante. Visuellen CSS-Clamp abhängig vom Chassis implementiert; Rohkoordinaten bleiben im Inline-Style und `data-x/y`, Engine/Seeds unberührt. Regressionen: 8 Ränder/Ecken, Desktop/Mobile und 375px, defensive Laufprobe, deterministische Engine-Grenzen/Seeds 1,12,4711. **Neue Tests noch nicht als erfolgreich bestätigt; vollständige aktuelle CI ausstehend. NEXT-78 bleibt offen.**
+- **NEXT-79:** Quellcode-Audit `USABILITY_AUDIT.md` erstellt: 7 gleichgewichtete Hauptaktionen, überladener Turnierdialog, Fachbegriffe ohne Hilfen, irreführender Kampfstatus, mobile Navigationslast. Testbare 79a–79e-Umsetzungsschritte festgelegt. **Keine UX-Umsetzung abgeschlossen.**
+- **Refactoring:** Weltkoordinaten und CSS-Visualisierung getrennt, vorhandene Inline-Werte für bisherige Tests erhalten; keine Änderung der Simulation. Abschließende vollständige Testsuite noch offen.
+- **Letztes bestätigtes Live-Release v0.1.55** (Publish #40132737105 / #40132968986); NEXT-56–62 veröffentlicht. **Kumulativ 5 vollständig implementierte, getestete, NICHT veröffentlichte Aufgaben:**
+  - NEXT-63 · Zugänglichkeit, Touch, Tastaturfokus, robuste Turnierbedienung · letzte bestätigte CI grün · NICHT VERÖFFENTLICHT.
+  - NEXT-64 · npm ci, Lockfile, Audit-Gate, reproduzierbare Builds · letzte bestätigte CI grün · NICHT VERÖFFENTLICHT.
+  - NEXT-66 · Validierte Kampfergebnisse und Detailansicht · letzte bestätigte CI grün · NICHT VERÖFFENTLICHT.
+  - NEXT-67 · Isoliertes deterministisches Turnierkampf-Replay · letzte bestätigte CI grün · NICHT VERÖFFENTLICHT.
+  - NEXT-68 · Browser-Autosave und sichere Wiederaufnahme · letzte bestätigte CI #40137115159: 372 Unit/Behavior/Regression, 92 Desktop/Mobil-E2E · NICHT VERÖFFENTLICHT.
+- **GitHub:** Entwicklungsbranch `automation/next-56-tournament-runner-unpublished`, Draft-PR #48. Branch weicht von main ab (zuletzt 4 Commits hinter main); keine Integration ohne Konflikt-/CI-Prüfung. **NEXT-78/79 offen, nicht in kumulativen Zähler aufnehmen.**
+- **Blocker:** Kein aktuell bestätigter neuer CI-Lauf für die Randkorrektur; daher keine Abschlussfreigabe. Bei nächstem Lauf CI prüfen, Fehler korrigieren und Tests wiederholen.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, Release-Commit, Publish-Workflow, publish.php oder Homepage-Update.
+
 ## Entwicklungsrunde 25.10.2026, 00:08 MESZ · NEXT-68 NEU vollständig verifiziert · KEIN PUBLISHING
 - **Aktuelle Runde (1 von maximal 3 Aufgaben): NEXT-68 NEU abgeschlossen.** Opt-in-Browser-Autosave ausschließlich lokal, nur an validierten Match-/Statusgrenzen; versioniertes 2-MB-Archiv, persistente Einwilligung, explizites Wiederherstellen nach Reload, vollständiges Löschen bei Deaktivierung. Fehlerhafte/zu große Daten verändern das laufende Turnier nicht. Pausierte und abgebrochene Turniere behalten ihren Status; kein automatischer Start nach Wiederherstellung.
 - **Qualität:** Development Tests **#40137115159 auf c95aaf99 erfolgreich:** **372 Unit-/Behavior-/Regressionstests in 31 Dateien, 92 Desktop-/Mobile-E2E**, TypeScript, Build, npm-Audit-Gate (0 bekannte Advisories), zweimaliger Clean-Build mit identischem SHA256. NEXT-68: 7 neue Unit-Tests und 6 neue Desktop-/Mobile-E2E; 2/3/16 Teilnehmer, 120 Matches, manipulierte Version/Fortschritt, >2 MB, Quota-Fehler, Reload/Pause/Cancel, Datenschutz.
