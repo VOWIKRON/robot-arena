@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased · NEXT-55 (getestet, nicht veröffentlicht)
+- Responsiver, eigenständiger Turnierdialog: 2–16 Teilnehmer mit Namens- und Presetwahl, sichere Eingabevalidierung, Round-Robin-Paarungen, Fortschrittsanzeige und Tabelle. Sandbox-Zustand und RNG bleiben unverändert.
+- TypeScript-/Browser-Regressionen korrigiert, inklusive eindeutiger Eingabelabels. Development Tests #40110813524 auf SHA 9f17bc65 erfolgreich: 303 Unit-/Behavior-Tests, 64 Desktop-/Mobile-E2E, Typecheck/Build.
+- Automatische Turnierausführung folgt in NEXT-56; kein Merge oder Deployment.
+
 ## Unreleased · NEXT-54 (getestet, nicht veröffentlicht)
 - NEXT-54: Deterministische Round-Robin-Auswertung (3/1/0 Punkte, Spiele/Siege/Remis/Niederlagen, Reststruktur-Differenz, stabile Sortierung und unvollständige Turniere); doppelte/ungültige Match-IDs, Seeds, Teilnehmer und Reststruktur werden abgewiesen. Validierte Ergebnis-Snapshots sind unveränderlich. Development Tests #40109944097 auf Commit 431ee335: 303 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 - NEXT-55 (Turnier-UI) und NEXT-56 (Runner) bleiben offen; keine Veröffentlichung.

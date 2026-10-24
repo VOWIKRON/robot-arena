@@ -1,3 +1,9 @@
+## Unveröffentlichte Entwicklungsfortsetzung (24.10.2026, 18:12 Europe/Berlin)
+- NEXT-55 abgeschlossen: unabhängiger responsiver Turnierdialog, 2–16 benennbare Teilnehmer mit Raptor/Titan-Presets, Seed/Ticklimit-Validierung, Round-Robin-Paarungen, Fortschritt und Tabelle. Noch keine automatische Turnierausführung.
+- Browser-Regression für mehrdeutiges Seed-Label behoben; TypeScript-Tupeltyp korrigiert; vollständiger Testlauf #40110813524 auf SHA 9f17bc65 grün (303 Unit/Behavior, 64 Desktop/Mobile, Typecheck/Build).
+- Kumulativ 13 unveröffentlichte Aufgaben seit v0.1.53 (NEXT-40, 44–55). Nächster Schritt NEXT-56; PR #46 Draft, main unverändert, kein Publish/Deployment.
+- Veröffentlichungsstatus der externen Homepage unabhängig ungeklärt; **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell**.
+
 ## Unveröffentlichte Entwicklungsrunde (24.10.2026, 18:00 Europe/Berlin)
 - NEXT-54: Deterministische Round-Robin-Auswertung (3/1/0 Punkte, Spiele/Siege/Remis/Niederlagen, Reststruktur-Differenz, stabile Sortierung und unvollständige Turniere); doppelte/ungültige Match-IDs, Seeds, Teilnehmer und Reststruktur werden abgewiesen. Validierte Ergebnis-Snapshots sind unveränderlich. Development Tests #40109944097 auf Commit 431ee335: 303 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 - Kumulativ 12 getestete Aufgaben seit v0.1.53, NICHT VERÖFFENTLICHT: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54.
