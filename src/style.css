@@ -21,3 +21,17 @@
 .energy-bar .fill{background:#59c9ff}
 
 .strategy-controls{display:grid;gap:6px;border-top:1px solid #2d3954;padding-top:10px}.strategy-controls [hidden]{display:none}.strategy-controls input{min-width:0}.battle-strategy{font-size:.86rem;font-weight:600;overflow-wrap:anywhere}#defensive-fields-a,#defensive-fields-b{display:grid;gap:6px}#defensive-fields-a[hidden],#defensive-fields-b[hidden]{display:none}
+
+/* NEXT-48: independent, seekable replay preview. Never reuses the live arena DOM. */
+#replay-seek{width:100%;min-height:44px;accent-color:#56d7ff;cursor:pointer}
+#replay-seek:disabled{opacity:.45;cursor:not-allowed}
+.replay-arena{position:relative;aspect-ratio:2/1;min-height:150px;margin-top:12px;overflow:hidden;border:1px solid #40516f;border-radius:12px;background:linear-gradient(#15203a,#091121)}
+.replay-arena[hidden]{display:none}
+.replay-arena::before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px);background-size:10% 10%}
+.replay-marker{position:absolute;z-index:2;display:grid;place-items:center;width:28px;height:28px;border:2px solid currentColor;border-radius:50%;transform:translate(-50%,-50%);background:#0c1428;font-weight:900}
+.replay-marker-a{color:#56d7ff}.replay-marker-b{color:#ff8f70}
+.replay-effects{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.replay-shot{stroke:#ffe58b;stroke-width:.9;stroke-linecap:round}
+.replay-damage{fill:none;stroke:#ff6677;stroke-width:1}
+.replay-stats{line-height:1.55;overflow-wrap:anywhere;font-size:.88rem;color:#d4e3f7}
+@media(max-width:650px){.replay-arena{aspect-ratio:1.5/1;min-height:130px}.replay-stats{font-size:.8rem}}
