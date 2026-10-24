@@ -1,6 +1,5 @@
 import { createTournamentDefinition, type TournamentDefinition } from './tournament-model';
 import { createRoundRobinSchedule } from './tournament-schedule';
-import { runMatch } from './simulation';
 import { deepFreeze } from './immutable';
 
 export type FairnessAudit = Readonly<{
