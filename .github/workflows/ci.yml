@@ -13,6 +13,13 @@ jobs:
         with:
           node-version: 22
       - run: npm install
+      - name: Capture exact npm dependency resolution for NEXT-64
+        shell: bash
+        run: |
+          test -s package-lock.json
+          echo ROBOT_ARENA_LOCKFILE_BEGIN
+          cat package-lock.json
+          echo ROBOT_ARENA_LOCKFILE_END
       - name: Audit dependencies (report only; security release gate remains blocked)
         shell: bash
         run: |
