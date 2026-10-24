@@ -1,3 +1,10 @@
+## Unreleased · 24.10.2026, 23:00 MESZ · NEXT-67 (nur Entwicklungsbranch)
+- **NEU NEXT-67:** Isoliertes Replay abgeschlossener Round-Robin-Kämpfe aus Seed und eingefrorenen Teilnehmern, exakter Abgleich von Sieger/Ticks/Reststruktur mit archiviertem Ergebnis vor Laden; manipulierte oder ausstehende Kämpfe werden abgewiesen.
+- Reines Engine-Modul `tournament-replay.ts`; Replay-Player wird wiederverwendet, ohne Sandbox oder Turnier-RNG zu berühren. Zugänglicher Button je abgeschlossenem Match, Desktop-/Mobile- und Tastaturbedienung.
+- **Development Tests #40132151611 auf ddd26d15 grün:** 365 Unit-/Behavior-/Regressionstests, 86 Desktop-/Mobile-E2E, TypeScript/Build, npm-Audit und identische Clean-Builds. 1/3600 Ticks, 2/3/16 Teilnehmer, Archiv-Roundtrip, Fehlerfälle. 0 Ticks laut Turniermodell unzulässig.
+- **Kumulativ 11 verifizierte NEXT-Aufgaben seit v0.1.54:** 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67. NEXT-56–62: Veröffentlichungsstatus ungeklärt; NEXT-63/64/66/67: nur Draft-PR #48, nicht veröffentlicht. Nächstes Ziel NEXT-68.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · 24.10.2026, 22:00 MESZ · NEXT-64/66 (nur Draft-PR #48)
 - **NEXT-64:** Reproduzierbares npm-Lockfile, saubere npm-ci-Installationen, Audit-Gate ohne bekannte Advisories und zweimaliger SHA256-identischer Dist-Build bei gleichem Commit.
 - **NEXT-66:** Validierte Paarungsdetails (Seed, Ticks, Gewinner/Remis, Reststruktur) nach jedem Kampf, offene Matches ohne erfundene Ergebnisse, sichere Darstellung von Unicode-/HTML-Namen, Archiv-Roundtrip.
