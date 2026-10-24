@@ -459,7 +459,7 @@ let tournamentRun: TournamentRun | null = null;
 function tournamentStatus(): void {
   if (!tournamentRun) return;
   const result = computeRoundRobinStandings(tournamentRun.definition, tournamentRun.results);
-  el('tournament-progress').textContent = `${tournamentRun.status}: ${result.completedMatches}/${result.totalMatches} Kämpfe · Führender: ${tournamentRun.definition.participants.find(p => p.id === result.standings[0]?.participantId)?.name ?? '–'} (${result.standings[0]?.points ?? 0} Punkte)`;
+  el('tournament-progress').textContent = `${result.completedMatches} / ${result.totalMatches} Kämpfe abgeschlossen · ${tournamentRun.status} · Führender: ${tournamentRun.definition.participants.find(p => p.id === result.standings[0]?.participantId)?.name ?? '–'} (${result.standings[0]?.points ?? 0} Punkte)`;
   const rows = el('tournament-table-scroll').querySelectorAll<HTMLTableRowElement>('tbody tr');
   result.standings.forEach((entry, i) => {
     const row = rows[i]; if (!row) return;
