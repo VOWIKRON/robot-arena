@@ -3,6 +3,8 @@ import { RAPTOR, TITAN } from '../src/engine/presets';
 import { recordMatch } from '../src/engine/recorder';
 import { parseReplay, serializeReplay } from '../src/engine/replay-format';
 import { ReplayPlayer } from '../src/engine/replay-player';
+import { SeededRandom } from '../src/engine/random';
+import { createMatch, stepMatchWithEvents } from '../src/engine/simulation';
 
 const document = (ticks: number) => parseReplay(serializeReplay(recordMatch(RAPTOR, TITAN, 4711, ticks)));
 
@@ -91,5 +93,81 @@ describe('NEXT-47 deterministic event-only ReplayPlayer', () => {
     expect(first).toEqual(second);
     expect(a.tick).toBe(recording.frames.length);
     expect(JSON.stringify(recording)).toBe(before);
+  });
+});
+
+describe('NEXT-48 event-only replay seek and reconstructed state', () => {
+  it.each([1, 12, 4711])('matches actual simulation states at every tick for seed %i', seed => {
+    const recording = parseReplay(serializeReplay(recordMatch(RAPTOR, TITAN, seed, 120)));
+    const player = new ReplayPlayer(recording);
+    const rng = new SeededRandom(seed);
+    let expected = createMatch(RAPTOR, TITAN);
+    expect(player.state).toEqual(expected);
+    for (let tick = 1; tick <= recording.frames.length; tick++) {
+      expected = stepMatchWithEvents(expected, rng).state;
+      player.seek(tick);
+      if (tick === recording.frames.length && recording.finalState.outcome === 'draw') {
+        expected = { ...expected, outcome: 'draw', endReason: 'timeout' };
+      }
+      expect(player.state).toEqual(expected);
+      expect(player.events).toEqual(recording.frames[tick - 1]!.events);
+    }
+    expect(player.state).toEqual(recording.finalState);
+    player.seek(Math.floor(player.length / 2));
+    expect(player.state.tick).toBe(Math.floor(player.length / 2));
+    player.seek(0);
+    expect(player.state).toEqual(recording.initialState);
+    player.seek(player.length);
+    expect(player.state).toEqual(recording.finalState);
+  });
+
+  it('pauses on seek, rejects out-of-range and fractional ticks without mutating cursor', () => {
+    const player = new ReplayPlayer(document(10));
+    expect(player.play()).toBe(true);
+    player.seek(4);
+    expect(player.tick).toBe(4);
+    expect(player.isPlaying).toBe(false);
+    expect(player.advance()).toBe(false);
+    for (const bad of [-1, 11, 0.5, NaN, Infinity]) {
+      expect(() => player.seek(bad)).toThrow(RangeError);
+      expect(player.tick).toBe(4);
+    }
+    player.seek(1);
+    expect(player.state.tick).toBe(1);
+    player.reset();
+    expect(player.tick).toBe(0);
+  });
+
+  it('keeps imported data and cached states immutable across backward and forward seek', () => {
+    const recording = document(20);
+    const before = JSON.stringify(recording);
+    const player = new ReplayPlayer(recording);
+    const snapshot = player.state;
+    player.seek(20);
+    const end = player.state;
+    player.seek(5);
+    player.seek(20);
+    expect(player.state).toBe(end);
+    expect(Object.isFrozen(end)).toBe(true);
+    expect(Object.isFrozen(end.robotA)).toBe(true);
+    expect(player.state).toEqual(recording.finalState);
+    player.seek(0);
+    expect(player.state).toBe(snapshot);
+    expect(JSON.stringify(recording)).toBe(before);
+  });
+
+  it('reconstructs immediate victory and empty timeout without extra simulation', () => {
+    const a = { ...RAPTOR, speed: 0, weaponRange: 100, weaponDamage: 10000 };
+    const b = { ...TITAN, speed: 0 };
+    const win = parseReplay(serializeReplay(recordMatch(a, b, 12, 3600)));
+    const player = new ReplayPlayer(win);
+    player.seek(1);
+    expect(player.state).toEqual(win.finalState);
+    expect(player.outcome).toBe('victory');
+    const empty = parseReplay(serializeReplay(recordMatch(RAPTOR, TITAN, 1, 0)));
+    const noFrames = new ReplayPlayer(empty);
+    expect(noFrames.state).toEqual(empty.finalState);
+    expect(noFrames.length).toBe(0);
+    expect(noFrames.outcome).toBe('draw');
   });
 });
