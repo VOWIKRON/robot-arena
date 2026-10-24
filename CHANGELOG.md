@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased · NEXT-40 (Entwicklungsbranch, nicht getestet, nicht veröffentlicht)
+- Energiereserve 0–100 % pro Roboter und Schussfreigabe unter Erhalt der Reserve als Quellcode ergänzt; Default 0 % erhält das bisherige Verhalten.
+- Eingabe/Validierung für beide Roboter sowie Unit-/Behavior-/Browser-Testfälle vorbereitet.
+- Vollständige Tests und Freigabe noch ausstehend; keine neue Version, kein Merge, kein Publishing.
+
 ## 0.1.53 – 2026-10-23
 - Defensive hält Sicherheitsabstand bereits vor kritischem Schaden; ab standardmäßig 70 % Struktur kein Nachsetzen mehr (zuvor erst 35 %).
 - Sicherheitsabstand bezieht sich auf die gegnerische Waffenreichweite und bleibt auf 95 % der eigenen begrenzt: Rückzug opfert nicht mehr die Schussmöglichkeit.

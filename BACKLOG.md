@@ -6,7 +6,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (in diesem Auftrag ausdrücklich nicht bearbeitet)
+**Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (Entwicklungsbranch, unveröffentlicht; Tests ausstehend)
 
 ---
 
@@ -258,11 +258,13 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] aktuelle Strategie in der Konfiguration sichtbar machen
 - [x] Desktop- und Mobile-E2E ergänzen
 
-### NEXT-40 · Energieverwaltungsparameter
-- [ ] Strategieparameter für Energiereserve definieren
-- [ ] Schussfreigabe abhängig von Reserve modellieren
-- [ ] Grenzfälle 0 %, Maximum und Regeneration testen
-- [ ] deterministisches Verhalten absichern
+### NEXT-40 · Energieverwaltungsparameter · IN ARBEIT / NICHT VERÖFFENTLICHT
+- [x] Optionale Energiereserve 0–100 % der maximalen Energie, Default 0 %, mit Builder-Validierung modelliert
+- [x] Schuss nur zulassen, wenn nach Energieverbrauch die Reserve erhalten bleibt; Regeneration erfolgt vor der Prüfung
+- [x] Eingabe und Vorschau für A/B im Config-Dialog als Quellcode ergänzt, Reset auf 0 %
+- [x] Unit-, Behavior-, Seed- und Desktop-/Mobile-Testfälle als Quellcode ergänzt
+- [ ] Tatsächliche Unit-/Behavior-/Regressionstests sowie Desktop-/Mobile-E2E auf dem Arbeitsbranch erfolgreich ausführen und dokumentieren
+- [ ] Code-Review, Regression gegen Default-Kampf, dann ausschließlich manuelle Veröffentlichungsfreigabe durch den Nutzer
 
 ### Erledigt in v0.1.52 · NEXT-41 · Strategieparameter im Config-Dialog
 - [x] relevante Strategieparameter abhängig vom Strategietyp anzeigen
@@ -382,3 +384,13 @@ Stabile Sandbox mit Editor, Strategien, Replay, Turnieren, Testlabor und reprodu
 6. anschließend die größeren Entwicklungsblöcke.
 
 So bleibt jederzeit sichtbar, was beim nächsten Lauf passiert und was unmittelbar danach vorgesehen ist.
+
+## Detaillierte Folgeabnahme (Planung, noch nicht implementiert)
+- **NEXT-44 Recorder:** Seed und beide RobotDefinition-Snapshots einmalig beim Matchstart einfrieren; Tick/Events nur append-only; bei Replay-Aufnahme 0, 1 und 3600 Ticks sowie sofortigem Sieg Ereignisreihenfolge und unveränderte Eingaben prüfen.
+- **NEXT-45 Replay-Format:** schemaVersion=1, Seed, Arenaabmessungen, Roboterdefinitionen, Tick-/Eventliste und Endzustand; ungültige IDs, Ticks, Versionen und Nicht-Finite-Werte mit benannten Fehlern ablehnen; JSON-Roundtrip deterministisch.
+- **NEXT-46 Import/Export:** Download mit stabiler Dateibenennung; Dateiimport mit Größenlimit, Fehlerdialog und ohne Änderung des laufenden Matchs bei ungültigen Daten; Desktop/Mobile und Tastatur testen.
+- **NEXT-47 Player:** Aufzeichnungen ohne SeededRandom erneut abspielen; Play/Pause/Step und Ende deterministisch; keine Simulation im Player; Tests für leere und früh beendete Kämpfe.
+- **NEXT-48 Zeitleiste:** seek(0), seek(mitte), seek(ende), rückwärts springen; Energie/Struktur/Position/Effekte konsistent rekonstruieren; Desktop/Mobile inklusive Touch testen.
+- **NEXT-49 Statistiken:** Shot-, Damage- und Energy-Kennzahlen ausschließlich aus Events ableiten; negative/überzählige Schäden ausschließen; Sieger/Unentschieden getrennt anzeigen.
+- **NEXT-50 Roundtrip:** Alle 16 Strategiepaarungen × Seeds 1/12/4711 mit Export→Import→Player gegen Zustands-/Event-Digests prüfen; Speichergrenzen und Browser-E2E aufnehmen.
+- **NEXT-51 Refactoring/Turnierplanung:** Recorder/Player-Schnittstellen nach Charakterisierung entkoppeln; bestehende Referenzen unverändert halten; 5–10 konkrete Turnieraufgaben mit Abnahmetests planen.

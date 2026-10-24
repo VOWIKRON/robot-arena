@@ -1,26 +1,19 @@
 # RUN_STATE
 
-## Aktueller Lauf
-- step: Defensive-Korrektur auf Nutzerauftrag
-- status: COMPLETE
-- version: 0.1.53
-- branch: main
-- local_typecheck: GREEN
-- local_unit_tests: GREEN (225)
-- local_build: GREEN
-- pr_tests: GREEN (225 Unit-/Verhaltenstests, 46 Desktop-/Mobile-E2E)
-- pr: https://github.com/VOWIKRON/robot-arena/pull/45
-- pr_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40018423641
-- main_tests: GREEN (vollständig einschließlich Desktop und Mobile)
-- main_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40018619403
-- publish: SUCCESS
-- publish_run: https://github.com/VOWIKRON/robot-arena/actions/runs/40018744209
-- published_commit: ec81e688fe92c79e8baf922583eb40132c4b3830
-- online_smoke: GREEN (Publish verifiziert Arena, Infoseiten, Versionsarchiv und exakten Commit)
-- blocker: none
+## Aktueller Arbeitslauf (24.10.2026)
+- step: NEXT-40
+- phase: IMPLEMENTING / WAITING_TESTS
+- status: IN_PROGRESS (unveröffentlicht)
+- branch: automation/next-40-energy-reserve-unpublished
+- base_main_sha: b90c7448419a134cd5e764e1243dc04fd5958715
+- head_sha: siehe Branch-Ref (ungetesteter Head)
+- stable_version: 0.1.53 (main unverändert)
+- pr: none
+- unit_behavior_tests: NOT_RUN on this branch
+- desktop_mobile_tests: NOT_RUN on this branch
+- latest_verified_main_tests: GREEN (40018986554, 23.10.2026; nicht NEXT-40)
+- publish: FORBIDDEN; manual user action only
+- blocker: CI push/PR triggers Publish workflow_run even on a non-main branch. No automatic Publish workflow may be triggered, therefore all commits use [skip ci] and no PR is opened.
 
-## Scope
-Frühzeitiger Sicherheitsabstand, auf 95 % eigene Reichweite begrenzt; Verfolgungsstopp ab 70 % Struktur. Keine Änderung von Schaden, Tempo, Energie oder anderen Strategien. 21 defensive Referenzstreams bewusst aktualisiert, 27 Referenzen aus v0.1.51 unverändert. Standard-Raptor weicht bei Tick 20 zurück und gewinnt 93 von 100 festen Seeds, zuvor 0; Titan weicht bei Tick 21 zurück. Keine allgemeine Sieggarantie.
-
-## Nächstes Gate
-Defensive-Korrektur vollständig integriert und veröffentlicht. NEXT-40 · Energieverwaltungsparameter bleibt offen. Dieser Abschlusscommit aktualisiert ausschließlich Projektmetadaten; das veröffentlichte Produkt bleibt unverändert. Vor neuem Produktzyklus tatsächlichen main-/Publish-Zustand prüfen.
+## Nächste Aktion
+NEXT-40 auf Entwicklungsbranch vollständig testen, ohne Publish-Workflow zu starten; erst danach Abschluss bewerten. Keine NEXT-44-Implementierung vor Abschluss von NEXT-40. Keine automatische Veröffentlichung und kein Merge auf main.

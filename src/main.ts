@@ -13,6 +13,7 @@ if (!app) throw new Error('App root missing');
 function strategyControls(side: 'a' | 'b'): string {
   const label = side.toUpperCase();
   return `<div class="strategy-controls"><label for="strategy-${side}">Strategie ${label}</label><select id="strategy-${side}">${AVAILABLE_STRATEGIES.map(item => `<option value="${item.value}">${item.label}</option>`).join('')}</select>
+  <label>Energiereserve ${label} (% Maximalenergie)<input id="reserve-${side}" type="number" min="0" max="100" step="any" value="0"></label>
   <label id="target-field-${side}">Zielabstand ${label} (% Waffenreichweite)<input id="target-${side}" type="number" min="0" max="100" step="any" value="80"></label>
   <div id="defensive-fields-${side}" hidden><label>Rückzugsschwelle ${label} (% Struktur)<input id="threshold-${side}" type="number" min="0" max="100" step="any" value="70"></label><label>Sicherheitsabstand ${label} (% gegnerische Waffenreichweite)<input id="retreat-${side}" type="number" min="100" max="200" step="any" value="110"></label><p class="muted">Hält frühzeitig Abstand, maximal 95 % der eigenen Waffenreichweite. Ab der Rückzugsschwelle keine Verfolgung mehr.</p></div></div>`;
 }
@@ -61,12 +62,10 @@ function pause(): void {
 function selectedStrategy(side: 'a' | 'b') {
   const strategy = el<HTMLSelectElement>(`strategy-${side}`).value as StrategyType;
   const percent = (name: string) => el<HTMLInputElement>(`${name}-${side}`).valueAsNumber / 100;
-  return {
-    strategy,
-    strategyParameters: strategy === 'defensive'
-      ? { retreatStructureRatio: percent('threshold'), retreatDistanceFactor: percent('retreat') }
-      : { targetDistanceRatio: percent('target') }
-  };
+  const movementParameters = strategy === 'defensive'
+    ? { retreatStructureRatio: percent('threshold'), retreatDistanceFactor: percent('retreat') }
+    : { targetDistanceRatio: percent('target') };
+  return { strategy, strategyParameters: { ...movementParameters, energyReserveRatio: percent('reserve') } };
 }
 
 function updateStrategyFields(side: 'a' | 'b', resetDefaults = false): void {
@@ -79,6 +78,7 @@ function updateStrategyFields(side: 'a' | 'b', resetDefaults = false): void {
   el<HTMLInputElement>(`retreat-${side}`).disabled = !defensive;
   if (resetDefaults) {
     const defaults = strategyParameters(strategy);
+    el<HTMLInputElement>(`reserve-${side}`).value = String(defaults.energyReserveRatio * 100);
     el<HTMLInputElement>(`target-${side}`).value = String(defaults.targetDistanceRatio * 100);
     el<HTMLInputElement>(`threshold-${side}`).value = String(defaults.retreatStructureRatio * 100);
     el<HTMLInputElement>(`retreat-${side}`).value = String(Math.round(defaults.retreatDistanceFactor * 100));
@@ -118,7 +118,7 @@ function configurationB() {
 }
 function selectedRobotB() { return buildRobotDefinition(configurationB()); }
 function previewHtml(d: ReturnType<typeof selectedRobotA>, weight: number, maxWeight: number): string {
-  return `<strong>Live-Werte</strong><span>Strategie: ${strategyLabel(d.strategy)}</span><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
+  return `<strong>Live-Werte</strong><span>Strategie: ${strategyLabel(d.strategy)}</span><span>Gewicht ${weight} / ${maxWeight}</span><span>Struktur ${d.maxStructure}</span><span>Energie ${d.maxEnergy} · +${d.energyRegen}/Tick</span><span>Energiereserve ${strategyParameters(d.strategy, d.strategyParameters).energyReserveRatio * 100} %</span><span>Tempo ${d.speed}</span><span>Sensor ${d.sensorRange}</span><span>Waffe: Reichweite ${d.weaponRange} · Schaden ${d.weaponDamage}</span><span>Kosten ${d.weaponEnergy} · Cooldown ${d.cooldownTicks}</span>`;
 }
 function renderPreview(): void {
   const errorsA = validateRobotConfiguration(configurationA());
@@ -313,7 +313,7 @@ for (const side of ['a', 'b'] as const) {
     renderPreview();
     resetMatch();
   });
-  for (const name of ['target', 'threshold', 'retreat']) {
+  for (const name of ['target', 'threshold', 'retreat', 'reserve']) {
     el(`${name}-${side}`).addEventListener('input', () => {
       pause();
       renderPreview();

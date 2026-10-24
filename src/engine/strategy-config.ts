@@ -2,6 +2,7 @@ export const STRATEGY_TYPES = ['aggressive', 'defensive', 'distance', 'melee'] a
 export type StrategyType = typeof STRATEGY_TYPES[number];
 export const DEFAULT_STRATEGY: StrategyType = 'aggressive';
 export type StrategyParameters = Readonly<{
+  energyReserveRatio?: number;
   targetDistanceRatio?: number;
   retreatStructureRatio?: number;
   retreatDistanceFactor?: number;
@@ -21,6 +22,7 @@ export function strategyLabel(strategy: StrategyType): string {
 
 export function strategyParameters(strategy: StrategyType, overrides: StrategyParameters = {}) {
   return {
+    energyReserveRatio: overrides.energyReserveRatio ?? 0,
     targetDistanceRatio: overrides.targetDistanceRatio ?? STRATEGY_CATALOG.find(item => item.value === strategy)!.targetDistanceRatio,
     retreatStructureRatio: overrides.retreatStructureRatio ?? 0.7,
     retreatDistanceFactor: overrides.retreatDistanceFactor ?? 1.1
@@ -30,6 +32,7 @@ export function strategyParameters(strategy: StrategyType, overrides: StrategyPa
 export function validateStrategyParameters(parameters: StrategyParameters = {}): string[] {
   const errors: string[] = [];
   for (const [value, min, max, label] of [
+    [parameters.energyReserveRatio, 0, 1, 'Energiereserve'],
     [parameters.targetDistanceRatio, 0, 1, 'Zielabstand'],
     [parameters.retreatStructureRatio, 0, 1, 'Rückzugsschwelle'],
     [parameters.retreatDistanceFactor, 1, 2, 'Sicherheitsabstand']
