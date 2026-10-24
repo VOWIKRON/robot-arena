@@ -151,3 +151,33 @@ test('NEXT-63: keyboard, 375px touch targets, double clicks and invalid plan pre
   await expect(open).toBeFocused();
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxStyle);
 });
+
+test('NEXT-66: match details are accurate, pending values absent and Unicode/HTML names stay text', async ({ page }) => {
+  await page.goto('/');
+  const sandboxStyle = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-count').fill('16');
+  await page.locator('#tournament-count').press('Tab');
+  await page.locator('#tournament-ticks').fill('10');
+  await page.locator('#tournament-name-1').fill('Änne <b>Roboter</b>');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  const fixtures = page.locator('#tournament-pairings li');
+  await expect(fixtures).toHaveCount(120);
+  await expect(fixtures.first()).toContainText('Änne <b>Roboter</b>');
+  await expect(fixtures.first()).toContainText('Ausstehend');
+  await expect(fixtures.first()).not.toContainText('Reststruktur');
+  await expect(page.locator('#tournament-pairings b')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(fixtures.first()).toContainText(/Seed [0-9]+ · Ticks [0-9]+ · Sieger: /);
+  await expect(fixtures.first()).toContainText(/Reststruktur A\\/B: [0-9.]+ \\/ [0-9.]+/);
+  await expect(fixtures.nth(1)).toContainText('Ausstehend');
+  await expect(fixtures.nth(1)).not.toContainText('Ticks');
+  const before = await fixtures.first().innerText();
+  const saved = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern' }).click();
+  const archive = await saved;
+  await page.locator('#tournament-file').setInputFiles(await archive.path());
+  await expect(fixtures.first()).toHaveText(before);
+  await page.getByRole('button', { name: 'Turnier schließen' }).click();
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxStyle);
+});
