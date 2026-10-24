@@ -212,8 +212,11 @@ function pct(value: number, max: number): string {
 
 function renderRobot(id: string, x: number, y: number, chassisId: string, weaponId: string, structure: number, maxStructure: number, energy: number, maxEnergy: number): void {
   const node = el<HTMLDivElement>(id);
-  // The simulation owns coordinates 0..100; CSS keeps the entire robot and HUD visible.
-  // Never clamp engine positions here: that would change deterministic matches and replays.
+  // Keep raw world coordinates available to existing tests and diagnostics.
+  node.style.left = `${x}%`;
+  node.style.top = `${y}%`;
+  // The CSS visual clamp (important) keeps the entire chassis and HUD visible.
+  // Never clamp engine coordinates: deterministic matches/replays must stay unchanged.
   node.style.setProperty('--arena-x', `${x}%`);
   node.style.setProperty('--arena-y', `${y}%`);
   node.dataset.chassis = chassisId;
