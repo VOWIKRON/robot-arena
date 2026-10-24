@@ -483,7 +483,7 @@ function renderTournamentParticipants(): void {
       const select = document.createElement('select');
       select.id = `tournament-preset-${index + 1}`;
       select.dataset.participantPreset = 'true';
-      for (const [value, title] of [['raptor', 'Raptor'], ['titan', 'Titan']]) {
+      for (const [value, title] of [['raptor', 'Raptor'], ['titan', 'Titan']] as const) {
         const option = document.createElement('option');
         option.value = value;
         option.textContent = title;
