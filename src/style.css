@@ -44,3 +44,17 @@
 .replay-stat-side{border:1px solid #2d3954;border-radius:9px;padding:10px;line-height:1.65;overflow-wrap:anywhere}
 #replay-result{margin-bottom:0;font-weight:700}
 @media(max-width:650px){.replay-stat-grid{grid-template-columns:1fr}}
+
+/* NEXT-55: independent, keyboard-accessible tournament planner. */
+.tournament-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.tournament-participants{display:grid;gap:8px;max-height:35vh;overflow:auto;padding:4px;scrollbar-gutter:stable}
+.tournament-participant{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,140px);gap:10px;border:1px solid #2d3954;padding:9px;border-radius:10px;background:#0a1428}
+.tournament-participant label{min-width:0}
+.tournament-pairings{max-height:220px;overflow:auto;line-height:1.6;padding-left:28px}
+.tournament-table-scroll{max-width:100%;overflow-x:auto;border:1px solid #40516f;border-radius:10px}
+.tournament-table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:500px}
+.tournament-table th,.tournament-table td{text-align:left;padding:9px;border-bottom:1px solid #2d3954;white-space:nowrap}
+.tournament-table th{background:#15213b}
+#tournament-preview[hidden]{display:none}
+#tournament-preview h3{margin:18px 0 8px}
+@media(max-width:650px){.tournament-options{grid-template-columns:1fr}.tournament-participant{grid-template-columns:minmax(0,1fr)}.tournament-participants{max-height:32vh}.tournament-table{font-size:.8rem}}
