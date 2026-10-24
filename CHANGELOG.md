@@ -1,3 +1,10 @@
+## Unreleased · 25.10.2026, 00:08 MESZ · NEXT-68 (nur Entwicklungsbranch)
+- **NEXT-68 NEU vollständig implementiert und getestet:** Browser-lokale, explizit aktivierte Turnier-Zwischenspeicherung an Matchgrenzen. Validiertes Archiv (Version 1, 2-MB-Grenze), Wiederherstellung nach Browser-Reload per Benutzeraktion, Schutz gegen beschädigte/überlange Sicherungen und Speicherkontingentfehler, kein Netztransfer. Ausschalten löscht Sicherung und Einwilligung. Pause, Cancel und deterministische 16-Teilnehmer-Fortsetzung geprüft.
+- **Refactoring:** Dateiimport und LocalStorage-Restore verwenden dieselbe validierte UI-Importfunktion; lokale Persistenz und Archivprüfung in eigenständiges Engine-Modul extrahiert.
+- **CI #40137115159 auf c95aaf99 vollständig grün:** 372 Unit-/Behavior-/Regressionstests (31 Dateien), 92 Desktop-/Mobile-E2E, Typecheck/Build, 2 reproduzierbare Clean-Builds, npm audit 0 bekannte Advisories.
+- **Letztes bestätigtes Live-Release v0.1.55:** Publish #40132737105 (echter Upload, Live-Verifikation und Deployment-Status erfolgreich), erneute Verifikation #40132968986. NEXT-56–62 sind veröffentlicht. **Kumulativ 5 sicher NICHT veröffentlichte Aufgaben seit v0.1.55:** NEXT-63, 64, 66, 67, **68 NEU**. NEXT-65 ist Duplikat von NEXT-59. Nur Draft-PR #48, kein Merge.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · 24.10.2026, 23:00 MESZ · NEXT-67 (nur Entwicklungsbranch)
 - **NEU NEXT-67:** Isoliertes Replay abgeschlossener Round-Robin-Kämpfe aus Seed und eingefrorenen Teilnehmern, exakter Abgleich von Sieger/Ticks/Reststruktur mit archiviertem Ergebnis vor Laden; manipulierte oder ausstehende Kämpfe werden abgewiesen.
 - Reines Engine-Modul `tournament-replay.ts`; Replay-Player wird wiederverwendet, ohne Sandbox oder Turnier-RNG zu berühren. Zugänglicher Button je abgeschlossenem Match, Desktop-/Mobile- und Tastaturbedienung.
