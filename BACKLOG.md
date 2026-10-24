@@ -5,9 +5,9 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 ## Aktueller Zustand
 
 **Phase:** Turnier-UI-Grundgerüst  
-**Aktuelle stabile Version:** 0.1.53
+**Aktuelle stabile Version:** 0.1.54 (Publish #40111747415 am 24.10.2026 verifiziert)
 **Nächstes Ziel:** NEXT-56 · Deterministische Turnierausführung (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50, NEXT-51, NEXT-52, NEXT-53, NEXT-54, NEXT-55 (13 Aufgaben).
+**Kumulativ seit bestätigtem Release v0.1.54 getestet, nicht veröffentlicht:** 0 Aufgaben; NEXT-56 implementiert, CI-Verifikation läuft. Die zuvor offenen 13 Aufgaben wurden mit v0.1.54 veröffentlicht.
 
 ---
 
@@ -364,10 +364,10 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 
 - **Verifiziert:** Development Tests #40110813524 auf SHA 9f17bc65: 303 Unit-/Behavior-Tests, 64 Desktop-/Mobile-E2E, Typecheck/Build erfolgreich; Sandbox-Isolation, 375px, Escape/Fokus und ungültige Eingaben geprüft.
 
-### NEXT-56 · Deterministische Turnierausführung
-- [ ] Runner verarbeitet geplante Paarungen seriell mit `runMatch`/Engine ohne UI-Kopplung; Pause/Fortsetzen/Abbrechen an Matchgrenzen.
-- [ ] Kein versteckter RNG; identische Definitionen liefern identische Ergebnisse und Reihenfolge, auch nach Pause.
-- [ ] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust.
+### NEXT-56 · Deterministische Turnierausführung (implementiert, abschließende Tests ausstehend)
+- [x] Runner verarbeitet geplante Paarungen seriell mit `runMatch`/Engine ohne UI-Kopplung; Pause/Fortsetzen/Abbrechen an Matchgrenzen.
+- [x] Kein versteckter RNG; identische Definitionen liefern identische Ergebnisse und Reihenfolge, auch nach Pause.
+- [ ] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust (Testfälle implementiert; CI-Ergebnis ausstehend).
 
 ### NEXT-57 · K.-o.-Bracket
 - [ ] Single-Elimination für 2–16 Teilnehmer mit dokumentierter Bye-Regel für Nicht-Zweierpotenzen; keine doppelte Teilnahme pro Runde.
