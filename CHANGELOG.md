@@ -1,9 +1,11 @@
 # Changelog
 
-## Unreleased · NEXT-40 (Entwicklungsbranch, nicht getestet, nicht veröffentlicht)
-- Energiereserve 0–100 % pro Roboter und Schussfreigabe unter Erhalt der Reserve als Quellcode ergänzt; Default 0 % erhält das bisherige Verhalten.
-- Eingabe/Validierung für beide Roboter sowie Unit-/Behavior-/Browser-Testfälle vorbereitet.
-- Vollständige Tests und Freigabe noch ausstehend; keine neue Version, kein Merge, kein Publishing.
+## Unreleased · NEXT-40 und NEXT-44 (Entwicklungsbranch, nicht veröffentlicht)
+- NEXT-40: Energiereserve 0–100 % pro Roboter, zentrale Schussfreigabe, getrennte Konfiguration A/B und Default 0 % implementiert und geprüft.
+- NEXT-40: Development Tests #40085113036 auf SHA 193f42d0 erfolgreich: 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build.
+- NEXT-44: Append-only-Event-Recorder mit Seed, unveränderlichen Start-/End-Snapshots und Ereignissen pro Tick implementiert; Tests für 0/1/3600 Ticks und Sofortsieg ergänzt; vollständige Prüfung des aktuellen Heads ausstehend.
+- Entwicklungstests durch Workflow-Namen `Development Tests` vom bisherigen Publish-Auslöser `CI` getrennt. Publish auf main ist noch automatisch konfiguriert.
+- Keine neue Produktversion, kein Merge auf main, keine Veröffentlichung.
 
 ## 0.1.53 – 2026-10-23
 - Defensive hält Sicherheitsabstand bereits vor kritischem Schaden; ab standardmäßig 70 % Struktur kein Nachsetzen mehr (zuvor erst 35 %).
