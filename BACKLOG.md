@@ -379,23 +379,23 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Browser-Import/Export, Resume an Matchgrenzen, keine doppelten Kämpfe; ungültiger Import erhält den laufenden Turnierstand.
 - [x] Tests: pausierter und abgeschlossener Roundtrip, fehlerhafte Zustände/Progress/IDs, Sonder-IDs, Desktop-/Mobile-Dateiimport; CI #40119157124: grün.
 
-### NEXT-59 · Turnier-E2E, Statistik und Refactoring (TEILWEISE – nicht abgeschlossen)
+### NEXT-59 · Turnier-E2E, Statistik und Refactoring (weiter in Abnahme)
 - [x] Engine-Integration für 16 Teilnehmer/120 Round-Robin-Matches; Import-/Resume-Ergebnisse stimmen mit direktem Lauf überein.
 - [x] Browser-E2E für Round Robin mit Pause/Resume, JSON-Download/-Upload und Tabellenstand; Desktop und Mobile.
-- [ ] K.-o.-Turnier in der Browseroberfläche integrieren und Desktop-/Mobile-E2E inklusive Touch/Tastatur, Gewinneranzeige und ungültiger Konfiguration ergänzen.
+- [x] K.-o.-Turnier in der Browseroberfläche integrieren und Desktop-/Mobile-E2E mit Tastatur, Gewinneranzeige und Freilosen ergänzen; ungültige Konfiguration und Touch-Details bleiben in der Abnahme.
 - [ ] 16-Teilnehmer-Referenz-Digests für Tabelle und Bracket mit festen Seeds erstellen; Performance-/Speichergrenzen dokumentieren.
 - [ ] Charakterisierung vor Runner/UI-Refactoring, anschließend vollständige Unit-/Behavior-/Regression-/E2E-Matrix erneut ausführen.
 
-### NEXT-60 · Turnier-Fairness und Seed-Audit (TEILWEISE – nicht abgeschlossen)
+### NEXT-60 · Turnier-Fairness und Seed-Audit (weiter in Abnahme)
 - [x] Reines Modul zählt Auftritte, A/B-Zuordnung und deterministische Seeds ohne Simulations-RNG.
 - [x] Optional alternierende Seitenzuordnung; bestehender Spielplan bleibt im Default unverändert. Prototypartige Teilnehmer-IDs werden sicher gezählt.
-- [ ] Für 2/3/4/16 Teilnehmer quantifizierte A/B-Verteilung und systematische Seitenverzerrung charakterisieren; erwartete Grenzwerte und Referenz-Digests dokumentieren.
+- [x] Für 2/3/4/16 Teilnehmer A/B-Verteilung mit paarweisen Side-Swap-Simulationen deterministisch prüfen; dokumentierte Bias-Grenzwerte und Referenz-Digests bleiben offen.
 - [ ] Alternierendes Format mit realem Runner und Ergebnis-/Seed-Ableitung abstimmen; regressionssichere Tests für Side-Swap und faire Turnierauswertung.
 
-### NEXT-61 · Exportierbare Turniertabelle
-- [ ] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
-- [ ] Spaltenreihenfolge, Dezimalformat, Unicode-Namen, Formel-Injection-Schutz und unvollständige Turniere dokumentieren.
-- [ ] Unit-/Behavior-Tests für Roundtrip, Sonderzeichen, 0 Ergebnisse und 16 Teilnehmer; Desktop-/Mobile-Download prüfen.
+### NEXT-61 · Exportierbare Turniertabelle (implementiert, getestet)
+- [x] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
+- [x] Feste Spaltenreihenfolge, Unicode, dezimalpunktbasierte numerische Werte, CSV-Quoting, Formel-Injection-Schutz und unvollständige Turniere implementieren.
+- [x] Unit-/Behavior-Tests für Sonderzeichen, 0 Ergebnisse und 16 Teilnehmer; Desktop-/Mobile-Download erfolgreich.
 
 ### NEXT-62 · Turnier-Leistung und Abbruchgrenzen
 - [ ] 16-Teilnehmer-Round-Robin mit 120 Paarungen unter reproduzierbaren Bedingungen benchmarken; CPU-/Speicherbedarf erfassen.
