@@ -1,5 +1,13 @@
 # RUN_STATE
 
+## Entwicklungsfortsetzung – Turnieroberfläche und Browser-Regression
+- NEXT-58: UI-Buttons für Nächster Kampf, Pause/Fortsetzen/Abbrechen, JSON-Export und Import mit Ergebnisfortschritt ergänzt.
+- NEXT-59: Desktop-/Mobile-Playwright-Test für Turnierdurchlauf, Pause/Fortsetzen, Download/Upload und Tabellenstand ergänzt.
+- NEXT-60: Fairness-Audit mit deterministischer A/B-Seiten- und Seed-Auswertung vorhanden.
+- Verifikation der neuesten UI- und E2E-Commits läuft; Freigabe nur nach grünen Checks. npm-audit-Befunde müssen vor Publish-Reife separat eingeordnet werden.
+- NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.
+
+
 ## Entwicklungsfortsetzung 24.10.2026 – NEXT-57 bis NEXT-60
 - Letzter bestätigter Publish: v0.1.54. main und Homepage bleiben unverändert; Draft-PR #47.
 - NEXT-56: bestätigt getestet, unveröffentlicht.
