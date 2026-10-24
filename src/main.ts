@@ -5,6 +5,8 @@ import { createMatch, stepMatchWithEvents } from './engine/simulation';
 import { SeededRandom } from './engine/random';
 import { EventRecorder } from './engine/recorder';
 import { downloadReplay, readReplayFile } from './engine/replay-io';
+import { parseReplay, serializeReplay, type ReplayDocument } from './engine/replay-format';
+import { ReplayPlayer } from './engine/replay-player';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
@@ -27,7 +29,7 @@ app.innerHTML = `
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button><button id="open-replay">Replay</button></div>
-<dialog id="replay-dialog" aria-labelledby="replay-title"><div class="config-dialog-card"><h2 id="replay-title">Replay-Dateien</h2><p>Aktuellen Kampf als JSON exportieren oder eine Replay-Datei prüfen. Die Wiedergabe folgt mit NEXT-47; ein Import verändert den laufenden Kampf nicht.</p><div class="controls"><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><button id="close-replay">Schließen</button></div><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"><p id="replay-feedback" class="status" role="status" aria-live="polite"></p></div></dialog>
+<dialog id="replay-dialog" aria-labelledby="replay-title"><div class="config-dialog-card"><h2 id="replay-title">Replay-Dateien</h2><p>Aktuellen Kampf als JSON exportieren oder eine Replay-Datei prüfen. Die Wiedergabe zeigt aufgezeichnete Ereignisse ohne erneute Simulation; ein Import verändert den laufenden Kampf nicht.</p><div class="controls"><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><button id="replay-load-current">Aktuellen Kampf laden</button><button id="close-replay">Schließen</button></div><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"><p id="replay-feedback" class="status" role="status" aria-live="polite"></p><div class="controls" aria-label="Replay-Steuerung"><button id="replay-play" disabled>Abspielen</button><button id="replay-pause" disabled>Pausieren</button><button id="replay-step" disabled>Replay-Schritt</button><button id="replay-reset" disabled>Replay-Anfang</button></div><p id="replay-progress" role="status" aria-live="polite">Kein Replay geladen</p><p id="replay-events" aria-label="Ereignisse im aktuellen Replay-Tick"></p></div></dialog>
 <div class="status" id="status"></div>
 </section>
 <aside class="card battle-panel"><h2>Kampfstatus</h2><div id="stats"></div><div class="battle-hint">Konfiguration über den Button unter der Arena ändern.</div></aside>\n<dialog id="config-dialog" aria-labelledby="config-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="config-title">Roboter konfigurieren</h2><button id="close-config" aria-label="Konfiguration schließen">×</button></div><div class="config-grid"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie A <select id="energy-a"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor A <select id="sensor-a"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label>${strategyControls('a')}<div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie B <select id="energy-b"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor B <select id="sensor-b"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label>${strategyControls('b')}<div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div class="dialog-actions"><button id="apply-config">Übernehmen &amp; Kampf zurücksetzen</button></div></div></dialog>
@@ -47,6 +49,8 @@ let state: MatchState;
 let rng: SeededRandom;
 let recorder: EventRecorder;
 let timer: number | null = null;
+let replayPlayer: ReplayPlayer | null = null;
+let replayTimer: number | null = null;
 
 const el = <T extends HTMLElement>(id: string): T => {
   const node = document.getElementById(id);
@@ -305,8 +309,52 @@ async function loadFooterMetadata(): Promise<void> {
 el<HTMLButtonElement>('open-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').showModal());
 el<HTMLButtonElement>('close-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').close());
 el<HTMLButtonElement>('apply-config').addEventListener('click', () => { renderPreview(); if (configurationValid()) { resetMatch(); el<HTMLDialogElement>('config-dialog').close(); } });
+function stopReplayTimer(): void {
+  if (replayTimer !== null) window.clearInterval(replayTimer);
+  replayTimer = null;
+  replayPlayer?.pause();
+}
+function renderReplay(): void {
+  const player = replayPlayer;
+  el('replay-progress').textContent = player
+    ? `Replay Tick ${player.tick} / ${player.length}${player.atEnd ? ' · Ende' : ''}`
+    : 'Kein Replay geladen';
+  el('replay-events').textContent = !player ? '' :
+    player.events.length ? `Ereignisse: ${player.events.map(event => event.type).join(', ')}` : 'Keine Ereignisse in diesem Tick';
+  for (const id of ['replay-play', 'replay-step'] as const)
+    el<HTMLButtonElement>(id).disabled = !player || player.atEnd;
+  el<HTMLButtonElement>('replay-pause').disabled = !player || !player.isPlaying;
+  el<HTMLButtonElement>('replay-reset').disabled = !player || player.tick === 0;
+}
+function loadReplay(recording: ReplayDocument): void {
+  stopReplayTimer();
+  replayPlayer = new ReplayPlayer(recording);
+  renderReplay();
+}
 el('open-replay').addEventListener('click', () => el<HTMLDialogElement>('replay-dialog').showModal());
 el('close-replay').addEventListener('click', () => el<HTMLDialogElement>('replay-dialog').close());
+el('replay-dialog').addEventListener('close', () => { stopReplayTimer(); renderReplay(); });
+el('replay-load-current').addEventListener('click', () => {
+  try {
+    loadReplay(parseReplay(serializeReplay(recorder.snapshot(state))));
+    el('replay-feedback').textContent = 'Aktueller Kampf für Replay geladen.';
+  } catch (error) {
+    el('replay-feedback').textContent = `Replay konnte nicht geladen werden: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
+  }
+});
+el('replay-play').addEventListener('click', () => {
+  if (!replayPlayer?.play()) return;
+  if (replayTimer !== null) window.clearInterval(replayTimer);
+  replayTimer = window.setInterval(() => {
+    replayPlayer?.advance();
+    if (replayPlayer?.atEnd) stopReplayTimer();
+    renderReplay();
+  }, 120);
+  renderReplay();
+});
+el('replay-pause').addEventListener('click', () => { stopReplayTimer(); renderReplay(); });
+el('replay-step').addEventListener('click', () => { stopReplayTimer(); replayPlayer?.step(); renderReplay(); });
+el('replay-reset').addEventListener('click', () => { stopReplayTimer(); replayPlayer?.reset(); renderReplay(); });
 el('replay-export').addEventListener('click', () => {
   try {
     downloadReplay(recorder.snapshot(state));
@@ -322,7 +370,8 @@ el<HTMLInputElement>('replay-file').addEventListener('change', async (event) => 
   if (!file) return;
   try {
     const replay = await readReplayFile(file);
-    el('replay-feedback').textContent = `Replay geprüft: Seed ${replay.seed}, ${replay.frames.length} Ticks, ${replay.robotA.name} gegen ${replay.robotB.name}. Wiedergabe folgt mit NEXT-47.`;
+    loadReplay(replay);
+    el('replay-feedback').textContent = `Replay geprüft: Seed ${replay.seed}, ${replay.frames.length} Ticks, ${replay.robotA.name} gegen ${replay.robotB.name}. Wiedergabe bereit.`;
   } catch (error) {
     el('replay-feedback').textContent = `Replay-Import abgelehnt: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
   } finally {
