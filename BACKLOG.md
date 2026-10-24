@@ -311,10 +311,11 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E als Quellcode ergänzt.
 - [x] Development Tests #40092321506 auf Commit 556a2858: Typecheck, Build, **262 Unit-/Verhaltenstests und 50 Desktop-/Mobile-E2E erfolgreich**; NEXT-46 implementiert und getestet, unveröffentlicht.
 
-### NEXT-47 · Replay-Player
-- [ ] Player-Zustandsmaschine mit Play/Pause/Einzelschritt/Ende aus validierten Frames definieren; keinerlei neue RNG-Aufrufe.
-- [ ] Importierte Aufzeichnung über eigene Player-Ansicht öffnen, Live-Kampf unverändert lassen.
-- [ ] 0-Tick, Sofortsieg, 3600 Ticks, Pausen-/Endzustand und mehrfaches Öffnen durch Behavior- und Desktop-/Mobile-Tests prüfen.
+### NEXT-47 · Replay-Player (implementiert, CI-Abnahme ausstehend)
+- [x] Ereignisbasierte Player-Zustandsmaschine mit Play/Pause/Einzelschritt/Ende aus validierten Frames; keine RNG-/Simulationsaufrufe.
+- [x] Importierte Aufzeichnung und aktuellen Kampf im eigenen Replay-Dialog mit Tick- und Ereignisanzeige abspielen; Live-Kampf bleibt unverändert.
+- [ ] Vollständige GitHub-Abnahme: 0-Tick, Sofortsieg, 3600 Ticks, Pause/Ende, erneutes Öffnen, importierte JSON-Datei sowie Desktop-/Mobile-E2E grün verifizieren.
+- [ ] Erst danach NEXT-47 als abgeschlossen und kumulativ unveröffentlicht zählen; NEXT-48 übernimmt Zustandsrekonstruktion und grafische Zeitleiste.
 
 ### NEXT-48 · Replay-Zeitleiste
 - [ ] Seek auf Tick 0, Mitte, Ende und rückwärts anbieten, deterministische Zustandsrekonstruktion ohne neue Simulation.
@@ -335,6 +336,22 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [ ] Recorder, Datei-IO und Player anhand bestehender Charakterisierungstests entkoppeln.
 - [ ] Danach vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests erneut ausführen.
 - [ ] Turnier-NEXT-52 bis NEXT-59 mit Datenmodell, Seed-Plan, Round-Robin, K.-o., Tabellen, Statistik, UI und E2E konkret planen.
+
+### NEXT-52 · Turnierdatenmodell
+- [ ] Teilnehmer-IDs, Konfigurationen und Seed-Plan unabhängig vom UI modellieren; doppelte IDs ablehnen.
+- [ ] Serialisierbare Turnierdefinition und feste Paarungsreihenfolge durch Unit-/Regressionstests absichern.
+
+### NEXT-53 · Round-Robin-Spielplan
+- [ ] Für 2–16 Roboter jede Paarung genau einmal deterministisch erzeugen.
+- [ ] Tests für gerade/ungerade Teilnehmerzahl, stabile Seeds und keine Selbstpaarung ergänzen.
+
+### NEXT-54 · Turnierauswertung
+- [ ] Siege, Niederlagen, Unentschieden und Punkte aus Match-Ergebnissen berechnen.
+- [ ] Gleichstand und unveränderte Eingaben durch Behavior- und Regressionstests absichern.
+
+### NEXT-55 · Turnier-UI-Grundgerüst
+- [ ] Responsiven Turnierdialog mit Teilnehmerübersicht, Paarungen und Ergebnistabelle ergänzen.
+- [ ] Tastaturbedienung, mobile Ansicht und keine Beeinflussung laufender Sandbox-Matches testen.
 
 ## Planungszyklus
 
