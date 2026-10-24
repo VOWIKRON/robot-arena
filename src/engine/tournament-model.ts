@@ -7,6 +7,8 @@ export type TournamentDefinition = Readonly<{
   schemaVersion: 1;
   id: string;
   format: TournamentFormat;
+  /** Omitted means the historical fixture orientation, preserving old archives. */
+  sideAssignment?: 'balanced';
   baseSeed: number;
   maxTicks: number;
   participants: readonly RobotDefinition[];
@@ -61,6 +63,8 @@ export function createTournamentDefinition(input: unknown): TournamentDefinition
   if (t.schemaVersion !== 1) throw new Error('Turnier: schemaVersion 1 erwartet');
   nonempty(t.id, 'Turnier-ID');
   if (t.format !== 'round-robin' && t.format !== 'knockout') throw new Error('Turnierformat ungültig');
+  if (t.sideAssignment !== undefined && t.sideAssignment !== 'balanced') throw new Error('Turnier: ungültige Seitenzuordnung');
+  if (t.sideAssignment === 'balanced' && t.format !== 'round-robin') throw new Error('Turnier: Seitenbalance nur für Round Robin');
   integer(t.baseSeed, 'Turnier-Seed', 0);
   integer(t.maxTicks, 'Turnier-maxTicks', 1, 3600);
   if (!Array.isArray(t.participants) || t.participants.length < 2 || t.participants.length > 16) {
@@ -72,6 +76,7 @@ export function createTournamentDefinition(input: unknown): TournamentDefinition
   const result: TournamentDefinition = {
     schemaVersion: 1, id: t.id as string, format: t.format,
     baseSeed: t.baseSeed as number, maxTicks: t.maxTicks as number,
+    ...(t.sideAssignment === 'balanced' ? { sideAssignment: 'balanced' as const } : {}),
     participants: structuredClone(participants)
   };
   return deepFreeze(result);
