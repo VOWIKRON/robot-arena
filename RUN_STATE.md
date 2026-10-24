@@ -8,7 +8,7 @@
 - **Verifikation NEXT-56: CI #40113922862 auf Code-Commit 453f5ef5 erfolgreich** – 314 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, TypeScript und Build grün.
 - Kumulativ seit letztem verifiziertem Release: **1 vollständig implementierte und getestete, unveröffentlichte Aufgabe: NEXT-56**.
 - Nächster Schritt: CI prüfen, ggf. Fehler korrigieren; dann NEXT-57 K.-o.-Bracket, NEXT-58 Import/Export.
-- Refactoring: Runner ist als reines, UI-unabhängiges Modul isoliert; Engine/Seed-Zuweisung bleibt unverändert. CI auf dem endgültigen Dokumentations-HEAD gesondert prüfen.
+- Refactoring: Runner ist als reines, UI-unabhängiges Modul isoliert; Engine/Seed-Zuweisung bleibt unverändert. Vollständiger CI-Lauf #40114214478 auf HEAD 9115c0c1 nach Code-, Dokumentations- und E2E-Änderungen grün: 314 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, TypeScript und Build. Zwei vorübergehende E2E-Fehlläufe durch fest verdrahtete NEXT-56-Backlog-Beschriftung wurden durch generische NEXT-Nummernprüfung behoben; abschließender Test grün.
 - **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, kein Deployment, kein publish.php.
 
 ## Fortsetzung der Entwicklungsrunde · 24.10.2026, 18:12 Europe/Berlin
