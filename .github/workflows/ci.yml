@@ -12,14 +12,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
-      - name: Capture exact npm dependency resolution for NEXT-64
-        shell: bash
-        run: |
-          test -s package-lock.json
-          echo ROBOT_ARENA_LOCKFILE_BEGIN
-          cat package-lock.json
-          echo ROBOT_ARENA_LOCKFILE_END
+          cache: npm
+      - run: npm ci --no-audit --no-fund
       - name: Audit dependencies (report only; security release gate remains blocked)
         shell: bash
         run: |
@@ -36,12 +30,24 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: Verify second clean install and reproducible build on identical SHA
+        shell: bash
+        run: |
+          before="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          lock_before="$(sha256sum package-lock.json | awk '{print $1}')"
+          npm ci --no-audit --no-fund
+          npm run typecheck
+          npm run build
+          after="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          test "$before" = "$after" || (echo "Non-deterministic dist output" && exit 1)
+          test "$lock_before" = "$(sha256sum package-lock.json | awk '{print $1}')" || (echo "Lockfile changed during npm ci" && exit 1)
+          echo "Reproducible dist digest: $after"
       - name: Cache Playwright Chromium
         id: playwright-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('package.json') }}
+          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium
         run: npx playwright install chromium
       - name: Verify Chromium runtime (install missing system libraries only if needed)
