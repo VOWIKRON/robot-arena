@@ -1,5 +1,13 @@
 # PROJECT_STATE
 
+## Aktuelle unveröffentlichte Entwicklungsrunde (24.10.2026, 16:00 Europe/Berlin)
+- NEXT-48: Eventbasierte, unveränderliche Zustandsrekonstruktion und Seek-Zeitleiste mit Position, Energie, Struktur, Schuss-/Treffereffekten; Tastatur und Mobile-Touch getestet. Development Tests #40100789839: 274 Unit-/Behavior-Tests, 56 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-49: Reine Replay-Statistik (Schüsse, Treffer, effektiver Schaden, Energieverbrauch), Deduplizierung und Überkill-Begrenzung; responsiver A/B-Vergleich. Development Tests #40100953952: 281 Unit-/Behavior-Tests, 58 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-50: 16 Strategiepaarungen × Seeds 1/12/4711, JSON-Roundtrip, Event-/Zustands-Digests, korrupte/übergroße Imports, Desktop-/Mobile-Regressionen. Development Tests #40101113261: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- Refactoring: Replay-Zustandsrekonstruktion und Kampfauswertung als getrennte, RNG-freie Engine-Module; UI verwendet nur diese Modelle. Danach vollständige Tests erfolgreich.
+- Kumulativ 8 vollständig getestete, unveröffentlichte Aufgaben seit v0.1.53: NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50.
+- Nächster Schritt: NEXT-51 · Replay-Refactoring/Turnierplanung. Hauptbranch und stabile Version v0.1.53 unverändert; PR #46 Draft, kein Merge, kein Publish.
+
 ## Unveröffentlichte Entwicklung NEXT-47 (24.10.2026, vollständig getestet)
 - Eventbasierter Replay-Player ohne RNG/Engine-Simulation auf Entwicklungsbranch implementiert; Play/Pause/Step/Reset, Ereignisanzeige und Laden importierter Dateien bzw. des aktuellen Kampfes.
 - Separate Replay-Uhr; der laufende Sandbox-Kampf wird durch Import und Wiedergabe nicht verändert.
