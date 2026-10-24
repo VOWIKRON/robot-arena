@@ -1,5 +1,5 @@
 import { createTournamentDefinition } from './tournament-model';
-import { createTournamentRun, advanceTournamentRun, type TournamentRun } from './tournament-runner';
+import { advanceTournamentRun, type TournamentRun } from './tournament-runner';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { createTournamentMatchResult } from './tournament-standings';
 import { deepFreeze } from './immutable';
