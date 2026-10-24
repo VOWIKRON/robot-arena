@@ -76,3 +76,31 @@ test('NEXT-60: opt-in balanced side assignment survives save/load and drives the
   await page.getByRole('button', { name: 'Turnier schließen' }).click();
   await expect(page.locator('#bot-a')).toBeVisible();
 });
+
+test('NEXT-62: automatic 16-player tournament yields to pause, resumes and cancels at match boundaries', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-count').fill('16');
+  await page.locator('#tournament-count').press('Tab');
+  await page.locator('#tournament-ticks').fill('20');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 120');
+  await page.getByRole('button', { name: 'Alle Kämpfe spielen' }).click();
+  await page.getByRole('button', { name: 'Pause', exact: true }).last().click();
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+  const paused = await page.locator('#tournament-progress').innerText();
+  await page.waitForTimeout(200);
+  await expect(page.locator('#tournament-progress')).toHaveText(paused);
+  await page.getByRole('button', { name: 'Fortsetzen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('120 / 120', { timeout: 20000 });
+  await expect(page.locator('#tournament-progress')).toContainText('completed');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.getByRole('button', { name: 'Alle Kämpfe spielen' }).click();
+  await page.getByRole('button', { name: 'Abbrechen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('cancelled');
+  const cancelled = await page.locator('#tournament-progress').innerText();
+  await page.waitForTimeout(200);
+  await expect(page.locator('#tournament-progress')).toHaveText(cancelled);
+  await page.getByRole('button', { name: 'Turnier schließen' }).click();
+  await expect(page.locator('#bot-a')).toBeVisible();
+});
