@@ -1,14 +1,14 @@
 # RUN_STATE
 
 ## Entwicklungsrunde 24.10.2026, 15:00 Europe/Berlin
-- current_next: NEXT-47 (Event-Replay-Player)
-- status: IMPLEMENTIERT, vollständige CI-Abnahme des aktuellen Heads noch ausstehend; nicht als abgeschlossen zählen.
+- current_next: NEXT-48 (Zeitleiste; nächster Lauf)
+- status: NEXT-47 IMPLEMENTIERT UND VOLLSTÄNDIG GETESTET; GitHub Development Tests #40096436278 auf Code-SHA 1b7413a (268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck/Build erfolgreich). Dokumentations-Head anschließend separat prüfen.
 - changes: src/engine/replay-player.ts, tests/replay-player.test.ts, src/main.ts, e2e/replay-player.spec.ts
 - checks: Unit/Behavior/Regression, 0/1/3600 Ticks, Sofortsieg, Pause/Play/Step/Reset, importierter Replay, Desktop/Mobile; finaler GitHub-Lauf ausstehend.
-- cumulative_verified_unpublished: NEXT-40, NEXT-44, NEXT-45, NEXT-46 (4); NEXT-47 noch nicht zählen.
+- cumulative_verified_unpublished: NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47 (5).
 - branch: automation/next-40-energy-reserve-unpublished; PR #46 DRAFT; main unverändert; kein Publish.
-- blocker: GitHub Development Tests für finalen Commit vollständig abwarten und eventuelle rote Tests beheben.
-- next: NEXT-47 CI finalisieren, danach NEXT-48.
+- blocker: keiner im NEXT-47-Code; abschließender Dokumentations-Head wird erneut durch CI geprüft.
+- next: NEXT-48 (deterministischer Seek und grafische Zeitleiste) im nächsten Lauf; keine Veröffentlichung.
 
 
 ## Aktueller Entwicklungsstand (24.10.2026, stündlicher Lauf)
@@ -34,8 +34,9 @@
 
 4. NEXT-46 · Replay-Import/-Export: **IMPLEMENTIERT UND GETESTET**, unveröffentlicht. Separater Dialog, Live-Recorder-Snapshot, JSON-Download, 2-MB-Limit, sichere Dateivalidierung und unveränderter Live-Kampf; Development Tests #40092321506 auf SHA 556a2858: 262 Unit-/Verhaltenstests, 50 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-**Gesamtzahl verifizierter, noch nicht veröffentlichter NEXT-Aufgaben: 4.**
-- NEXT-47 bis NEXT-51: geplant, nicht implementiert.
+**Gesamtzahl verifizierter, noch nicht veröffentlichter NEXT-Aufgaben: 5.**
+5. NEXT-47 · Ereignisbasierter Replay-Player: **IMPLEMENTIERT UND GETESTET**, unveröffentlicht. Play/Pause/Schritt/Reset/Ende, importierte Replays, kein RNG, unveränderter Live-Kampf; Development Tests #40096436278 auf SHA 1b7413a: 268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-48 bis NEXT-55: geplant, nicht implementiert.
 
 ## Nächste Aktion
 1. Development Tests für finalen Branch-Head prüfen, insbesondere Backlog-HTML-Smoke nach Aktualisierung auf NEXT-47.
