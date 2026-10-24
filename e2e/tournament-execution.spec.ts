@@ -50,3 +50,29 @@ test('NEXT-58: custom participant IDs survive import and invalid JSON preserves 
   await expect(page.locator('#tournament-progress')).toHaveText(before);
   await expect(page.locator('#tournament-table tbody')).toContainText('Alpha Import');
 });
+
+test('NEXT-60: opt-in balanced side assignment survives save/load and drives the real match', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-count').fill('4');
+  await page.locator('#tournament-count').press('Tab');
+  await page.locator('#tournament-side-assignment').selectOption('balanced');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-pairings li')).toHaveCount(6);
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  const saved = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern' }).click();
+  const file = await saved;
+  const archive = JSON.parse(await readFile(await file.path(), 'utf8'));
+  expect(archive.run.definition.sideAssignment).toBe('balanced');
+  expect(archive.run.results[0].robotAId).toBe(archive.run.definition.participants[0].id);
+  await page.locator('#tournament-side-assignment').selectOption('legacy');
+  await page.locator('#tournament-file').setInputFiles(await file.path());
+  await expect(page.locator('#tournament-side-assignment')).toHaveValue('balanced');
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('2 / 6');
+  await page.getByRole('button', { name: 'Turnier schließen' }).click();
+  await expect(page.locator('#bot-a')).toBeVisible();
+});
