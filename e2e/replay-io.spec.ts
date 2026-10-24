@@ -6,6 +6,8 @@ test('NEXT-46 replay export/import is keyboard accessible and does not change th
   const tickBefore = await page.locator('#status').innerText();
   const energyBefore = await page.getByRole('progressbar', { name: 'Energie Roboter A' }).getAttribute('aria-valuenow');
 
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Replay exportieren' }).click();
   const download = await downloadPromise;
