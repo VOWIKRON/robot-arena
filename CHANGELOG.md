@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased · NEXT-48, NEXT-49 und NEXT-50 (vollständig getestet, nicht veröffentlicht)
+- NEXT-48: Grafische Replay-Zeitleiste mit deterministischem Seek in beide Richtungen, unabhängiger Arenaansicht, Struktur-/Energie-/Positionsrekonstruktion und reproduzierbaren Schuss-/Treffereffekten. Development Tests #40100789839: 274 Unit-/Behavior-Tests und 56 Desktop-/Mobile-E2E erfolgreich.
+- NEXT-49: Ereignisbasierte A/B-Kampfstatistiken (Schüsse, Treffer, effektiver Schaden, Energieverbrauch), Deduplizierung, Überkill-Schutz, Sofortsieg, Timeout und 0 Ticks. Development Tests #40100953952: 281 Unit-/Behavior-Tests und 58 Desktop-/Mobile-E2E erfolgreich.
+- NEXT-50: 48 Replay-Roundtrips (16 Strategiepaarungen × 3 Seeds) mit SHA-256-Vergleich von Events und Zuständen, beschädigten/fehlenden Frames, 2-MB-Grenze und Browser-Regressionen. Development Tests #40101113261: 284 Unit-/Behavior-Tests und 60 Desktop-/Mobile-E2E erfolgreich.
+- Replay-Zustandsrekonstruktion und Statistik als reine, von der UI getrennte Module refaktoriert. Vollständiger Typecheck und Build erfolgreich. Alle drei Aufgaben bleiben unveröffentlicht; Live-Version v0.1.53 unverändert.
+
 ## Unreleased · NEXT-47 (implementiert und getestet, unveröffentlicht)
 - Replay-Player mit Play/Pause, Einzelschritt, Reset und Endzustand; importierte Aufzeichnungen oder aktuellen Kampf im Replay-Dialog ereignisbasiert wiedergeben, ohne Engine oder RNG erneut auszuführen.
 - Unit-/Behavior-Tests für leere, sofort beendete und 3600-Tick-Replays, deterministische Ereignisreihenfolge sowie Desktop-/Mobile-E2E für Dateiimport und unveränderten Live-Kampf erfolgreich: Development Tests #40096436278 (SHA 1b7413a), 268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck/Build grün.
