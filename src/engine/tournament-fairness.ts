@@ -1,6 +1,7 @@
 import { createTournamentDefinition, type TournamentDefinition } from './tournament-model';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { deepFreeze } from './immutable';
+import { runMatch } from './simulation';
 
 export type FairnessAudit = Readonly<{
   participants: number; matches: number;
@@ -36,4 +37,27 @@ export function createFairSideSchedule(input: TournamentDefinition, alternateSid
   return deepFreeze(fixtures.map((f, index) => index % 2 === 0 ? f : {
     ...f, robotAId: f.robotBId, robotBId: f.robotAId
   }));
+}
+
+/** Side-balanced paired evaluation: the same pair and seed are simulated twice,
+ * with A/B exchanged. Scores measure robot identity, not screen side.
+ * This is an audit, not a replacement for the canonical tournament runner.
+ */
+export function auditSideBias(input: TournamentDefinition) {
+  const definition = createTournamentDefinition(input);
+  const fixtures = createRoundRobinSchedule(definition);
+  const byId = new Map(definition.participants.map(p => [p.id, p]));
+  const counts = { sideAWins: 0, sideBWins: 0, draws: 0, pairedMatches: fixtures.length };
+  for (const f of fixtures) {
+    const a = byId.get(f.robotAId)!;
+    const b = byId.get(f.robotBId)!;
+    for (const [left, right] of [[a,b],[b,a]] as const) {
+      const outcome = runMatch(left, right, f.seed, definition.maxTicks);
+      if (outcome.winner === left.id) counts.sideAWins++;
+      else if (outcome.winner === right.id) counts.sideBWins++;
+      else counts.draws++;
+    }
+  }
+  return deepFreeze({ ...counts, sideWinDifference: counts.sideAWins - counts.sideBWins,
+    simulations: fixtures.length * 2 });
 }
