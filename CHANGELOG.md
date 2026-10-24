@@ -1,3 +1,8 @@
+## Unreleased · 25.10.2026, 02:00 MESZ · NEXT-78 Regression verstärkt (noch nicht abgenommen)
+- P0-Fluchttests prüfen nun explizit, dass der Raptor **wirklich zurückweicht** und die Arenagrenze erreicht, bevor sie das Einhalten der Grenzen bewerten. Vorher war ein fälschlich grüner Test ohne Bewegung möglich. Alle acht Ränder/Ecken und 1000 Schritte bleiben abgedeckt.
+- **Keine aktuelle vollständige CI-Bestätigung:** NEXT-78 offen; keine neue veröffentlichungsreife Aufgabe. NEXT-79 nur Audit, keine UX-Implementierung.
+- Kumulativ weiterhin fünf zuvor verifizierte, unveröffentlichte Aufgaben NEXT-63/64/66/67/68 seit Live-v0.1.55. Kein Merge, Release oder Publishing.
+
 ## Unreleased · 25.10.2026, 01:00 MESZ · NEXT-78 P0 in Verifikation, NEXT-79 Audit
 - **Fix vorbereitet, noch nicht abgenommen:** Arena-Darstellung klemmt die sichtbaren Raptor-/Titan-Chassis inklusive Waffe und Energie-/Lebensbalken an allen vier Rändern und Ecken in den Viewport. Engine-Weltkoordinaten, Seeds und Replay bleiben unverändert; Inline-Rohwerte für bestehende Diagnosen erhalten.
 - **Tests ergänzt (Ausführung der neuen vollständigen CI noch ausstehend):** Engine-Defensive an Rändern/Ecken, 1000-Schritt-Checks und Seeds 1/12/4711; Desktop-/Mobile-E2E mit 375px und 1280px, acht Grenzlagen und realem defensivem Kampf.
