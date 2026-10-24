@@ -6,8 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-44 · Event Recorder (Entwicklungsbranch, unveröffentlicht; Tests ausstehend)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40 (1 Aufgabe).
+**Nächstes Ziel:** NEXT-45 · Replay-Dateiformat und Validierung (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44 (2 Aufgaben).
 
 ---
 
@@ -287,14 +287,14 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Folgezyklus · F · Replay & Analyse
 
-NEXT-40 ist getestet, aber nicht veröffentlicht. NEXT-44 ist implementiert und wird geprüft; weitere Schritte sind geplant.
+NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der nächste offene Schritt; weitere Schritte sind geplant.
 
-### NEXT-44 · Event Recorder · IMPLEMENTIERT / TESTS AUSSTEHEND
+### NEXT-44 · Event Recorder · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
 - [x] Seed, Startkonfigurationen, Initial-/Endzustand und Tick-Events in einem unveränderlichen Snapshot aufzeichnen.
 - [x] Append-only-Recorder mit fortlaufenden Tick-IDs, Ereignisreihenfolge und Ende-Sperre ergänzen.
 - [x] Tests für 0/1/3600 Ticks, Sofortsieg und Seed-Determinismus implementieren.
-- [ ] Vollständige Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E auf dem aktuellen Recorder-Head erfolgreich nachweisen.
-- [ ] Nach Abnahme als abgeschlossen zählen, erst danach NEXT-45 beginnen.
+- [x] Development Tests #40088595774 auf SHA 7df3cacc: 252 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
+- [x] Recorder-Tests und unveränderte Default-Kämpfe verifiziert; NEXT-44 als abgeschlossen und unveröffentlicht gezählt.
 
 ### NEXT-45 · Replay-Dateiformat und Validierung
 - [ ] Versioniertes JSON-Format mit Metadaten definieren; ungültige Versionen und inkonsistente Tick-/Robot-Referenzen ablehnen.
