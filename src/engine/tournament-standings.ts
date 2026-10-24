@@ -44,6 +44,16 @@ function structure(value: unknown, max: number, label: string): number {
   return value;
 }
 
+
+/** Validate and capture an independent immutable match-result record for a fixture. */
+export function createTournamentMatchResult(
+  definition: TournamentDefinition,
+  result: TournamentMatchResult
+): TournamentMatchResult {
+  computeRoundRobinStandings(definition, [result]);
+  return deepFreeze(structuredClone(result));
+}
+
 /** Pure, deterministic ranking. Missing matches are not counted and are reported explicitly.
  * Structure difference is the sum of (own remaining structure - opponent remaining structure)
  * across completed fixtures, without normalization.
