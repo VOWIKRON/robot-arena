@@ -332,26 +332,54 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Maximalgröße, beschädigte JSON-Daten, fehlende Frames und Desktop-/Mobile-E2E abgesichert.
 - [x] Referenz-Snapshots, stabile Hash-Vergleiche und Performance der 48-Fälle-Suite im vollständigen CI-Lauf geprüft; Development Tests #40101113261: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-51 · Replay-Refactoring und Turnierplanung
-- [ ] Recorder, Datei-IO und Player anhand bestehender Charakterisierungstests entkoppeln.
-- [ ] Danach vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests erneut ausführen.
-- [ ] Turnier-NEXT-52 bis NEXT-59 mit Datenmodell, Seed-Plan, Round-Robin, K.-o., Tabellen, Statistik, UI und E2E konkret planen.
+### NEXT-51 · Replay-Refactoring und Turnierplanung (in Prüfung)
+- [x] Gemeinsames `deepFreeze` in `src/engine/immutable.ts` extrahiert; Recorder-Export für Kompatibilität beibehalten; Replay-Format und Zustandsrekonstruktion importieren direkt aus dem reinen Modul.
+- [x] Charakterisierungstests für verschachtelte Event-/Zustands-Snapshots, referenztreue Rückgabe, Primitivwerte und bereits eingefrorene Werte ergänzt.
+- [ ] Vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests des finalen Entwicklungsstands erfolgreich prüfen; erst danach NEXT-51 als abgeschlossen zählen.
+- [x] Turnier-NEXT-52 bis NEXT-59 mit Datenmodell, Seeds, Round-Robin, Auswertung, UI, K.-o., Persistenz und E2E-Abnahmen konkret geplant.
 
-### NEXT-52 · Turnierdatenmodell
-- [ ] Teilnehmer-IDs, Konfigurationen und Seed-Plan unabhängig vom UI modellieren; doppelte IDs ablehnen.
-- [ ] Serialisierbare Turnierdefinition und feste Paarungsreihenfolge durch Unit-/Regressionstests absichern.
+### NEXT-52 · Turnierdatenmodell und Validierung
+- [ ] Reines Modul `src/engine/tournament-model.ts`: Teilnehmer mit stabiler eindeutiger ID und validierter RobotDefinition, Turnier-ID, `format` (round-robin/knockout), `baseSeed` und `maxTicks`.
+- [ ] 2–16 Teilnehmer erzwingen; doppelte IDs, ungültige Definitionen, Nicht-Finite-Werte, negative/unsichere Seeds und leere Namen mit verständlichen Fehlern ablehnen.
+- [ ] Eingaben niemals mutieren; serialisierbare, versionierte Turnierdefinition mit deterministischem JSON-Roundtrip.
+- [ ] Unit-/Behavior-Tests: Grenzen 1/2/16/17, Duplikate, Invalid-Inputs, Deep-Copy, Wiederholbarkeit.
 
-### NEXT-53 · Round-Robin-Spielplan
-- [ ] Für 2–16 Roboter jede Paarung genau einmal deterministisch erzeugen.
-- [ ] Tests für gerade/ungerade Teilnehmerzahl, stabile Seeds und keine Selbstpaarung ergänzen.
+### NEXT-53 · Deterministischer Round-Robin-Spielplan
+- [ ] Paarungen für 2–16 Teilnehmer genau einmal pro ungeordnetem Paar erzeugen: `n*(n-1)/2`; keine Selbstpaarungen.
+- [ ] Paarungsreihenfolge und Seeds allein aus Turnierdefinition und Matchindex ableiten, ohne globalen RNG; unabhängig von UI-/Ausführungsreihenfolge.
+- [ ] Gerade/ungerade Teilnehmerzahl, 2/3/4/16 Teilnehmer und Seed-Grenzen testen; Snapshot-Digests für feste Referenzturniere.
 
-### NEXT-54 · Turnierauswertung
-- [ ] Siege, Niederlagen, Unentschieden und Punkte aus Match-Ergebnissen berechnen.
-- [ ] Gleichstand und unveränderte Eingaben durch Behavior- und Regressionstests absichern.
+### NEXT-54 · Turnierauswertung und Rangfolge
+- [ ] Ergebnisse als unveränderliche Datensätze (Teilnehmer-IDs, Seed, Gewinner/Unentschieden, Ticks, Reststruktur) erfassen; doppelte Match-IDs ablehnen.
+- [ ] Tabelle aus Ergebnissen berechnen: Spiele, Siege, Unentschieden, Niederlagen, Punkte 3/1/0, Struktur-Differenz.
+- [ ] Gleichstand deterministisch nach Punkten, Struktur-Differenz und stabiler Teilnehmer-ID auflösen; unvollständige Turniere anzeigen.
+- [ ] Unit-/Behavior-Tests: 0 Matches, Draw, Sieg, Überzählung, Duplikate, stabile Sortierung, keine Eingabemutation.
 
-### NEXT-55 · Turnier-UI-Grundgerüst
-- [ ] Responsiven Turnierdialog mit Teilnehmerübersicht, Paarungen und Ergebnistabelle ergänzen.
-- [ ] Tastaturbedienung, mobile Ansicht und keine Beeinflussung laufender Sandbox-Matches testen.
+### NEXT-55 · Responsives Turnier-UI-Grundgerüst
+- [ ] Eigenständiger Dialog mit Teilnehmern, Paarungen, Fortschritt und Tabelle; Sandbox-Kampfzustand strikt unverändert.
+- [ ] Tastaturbedienung, Fokusmanagement, klare Fehlerzustände und responsive Darstellung auf 375px und Desktop.
+- [ ] Playwright-E2E: Öffnen/Schließen, gültige/ungültige Eingaben, Scrollen, Touch und unveränderte Sandbox.
+
+### NEXT-56 · Deterministische Turnierausführung
+- [ ] Runner verarbeitet geplante Paarungen seriell mit `runMatch`/Engine ohne UI-Kopplung; Pause/Fortsetzen/Abbrechen an Matchgrenzen.
+- [ ] Kein versteckter RNG; identische Definitionen liefern identische Ergebnisse und Reihenfolge, auch nach Pause.
+- [ ] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust.
+
+### NEXT-57 · K.-o.-Bracket
+- [ ] Single-Elimination für 2–16 Teilnehmer mit dokumentierter Bye-Regel für Nicht-Zweierpotenzen; keine doppelte Teilnahme pro Runde.
+- [ ] Unentschieden deterministisch und fair nach vorab definierter Tie-Break-Regel auflösen; keine impliziten Zufallsziehungen.
+- [ ] Tests: 2/3/5/8/16 Teilnehmer, Bye-Reihenfolge, Finalpaarung, Champion, Replay-Seeds.
+
+### NEXT-58 · Turnier-Import/-Export und Wiederaufnahme
+- [ ] Versioniertes JSON für Definition, Spielplan, Ergebnisse, Seeds und Fortschritt; Größe begrenzen, Schema/IDs streng prüfen.
+- [ ] Fehlerhafter Import verändert weder Sandbox noch aktives Turnier; Wiederaufnahme ohne doppelte Ergebnisse.
+- [ ] JSON-Roundtrip und Resume-Digests für vollständige/unterbrochene Turniere; Desktop-/Mobile-Dateiauswahl testen.
+
+### NEXT-59 · Turnier-E2E, Statistik und Refactoring
+- [ ] Browser-E2E für Round Robin und K.-o. inklusive Touch/Tastatur, Pause/Resume und Ergebnisanzeige.
+- [ ] 16 Teilnehmer mit festen Seeds deterministisch gegen Tabellen-/Bracket-Digests prüfen; Laufzeit-/Speichergrenzen dokumentieren.
+- [ ] Engine/Runner/UI entkoppeln, Charakterisierungstests vor Refactoring ergänzen, danach gesamte Testmatrix erneut ausführen.
+- [ ] Folgende 5–10 NEXT-Aufgaben anhand Test- und Nutzerfeedback detailliert planen.
 
 ## Planungszyklus
 
