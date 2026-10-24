@@ -138,7 +138,7 @@ test('NEXT-63: keyboard, 375px touch targets, double clicks and invalid plan pre
   expect(touchTargets.length).toBeGreaterThan(15);
   expect(touchTargets.every(t => t.height >= 44 && t.width >= 44)).toBe(true);
   const dialogContrast = await page.locator('#tournament-dialog').evaluate(el => {
-    const rgb = (value: string) => (value.match(/[\\d.]+/g) ?? []).slice(0, 3).map(Number);
+    const rgb = (value: string) => (value.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
     const linear = (v: number) => { const c = v / 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
     const lum = (v: number[]) => v.reduce((acc, c, i) => acc + linear(c) * [0.2126, 0.7152, 0.0722][i]!, 0);
     const style = getComputedStyle(el);
