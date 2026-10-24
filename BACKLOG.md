@@ -1,3 +1,8 @@
+## Entwicklungsstand · 25.10.2026, 01:00 MESZ · NICHT VERÖFFENTLICHT
+- **NEXT-78 P0 (in Arbeit, CI-Abnahme ausstehend):** Die Engine begrenzt Weltkoordinaten bereits auf 0..100; der 48px-Raptor bzw. 54px-Titan samt Energie-/Strukturbalken wird bislang jedoch am Spielfeldrand abgeschnitten. CSS-Viewport-Clamp für komplette Roboter/HUD implementiert, Rohkoordinaten und deterministische Engine unverändert. Neue feste Engine-Grenztests und Desktop-/Mobile-Playwright-Tests für acht Rand-/Eckfälle sowie reale Defensive hinzugefügt. **Nicht als abgeschlossen zählen, bevor die aktuelle vollständige CI grün ist.**
+- **NEXT-79 P1 (Analyse begonnen, Umsetzung offen):** Quellcode-Audit in `USABILITY_AUDIT.md` mit priorisierten Bedienproblemen und testbaren Folgeschritten 79a–79e; keine UX-Änderung behauptet.
+- **Letztes verifiziertes Live-Release v0.1.55.** Unverändert **5 vollständig getestete, noch nicht veröffentlichte Aufgaben:** NEXT-63, NEXT-64, NEXT-66, NEXT-67, NEXT-68. NEXT-78/79 nicht dazuzählen. Nur Draft-PR #48; kein Merge/Publish.
+
 ## Aktueller Zustand · 25.10.2026, 00:08 MESZ
 **NEXT-68 – NEU vollständig implementiert und verifiziert:** Opt-in-LocalStorage-Checkpoint nur an Match-/Statusgrenzen; validierte versionierte Archive bis 2 MB, explizite Wiederherstellung nach Reload, korrupte/zu große Sicherungen und Quota-Fehler ohne Änderung aktiver Turniere, Datenschutz-Löschung, Pause/Cancel und 16-Teilnehmer-Regression. Refactoring: gemeinsamer validierter Datei-/LocalStorage-Importpfad und isoliertes Speicher-Modul.
 **Development Tests #40137115159 auf c95aaf99 grün:** 372 Unit-/Behavior-/Regressionstests (31 Dateien), 92 Desktop-/Mobile-E2E, Typecheck, Build, Audit-Gate 0 bekannte Advisories, zwei identische Clean-Builds.
@@ -15,13 +20,13 @@
 
 ## Neu priorisierte Nutzerbefunde · 25.10.2026 (offen, noch nicht implementiert)
 
-### NEXT-78 · P0 Bug: Raptor verlässt beim Fliehen das Spielfeld
+### NEXT-78 · P0 Bug: Raptor verlässt beim Fliehen das Spielfeld (Code-/Teständerungen vorhanden, CI offen)
 - [ ] Reproduktion mit festen Seeds, hoher Geschwindigkeit, Rand-/Eckpositionen, defensiver Flucht und längeren Simulationen; unterscheiden zwischen Engine-Koordinaten und visueller Darstellung/Interpolation.
 - [ ] Engine-Grenzen inklusive Roboterradius sowie Canvas/SVG/CSS-Skalierung, Transformationsursprung und Animation prüfen; Ursache beheben, ohne deterministische Kampfregeln unbeabsichtigt zu verändern.
 - [ ] Unit-/Behavior-/Regressionstests für alle vier Ränder, Ecken und lange Flucht sowie Desktop-/Mobil-E2E; nach Refactoring vollständige Testsuite ausführen.
 - [ ] Abnahme: Raptor bleibt während der gesamten Flucht sichtbar innerhalb des Spielfelds, auch bei Resize und Mobile; keine neuen Golden-Seed-Abweichungen ohne dokumentierte Begründung.
 
-### NEXT-79 · P1 Usability-Audit und Bedienkonzept
+### NEXT-79 · P1 Usability-Audit und Bedienkonzept (Quellcode-Audit dokumentiert, UX-Umsetzung offen)
 - [ ] Aktuelle Spielerwege (Konfiguration, Start, Pause, Reset, Replay, Turnier) auf Desktop und Mobil systematisch prüfen; unklare Beschriftungen, Informationsüberlastung und versteckte Aktionen dokumentieren.
 - [ ] Informationshierarchie mit klarer Trennung von Arena, Kampfsteuerung, Status und erweiterten Einstellungen entwerfen; Hauptaktionen priorisieren, seltene Optionen einklappen.
 - [ ] Verständliche Status-/Fehlermeldungen, Tastaturbedienung, Touch-Ziele und 375px-Layout mit konkreten Akzeptanzkriterien bewerten.
