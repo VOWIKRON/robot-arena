@@ -219,3 +219,71 @@ test('NEXT-67: replay action works in a narrow mobile viewport', async ({ page }
   await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
   await expect(page.locator('#replay-progress')).toContainText('0 /');
 });
+
+
+test('NEXT-68: opt-in autosave restores paused progress after reload without touching the sandbox', async ({ page }) => {
+  await page.goto('/');
+  const sandboxStyle = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-count').fill('4');
+  await page.locator('#tournament-count').press('Tab');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.locator('#tournament-autosave').check();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await page.getByRole('button', { name: 'Pause', exact: true }).last().click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  await page.reload();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await expect(page.locator('#tournament-autosave')).toBeChecked();
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+  await page.getByRole('button', { name: 'Fortsetzen' }).click();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('2 / 6');
+  await page.getByRole('button', { name: 'Lokale Sicherung löschen' }).click();
+  await expect(page.locator('#tournament-autosave')).not.toBeChecked();
+  await page.reload();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-feedback')).toContainText('Keine lokale Turniersicherung');
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxStyle);
+});
+
+test('NEXT-68: corrupt and oversized local data cannot replace an active tournament', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 780 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.locator('#tournament-autosave').check();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  const before = await page.locator('#tournament-progress').innerText();
+  await page.evaluate(() => localStorage.setItem('robot-arena:tournament:autosave:v1', '{"schemaVersion":2}'));
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-feedback')).toContainText('ungültige Version');
+  await expect(page.locator('#tournament-progress')).toHaveText(before);
+  await page.evaluate(() => localStorage.setItem('robot-arena:tournament:autosave:v1', 'x'.repeat(2 * 1024 * 1024 + 1)));
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-feedback')).toContainText('zu groß');
+  await expect(page.locator('#tournament-progress')).toHaveText(before);
+});
+
+test('NEXT-68: cancelled autosave stays cancelled after reload; disabling opt-in clears data', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.locator('#tournament-autosave').check();
+  await page.getByRole('button', { name: 'Abbrechen' }).click();
+  await page.reload();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('cancelled');
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('cancelled');
+  await page.locator('#tournament-autosave').uncheck();
+  const saved = await page.evaluate(() => ({
+    archive: localStorage.getItem('robot-arena:tournament:autosave:v1'),
+    optIn: localStorage.getItem('robot-arena:tournament:autosave-enabled:v1')
+  }));
+  expect(saved).toEqual({ archive: null, optIn: null });
+});
