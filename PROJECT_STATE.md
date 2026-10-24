@@ -1,3 +1,10 @@
+## Unveröffentlichte Entwicklungsrunde (24.10.2026, 17:00 Europe/Berlin)
+- NEXT-51 abgeschlossen: `deepFreeze` aus Recorder in `src/engine/immutable.ts` extrahiert; Replay-Format/State ohne Runtime-Abhängigkeit vom Recorder; Recorder-Export rückwärtskompatibel. Charakterisierungstests und vollständige CI #40105284320 grün.
+- NEXT-52 abgeschlossen: unveränderliches, validiertes Turniermodell für 2–16 Teilnehmer, Format, Seed, maxTicks und JSON-Roundtrip; doppelte IDs/ungültige Werte abgewiesen. #40105438397 grün: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E.
+- NEXT-53 abgeschlossen: deterministische Round-Robin-Paarungen und Seeds, 2/3/4/16 Teilnehmer, keine Duplikate/Selbstpaarungen, sichere Seeds bis MAX_SAFE_INTEGER. #40105486356 grün: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E.
+- Kumulativ 11 implementierte und vollständig getestete Aufgaben seit v0.1.53, NICHT VERÖFFENTLICHT: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53.
+- Nächster Schritt: NEXT-54 Turnierauswertung. PR #46 Draft, main unverändert, kein Publish/Deployment.
+
 # PROJECT_STATE
 
 ## Aktuelle unveröffentlichte Entwicklungsrunde (24.10.2026, 16:00 Europe/Berlin)
