@@ -30,6 +30,7 @@ export function validateTournamentArchive(input: unknown): TournamentArchive {
   }
   if (raw.status === 'completed' && results.length !== fixtures.length) throw new Error('Turnierarchiv: unvollständiger Abschluss');
   if (raw.status === 'ready' && results.length !== 0) throw new Error('Turnierarchiv: Bereits gestartetes Turnier');
+  if (results.length === fixtures.length && raw.status !== 'completed') throw new Error('Turnierarchiv: alle Kämpfe abgeschlossen, Abschlussstatus erwartet');
   const run = deepFreeze({ definition, status: raw.status as TournamentRun['status'], nextMatchIndex: results.length, totalMatches: fixtures.length, results });
   return deepFreeze({ schemaVersion: 1 as const, run });
 }

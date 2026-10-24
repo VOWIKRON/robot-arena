@@ -13,9 +13,9 @@ export type FairnessAudit = Readonly<{
 export function auditTournamentFairness(input: TournamentDefinition): FairnessAudit {
   const definition = createTournamentDefinition(input);
   const fixtures = createRoundRobinSchedule(definition);
-  const appearances: Record<string, number> = {};
-  const asRobotA: Record<string, number> = {};
-  const asRobotB: Record<string, number> = {};
+  const appearances: Record<string, number> = Object.create(null) as Record<string, number>;
+  const asRobotA: Record<string, number> = Object.create(null) as Record<string, number>;
+  const asRobotB: Record<string, number> = Object.create(null) as Record<string, number>;
   for (const p of definition.participants) {
     appearances[p.id] = 0; asRobotA[p.id] = 0; asRobotB[p.id] = 0;
   }

@@ -32,4 +32,14 @@ describe('NEXT-58 tournament archive', () => {
     expect(() => importTournamentRun(JSON.stringify(duplicate))).toThrow();
     expect(() => importTournamentRun(' '.repeat(2 * 1024 * 1024 + 1))).toThrow();
   });
+  it.each(['running', 'paused', 'cancelled', 'ready'])('rejects a complete archive falsely marked %s', status => {
+    const complete = JSON.parse(exportTournamentRun(finishTournamentRun(createTournamentRun(definition))));
+    complete.run.status = status;
+    expect(() => importTournamentRun(JSON.stringify(complete))).toThrow(/Abschlussstatus/);
+  });
+  it('rejects a partial archive falsely marked completed', () => {
+    const partial = JSON.parse(exportTournamentRun(advanceTournamentRun(createTournamentRun(definition))));
+    partial.run.status = 'completed';
+    expect(() => importTournamentRun(JSON.stringify(partial))).toThrow(/unvollständiger Abschluss/);
+  });
 });
