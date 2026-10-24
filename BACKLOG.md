@@ -13,6 +13,23 @@
 
 # Backlog
 
+## Neu priorisierte Nutzerbefunde · 25.10.2026 (offen, noch nicht implementiert)
+
+### NEXT-78 · P0 Bug: Raptor verlässt beim Fliehen das Spielfeld
+- [ ] Reproduktion mit festen Seeds, hoher Geschwindigkeit, Rand-/Eckpositionen, defensiver Flucht und längeren Simulationen; unterscheiden zwischen Engine-Koordinaten und visueller Darstellung/Interpolation.
+- [ ] Engine-Grenzen inklusive Roboterradius sowie Canvas/SVG/CSS-Skalierung, Transformationsursprung und Animation prüfen; Ursache beheben, ohne deterministische Kampfregeln unbeabsichtigt zu verändern.
+- [ ] Unit-/Behavior-/Regressionstests für alle vier Ränder, Ecken und lange Flucht sowie Desktop-/Mobil-E2E; nach Refactoring vollständige Testsuite ausführen.
+- [ ] Abnahme: Raptor bleibt während der gesamten Flucht sichtbar innerhalb des Spielfelds, auch bei Resize und Mobile; keine neuen Golden-Seed-Abweichungen ohne dokumentierte Begründung.
+
+### NEXT-79 · P1 Usability-Audit und Bedienkonzept
+- [ ] Aktuelle Spielerwege (Konfiguration, Start, Pause, Reset, Replay, Turnier) auf Desktop und Mobil systematisch prüfen; unklare Beschriftungen, Informationsüberlastung und versteckte Aktionen dokumentieren.
+- [ ] Informationshierarchie mit klarer Trennung von Arena, Kampfsteuerung, Status und erweiterten Einstellungen entwerfen; Hauptaktionen priorisieren, seltene Optionen einklappen.
+- [ ] Verständliche Status-/Fehlermeldungen, Tastaturbedienung, Touch-Ziele und 375px-Layout mit konkreten Akzeptanzkriterien bewerten.
+- [ ] Vor Umsetzung UI-Baseline/Behavior-Tests festhalten; Verbesserungen in kleinen überprüfbaren Schritten und mit Desktop-/Mobil-Regressionen umsetzen.
+
+**Priorisierung:** NEXT-78 als Bugfix vor neuen Features; danach NEXT-79. NEXT-69 ff. bleiben erhalten und werden nach Fehlerbehebung/Usability-Arbeit fortgesetzt. Keine Veröffentlichung oder Merge nach main.
+
+
 Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro stündlichem Lauf werden bis zu drei unabhängige oder sicher sequenzierbare Schritte bearbeitet; unvollständige Schritte werden zuerst fortgesetzt. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
 ## Aktueller Zustand · 24.10.2026, 22:00 MESZ
