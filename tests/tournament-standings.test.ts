@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { RAPTOR } from '../src/engine/presets';
 import { createTournamentDefinition } from '../src/engine/tournament-model';
 import { createRoundRobinSchedule } from '../src/engine/tournament-schedule';
-import { computeRoundRobinStandings, type TournamentMatchResult } from '../src/engine/tournament-standings';
+import { computeRoundRobinStandings, createTournamentMatchResult, type TournamentMatchResult } from '../src/engine/tournament-standings';
 
 const definition = (count = 3) => createTournamentDefinition({
   schemaVersion: 1, id: 'cup', format: 'round-robin', baseSeed: 12, maxTicks: 3600,
@@ -37,6 +37,17 @@ describe('NEXT-54 immutable deterministic round-robin standings', () => {
     expect(output.standings.map(row => [row.participantId, row.points, row.played, row.wins, row.draws, row.losses]))
       .toEqual([['r2', 4, 2, 1, 1, 0], ['r0', 4, 2, 1, 1, 0], ['r1', 0, 2, 0, 0, 2]]);
     expect(output.standings.map(row => row.structureDifference)).toEqual([30, 20, -50]);
+  });
+
+  it('captures validated match results as independent immutable snapshots', () => {
+    const source = { ...fixtureResult(3, 0, 'r0') };
+    const copy = createTournamentMatchResult(definition(), source);
+    expect(copy).toEqual(source);
+    expect(copy).not.toBe(source);
+    expect(Object.isFrozen(copy)).toBe(true);
+    source.remainingStructureA = 40;
+    expect(copy.remainingStructureA).toBe(50);
+    expect(() => createTournamentMatchResult(definition(), { ...source, matchId: 'invalid' })).toThrow(/unbekannte/);
   });
 
   it('uses structure difference and then ID for equal points, regardless of input order', () => {
