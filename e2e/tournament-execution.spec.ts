@@ -104,3 +104,50 @@ test('NEXT-62: automatic 16-player tournament yields to pause, resumes and cance
   await page.getByRole('button', { name: 'Turnier schließen' }).click();
   await expect(page.locator('#bot-a')).toBeVisible();
 });
+
+test('NEXT-63: keyboard, 375px touch targets, double clicks and invalid plan preserve active state', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 780 });
+  await page.goto('/');
+  const sandboxStyle = await page.locator('#bot-a').getAttribute('style');
+  const open = page.getByRole('button', { name: 'Turnier', exact: true });
+  await open.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Turnier planen' })).toBeVisible();
+  await expect(page.locator('#tournament-count')).toBeFocused();
+  await page.locator('#tournament-count').fill('4');
+  await page.locator('#tournament-count').press('Tab');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.getByRole('status', { name: 'Turnierfortschritt' })).toContainText('0 / 6');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).dblclick();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 6');
+  await page.getByRole('button', { name: 'Nächster Kampf' }).dblclick();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  await page.locator('#tournament-seed').fill('-1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-feedback')).toContainText(/ungültig/i);
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  await page.locator('#tournament-seed').fill('4711');
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('2 / 6');
+  const region = page.getByRole('region', { name: /Turniertabelle, horizontal/ });
+  await region.focus();
+  await expect(region).toBeFocused();
+  const touchTargets = await page.locator('#tournament-dialog button:visible, #tournament-dialog input:visible, #tournament-dialog select:visible').evaluateAll(elements =>
+    elements.map(el => ({ id: el.id, height: el.getBoundingClientRect().height, width: el.getBoundingClientRect().width }))
+  );
+  expect(touchTargets.length).toBeGreaterThan(15);
+  expect(touchTargets.every(t => t.height >= 44 && t.width >= 44)).toBe(true);
+  const dialogContrast = await page.locator('#tournament-dialog').evaluate(el => {
+    const rgb = (value: string) => (value.match(/[\\d.]+/g) ?? []).slice(0, 3).map(Number);
+    const linear = (v: number) => { const c = v / 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+    const lum = (v: number[]) => v.reduce((acc, c, i) => acc + linear(c) * [0.2126, 0.7152, 0.0722][i]!, 0);
+    const style = getComputedStyle(el);
+    const light = Math.max(lum(rgb(style.color)), lum(rgb(style.backgroundColor)));
+    const dark = Math.min(lum(rgb(style.color)), lum(rgb(style.backgroundColor)));
+    return (light + 0.05) / (dark + 0.05);
+  });
+  expect(dialogContrast).toBeGreaterThanOrEqual(4.5);
+  await page.getByRole('button', { name: 'Turnier schließen' }).click();
+  await expect(open).toBeFocused();
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxStyle);
+});
