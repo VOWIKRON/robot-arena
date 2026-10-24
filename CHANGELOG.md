@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased · NEXT-46 (Entwicklung, Testfreigabe ausstehend)
+## Unreleased · NEXT-46 (implementiert und getestet, noch nicht veröffentlicht)
 - Replay-Dialog mit JSON-Export des aktuellen Kampfs und Importvalidierung bis 2 MB; Live-Kampf bleibt bei gültigen und ungültigen Imports unverändert.
-- Recorder-Snapshot refaktoriert; deterministische Dateinamen und Unit-/Behavior-/Desktop-/Mobile-Tests ergänzt. Testfreigabe für aktuellen Head ausstehend.
+- Recorder-Snapshot refaktoriert; deterministische Dateinamen und Unit-/Behavior-/Desktop-/Mobile-Tests ergänzt. Development Tests #40092321506 auf Commit 556a2858 erfolgreich: 262 Unit-/Verhaltenstests, 50 Desktop-/Mobile-E2E, Typecheck und Build; Dokumentations-Head separat prüfen.
 - Kein Merge, kein Deployment, keine Veröffentlichung.
 
 ## 0.1.54 – Freigabekandidat (noch nicht veröffentlicht) · NEXT-40, NEXT-44, NEXT-45
