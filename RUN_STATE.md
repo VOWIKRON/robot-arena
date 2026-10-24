@@ -1,21 +1,21 @@
 # RUN_STATE
 
-## Aktuelle Entwicklungsrunde · 24.10.2026, 16:00 Europe/Berlin
+## Aktuelle Entwicklungsrunde · 24.10.2026, 17:00 Europe/Berlin
 - branch: `automation/next-40-energy-reserve-unpublished`
 - pull_request: #46 (Draft; NICHT MERGEN)
-- main_sha: `b90c7448419a134cd5e764e1243dc04fd5958715` (gegen Entwicklungsbranch geprüft, unverändert)
-- last_documented_verified_release: v0.1.53 (laut BACKLOG.md / PROJECT_STATE.md mit Online-Smoke)
-- live_website_check: bei diesem Lauf technisch nicht abrufbar; externer Veröffentlichungsstatus daher nicht unabhängig bestätigt
-- package_version_on_branch: 0.1.54 (unveröffentlichter Release-Kandidat, kein Release-Commit in diesem Lauf)
-- current_next: NEXT-51 · Replay-Refactoring und Turnierplanung
-- round_completed: NEXT-48, NEXT-49, NEXT-50 (3 von maximal 3)
+- main_sha: `b90c7448419a134cd5e764e1243dc04fd5958715` (per GitHub-Compare weiterhin unverändert)
+- last_documented_verified_release: v0.1.53 (laut BACKLOG.md / PROJECT_STATE.md)
+- live_website_check: nicht unabhängig bestätigt; bei externer manueller Veröffentlichung ohne GitHub-Merge **Veröffentlichungsstatus ungeklärt**
+- package_version_on_branch: 0.1.54 (unveröffentlichter Release-Kandidat)
+- current_next: NEXT-54 · Turnierauswertung
+- round_completed: NEXT-51, NEXT-52, NEXT-53 (3 von maximal 3)
 - round_status: ALLE DREI IMPLEMENTIERT UND VOLLSTÄNDIG GETESTET
-- testing: Development Tests #40100789839 (274 Unit/Behavior, 56 Desktop/Mobile), #40100953952 (281/58), #40101113261 (284/60), alle inklusive Typecheck/Build erfolgreich
-- deterministic_checks: Tick 0/Mitte/Ende/Rückwärts, 0/1/3600 Ticks, Sofortsieg, 16 Strategiepaarungen × 3 Seeds, JSON-Roundtrip, Event-/Zustands-Digests, beschädigte und übergroße Dateien
-- refactoring: Zustandsrekonstruktion `src/engine/replay-state.ts` und Kampfauswertung `src/engine/replay-stats.ts` als reine Module von Player und UI getrennt; komplette Tests nach Änderung erfolgreich
-- blocker: keiner; Dokumentations- und Smoke-Tests auf Commit 3b16313e erfolgreich (Development Tests #40101321193: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck und Build)
+- tests: Development Tests #40105284320 (Replay-Refactoring), #40105438397 (290 Unit/Behavior, 60 Desktop/Mobile), #40105486356 (297 Unit/Behavior, 60 Desktop/Mobile), jeweils Typecheck/Build erfolgreich
+- deterministic_checks: Immutable-Snapshots; Turniermodell-Grenzen 2/16, IDs, Seeds und JSON-Roundtrip; Round Robin 2/3/4/16, Paarungsformel, Reihenfolge und Seeds bis MAX_SAFE_INTEGER
+- refactoring: `deepFreeze` in eigenständiges reines Modul verschoben; Recorder-Runtime-Abhängigkeit in Replay-Format und State beseitigt; bestehende Recorder-API unverändert
+- blocker: keiner für Entwicklung; finalen Testlauf nach Dokumentationsänderungen separat prüfen
 - publishing: AUSDRÜCKLICH VERBOTEN. Kein Merge auf main, kein Publish/Deployment, kein Aufruf von publish.php.
-- publish_workflow_on_main: reagiert noch auf alten CI-Namen; kein Release-Workflow ausgelöst
+- publish_workflow_on_main: reagiert weiterhin auf alten CI-Namen; kein Release-Workflow ausgelöst
 - unrelated_prs: #5 und #8 nicht verändert
 
 ## Kumulative vollständig getestete, seit v0.1.53 nicht in main integrierte Aufgaben
@@ -30,13 +30,17 @@
 | **49 – NEU** | Kampfstatistiken A/B mit Deduplizierung und Überkill-Begrenzung | **#40100953952 · 281 / 58** | **Implementiert, getestet, unveröffentlicht** |
 | **50 – NEU** | 48 Strategie-/Seed-Roundtrips, Hash-Digests, Import-Härtung | **#40101113261 · 284 / 60** | **Implementiert, getestet, unveröffentlicht** |
 
-**Gesamtzahl vollständig getesteter, seit v0.1.53 nicht in main integrierter Aufgaben: 8.**
-- NEXT-51 bis NEXT-55 sind geplant, noch nicht implementiert.
+| **51 – NEU** | Replay-Refactoring: Immutable-Helper und Recorder-Entkopplung | #40105284320 · vollständige Development Tests | **Implementiert, getestet, unveröffentlicht** |
+| **52 – NEU** | Validiertes, unveränderliches Turnierdatenmodell | #40105438397 · 290 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+| **53 – NEU** | Deterministischer Round-Robin-Spielplan und Seeds | #40105486356 · 297 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+
+**Gesamtzahl vollständig getesteter, seit v0.1.53 nicht in main integrierter Aufgaben: 11.**
+- NEXT-54 bis NEXT-59 sind geplant, noch nicht implementiert.
 - Veröffentlichung auf der externen Website konnte in diesem Lauf nicht unabhängig abgerufen werden; falls eine manuelle externe Veröffentlichung ohne GitHub-Merge erfolgt ist, ist deren Status **Veröffentlichungsstatus ungeklärt**.
 - **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
 
 ## Nächster Haltepunkt
-1. Vor dem nächsten Lauf GitHub-HEAD und den letzten vollständigen Development-Tests-Lauf erneut prüfen.
-2. Nächster Lauf: NEXT-51 Refactoring/Turnierplanung; zuerst offene Fehler, maximal drei NEXT-Abschlüsse.
-3. Rolling Backlog, Testsuite und Release Notes synchron halten, ohne Homepage-Update.
+1. Letzten vollständigen Development-Tests-Lauf auf dem aktuellen Dokumentations-HEAD prüfen; keine neue Aufgabe als getestet melden, bevor der Test grün ist.
+2. Nächster Lauf: NEXT-54 Turnierauswertung; Fehler vor Features, maximal drei Aufgaben.
+3. Rolling Backlog und Test-/Release-Dokumentation synchron halten; keine Homepage-Aktualisierung.
 4. Keine anderen Automationen verändern; PR #46 bleibt Draft und main unverändert.
