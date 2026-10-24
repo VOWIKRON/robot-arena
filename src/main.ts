@@ -18,6 +18,7 @@ import { runKnockoutBracket } from './engine/tournament-knockout';
 import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
+import { isTournamentAutosaveEnabled, saveTournamentSnapshot, restoreTournamentSnapshot, setTournamentAutosaveEnabled } from './engine/tournament-local-save';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
@@ -40,7 +41,7 @@ app.innerHTML = `
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button><button id="open-replay">Replay</button><button id="open-tournament">Turnier</button></div>
-<dialog id="tournament-dialog" aria-labelledby="tournament-title" aria-describedby="tournament-description"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="tournament-title">Turnier planen</h2><button id="close-tournament" aria-label="Turnier schließen">×</button></div><p id="tournament-description">Turniere für 2 bis 16 Roboter: Round Robin mit einzelnem oder automatischem Kampfablauf und optional ausgeglichener Seitenzuordnung, oder K.-o.-Bracket. Der Sandbox-Kampf bleibt unverändert.</p><div class="tournament-options"><label>Teilnehmerzahl<input id="tournament-count" type="number" min="2" max="16" step="1" value="2"></label><label>Turnier-Startwert<input id="tournament-seed" type="number" min="0" max="9007199254740991" step="1" value="4711"></label><label>Ticklimit je Kampf<input id="tournament-ticks" type="number" min="1" max="3600" step="1" value="3600"></label></div><h3>Teilnehmer</h3><div id="tournament-participants" class="tournament-participants"></div><label>Turnierformat<select id="tournament-format"><option value="round-robin">Jeder gegen jeden</option><option value="knockout">K.-o.-Turnier</option></select></label><label>Seitenzuordnung (Round Robin)<select id="tournament-side-assignment"><option value="legacy">Klassisch (bisheriges Verhalten)</option><option value="balanced">Ausgeglichen (A/B-Differenz höchstens 1)</option></select></label><div class="controls"><button id="tournament-create">Spielplan erstellen</button><button id="tournament-run">Nächster Kampf</button><button id="tournament-auto">Alle Kämpfe spielen</button><button id="tournament-pause">Pause</button><button id="tournament-resume">Fortsetzen</button><button id="tournament-cancel">Abbrechen</button><button id="tournament-export">Speichern</button><button id="tournament-table-csv">Tabelle CSV</button><button id="tournament-table-json">Tabelle JSON</button><button id="tournament-import">Laden</button></div><input id="tournament-file" type="file" accept=".json,application/json" hidden aria-label="Turnierdatei"><p id="tournament-feedback" role="status" aria-live="polite" class="status"></p><section id="tournament-preview" hidden aria-label="Turniervorschau"><h3>Fortschritt</h3><p id="tournament-progress" role="status" aria-live="polite" aria-label="Turnierfortschritt"></p><h3>Paarungen</h3><ol id="tournament-pairings" class="tournament-pairings" tabindex="0" aria-label="Spielplan, mit Pfeiltasten scrollbar"></ol><h3>Tabelle</h3><div id="tournament-table-scroll" class="tournament-table-scroll" tabindex="0" role="region" aria-label="Turniertabelle, horizontal scrollbar"></div></section></div></dialog>
+<dialog id="tournament-dialog" aria-labelledby="tournament-title" aria-describedby="tournament-description"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="tournament-title">Turnier planen</h2><button id="close-tournament" aria-label="Turnier schließen">×</button></div><p id="tournament-description">Turniere für 2 bis 16 Roboter: Round Robin mit einzelnem oder automatischem Kampfablauf und optional ausgeglichener Seitenzuordnung, oder K.-o.-Bracket. Der Sandbox-Kampf bleibt unverändert.</p><div class="tournament-options"><label>Teilnehmerzahl<input id="tournament-count" type="number" min="2" max="16" step="1" value="2"></label><label>Turnier-Startwert<input id="tournament-seed" type="number" min="0" max="9007199254740991" step="1" value="4711"></label><label>Ticklimit je Kampf<input id="tournament-ticks" type="number" min="1" max="3600" step="1" value="3600"></label></div><h3>Teilnehmer</h3><div id="tournament-participants" class="tournament-participants"></div><label>Turnierformat<select id="tournament-format"><option value="round-robin">Jeder gegen jeden</option><option value="knockout">K.-o.-Turnier</option></select></label><label>Seitenzuordnung (Round Robin)<select id="tournament-side-assignment"><option value="legacy">Klassisch (bisheriges Verhalten)</option><option value="balanced">Ausgeglichen (A/B-Differenz höchstens 1)</option></select></label><div class="controls"><button id="tournament-create">Spielplan erstellen</button><button id="tournament-run">Nächster Kampf</button><button id="tournament-auto">Alle Kämpfe spielen</button><button id="tournament-pause">Pause</button><button id="tournament-resume">Fortsetzen</button><button id="tournament-cancel">Abbrechen</button><button id="tournament-export">Speichern</button><button id="tournament-table-csv">Tabelle CSV</button><button id="tournament-table-json">Tabelle JSON</button><button id="tournament-import">Laden</button></div><div class="tournament-local-save"><label><input id="tournament-autosave" type="checkbox"> Automatisch nur in diesem Browser sichern</label><button id="tournament-restore" type="button">Lokale Sicherung laden</button><button id="tournament-clear-saved" type="button">Lokale Sicherung löschen</button></div><input id="tournament-file" type="file" accept=".json,application/json" hidden aria-label="Turnierdatei"><p id="tournament-feedback" role="status" aria-live="polite" class="status"></p><section id="tournament-preview" hidden aria-label="Turniervorschau"><h3>Fortschritt</h3><p id="tournament-progress" role="status" aria-live="polite" aria-label="Turnierfortschritt"></p><h3>Paarungen</h3><ol id="tournament-pairings" class="tournament-pairings" tabindex="0" aria-label="Spielplan, mit Pfeiltasten scrollbar"></ol><h3>Tabelle</h3><div id="tournament-table-scroll" class="tournament-table-scroll" tabindex="0" role="region" aria-label="Turniertabelle, horizontal scrollbar"></div></section></div></dialog>
 <dialog id="replay-dialog" aria-labelledby="replay-title"><div class="config-dialog-card"><h2 id="replay-title">Replay-Dateien</h2><p>Aktuellen Kampf als JSON exportieren oder eine Replay-Datei prüfen. Die Wiedergabe zeigt aufgezeichnete Ereignisse ohne erneute Simulation; ein Import verändert den laufenden Kampf nicht.</p><div class="controls"><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><button id="replay-load-current">Aktuellen Kampf laden</button><button id="close-replay">Schließen</button></div><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"><p id="replay-feedback" class="status" role="status" aria-live="polite"></p><div class="controls" aria-label="Replay-Steuerung"><button id="replay-play" disabled>Abspielen</button><button id="replay-pause" disabled>Pausieren</button><button id="replay-step" disabled>Replay-Schritt</button><button id="replay-reset" disabled>Replay-Anfang</button></div><p id="replay-progress" role="status" aria-live="polite">Kein Replay geladen</p><label for="replay-seek">Replay-Zeitleiste (Tick)<input id="replay-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Replay-Zeitleiste"></label><div id="replay-arena" class="replay-arena" role="img" aria-label="Rekonstruierte Roboterpositionen im Replay" hidden><svg id="replay-effects" class="replay-effects" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><span id="replay-bot-a" class="replay-marker replay-marker-a">A</span><span id="replay-bot-b" class="replay-marker replay-marker-b">B</span></div><p id="replay-stats" class="replay-stats" role="status" aria-live="polite"></p><p id="replay-events" aria-label="Ereignisse im aktuellen Replay-Tick"></p><section id="replay-analysis" class="replay-analysis" aria-label="Replay-Kampfstatistik" hidden><h3>Kampfstatistik (gesamte Aufzeichnung)</h3><div class="replay-stat-grid"><div id="replay-stat-a" class="replay-stat-side"></div><div id="replay-stat-b" class="replay-stat-side"></div></div><p id="replay-result"></p></section></div></dialog>
 <div class="status" id="status"></div>
 </section>
@@ -462,6 +463,15 @@ let tournamentDefinition: TournamentDefinition | null = null;
 let tournamentRun: TournamentRun | null = null;
 let tournamentAutoTimer: number | null = null;
 let tournamentAutoRequested = false;
+/** Only explicit opt-in writes a validated archive at match/status boundaries. */
+function persistTournamentSnapshot(): void {
+  if (!tournamentRun || !el<HTMLInputElement>('tournament-autosave').checked) return;
+  try {
+    saveTournamentSnapshot(tournamentRun, window.localStorage);
+  } catch (error) {
+    el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + (error instanceof Error ? error.message : 'Speicher nicht verfügbar');
+  }
+}
 function stopTournamentAuto(clearIntent = true): void {
   if (tournamentAutoTimer !== null) window.clearTimeout(tournamentAutoTimer);
   tournamentAutoTimer = null;
@@ -683,7 +693,7 @@ el('tournament-create').addEventListener('click', () => {
   } catch { /* renderTournamentPreview reports the validation error without losing an active run. */ }
   if (!renderTournamentPreview() || !tournamentDefinition) return;
   tournamentRun = tournamentDefinition.format === 'round-robin' ? createTournamentRun(tournamentDefinition) : null;
-  if (tournamentRun) tournamentStatus();
+  if (tournamentRun) { tournamentStatus(); persistTournamentSnapshot(); }
 });
 function tournamentAction(action: (run: TournamentRun) => TournamentRun): void {
   try {
@@ -691,6 +701,7 @@ function tournamentAction(action: (run: TournamentRun) => TournamentRun): void {
     tournamentRun = action(tournamentRun);
     tournamentStatus();
     el('tournament-feedback').textContent = 'Turnierstatus: ' + tournamentRun.status;
+    persistTournamentSnapshot();
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Turnierfehler'; }
 }
 /** One match per browser task keeps progress, pause and cancel responsive at match boundaries. */
@@ -752,6 +763,54 @@ el('tournament-export').addEventListener('click', () => {
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
 });
+/** A single import path is shared by file import and validated local recovery. */
+function applyImportedTournament(loaded: TournamentRun): void {
+  tournamentDefinition = loaded.definition;
+  tournamentRun = loaded;
+  el<HTMLInputElement>('tournament-count').value = String(loaded.definition.participants.length);
+  renderTournamentParticipants();
+  el<HTMLSelectElement>('tournament-format').value = loaded.definition.format;
+  el<HTMLSelectElement>('tournament-side-assignment').value = loaded.definition.sideAssignment === 'balanced' ? 'balanced' : 'legacy';
+  el<HTMLSelectElement>('tournament-side-assignment').disabled = loaded.definition.format === 'knockout';
+  el<HTMLInputElement>('tournament-seed').value = String(loaded.definition.baseSeed);
+  el<HTMLInputElement>('tournament-ticks').value = String(loaded.definition.maxTicks);
+  loaded.definition.participants.forEach((p, i) => { el<HTMLInputElement>(`tournament-name-${i + 1}`).value = p.name; });
+  if (!renderTournamentPreview(loaded.definition)) throw new Error('Geladenes Turnier konnte nicht angezeigt werden');
+  tournamentRun = loaded;
+  tournamentStatus();
+  persistTournamentSnapshot();
+}
+el('tournament-autosave').addEventListener('change', () => {
+  const checkbox = el<HTMLInputElement>('tournament-autosave');
+  try {
+    setTournamentAutosaveEnabled(window.localStorage, checkbox.checked);
+    el('tournament-feedback').textContent = checkbox.checked ? 'Lokale Sicherung aktiviert (nur dieses Gerät).' : 'Lokale Sicherung deaktiviert und gelöscht.';
+    persistTournamentSnapshot();
+  } catch (error) {
+    checkbox.checked = false;
+    el('tournament-feedback').textContent = 'Lokaler Speicher nicht verfügbar: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+  }
+});
+el('tournament-restore').addEventListener('click', () => {
+  stopTournamentAuto();
+  try {
+    const loaded = restoreTournamentSnapshot(window.localStorage);
+    if (!loaded) throw new Error('Keine lokale Turniersicherung vorhanden');
+    applyImportedTournament(loaded);
+    el('tournament-feedback').textContent = 'Lokale Turniersicherung geprüft und geladen. Der Kampf wird nicht automatisch gestartet.';
+  } catch (error) {
+    el('tournament-feedback').textContent = 'Lokale Wiederherstellung fehlgeschlagen: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+  }
+});
+el('tournament-clear-saved').addEventListener('click', () => {
+  try {
+    setTournamentAutosaveEnabled(window.localStorage, false);
+    el<HTMLInputElement>('tournament-autosave').checked = false;
+    el('tournament-feedback').textContent = 'Lokale Turniersicherung und automatische Speicherung gelöscht.';
+  } catch (error) {
+    el('tournament-feedback').textContent = 'Lokale Sicherung konnte nicht gelöscht werden: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+  }
+});
 el('tournament-import').addEventListener('click', () => el<HTMLInputElement>('tournament-file').click());
 el('tournament-file').addEventListener('change', async () => {
   stopTournamentAuto();
@@ -760,21 +819,7 @@ el('tournament-file').addEventListener('change', async () => {
     const file = input.files?.[0];
     if (!file || file.size > 2 * 1024 * 1024) throw new Error('Datei fehlt oder ist zu groß');
     const loaded = importTournamentRun(await file.text());
-    tournamentRun = loaded;
-    tournamentDefinition = loaded.definition;
-    el<HTMLInputElement>('tournament-count').value = String(loaded.definition.participants.length);
-    renderTournamentParticipants();
-    tournamentDefinition = loaded.definition;
-    tournamentRun = loaded;
-    el<HTMLSelectElement>('tournament-format').value = loaded.definition.format;
-    el<HTMLSelectElement>('tournament-side-assignment').value = loaded.definition.sideAssignment === 'balanced' ? 'balanced' : 'legacy';
-    el<HTMLSelectElement>('tournament-side-assignment').disabled = loaded.definition.format === 'knockout';
-    el<HTMLInputElement>('tournament-seed').value = String(loaded.definition.baseSeed);
-    el<HTMLInputElement>('tournament-ticks').value = String(loaded.definition.maxTicks);
-    loaded.definition.participants.forEach((p, i) => { el<HTMLInputElement>(`tournament-name-${i + 1}`).value = p.name; });
-    renderTournamentPreview(loaded.definition);
-    tournamentRun = loaded;
-    tournamentStatus();
+    applyImportedTournament(loaded);
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Importfehler'; }
   finally { input.value = ''; }
 });
@@ -804,4 +849,9 @@ for (const side of ['a', 'b'] as const) {
 }
 renderPreview();
 resetMatch();
+try {
+  el<HTMLInputElement>('tournament-autosave').checked = isTournamentAutosaveEnabled(window.localStorage);
+} catch {
+  el<HTMLInputElement>('tournament-autosave').checked = false;
+}
 void loadFooterMetadata();
