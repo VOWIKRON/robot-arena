@@ -1,4 +1,6 @@
 import type { CombatEvent } from './events';
+import { deepFreeze } from './immutable';
+export { deepFreeze } from './immutable';
 import { SeededRandom } from './random';
 import { createMatch, stepMatchWithEvents, type StepResult } from './simulation';
 import type { MatchState, RobotDefinition } from './types';
@@ -16,14 +18,6 @@ export type MatchRecording = Readonly<{
   frames: readonly RecordedFrame[];
   finalState: MatchState;
 }>;
-
-export function deepFreeze<T>(value: T): T {
-  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) deepFreeze(child);
-    Object.freeze(value);
-  }
-  return value;
-}
 
 /** Records immutable event snapshots without changing the engine or consuming RNG. */
 export class EventRecorder {
