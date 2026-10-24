@@ -101,8 +101,9 @@
 #arena .bot {
   --bot-half: 24px;
   --bot-hud-top: 53px;
-  left: clamp(var(--bot-half), var(--arena-x, 50%), calc(100% - var(--bot-half)));
-  top: clamp(var(--bot-hud-top), var(--arena-y, 50%), calc(100% - var(--bot-half)));
+  /* Override the raw inline world coordinates without changing them. */
+  left: clamp(var(--bot-half), var(--arena-x, 50%), calc(100% - var(--bot-half))) !important;
+  top: clamp(var(--bot-hud-top), var(--arena-y, 50%), calc(100% - var(--bot-half))) !important;
 }
 #arena .bot[data-chassis="titan-chassis"] {
   --bot-half: 27px;
