@@ -6,7 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (Entwicklungsbranch, unveröffentlicht; Tests ausstehend)
+**Nächstes Ziel:** NEXT-44 · Event Recorder (Entwicklungsbranch, unveröffentlicht; Tests ausstehend)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40 (1 Aufgabe).
 
 ---
 
@@ -258,13 +259,13 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] aktuelle Strategie in der Konfiguration sichtbar machen
 - [x] Desktop- und Mobile-E2E ergänzen
 
-### NEXT-40 · Energieverwaltungsparameter · IN ARBEIT / NICHT VERÖFFENTLICHT
+### NEXT-40 · Energieverwaltungsparameter · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
 - [x] Optionale Energiereserve 0–100 % der maximalen Energie, Default 0 %, mit Builder-Validierung modelliert
 - [x] Schuss nur zulassen, wenn nach Energieverbrauch die Reserve erhalten bleibt; Regeneration erfolgt vor der Prüfung
 - [x] Eingabe und Vorschau für A/B im Config-Dialog als Quellcode ergänzt, Reset auf 0 %
 - [x] Unit-, Behavior-, Seed- und Desktop-/Mobile-Testfälle als Quellcode ergänzt
-- [ ] Tatsächliche Unit-/Behavior-/Regressionstests sowie Desktop-/Mobile-E2E auf dem Arbeitsbranch erfolgreich ausführen und dokumentieren
-- [ ] Code-Review, Regression gegen Default-Kampf, dann ausschließlich manuelle Veröffentlichungsfreigabe durch den Nutzer
+- [x] Development Tests #40085113036 auf Commit 193f42d0: 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich
+- [x] Default 0 % und feste Seeds gegen Regressionen geprüft; Veröffentlichung bleibt ausschließlich manuell und steht aus
 
 ### Erledigt in v0.1.52 · NEXT-41 · Strategieparameter im Config-Dialog
 - [x] relevante Strategieparameter abhängig vom Strategietyp anzeigen
@@ -286,10 +287,14 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Folgezyklus · F · Replay & Analyse
 
-NEXT-40 bleibt zuvor offen; die folgenden Schritte sind geplant und noch nicht implementiert.
+NEXT-40 ist getestet, aber nicht veröffentlicht. NEXT-44 ist implementiert und wird geprüft; weitere Schritte sind geplant.
 
-### NEXT-44 · Event Recorder
-- [ ] Events pro Tick mit Seed und Ausgangskonfiguration unveränderlich aufzeichnen; Reihenfolge und Abschlusszustand testen.
+### NEXT-44 · Event Recorder · IMPLEMENTIERT / TESTS AUSSTEHEND
+- [x] Seed, Startkonfigurationen, Initial-/Endzustand und Tick-Events in einem unveränderlichen Snapshot aufzeichnen.
+- [x] Append-only-Recorder mit fortlaufenden Tick-IDs, Ereignisreihenfolge und Ende-Sperre ergänzen.
+- [x] Tests für 0/1/3600 Ticks, Sofortsieg und Seed-Determinismus implementieren.
+- [ ] Vollständige Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E auf dem aktuellen Recorder-Head erfolgreich nachweisen.
+- [ ] Nach Abnahme als abgeschlossen zählen, erst danach NEXT-45 beginnen.
 
 ### NEXT-45 · Replay-Dateiformat und Validierung
 - [ ] Versioniertes JSON-Format mit Metadaten definieren; ungültige Versionen und inkonsistente Tick-/Robot-Referenzen ablehnen.
