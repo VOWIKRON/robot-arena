@@ -386,11 +386,11 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] 16-Teilnehmer-SHA256-Referenz-Digests für Tabelle und Bracket mit festen Seeds festgeschrieben; 30-Sekunden-Engine-Laufzeitlimit in CI geprüft. Speicherlimit wird durch die feste Teilnehmergrenze (max. 16) und vollständige Testmatrix begrenzt, nicht durch eine separat gemessene Heap-Obergrenze.
 - [x] SHA256-Charakterisierung vor K.-o.-Seed-Refactoring, danach vollständige Unit-/Behavior-/Regression-/E2E-Matrix erneut erfolgreich ausgeführt (CI #40123058094).
 
-### NEXT-60 · Turnier-Fairness und Seed-Audit (weiter in Abnahme)
+### NEXT-60 · Turnier-Fairness und Seed-Audit (vollständig getestet, unveröffentlicht)
 - [x] Reines Modul zählt Auftritte, A/B-Zuordnung und deterministische Seeds ohne Simulations-RNG.
 - [x] Optional alternierende Seitenzuordnung; bestehender Spielplan bleibt im Default unverändert. Prototypartige Teilnehmer-IDs werden sicher gezählt.
-- [x] Für 2/3/4/16 Teilnehmer A/B-Verteilung mit paarweisen Side-Swap-Simulationen deterministisch prüfen; dokumentierte Bias-Grenzwerte und Referenz-Digests bleiben offen.
-- [ ] Alternierendes Format mit realem Runner und Ergebnis-/Seed-Ableitung abstimmen; regressionssichere Tests für Side-Swap und faire Turnierauswertung.
+- [x] Für 2/3/4/16 Teilnehmer A/B-Verteilung und Side-Swap-Simulationen deterministisch geprüft; 16er-Golden-SHA256 und Bias-Grenze (max. 25 % im fixierten Referenzszenario) getestet.
+- [x] Opt-in-Seitenbalance ist im echten Spielplan, Runner, Archiv und in der Auswertung integriert; Side-Swap, unveränderte Seeds, Wiederaufnahme und Legacy-Golden-Digest mit Regressionstests abgesichert (CI #40123159397).
 
 ### NEXT-61 · Exportierbare Turniertabelle (implementiert, getestet)
 - [x] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
