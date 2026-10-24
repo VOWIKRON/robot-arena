@@ -49,7 +49,7 @@ function robot(value: unknown, index: number): RobotDefinition {
     const params = record(r.strategyParameters, `${label}.strategyParameters`);
     const allowed = ['energyReserveRatio', 'targetDistanceRatio', 'retreatStructureRatio', 'retreatDistanceFactor'];
     if (Object.keys(params).some(key => !allowed.includes(key))) throw new Error(`${label}: unbekannter Strategieparameter`);
-    const errors = validateStrategyParameters(params);
+    const errors = validateStrategyParameters(params as unknown as Parameters<typeof validateStrategyParameters>[0]);
     if (errors.length) throw new Error(`${label}: ${errors.join(', ')}`);
   }
   return r as unknown as RobotDefinition;
