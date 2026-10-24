@@ -2,8 +2,9 @@
 
 Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro stündlichem Lauf werden bis zu drei unabhängige oder sicher sequenzierbare Schritte bearbeitet; unvollständige Schritte werden zuerst fortgesetzt. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
-## Aktueller Zustand · 24.10.2026, 21:15 MESZ
+## Aktueller Zustand · 24.10.2026, 22:00 MESZ
 
+**Neue Runde vollständig getestet:** NEXT-64 (reproduzierbare Abhängigkeiten) und NEXT-66 (Matchdetails), Development Tests #40128110261 auf e23323ef: 29 Testdateien, 358 Unit-/Behavior-/Regressionstests, 82 Desktop-/Mobil-E2E, TypeScript/Build, zweimaliger sauberer npm-ci-Install und byteidentischer Dist-SHA256 (1488f94b…), npm audit 0 bekannte Advisories; vollständig erfolgreich. **Kumulativ 10 getestete NEXT-Aufgaben seit v0.1.54; 63/64/66 sicher nicht veröffentlicht.** Nächstes Ziel NEXT-67.
 **Letzte unabhängig bestätigte Live-Veröffentlichung:** v0.1.54, Publish #40111747415. **main inzwischen v0.1.55** (Commit 809fe86c; Release-Bump nach Merge von PR #47 um 19:09 UTC). **Live-Veröffentlichung von v0.1.55 NICHT verifiziert; Veröffentlichungsstatus ungeklärt.** Dieser Lauf hat weder Merge noch Publish ausgelöst.
 **Aktuelle sichere Entwicklung:** Branch `automation/next-56-tournament-runner-unpublished`, **Draft-PR #48**, kein Merge. Development Tests **#40124222697** auf Commit 01771371: **354 Unit-/Behavior-/Regressionstests, 80 Desktop-/Mobile-E2E**, Typecheck, Build und npm audit (0 Advisories) erfolgreich.
 **Insgesamt acht seit v0.1.54 implementierte und verifizierte Aufgaben:** NEXT-56, 57, 58, 59, 60, 61, 62, 63.
@@ -414,20 +415,20 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Ungültige neue Konfiguration verwirft kein laufendes Turnier; Dialog schließen stoppt Automatik; Sandbox bleibt unverändert.
 - [x] Vollständige CI #40124222697 auf 01771371: 354 Unit-/Behavior-/Regressionstests, 80 Desktop-/Mobile-E2E, Typecheck/Build/Audit grün; ausschließlich Draft-PR #48.
 
-### NEXT-64 · Reproduzierbare und sichere Entwicklungsabhängigkeiten
-- [ ] Deterministischen Lockfile-Prozess einführen, Abhängigkeitsversionen dokumentieren und `npm ci` auf Development Tests umstellen.
-- [ ] Sicherheitsgate für neue Advisories und verifizierte Update-Strategie festlegen; keine automatische Veröffentlichung.
-- [ ] CI-/Build-Reproduzierbarkeit auf unverändertem SHA mindestens zweimal verifizieren.
+### NEXT-64 · Reproduzierbare und sichere Entwicklungsabhängigkeiten (NEU abgeschlossen, NICHT veröffentlicht)
+- [x] Lockfile v3 aus realem CI-Install erstellt; `npm ci` statt `npm install` und Cache-Key auf Lockfile-Hash; Update-Strategie: bewusster Lockfile-Update-PR mit Audit, Unit/E2E und zwei Builds.
+- [x] Sicherheitsgate lehnt jede bekannte Advisory ab (npm audit, 0 Befunde im CI); keine automatische Veröffentlichung.
+- [x] Zweimal `npm ci` und zweimal Build auf identischem SHA; Dist-SHA256 byteidentisch (1488f94b…); CI #40128110261 erfolgreich.
 
 ### NEXT-65 · K.-o.-Turnier im Browser (bereits in NEXT-59 erledigt – DUPLIKAT, nicht erneut zählen)
 - [x] K.-o.-Format, Bracket, Freilose und Champion responsiv dargestellt.
 - [x] Isolierte Engine ohne Sandbox-Veränderung; Desktop-/Mobile-Behavior-E2E 3/5/16 Teilnehmer.
 - [x] Mit NEXT-59 getestet; kein neuer separater Entwicklungsabschluss.
 
-### NEXT-66 · Detailansicht einzelner Turnierkämpfe
-- [ ] Nach jeder Round-Robin-Paarung Ergebnisdetails (Seed, Ticks, Gewinner, Reststruktur A/B) aus validiertem Runner-Snapshot zeigen.
-- [ ] Noch offene Kämpfe ohne erfundene Werte kennzeichnen, Unicode-Namen sicher per textContent ausgeben.
-- [ ] 2/16 Teilnehmer, Timeout, Unentschieden und Tastatur/Mobile mit Behavior- und Regressionstests prüfen.
+### NEXT-66 · Detailansicht einzelner Turnierkämpfe (NEU abgeschlossen, NICHT veröffentlicht)
+- [x] Paarungsdetails aus validiertem, immutable Runner-Snapshot nach jedem Match anzeigen: Seed, Ticks, Gewinner/Remis, Reststruktur A/B.
+- [x] Ausstehende Paarungen mit `Ausstehend` ohne erfundene Ticks/Sieger/Reststruktur; Unicode- und HTML-artige Namen nur via `textContent`.
+- [x] 2/16 Teilnehmer, Timeout/Remis, ungültige Seeds, deterministische Wiederholung, Archiv-Roundtrip und Desktop/Mobil im CI #40128110261 verifiziert.
 
 ### NEXT-67 · Turnierkampf-Replay aus reproduzierbaren Seeds
 - [ ] Reproduzierbaren Replay-Snapshot für einen bereits abgeschlossenen Turnierkampf erzeugen, ohne die Sandbox oder RNG des laufenden Matches zu berühren.
@@ -453,6 +454,21 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [ ] Seit NEXT-60 neu hinzugekommene Module auf Duplikate, Kopplungen und versteckte RNG-Verwendungen prüfen.
 - [ ] Vor jedem Refactoring Charakterisierung, danach komplette Unit-/Behavior-/Desktop-/Mobile-Matrix und SHA256-Digests erneut ausführen.
 - [ ] Versions-/Live-Status, Draft-PR, Deployment-Gates und manuelle Freigabe dokumentieren; **kein Publish**.
+
+### NEXT-72 · Best-of-N Turnierserie (geplant, noch nicht implementiert)
+- [ ] Ungerade Serienlängen 1/3/5 als validiertes Modell definieren; feste Seedfolge und stabile Seitenzuordnung.
+- [ ] Abbruch sobald eine Seite uneinholbar führt, Remis-/Tie-Break-Regel dokumentieren; keine versteckte RNG-Nutzung.
+- [ ] Golden-Digests, 2/16 Teilnehmer, Archive und Desktop-/Mobile-Regressionen absichern.
+
+### NEXT-73 · Match-Statistik im Turnier (geplant)
+- [ ] Treffer, Schüsse, Schaden und Energieverbrauch je Match aus deterministischen Ereignissen ableiten.
+- [ ] Statistik von bereits archivierten Matches als optional kennzeichnen; keine Werte erfinden.
+- [ ] Unit/Behavior/Replay-Golden-Digests und responsives Layout prüfen.
+
+### NEXT-74 · Turnierdaten-Validierung und Missbrauchsgrenzen (geplant)
+- [ ] Importgröße, Duplikate, Prototyp-Namen, verschachtelte Objekte und nicht endliche Zahlen prüfen.
+- [ ] Fehlerhafte Daten dürfen laufendes Turnier und Sandbox nicht verändern.
+- [ ] Fuzz-/Property-Tests mit festen Seeds, Desktop/Mobil und vollständige Regressionen ergänzen.
 
 ## Planungszyklus
 
