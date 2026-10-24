@@ -534,6 +534,7 @@ function renderTournamentPreview(): void {
       list.append(item);
     }
     const table = document.createElement('table');
+    table.id = 'tournament-table';
     table.className = 'tournament-table';
     table.setAttribute('aria-label', 'Turniertabelle');
     const thead = document.createElement('thead');
