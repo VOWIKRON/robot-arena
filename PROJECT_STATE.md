@@ -1,11 +1,11 @@
 # PROJECT_STATE
 
-## Unveröffentlichte Entwicklung NEXT-47 (24.10.2026)
+## Unveröffentlichte Entwicklung NEXT-47 (24.10.2026, vollständig getestet)
 - Eventbasierter Replay-Player ohne RNG/Engine-Simulation auf Entwicklungsbranch implementiert; Play/Pause/Step/Reset, Ereignisanzeige und Laden importierter Dateien bzw. des aktuellen Kampfes.
 - Separate Replay-Uhr; der laufende Sandbox-Kampf wird durch Import und Wiedergabe nicht verändert.
 - Unit-/Behavior-/Regressionstests für 0/1/3600 Ticks, Sofortsieg, Pause, Ende und deterministische Wiedergabe; Desktop-/Mobile-E2E für Dialog und Dateiimport ergänzt.
-- Vollständige CI-Verifikation des finalen Entwicklungsstands noch ausstehend; NEXT-47 bis dahin NICHT als abgeschlossen zählen.
-- Kumulativ bereits verifiziert, aber nicht veröffentlicht: NEXT-40, NEXT-44, NEXT-45, NEXT-46 (4).
+- Development Tests #40096436278 auf Code-SHA 1b7413a grün: 268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck und Build. NEXT-47 abgeschlossen; finale Dokumentationsänderungen separat prüfen.
+- Kumulativ bereits verifiziert, aber nicht veröffentlicht: NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47 (5).
 - Stabile Version auf main: 0.1.53; PR #46 Draft, kein Merge/Publish.
 
 ## Aktueller Stand
