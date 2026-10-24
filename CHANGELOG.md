@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased · NEXT-47 (implementiert, finale Tests ausstehend)
+## Unreleased · NEXT-47 (implementiert und getestet, unveröffentlicht)
 - Replay-Player mit Play/Pause, Einzelschritt, Reset und Endzustand; importierte Aufzeichnungen oder aktuellen Kampf im Replay-Dialog ereignisbasiert wiedergeben, ohne Engine oder RNG erneut auszuführen.
-- Unit-/Behavior-Tests für leere, sofort beendete und 3600-Tick-Replays, deterministische Ereignisreihenfolge sowie Desktop-/Mobile-E2E für Dateiimport und unveränderten Live-Kampf ergänzt.
+- Unit-/Behavior-Tests für leere, sofort beendete und 3600-Tick-Replays, deterministische Ereignisreihenfolge sowie Desktop-/Mobile-E2E für Dateiimport und unveränderten Live-Kampf erfolgreich: Development Tests #40096436278 (SHA 1b7413a), 268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck/Build grün.
 - Grafische Zustandsrekonstruktion und Seek gehören erst zu NEXT-48; keine Veröffentlichung oder Deployment.
 
 
