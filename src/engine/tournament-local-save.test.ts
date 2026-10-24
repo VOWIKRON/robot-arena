@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { RAPTOR, TITAN } from './presets';
 import { createTournamentDefinition } from './tournament-model';
-import { advanceTournamentRun, createTournamentRun, finishTournamentRun, pauseTournamentRun, cancelTournamentRun } from './tournament-runner';
+import { advanceTournamentRun, createTournamentRun, finishTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun } from './tournament-runner';
 import { TOURNAMENT_AUTOSAVE_KEY, TOURNAMENT_AUTOSAVE_ENABLED_KEY, saveTournamentSnapshot, restoreTournamentSnapshot, isTournamentAutosaveEnabled, setTournamentAutosaveEnabled, type TournamentSnapshotStorage } from './tournament-local-save';
 
 function memoryStorage(): TournamentSnapshotStorage {
@@ -39,7 +39,7 @@ describe('NEXT-68 local tournament autosave', () => {
     expect(restored).toEqual(run);
     expect(restored).not.toBe(run);
     expect(Object.isFrozen(restored)).toBe(true);
-    expect(finishTournamentRun(restored)).toEqual(finishTournamentRun(run));
+    expect(finishTournamentRun(resumeTournamentRun(restored))).toEqual(finishTournamentRun(resumeTournamentRun(run)));
   });
   it('restores completed and cancelled status without changing the outcome', () => {
     const storage = memoryStorage();
