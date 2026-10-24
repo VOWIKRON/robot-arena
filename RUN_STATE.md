@@ -46,7 +46,6 @@
 | **51 – NEU** | Replay-Refactoring: Immutable-Helper und Recorder-Entkopplung | #40105284320 · vollständige Development Tests | **Implementiert, getestet, unveröffentlicht** |
 | **52 – NEU** | Validiertes, unveränderliches Turnierdatenmodell | #40105438397 · 290 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
 | **53 – NEU** | Deterministischer Round-Robin-Spielplan und Seeds | #40105486356 · 297 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
-
 | **54 – NEU** | Turnierauswertung, 3/1/0 Punkte, Reststruktur-Differenz, immutable Ergebnis-Snapshots | #40109944097 · 303 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
 
 **Gesamtzahl vollständig getesteter, seit v0.1.53 nicht in main integrierter Aufgaben: 12.**
