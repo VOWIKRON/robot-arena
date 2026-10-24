@@ -296,8 +296,12 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Development Tests #40088595774 auf SHA 7df3cacc: 252 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
 - [x] Recorder-Tests und unveränderte Default-Kämpfe verifiziert; NEXT-44 als abgeschlossen und unveröffentlicht gezählt.
 
-### NEXT-45 · Replay-Dateiformat und Validierung
-- [ ] Versioniertes JSON-Format mit Metadaten definieren; ungültige Versionen und inkonsistente Tick-/Robot-Referenzen ablehnen.
+### NEXT-45 · Replay-Dateiformat und Validierung · IMPLEMENTIERT / TESTS AUSSTEHEND
+- [x] JSON-Schema-Version 1 mit Seed, Arena, RobotDefinition-Snapshots, Tick-Events und Endzustand ergänzen.
+- [x] Validierung von Schema-Version, Robot-IDs, Tick-Folge, Event-Referenzen, Arena und nicht endlichen Werten implementieren.
+- [x] Unit-/Behavior-/Regressionstests für JSON-Roundtrip, 0-Tick, Sofortsieg und ungültige Daten ergänzen.
+- [ ] Vollständige Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E auf dem aktuellen Head grün nachweisen.
+- [ ] Nach Abnahme als abgeschlossen und unveröffentlicht zählen.
 
 ### NEXT-46 · Replay exportieren und importieren
 - [ ] Download/Dateiimport im separaten Dialog anbieten; validierte Dateien und verständliche Fehler auf Desktop/Mobile absichern.
