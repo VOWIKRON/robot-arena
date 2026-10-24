@@ -1,4 +1,4 @@
-name: CI
+name: Development Tests
 
 on:
   push:
@@ -13,6 +13,19 @@ jobs:
         with:
           node-version: 22
       - run: npm install
+      - name: Audit dependencies (report only; security release gate remains blocked)
+        shell: bash
+        run: |
+          npm audit --json > audit-report.json || true
+          node -e 'const a=require("./audit-report.json"); console.log("Dependency audit:",JSON.stringify({counts:a.metadata?.vulnerabilities,issues:Object.entries(a.vulnerabilities||{}).map(([name,v])=>({name,severity:v.severity,via:v.via,fixAvailable:v.fixAvailable}))},null,2))'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-dependency-audit
+          path: audit-report.json
+          if-no-files-found: ignore
+      - name: Enforce zero known dependency advisories
+        run: node -e 'const a=require("./audit-report.json"); const v=a.metadata?.vulnerabilities; if(!v || v.total>0){console.error("Dependency security gate blocked:",v);process.exit(1)}'
       - run: npm run typecheck
       - run: npm test
       - run: npm run build

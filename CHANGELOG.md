@@ -1,4 +1,45 @@
+## NEXT-60 abgeschlossen · 24.10.2026 · nicht veröffentlicht
+- Tatsächliche CI #40123159397 erfolgreich (auf Code- und Teststand vor dieser Dokumentationsänderung).
+- Opt-in-Seitenbalance ist im Spielplan und tatsächlichen Runner implementiert, mit identischen Match-IDs/Seeds, gültigen Archiven und deterministischer Tabellenwertung.
+- Regressionen für 2/3/4/5/16 Teilnehmer, Side-Swap, Pause/Resume, Export/Import, legacy unverändertes Verhalten; 16-Teilnehmer-Golden-SHA256 für Spielplan, Ergebnisse, Tabelle und Bias. Referenzszenario maximal 25 % Side-Bias, maximal 1 Seitenstart Differenz je Teilnehmer.
+- **Kumulativ 6 vollständig getestete, unveröffentlichte Aufgaben seit v0.1.54: NEXT-56, NEXT-57, NEXT-58, NEXT-59, NEXT-60, NEXT-61.**
+- Draft-PR #47, Entwicklungsbranch automation/next-56-tournament-runner-unpublished; keine Veröffentlichung, kein Merge. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## NEXT-59 vollständig abgeschlossen · 24.10.2026 · NICHT VERÖFFENTLICHT
+- 16-Teilnehmer-Round-Robin (120 Paarungen) und K.-o.-Bracket mit SHA256-Golden-Referenzen charakterisiert, 30-Sekunden-CI-Grenze für den deterministischen Engine-Lauf geprüft.
+- Desktop-/Mobil-E2E für 3/5/16 Teilnehmer, Freilose, Champion, Eingabefehler und Export vorhanden.
+- Seed-Ableitung der K.-o.-Engine refaktoriert, nach Refactoring **Development Tests #40123058094 erfolgreich**: Unit/Behavior/Regression, Desktop/Mobile, TypeScript/Build und npm-Sicherheitsgate.
+- Kumulativ vollständig getestete, unveröffentlichte NEXT-Aufgaben seit v0.1.54: **NEXT-56, NEXT-57, NEXT-58, NEXT-59, NEXT-61 (5)**. NEXT-60 bleibt offen.
+- Entwicklungsbranch automation/next-56-tournament-runner-unpublished / Draft-PR #47; main und Homepage unverändert. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## Entwicklungsrunde 24.10.2026 · NEXT-59 bis NEXT-61 · ohne Publishing
+- Letztes verifiziertes Release v0.1.54; main unverändert; Entwicklungsbranch automation/next-56-tournament-runner-unpublished, Draft-PR #47.
+- Aktuelle CI #40121383728 auf Commit 0a67a98d: **erfolgreich**; 27 Testdateien, 74 Desktop-/Mobile-E2E, TypeScript/Build grün, npm audit 0 bekannte Schwachstellen.
+- NEXT-56: deterministischer Runner mit Pause/Resume/Cancel – vollständig, Tests grün, NICHT VERÖFFENTLICHT.
+- NEXT-57: deterministisches K.-o.-Bracket und Freilose – vollständig, Tests grün, NICHT VERÖFFENTLICHT.
+- NEXT-58: Archiv-Import/-Export und Wiederaufnahme – vollständig, Tests grün, NICHT VERÖFFENTLICHT.
+- NEXT-59: K.-o.-Browseroberfläche mit Champion, Seeds, Freilosen, 3/5/16-Teilnehmer-E2E, ungültigen Eingaben und Desktop/Mobile ergänzt. CI grün; Referenz-Digests, Performance-Grenzen und Refactoring-Charakterisierung aus Akzeptanzkriterien noch offen; daher **NICHT vollständig abgeschlossen**.
+- NEXT-60: deterministische paarweise Side-Swap-Bias-Simulation für 2/3/4/16 Teilnehmer, Seeds und Side-Zähler getestet. CI grün; explizite Bias-Grenzwerte, Referenz-Digests und Integration in echten Runner noch offen; daher **NICHT vollständig abgeschlossen**.
+- NEXT-61: versionierte JSON-Tabellensnapshots, CSV-Export mit Unicode/Formel-Schutz und Browser-Downloads, 2/16 Teilnehmer, unvollständige Turniere – vollständig implementiert und getestet, **NICHT VERÖFFENTLICHT**.
+- Kumulativ seit v0.1.54 **vier vollständig implementierte und verifizierte Aufgaben: NEXT-56, NEXT-57, NEXT-58, NEXT-61**. NEXT-59/60 zählen nicht.
+- Keine Homepage-Aktualisierung, kein Merge, kein Release, kein publish.php. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 # Changelog
+
+## Unreleased · Qualitätsrunde 24.10.2026, 20:08 (nicht veröffentlicht)
+- NEXT-56/57/58 vollständig implementiert und verifiziert; K.-o.-Bracket, Round-Robin-Runner, Turnier-JSON mit Browser-Import/Export und fehlerfreier Wiederaufnahme. NEXT-59/60 nur teilweise umgesetzt.
+- Fehlende Engine-Testdateien durch Erweiterung der Vitest-Discovery aktiviert. Archiv-Endstatus validiert; importierte benutzerdefinierte Teilnehmer-IDs bleiben im Browser erhalten; korrupter Import bewahrt laufendes Turnier; sichere Zähler für Prototype-ähnliche IDs.
+- Vitest 5.x ersetzt verwundbare Vitest-3.x-Abhängigkeiten. npm audit: 0 bekannte Schwachstellen. `Development Tests` #40119157124/#40119160281 auf 8dc5633a: 335 Unit/Behavior/Regression, 68 Desktop/Mobile, TypeScript, Build, Audit grün.
+- Draft-PR #47, kein Merge, keine Website-Aktualisierung. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## Unreleased · NEXT-56 (vollständig getestet, nicht veröffentlicht)
+- Separater, UI-unabhängiger Round-Robin-Runner führt Paarungen seriell mit den definierten Seeds und Ticklimits aus; immutable Ergebnis-Snapshots und deterministische Reihenfolge.
+- Pause/Fortsetzen/Abbrechen ausschließlich an Matchgrenzen, bereits abgeschlossene Ergebnisse bleiben erhalten. Tests für 2/4/16 Teilnehmer, 120 Matches, Timeout, Seeds und Zustandsübergänge ergänzt. CI #40113922862 auf 453f5ef5 grün: 314 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, TypeScript und Build.
+- **Nicht veröffentlicht**, Entwicklungsbranch und Draft-PR #47; kein Merge, kein Deployment.
+
+## 0.1.54 – 2026-10-24 (erfolgreich veröffentlicht)
+- Release v0.1.54 mit NEXT-40 und NEXT-44 bis NEXT-55 auf main integriert. Publish #40111747415: Upload, Live-Verifikation und Deployment-Status erfolgreich; Build-Commit 362f8bdb.
+- Historische, unten stehende „Unreleased“-Abschnitte für NEXT-40 bis NEXT-55 beschreiben den Zustand vor dieser Veröffentlichung und sind jetzt Teil von v0.1.54.
 
 ## Unreleased · NEXT-55 (getestet, nicht veröffentlicht)
 - Responsiver, eigenständiger Turnierdialog: 2–16 Teilnehmer mit Namens- und Presetwahl, sichere Eingabevalidierung, Round-Robin-Paarungen, Fortschrittsanzeige und Tabelle. Sandbox-Zustand und RNG bleiben unverändert.

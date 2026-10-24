@@ -12,6 +12,10 @@ import { RAPTOR, TITAN } from './engine/presets';
 import { createTournamentDefinition, type TournamentDefinition } from './engine/tournament-model';
 import { createRoundRobinSchedule } from './engine/tournament-schedule';
 import { computeRoundRobinStandings } from './engine/tournament-standings';
+import { runKnockoutBracket } from './engine/tournament-knockout';
+import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
+import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
+import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
@@ -29,12 +33,12 @@ function strategyControls(side: 'a' | 'b'): string {
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.53</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.54</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button><button id="open-replay">Replay</button><button id="open-tournament">Turnier</button></div>
-<dialog id="tournament-dialog" aria-labelledby="tournament-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="tournament-title">Turnier planen</h2><button id="close-tournament" aria-label="Turnier schließen">×</button></div><p>Round Robin für 2 bis 16 Roboter. Die Planung verändert den laufenden Sandbox-Kampf nicht. Die automatische Turnierausführung folgt in NEXT-56.</p><div class="tournament-options"><label>Teilnehmerzahl<input id="tournament-count" type="number" min="2" max="16" step="1" value="2"></label><label>Turnier-Startwert<input id="tournament-seed" type="number" min="0" max="9007199254740991" step="1" value="4711"></label><label>Ticklimit je Kampf<input id="tournament-ticks" type="number" min="1" max="3600" step="1" value="3600"></label></div><h3>Teilnehmer</h3><div id="tournament-participants" class="tournament-participants"></div><div class="controls"><button id="tournament-create">Spielplan erstellen</button></div><p id="tournament-feedback" role="status" aria-live="polite" class="status"></p><section id="tournament-preview" hidden aria-label="Turniervorschau"><h3>Fortschritt</h3><p id="tournament-progress"></p><h3>Paarungen</h3><ol id="tournament-pairings" class="tournament-pairings"></ol><h3>Tabelle</h3><div id="tournament-table-scroll" class="tournament-table-scroll"></div></section></div></dialog>
+<dialog id="tournament-dialog" aria-labelledby="tournament-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="tournament-title">Turnier planen</h2><button id="close-tournament" aria-label="Turnier schließen">×</button></div><p>Round Robin für 2 bis 16 Roboter. Die Planung verändert den laufenden Sandbox-Kampf nicht. Die Turnierausführung ist als deterministischer Engine-Runner vorbereitet; die Bedienung im Dialog folgt in einem späteren Entwicklungsschritt.</p><div class="tournament-options"><label>Teilnehmerzahl<input id="tournament-count" type="number" min="2" max="16" step="1" value="2"></label><label>Turnier-Startwert<input id="tournament-seed" type="number" min="0" max="9007199254740991" step="1" value="4711"></label><label>Ticklimit je Kampf<input id="tournament-ticks" type="number" min="1" max="3600" step="1" value="3600"></label></div><h3>Teilnehmer</h3><div id="tournament-participants" class="tournament-participants"></div><label>Turnierformat<select id="tournament-format"><option value="round-robin">Jeder gegen jeden</option><option value="knockout">K.-o.-Turnier</option></select></label><label>Seitenzuordnung (Round Robin)<select id="tournament-side-assignment"><option value="legacy">Klassisch (bisheriges Verhalten)</option><option value="balanced">Ausgeglichen (A/B-Differenz höchstens 1)</option></select></label><div class="controls"><button id="tournament-create">Spielplan erstellen</button><button id="tournament-run">Nächster Kampf</button><button id="tournament-auto">Alle Kämpfe spielen</button><button id="tournament-pause">Pause</button><button id="tournament-resume">Fortsetzen</button><button id="tournament-cancel">Abbrechen</button><button id="tournament-export">Speichern</button><button id="tournament-table-csv">Tabelle CSV</button><button id="tournament-table-json">Tabelle JSON</button><button id="tournament-import">Laden</button></div><input id="tournament-file" type="file" accept=".json,application/json" hidden aria-label="Turnierdatei"><p id="tournament-feedback" role="status" aria-live="polite" class="status"></p><section id="tournament-preview" hidden aria-label="Turniervorschau"><h3>Fortschritt</h3><p id="tournament-progress" role="status" aria-live="polite" aria-label="Turnierfortschritt"></p><h3>Paarungen</h3><ol id="tournament-pairings" class="tournament-pairings"></ol><h3>Tabelle</h3><div id="tournament-table-scroll" class="tournament-table-scroll"></div></section></div></dialog>
 <dialog id="replay-dialog" aria-labelledby="replay-title"><div class="config-dialog-card"><h2 id="replay-title">Replay-Dateien</h2><p>Aktuellen Kampf als JSON exportieren oder eine Replay-Datei prüfen. Die Wiedergabe zeigt aufgezeichnete Ereignisse ohne erneute Simulation; ein Import verändert den laufenden Kampf nicht.</p><div class="controls"><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><button id="replay-load-current">Aktuellen Kampf laden</button><button id="close-replay">Schließen</button></div><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"><p id="replay-feedback" class="status" role="status" aria-live="polite"></p><div class="controls" aria-label="Replay-Steuerung"><button id="replay-play" disabled>Abspielen</button><button id="replay-pause" disabled>Pausieren</button><button id="replay-step" disabled>Replay-Schritt</button><button id="replay-reset" disabled>Replay-Anfang</button></div><p id="replay-progress" role="status" aria-live="polite">Kein Replay geladen</p><label for="replay-seek">Replay-Zeitleiste (Tick)<input id="replay-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Replay-Zeitleiste"></label><div id="replay-arena" class="replay-arena" role="img" aria-label="Rekonstruierte Roboterpositionen im Replay" hidden><svg id="replay-effects" class="replay-effects" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><span id="replay-bot-a" class="replay-marker replay-marker-a">A</span><span id="replay-bot-b" class="replay-marker replay-marker-b">B</span></div><p id="replay-stats" class="replay-stats" role="status" aria-live="polite"></p><p id="replay-events" aria-label="Ereignisse im aktuellen Replay-Tick"></p><section id="replay-analysis" class="replay-analysis" aria-label="Replay-Kampfstatistik" hidden><h3>Kampfstatistik (gesamte Aufzeichnung)</h3><div class="replay-stat-grid"><div id="replay-stat-a" class="replay-stat-side"></div><div id="replay-stat-b" class="replay-stat-side"></div></div><p id="replay-result"></p></section></div></dialog>
 <div class="status" id="status"></div>
 </section>
@@ -453,6 +457,26 @@ el<HTMLInputElement>('replay-file').addEventListener('change', async (event) => 
 
 /** NEXT-55: The tournament planner owns no reference to the live MatchState or RNG. */
 let tournamentDefinition: TournamentDefinition | null = null;
+let tournamentRun: TournamentRun | null = null;
+let tournamentAutoTimer: number | null = null;
+let tournamentAutoRequested = false;
+function stopTournamentAuto(clearIntent = true): void {
+  if (tournamentAutoTimer !== null) window.clearTimeout(tournamentAutoTimer);
+  tournamentAutoTimer = null;
+  if (clearIntent) tournamentAutoRequested = false;
+}
+function tournamentStatus(): void {
+  if (!tournamentRun) return;
+  const result = computeRoundRobinStandings(tournamentRun.definition, tournamentRun.results);
+  el('tournament-progress').textContent = `${result.completedMatches} / ${result.totalMatches} Kämpfe abgeschlossen · ${tournamentRun.status} · Führender: ${tournamentRun.definition.participants.find(p => p.id === result.standings[0]?.participantId)?.name ?? '–'} (${result.standings[0]?.points ?? 0} Punkte)`;
+  const rows = el('tournament-table-scroll').querySelectorAll<HTMLTableRowElement>('tbody tr');
+  result.standings.forEach((entry, i) => {
+    const row = rows[i]; if (!row) return;
+    const cells = row.querySelectorAll('td');
+    const participant = tournamentRun!.definition.participants.find(p => p.id === entry.participantId);
+    [participant?.name ?? entry.participantId, entry.played, entry.wins, entry.draws, entry.losses, entry.points, entry.structureDifference].forEach((value, j) => { if (cells[j]) cells[j]!.textContent = String(value); });
+  });
+}
 function tournamentCount(): number {
   const count = el<HTMLInputElement>('tournament-count').valueAsNumber;
   if (!Number.isSafeInteger(count) || count < 2 || count > 16) {
@@ -498,7 +522,9 @@ function renderTournamentParticipants(): void {
   } catch (error) {
     el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Ungültige Teilnehmerzahl';
   }
+  stopTournamentAuto();
   tournamentDefinition = null;
+  tournamentRun = null;
   el('tournament-preview').hidden = true;
 }
 function buildTournamentDefinition(): TournamentDefinition {
@@ -516,21 +542,28 @@ function buildTournamentDefinition(): TournamentDefinition {
     throw new Error('Teilnehmernamen müssen eindeutig sein.');
   }
   return createTournamentDefinition({
-    schemaVersion: 1, id: 'sandbox-tournament', format: 'round-robin',
-    baseSeed: seed, maxTicks: ticks, participants
+    schemaVersion: 1, id: 'sandbox-tournament', format: el<HTMLSelectElement>('tournament-format').value as 'round-robin' | 'knockout',
+    baseSeed: seed, maxTicks: ticks, participants,
+    ...(el<HTMLSelectElement>('tournament-side-assignment').value === 'balanced' ? {sideAssignment: 'balanced' as const} : {})
   });
 }
-function renderTournamentPreview(): void {
+function renderTournamentPreview(definitionOverride?: TournamentDefinition): void {
   try {
-    const definition = buildTournamentDefinition();
-    const fixtures = createRoundRobinSchedule(definition);
-    const result = computeRoundRobinStandings(definition, []);
+    const definition = definitionOverride ?? buildTournamentDefinition();
+    const fixtures = definition.format === 'round-robin' ? createRoundRobinSchedule(definition) : [];
+    const knockout = definition.format === 'knockout' ? runKnockoutBracket(definition) : null;
+    const result = definition.format === 'round-robin' ? computeRoundRobinStandings(definition, []) : null;
     const names = new Map(definition.participants.map(robot => [robot.id, robot.name]));
     const list = el('tournament-pairings');
     list.replaceChildren();
     for (const fixture of fixtures) {
       const item = document.createElement('li');
       item.textContent = `${names.get(fixture.robotAId)} gegen ${names.get(fixture.robotBId)} · Seed ${fixture.seed}`;
+      list.append(item);
+    }
+    if (knockout) for (const match of knockout.matches) {
+      const item = document.createElement('li');
+      item.textContent = `Runde ${match.round + 1}: ${names.get(match.robotAId)} gegen ${match.robotBId ? names.get(match.robotBId) : 'Freilos'} · Seed ${match.seed} · Sieger: ${names.get(match.winnerId)}`;
       list.append(item);
     }
     const table = document.createElement('table');
@@ -547,7 +580,7 @@ function renderTournamentPreview(): void {
     }
     thead.append(header);
     const tbody = document.createElement('tbody');
-    for (const standing of result.standings) {
+    for (const standing of result?.standings ?? []) {
       const tr = document.createElement('tr');
       for (const value of [
         names.get(standing.participantId) ?? standing.participantId, standing.played,
@@ -561,7 +594,7 @@ function renderTournamentPreview(): void {
     }
     table.append(thead, tbody);
     el('tournament-table-scroll').replaceChildren(table);
-    el('tournament-progress').textContent = `${result.completedMatches} / ${result.totalMatches} Kämpfe abgeschlossen (0 %). Noch keine Turnierausführung.`;
+    el('tournament-progress').textContent = knockout ? `K.-o.-Turnier abgeschlossen · Sieger: ${names.get(knockout.championId)}` : `${result!.completedMatches} / ${result!.totalMatches} Kämpfe abgeschlossen (0 %). Noch keine Turnierausführung.`;
     el('tournament-preview').hidden = false;
     el('tournament-feedback').textContent = `Spielplan mit ${definition.participants.length} Teilnehmern und ${fixtures.length} Paarungen erstellt.`;
     tournamentDefinition = definition;
@@ -577,10 +610,105 @@ el('open-tournament').addEventListener('click', () => {
   if (!tournamentDefinition) renderTournamentParticipants();
   el<HTMLInputElement>('tournament-count').focus();
 });
-el('close-tournament').addEventListener('click', () => el<HTMLDialogElement>('tournament-dialog').close());
+el('close-tournament').addEventListener('click', () => { stopTournamentAuto(); el<HTMLDialogElement>('tournament-dialog').close(); });
 el('tournament-dialog').addEventListener('close', () => el<HTMLButtonElement>('open-tournament').focus());
 el('tournament-count').addEventListener('change', renderTournamentParticipants);
-el('tournament-create').addEventListener('click', renderTournamentPreview);
+el('tournament-format').addEventListener('change', () => {
+  const knockout = el<HTMLSelectElement>('tournament-format').value === 'knockout';
+  const sideSelect = el<HTMLSelectElement>('tournament-side-assignment');
+  sideSelect.disabled = knockout;
+  if (knockout) sideSelect.value = 'legacy';
+});
+el('tournament-create').addEventListener('click', () => { stopTournamentAuto(); renderTournamentPreview(); if (tournamentDefinition) { tournamentRun = tournamentDefinition.format === 'round-robin' ? createTournamentRun(tournamentDefinition) : null; if (tournamentRun) tournamentStatus(); } });
+function tournamentAction(action: (run: TournamentRun) => TournamentRun): void {
+  try {
+    if (!tournamentRun) throw new Error('Bitte zuerst einen Spielplan erstellen oder laden.');
+    tournamentRun = action(tournamentRun);
+    tournamentStatus();
+    el('tournament-feedback').textContent = 'Turnierstatus: ' + tournamentRun.status;
+  } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Turnierfehler'; }
+}
+/** One match per browser task keeps progress, pause and cancel responsive at match boundaries. */
+function scheduleTournamentAuto(): void {
+  if (!tournamentAutoRequested || !tournamentRun ||
+      tournamentRun.status === 'paused' || tournamentRun.status === 'cancelled' ||
+      tournamentRun.status === 'completed' || tournamentAutoTimer !== null) return;
+  tournamentAutoTimer = window.setTimeout(() => {
+    tournamentAutoTimer = null;
+    if (!tournamentAutoRequested || !tournamentRun ||
+        tournamentRun.status === 'paused' || tournamentRun.status === 'cancelled' ||
+        tournamentRun.status === 'completed') return;
+    const before = tournamentRun;
+    tournamentAction(advanceTournamentRun);
+    if (tournamentRun === before || (tournamentRun !== null && tournamentRun.nextMatchIndex >= tournamentRun.totalMatches)) {
+      stopTournamentAuto();
+      return;
+    }
+    scheduleTournamentAuto();
+  }, 0);
+}
+el('tournament-run').addEventListener('click', () => { stopTournamentAuto(); tournamentAction(advanceTournamentRun); });
+el('tournament-auto').addEventListener('click', () => {
+  if (!tournamentRun) { tournamentAction(advanceTournamentRun); return; }
+  if (tournamentRun.status === 'paused') tournamentAction(resumeTournamentRun);
+  if (tournamentRun.status === 'completed' || tournamentRun.status === 'cancelled') {
+    tournamentAction(advanceTournamentRun);
+    return;
+  }
+  tournamentAutoRequested = true;
+  scheduleTournamentAuto();
+});
+el('tournament-pause').addEventListener('click', () => { stopTournamentAuto(false); tournamentAction(pauseTournamentRun); });
+el('tournament-resume').addEventListener('click', () => {
+  tournamentAction(resumeTournamentRun);
+  if (tournamentAutoRequested) scheduleTournamentAuto();
+});
+el('tournament-cancel').addEventListener('click', () => { stopTournamentAuto(); tournamentAction(cancelTournamentRun); });
+function downloadTournamentTable(format: 'csv' | 'json'): void {
+  try {
+    if (!tournamentRun) throw new Error('Für den Tabellenexport ist ein Round-Robin-Turnier erforderlich');
+    const content = format === 'csv' ? exportTournamentTableCsv(tournamentRun) : exportTournamentTableJson(tournamentRun);
+    const url = URL.createObjectURL(new Blob([content], {type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json'}));
+    const a = document.createElement('a'); a.href = url; a.download = 'robot-arena-tabelle.' + format; a.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
+}
+el('tournament-table-csv').addEventListener('click', () => downloadTournamentTable('csv'));
+el('tournament-table-json').addEventListener('click', () => downloadTournamentTable('json'));
+el('tournament-export').addEventListener('click', () => {
+  try {
+    if (!tournamentRun) throw new Error('Kein Turnier vorhanden');
+    const url = URL.createObjectURL(new Blob([exportTournamentRun(tournamentRun)], { type: 'application/json' }));
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'robot-arena-turnier.json'; anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
+});
+el('tournament-import').addEventListener('click', () => el<HTMLInputElement>('tournament-file').click());
+el('tournament-file').addEventListener('change', async () => {
+  stopTournamentAuto();
+  const input = el<HTMLInputElement>('tournament-file');
+  try {
+    const file = input.files?.[0];
+    if (!file || file.size > 2 * 1024 * 1024) throw new Error('Datei fehlt oder ist zu groß');
+    const loaded = importTournamentRun(await file.text());
+    tournamentRun = loaded;
+    tournamentDefinition = loaded.definition;
+    el<HTMLInputElement>('tournament-count').value = String(loaded.definition.participants.length);
+    renderTournamentParticipants();
+    tournamentDefinition = loaded.definition;
+    tournamentRun = loaded;
+    el<HTMLSelectElement>('tournament-format').value = loaded.definition.format;
+    el<HTMLSelectElement>('tournament-side-assignment').value = loaded.definition.sideAssignment === 'balanced' ? 'balanced' : 'legacy';
+    el<HTMLSelectElement>('tournament-side-assignment').disabled = loaded.definition.format === 'knockout';
+    el<HTMLInputElement>('tournament-seed').value = String(loaded.definition.baseSeed);
+    el<HTMLInputElement>('tournament-ticks').value = String(loaded.definition.maxTicks);
+    loaded.definition.participants.forEach((p, i) => { el<HTMLInputElement>(`tournament-name-${i + 1}`).value = p.name; });
+    renderTournamentPreview(loaded.definition);
+    tournamentRun = loaded;
+    tournamentStatus();
+  } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Importfehler'; }
+  finally { input.value = ''; }
+});
 
 el('start').addEventListener('click', start);
 el('pause').addEventListener('click', pause);
