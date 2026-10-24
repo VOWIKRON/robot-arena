@@ -12,6 +12,7 @@ import { RAPTOR, TITAN } from './engine/presets';
 import { createTournamentDefinition, type TournamentDefinition } from './engine/tournament-model';
 import { createRoundRobinSchedule } from './engine/tournament-schedule';
 import { computeRoundRobinStandings } from './engine/tournament-standings';
+import { tournamentMatchDetails } from './engine/tournament-details';
 import { runKnockoutBracket } from './engine/tournament-knockout';
 import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
@@ -465,6 +466,21 @@ function stopTournamentAuto(clearIntent = true): void {
   tournamentAutoTimer = null;
   if (clearIntent) tournamentAutoRequested = false;
 }
+/** Match details always derive from the immutable runner snapshot, never UI guesses. */
+function renderTournamentMatchDetails(): void {
+  if (!tournamentRun) return;
+  const items = el('tournament-pairings').querySelectorAll<HTMLLIElement>('li');
+  tournamentMatchDetails(tournamentRun).forEach((match, index) => {
+    const item = items[index];
+    if (!item) return;
+    const outcome = match.status === 'pending'
+      ? 'Ausstehend'
+      : `Ticks ${match.ticks} · Sieger: ${match.winnerName ?? 'Unentschieden'} · Reststruktur A/B: ${match.remainingStructureA} / ${match.remainingStructureB}`;
+    // textContent deliberately prevents participant names from being interpreted as markup.
+    item.textContent = `${match.robotAName} gegen ${match.robotBName} · Seed ${match.seed} · ${outcome}`;
+    item.dataset.matchId = match.matchId;
+  });
+}
 function tournamentStatus(): void {
   if (!tournamentRun) return;
   const result = computeRoundRobinStandings(tournamentRun.definition, tournamentRun.results);
@@ -476,6 +492,7 @@ function tournamentStatus(): void {
     const participant = tournamentRun!.definition.participants.find(p => p.id === entry.participantId);
     [participant?.name ?? entry.participantId, entry.played, entry.wins, entry.draws, entry.losses, entry.points, entry.structureDifference].forEach((value, j) => { if (cells[j]) cells[j]!.textContent = String(value); });
   });
+  renderTournamentMatchDetails();
 }
 function tournamentCount(): number {
   const count = el<HTMLInputElement>('tournament-count').valueAsNumber;
