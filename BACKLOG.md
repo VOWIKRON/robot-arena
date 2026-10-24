@@ -6,8 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-48 · Replay-Zeitleiste (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47 (5 Aufgaben).
+**Nächstes Ziel:** NEXT-51 · Replay-Refactoring und Turnierplanung (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50 (8 Aufgaben).
 
 ---
 
@@ -317,20 +317,20 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] GitHub Development Tests #40096436278 (SHA 1b7413a): 268 Unit-/Behavior-/Regressionstests und 52 Desktop-/Mobile-E2E, Typecheck/Build grün; 0-Tick, Sofortsieg, 3600 Ticks, Pause/Ende, erneutes Öffnen und importierte JSON-Datei geprüft.
 - [x] NEXT-47 als abgeschlossen und kumulativ unveröffentlicht gezählt; NEXT-48 übernimmt Zustandsrekonstruktion und grafische Zeitleiste.
 
-### NEXT-48 · Replay-Zeitleiste
-- [ ] Seek auf Tick 0, Mitte, Ende und rückwärts anbieten, deterministische Zustandsrekonstruktion ohne neue Simulation.
-- [ ] Struktur, Energie, Position und Kampfeffekte nach Seek konsistent anzeigen; Mobile-Touch und Tastatur prüfen.
-- [ ] Referenzzustände und Eventreihenfolge mit festen Seeds testen.
+### NEXT-48 · Replay-Zeitleiste · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Seek auf Tick 0, Mitte, Ende und rückwärts; deterministische Zustandsrekonstruktion ohne neue Simulation.
+- [x] Struktur, Energie, Position und Kampfeffekte nach Seek konsistent; Mobile-Touch und Tastatur geprüft.
+- [x] Referenzzustände und Eventreihenfolge mit festen Seeds getestet; Development Tests #40100789839: 274 Unit-/Behavior-Tests, 56 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-49 · Kampfstatistiken
-- [ ] Schüsse, Treffer, effektiven Schaden und Energieverbrauch aus aufgezeichneten Events berechnen.
-- [ ] Doppelte Events, Überkill, Sofortsieg, 0 Ticks und Timeout gesondert testen.
-- [ ] A/B-Vergleich mit zugänglichen Labels und responsiver Ansicht.
+### NEXT-49 · Kampfstatistiken · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Schüsse, Treffer, effektiven Schaden und Energieverbrauch aus aufgezeichneten Events berechnen.
+- [x] Doppelte Events, Überkill, Sofortsieg, 0 Ticks und Timeout gesondert getestet.
+- [x] A/B-Vergleich mit zugänglichen Labels und responsiver Ansicht; Development Tests #40100953952: 281 Unit-/Behavior-Tests, 58 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-50 · Replay-Roundtrip und Testreview
-- [ ] Alle 16 Strategiepaarungen × Seeds 1/12/4711: Aufnahme→Export→Import→Player mit Zustands-/Event-Digests vergleichen.
-- [ ] Maximalgröße, beschädigte JSON-Daten, fehlende Frames und Tastatur-/Mobile-E2E absichern.
-- [ ] Flaky-/Performance-Review, Referenz-Snapshots dokumentieren.
+### NEXT-50 · Replay-Roundtrip und Testreview · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Alle 16 Strategiepaarungen × Seeds 1/12/4711: Aufnahme→Export→Import→Player mit Zustands-/Event-Digests verglichen (48 Fälle).
+- [x] Maximalgröße, beschädigte JSON-Daten, fehlende Frames und Desktop-/Mobile-E2E abgesichert.
+- [x] Referenz-Snapshots, stabile Hash-Vergleiche und Performance der 48-Fälle-Suite im vollständigen CI-Lauf geprüft; Development Tests #40101113261: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
 ### NEXT-51 · Replay-Refactoring und Turnierplanung
 - [ ] Recorder, Datei-IO und Player anhand bestehender Charakterisierungstests entkoppeln.
