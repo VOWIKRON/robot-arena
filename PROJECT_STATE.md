@@ -77,7 +77,7 @@ NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministis
 
 ## Rolling Backlog
 
-BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Der jeweils nächste Lauf bearbeitet genau einen davon. Sobald weniger als 5 konkrete Schritte verbleiben, wird vor dem Leerlaufen ein Planungszyklus fällig.
+BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Pro stündlichem Lauf sind bis zu drei verifizierte Abschlüsse erlaubt; ein unvollständiger Schritt hat Vorrang. Sobald weniger als 5 konkrete Schritte verbleiben, wird vor dem Leerlaufen ein Planungszyklus fällig.
 
 
 ## Aktueller Testausbau

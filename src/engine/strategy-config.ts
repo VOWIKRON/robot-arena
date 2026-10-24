@@ -8,7 +8,7 @@ export type StrategyParameters = Readonly<{
   retreatDistanceFactor?: number;
 }>;
 
-// Shared engine/UI defaults. Energy reserves belong to NEXT-40.
+// Shared engine/UI defaults; omitted reserve values preserve legacy zero-reserve behavior.
 export const STRATEGY_CATALOG = [
   { value: 'aggressive', label: 'Aggressiv', targetDistanceRatio: 0.8 },
   { value: 'distance', label: 'Distanz', targetDistanceRatio: 0.9 },
