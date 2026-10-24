@@ -157,7 +157,7 @@ test('public information pages are reachable', async ({ page }) => {
   await page.goto('/backlog.html');
   await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
-  await expect(page.locator('.meta-grid').getByText('NEXT-45 · Replay-Dateiformat (Prüfung)', { exact: true })).toBeVisible();
+  await expect(page.locator('.meta-grid').getByText('NEXT-46 · Replay-Import/Export', { exact: true })).toBeVisible();
   await expect(page.getByText('✓ NEXT-35 · Aggressive Strategie (v0.1.49)', { exact: true })).toBeVisible();
   for (const label of ['✓ NEXT-36 · Distanzstrategie (v0.1.50)', '✓ NEXT-37 · Defensive Strategie (v0.1.50)', '✓ NEXT-38 · Nahkampfstrategie (v0.1.50)']) {
     await expect(page.getByText(label, { exact: true })).toBeVisible();
