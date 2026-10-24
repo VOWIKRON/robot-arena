@@ -1,12 +1,12 @@
 # Changelog
 
-## Unreleased · NEXT-40 und NEXT-44 (Entwicklungsbranch, nicht veröffentlicht)
+## 0.1.54 – Freigabekandidat (noch nicht veröffentlicht) · NEXT-40, NEXT-44, NEXT-45
 - NEXT-40: Energiereserve 0–100 % pro Roboter, zentrale Schussfreigabe, getrennte Konfiguration A/B und Default 0 % implementiert und geprüft.
 - NEXT-40: Development Tests #40085113036 auf SHA 193f42d0 erfolgreich: 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build.
 - NEXT-44: Append-only-Event-Recorder mit Seed, unveränderlichen Start-/End-Snapshots und Ereignissen pro Tick. Development Tests #40088595774 auf SHA 7df3cacc erfolgreich: 252 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build.
 - NEXT-45: Replay-JSON schemaVersion 1, Arena-/Seed-/RobotDefinition-Metadaten, Tick-/Event-/Zustandsprüfung und JSON-Roundtrip implementiert. Development Tests #40088913689 auf SHA 9d6f719c: 258 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build grün. Drei NEXT-Aufgaben sind getestet und unveröffentlicht.
 - Entwicklungstests durch Workflow-Namen `Development Tests` vom bisherigen Publish-Auslöser `CI` getrennt. Publish auf main ist noch automatisch konfiguriert.
-- Keine neue Produktversion, kein Merge auf main, keine Veröffentlichung.
+- Release-Kandidat v0.1.54; Veröffentlichung erst nach Tests des finalen Heads und expliziter Freigabe.
 
 ## 0.1.53 – 2026-10-23
 - Defensive hält Sicherheitsabstand bereits vor kritischem Schaden; ab standardmäßig 70 % Struktur kein Nachsetzen mehr (zuvor erst 35 %).
