@@ -303,23 +303,38 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Development Tests #40088913689 auf SHA 9d6f719c: 258 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
 - [x] Replay-Format als abgeschlossen und unveröffentlicht gezählt; NEXT-46 folgt frühestens im nächsten Stundenlauf.
 
-### NEXT-46 · Replay exportieren und importieren
-- [ ] Download/Dateiimport im separaten Dialog anbieten; validierte Dateien und verständliche Fehler auf Desktop/Mobile absichern.
+### NEXT-46 · Replay exportieren und importieren · IMPLEMENTIERT / TESTS AUSSTEHEND
+- [x] Live-Recorder um unveränderliche, wiederholbare Snapshots ohne Abschluss erweitern.
+- [x] Deterministische JSON-Dateinamen, Browser-Download, 2-MB-Grenze und Schema-/ID-/Tick-Validierung beim Import.
+- [x] Separaten zugänglichen Replay-Dialog mit Import-/Export-Knöpfen, Dateiauswahl und verständlicher Rückmeldung ergänzen.
+- [x] Ungültiger Import und gültige Dateivorschau verändern den laufenden Kampf nicht; Wiedergabe erst NEXT-47.
+- [x] Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E als Quellcode ergänzt.
+- [ ] Finalen Head mit Typecheck, Unit-/Verhaltens-/Regressionstests, Build und Desktop-/Mobile-E2E grün bestätigen; erst dann als abgeschlossen zählen.
 
 ### NEXT-47 · Replay-Player
-- [ ] Play/Pause/Einzelschritt aus aufgezeichneten Daten statt neuer Simulation; Abbruch und Kampfende absichern.
+- [ ] Player-Zustandsmaschine mit Play/Pause/Einzelschritt/Ende aus validierten Frames definieren; keinerlei neue RNG-Aufrufe.
+- [ ] Importierte Aufzeichnung über eigene Player-Ansicht öffnen, Live-Kampf unverändert lassen.
+- [ ] 0-Tick, Sofortsieg, 3600 Ticks, Pausen-/Endzustand und mehrfaches Öffnen durch Behavior- und Desktop-/Mobile-Tests prüfen.
 
 ### NEXT-48 · Replay-Zeitleiste
-- [ ] Zu aufgezeichneten Ticks springen; konsistente Anzeigen und reproduzierbares Vor-/Zurückspringen testen.
+- [ ] Seek auf Tick 0, Mitte, Ende und rückwärts anbieten, deterministische Zustandsrekonstruktion ohne neue Simulation.
+- [ ] Struktur, Energie, Position und Kampfeffekte nach Seek konsistent anzeigen; Mobile-Touch und Tastatur prüfen.
+- [ ] Referenzzustände und Eventreihenfolge mit festen Seeds testen.
 
 ### NEXT-49 · Kampfstatistiken
-- [ ] Schüsse, Schaden und Energieverbrauch aus Events berechnen; keine unbelegten oder doppelt gezählten Werte.
+- [ ] Schüsse, Treffer, effektiven Schaden und Energieverbrauch aus aufgezeichneten Events berechnen.
+- [ ] Doppelte Events, Überkill, Sofortsieg, 0 Ticks und Timeout gesondert testen.
+- [ ] A/B-Vergleich mit zugänglichen Labels und responsiver Ansicht.
 
 ### NEXT-50 · Replay-Roundtrip und Testreview
-- [ ] Alle Strategiepaarungen Aufnahme→Export→Import→Wiedergabe vergleichen; Desktop/Mobile-Regressionen erweitern.
+- [ ] Alle 16 Strategiepaarungen × Seeds 1/12/4711: Aufnahme→Export→Import→Player mit Zustands-/Event-Digests vergleichen.
+- [ ] Maximalgröße, beschädigte JSON-Daten, fehlende Frames und Tastatur-/Mobile-E2E absichern.
+- [ ] Flaky-/Performance-Review, Referenz-Snapshots dokumentieren.
 
 ### NEXT-51 · Replay-Refactoring und Turnierplanung
-- [ ] Recorder/Player nach Charakterisierung refactoren; nächsten Turnierblock in 5–10 konkrete Schritte zerlegen.
+- [ ] Recorder, Datei-IO und Player anhand bestehender Charakterisierungstests entkoppeln.
+- [ ] Danach vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests erneut ausführen.
+- [ ] Turnier-NEXT-52 bis NEXT-59 mit Datenmodell, Seed-Plan, Round-Robin, K.-o., Tabellen, Statistik, UI und E2E konkret planen.
 
 ## Planungszyklus
 
