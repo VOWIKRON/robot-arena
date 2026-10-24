@@ -1,5 +1,16 @@
 # RUN_STATE
 
+## Entwicklungsrunde · 24.10.2026, 18:56 Europe/Berlin (NEUER RELEASE-BASISSTAND)
+- **Letzter verifizierter Publish: v0.1.54**. GitHub Publish #40111747415 auf main-Commit 362f8bdb10524f216b3be66e3d9dd1d120e26d46: Upload, Online-Verifikation und Deployment-Status erfolgreich (24.10.2026, 18:29 Europe/Berlin).
+- Der alte Stand „13 unveröffentlichte Aufgaben seit v0.1.53“ ist HISTORISCH und wurde durch die erfolgreiche Veröffentlichung abgelöst; NEXT-40 und NEXT-44 bis NEXT-55 gehören zum veröffentlichten Release v0.1.54.
+- Aktueller Entwicklungsbranch: automation/next-56-tournament-runner-unpublished; Draft-PR #47. main bleibt unverändert.
+- NEXT-56: serieller deterministischer Runner mit immutable Ergebnis-Snapshots, Pause/Fortsetzen/Abbrechen an Matchgrenzen; Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, Seeds und Timeout geschrieben.
+- **Verifikation NEXT-56: vollständiger CI-Lauf ausstehend; daher noch nicht als abgeschlossen zählen.**
+- Kumulativ seit letztem verifiziertem Release: 0 bestätigte unveröffentlichte Abschlüsse, NEXT-56 in Prüfung.
+- Nächster Schritt: CI prüfen, ggf. Fehler korrigieren; dann NEXT-57 K.-o.-Bracket, NEXT-58 Import/Export.
+- Refactoring: Runner ist als reines, UI-unabhängiges Modul isoliert; Engine/Seed-Zuweisung bleibt unverändert. Vollständiger Test nach Dokumentationsänderungen noch ausstehend.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, kein Deployment, kein publish.php.
+
 ## Fortsetzung der Entwicklungsrunde · 24.10.2026, 18:12 Europe/Berlin
 - NEU abgeschlossen: NEXT-55 · Responsiver Turnierplanungsdialog mit 2–16 Teilnehmern, Preset- und Namenswahl, validierten Seeds/Ticklimits, deterministischen Paarungen, Fortschritt 0/N und Punktetabelle.
 - Verifiziert: Development Tests #40110813524 auf Code-SHA 9f17bc65: 303 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
