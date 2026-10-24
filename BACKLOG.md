@@ -1,3 +1,10 @@
+## Aktueller Zustand · 25.10.2026, 00:08 MESZ
+**NEXT-68 – NEU vollständig implementiert und verifiziert:** Opt-in-LocalStorage-Checkpoint nur an Match-/Statusgrenzen; validierte versionierte Archive bis 2 MB, explizite Wiederherstellung nach Reload, korrupte/zu große Sicherungen und Quota-Fehler ohne Änderung aktiver Turniere, Datenschutz-Löschung, Pause/Cancel und 16-Teilnehmer-Regression. Refactoring: gemeinsamer validierter Datei-/LocalStorage-Importpfad und isoliertes Speicher-Modul.
+**Development Tests #40137115159 auf c95aaf99 grün:** 372 Unit-/Behavior-/Regressionstests (31 Dateien), 92 Desktop-/Mobile-E2E, Typecheck, Build, Audit-Gate 0 bekannte Advisories, zwei identische Clean-Builds.
+**Letztes bestätigtes Live-Release v0.1.55:** Publish #40132737105 hat Upload und Live-Checks erfolgreich durchgeführt, #40132968986 hat Live erneut verifiziert. NEXT-56–62 sind veröffentlicht und nicht mehr im Unpublished-Zähler.
+**Kumulativ 5 getestete, NICHT veröffentlichte Aufgaben seit v0.1.55:** NEXT-63, 64, 66, 67 und **68 NEU**; nur Entwicklungsbranch / Draft-PR #48. NEXT-65 ist bereits in NEXT-59 enthalten. Nächster Schritt NEXT-69, danach NEXT-70/71, Rolling Backlog bis NEXT-77.
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Aktueller Zustand · 24.10.2026, 23:00 MESZ
 **NEXT-67 – NEU vollständig abgeschlossen und getestet:** Isoliertes Replay abgeschlossener Turnierkämpfe, reproduziert aus Original-Seed und eingefrorenen Roboterdefinitionen. Exakte archivierte Sieger-/Tick-/Reststrukturwerte müssen übereinstimmen; keine Replay-Wiedergabe bei Manipulation oder offenen Kämpfen. Sandbox und aktives Turnier bleiben unverändert. 2/3/16 Teilnehmer, 1/3600 Ticks, Desktop/Mobil und Tastatur getestet. 0 Ticks im Turniermodell absichtlich ungültig.
 **Development Tests #40132151611 auf ddd26d15:** 365 Unit/Behavior/Regression (30 Dateien), 86 Desktop-/Mobile-E2E, Typecheck, Build, Audit und zweimaliger reproduzierbarer Build grün.
@@ -441,10 +448,11 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Archiviertes Ergebnis exakt auf Sieger, Tick und beide Reststrukturen prüfen (kollisionsfreier Feldvergleich statt verlustbehaftetem Digest); manipulierte Ergebnisse und offene Kämpfe explizit ablehnen.
 - [x] Zugängliche Replay-Schaltfläche je abgeschlossener Paarung, vorhandener Replay-Player, 1/3600-Tick-Grenzen, 0-Tick-Validierungsfehler, 2/3/16 Teilnehmer, Desktop-/Mobile-E2E und Tastatur prüfen. CI #40132151611 grün: 365 Unit/Behavior/Regression und 86 E2E.
 
-### NEXT-68 · Sicheres automatisches Turnier-Zwischenspeichern
-- [ ] Opt-in-LocalStorage-Snapshot nur an Matchgrenzen mit Version/Größenlimit und Validierung, keine Hintergrund-Übertragung.
-- [ ] Korrupte/zu große Daten abweisen und gültiges aktives Turnier unangetastet lassen.
-- [ ] Wiederaufnahme nach Reload, Pause/Cancel-Semantik und Desktop-/Mobile-Tests absichern.
+### NEXT-68 · Sicheres automatisches Turnier-Zwischenspeichern · NEU ABGESCHLOSSEN, NICHT VERÖFFENTLICHT
+- [x] Opt-in-LocalStorage-Snapshot nur an Match-/Statusgrenzen mit Archivschema 1, 2-MB-Grenze und vollständiger Validierung; keine Hintergrund-Übertragung.
+- [x] Korrupte/zu große Daten, falsche Versionen und Quota-Fehler abweisen, gültiges aktives Turnier unangetastet lassen; deaktivierte Einwilligung löscht lokal gespeicherte Daten.
+- [x] Wiederaufnahme nach Reload nur auf Benutzeraktion, Pause/Cancel-Semantik, 2/3/16 Teilnehmer und 120 Matches, Desktop-/Mobile-Tests absichern. CI #40137115159: 372 Unit-/Behavior-/Regressionstests und 92 Desktop-/Mobile-E2E erfolgreich.
+- [x] Dateiimport und lokale Wiederherstellung nutzen denselben validierten Importpfad; Storage-Modul ist isoliert und unit-getestet.
 
 ### NEXT-69 · Eigene Roboterkonfigurationen im Turnier
 - [ ] Validierte aktuelle A/B-Konfigurationen als optionale Teilnehmer-Presets übernehmen, ohne Live-Sandboxzustand zu mutieren.
@@ -475,6 +483,21 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [ ] Importgröße, Duplikate, Prototyp-Namen, verschachtelte Objekte und nicht endliche Zahlen prüfen.
 - [ ] Fehlerhafte Daten dürfen laufendes Turnier und Sandbox nicht verändern.
 - [ ] Fuzz-/Property-Tests mit festen Seeds, Desktop/Mobil und vollständige Regressionen ergänzen.
+
+### NEXT-75 · Turnier-Archivmigration und Abwärtskompatibilität (geplant)
+- [ ] V1-Archive und LocalStorage-Snapshots bei zukünftiger Schemaänderung strikt versioniert behandeln; keine stille Datenkonvertierung.
+- [ ] Validierte Migrationsmatrix und explizite Fehlertexte für inkompatible Versionen, beschädigte und zu große Sicherungen.
+- [ ] Golden-Archive für Pause/Cancel/Complete, 2/16 Teilnehmer und Desktop-/Mobile-Import dauerhaft testen.
+
+### NEXT-76 · Turnier-Suche und Ergebnisfilter (geplant)
+- [ ] 120 Paarungen nach Teilnehmer, Ergebnisstatus und Match-ID ohne Mutation des Turnier-Snapshots filtern.
+- [ ] Zugängliche Suche mit Debounce, Tastatur und 375px-Layout; HTML-/Unicode-Namen sicher anzeigen.
+- [ ] Browser-E2E für Filter, Replay, Import und Zurücksetzen der Suche, auch bei unvollständigen Turnieren.
+
+### NEXT-77 · Export- und Autosave-Fehlerbehandlung (geplant)
+- [ ] Einheitliche Fehlermeldungen für lokale Speichersperre, Quota, ungültige Archive und Download-Fehler ohne Verlust des Turnierstands.
+- [ ] Opt-in- und Löschzustände gegen Browser-Neustart und konkurrierende Tabs prüfen; Konflikte sichtbar machen statt Daten still zu überschreiben.
+- [ ] Fehlerpfade mit Unit-/Behavior-/Desktop-/Mobile-Regressionen und vollständiger CI absichern.
 
 ## Planungszyklus
 
