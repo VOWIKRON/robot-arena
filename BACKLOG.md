@@ -7,7 +7,7 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 **Phase:** Turnier-UI-Grundgerüst  
 **Aktuelle stabile Version:** 0.1.54 (Publish #40111747415 am 24.10.2026 verifiziert)
 **Nächstes Ziel:** NEXT-56 · Deterministische Turnierausführung (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit bestätigtem Release v0.1.54 getestet, nicht veröffentlicht:** 0 Aufgaben; NEXT-56 implementiert, CI-Verifikation läuft. Die zuvor offenen 13 Aufgaben wurden mit v0.1.54 veröffentlicht.
+**Kumulativ seit bestätigtem Release v0.1.54 getestet, nicht veröffentlicht:** 1 Aufgabe (NEXT-56); CI #40113922862: 314 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, TypeScript/Build grün. Die zuvor offenen 13 Aufgaben wurden mit v0.1.54 veröffentlicht.
 
 ---
 
@@ -364,10 +364,10 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 
 - **Verifiziert:** Development Tests #40110813524 auf SHA 9f17bc65: 303 Unit-/Behavior-Tests, 64 Desktop-/Mobile-E2E, Typecheck/Build erfolgreich; Sandbox-Isolation, 375px, Escape/Fokus und ungültige Eingaben geprüft.
 
-### NEXT-56 · Deterministische Turnierausführung (implementiert, abschließende Tests ausstehend)
+### NEXT-56 · Deterministische Turnierausführung (implementiert und vollständig getestet, unveröffentlicht)
 - [x] Runner verarbeitet geplante Paarungen seriell mit `runMatch`/Engine ohne UI-Kopplung; Pause/Fortsetzen/Abbrechen an Matchgrenzen.
 - [x] Kein versteckter RNG; identische Definitionen liefern identische Ergebnisse und Reihenfolge, auch nach Pause.
-- [ ] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust (Testfälle implementiert; CI-Ergebnis ausstehend).
+- [x] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust (CI #40113922862 grün: 314 Unit/Behavior, 64 Desktop/Mobile).
 
 ### NEXT-57 · K.-o.-Bracket
 - [ ] Single-Elimination für 2–16 Teilnehmer mit dokumentierter Bye-Regel für Nicht-Zweierpotenzen; keine doppelte Teilnahme pro Runde.
