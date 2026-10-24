@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 
 test('NEXT-46 replay export/import is keyboard accessible and does not change the match', async ({ page }) => {
@@ -21,7 +22,9 @@ test('NEXT-46 replay export/import is keyboard accessible and does not change th
   expect(await page.locator('#status').innerText()).toBe(tickBefore);
   expect(await page.getByRole('progressbar', { name: 'Energie Roboter A' }).getAttribute('aria-valuenow')).toBe(energyBefore);
 
-  await page.locator('#replay-file').setInputFiles(await download.path());
+  await page.locator('#replay-file').setInputFiles({
+    name: download.suggestedFilename(), mimeType: 'application/json', buffer: await readFile(await download.path())
+  });
   await expect(page.locator('#replay-feedback')).toContainText('Replay geprüft: Seed 4711, 1 Ticks');
   expect(await page.locator('#status').innerText()).toBe(tickBefore);
   await page.getByRole('button', { name: 'Replay importieren' }).focus();
