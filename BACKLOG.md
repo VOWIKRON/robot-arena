@@ -6,8 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-51 · Replay-Refactoring und Turnierplanung (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50 (8 Aufgaben).
+**Nächstes Ziel:** NEXT-54 · Turnierauswertung (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50, NEXT-51, NEXT-52, NEXT-53 (11 Aufgaben).
 
 ---
 
@@ -332,24 +332,24 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Maximalgröße, beschädigte JSON-Daten, fehlende Frames und Desktop-/Mobile-E2E abgesichert.
 - [x] Referenz-Snapshots, stabile Hash-Vergleiche und Performance der 48-Fälle-Suite im vollständigen CI-Lauf geprüft; Development Tests #40101113261: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-51 · Replay-Refactoring und Turnierplanung (in Prüfung)
+### NEXT-51 · Replay-Refactoring und Turnierplanung (erledigt, unveröffentlicht)
 - [x] Gemeinsames `deepFreeze` in `src/engine/immutable.ts` extrahiert; Recorder-Export für Kompatibilität beibehalten; Replay-Format und Zustandsrekonstruktion importieren direkt aus dem reinen Modul.
 - [x] Charakterisierungstests für verschachtelte Event-/Zustands-Snapshots, referenztreue Rückgabe, Primitivwerte und bereits eingefrorene Werte ergänzt.
-- [ ] Vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests des finalen Entwicklungsstands erfolgreich prüfen; erst danach NEXT-51 als abgeschlossen zählen.
+- [x] Vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests erfolgreich: Development Tests #40105284320 (gemeinsamer Immutable-Helper), anschließend #40105438397 und #40105486356.
 - [x] Turnier-NEXT-52 bis NEXT-59 mit Datenmodell, Seeds, Round-Robin, Auswertung, UI, K.-o., Persistenz und E2E-Abnahmen konkret geplant.
 
-### NEXT-52 · Turnierdatenmodell und Validierung
-- [ ] Reines Modul `src/engine/tournament-model.ts`: Teilnehmer mit stabiler eindeutiger ID und validierter RobotDefinition, Turnier-ID, `format` (round-robin/knockout), `baseSeed` und `maxTicks`.
-- [ ] 2–16 Teilnehmer erzwingen; doppelte IDs, ungültige Definitionen, Nicht-Finite-Werte, negative/unsichere Seeds und leere Namen mit verständlichen Fehlern ablehnen.
-- [ ] Eingaben niemals mutieren; serialisierbare, versionierte Turnierdefinition mit deterministischem JSON-Roundtrip.
-- [ ] Unit-/Behavior-Tests: Grenzen 1/2/16/17, Duplikate, Invalid-Inputs, Deep-Copy, Wiederholbarkeit.
+### NEXT-52 · Turnierdatenmodell und Validierung (erledigt, unveröffentlicht)
+- [x] Reines Modul `src/engine/tournament-model.ts`: Teilnehmer mit stabiler eindeutiger ID und validierter RobotDefinition, Turnier-ID, `format` (round-robin/knockout), `baseSeed` und `maxTicks`.
+- [x] 2–16 Teilnehmer erzwingen; doppelte IDs, ungültige Definitionen, Nicht-Finite-Werte, negative/unsichere Seeds und leere Namen mit verständlichen Fehlern ablehnen.
+- [x] Eingaben niemals mutieren; serialisierbare, versionierte Turnierdefinition mit deterministischem JSON-Roundtrip.
+- [x] Unit-/Behavior-Tests: Grenzen 1/2/16/17, Duplikate, Invalid-Inputs, Deep-Copy, Wiederholbarkeit.
 
-### NEXT-53 · Deterministischer Round-Robin-Spielplan
-- [ ] Paarungen für 2–16 Teilnehmer genau einmal pro ungeordnetem Paar erzeugen: `n*(n-1)/2`; keine Selbstpaarungen.
-- [ ] Paarungsreihenfolge und Seeds allein aus Turnierdefinition und Matchindex ableiten, ohne globalen RNG; unabhängig von UI-/Ausführungsreihenfolge.
-- [ ] Gerade/ungerade Teilnehmerzahl, 2/3/4/16 Teilnehmer und Seed-Grenzen testen; Snapshot-Digests für feste Referenzturniere.
+### NEXT-53 · Deterministischer Round-Robin-Spielplan (erledigt, unveröffentlicht)
+- [x] Paarungen für 2–16 Teilnehmer genau einmal pro ungeordnetem Paar erzeugen: `n*(n-1)/2`; keine Selbstpaarungen.
+- [x] Paarungsreihenfolge und Seeds allein aus Turnierdefinition und Matchindex ableiten, ohne globalen RNG; unabhängig von UI-/Ausführungsreihenfolge.
+- [x] Gerade/ungerade Teilnehmerzahl, 2/3/4/16 Teilnehmer und Seed-Grenzen testen; Snapshot-Digests für feste Referenzturniere.
 
-### NEXT-54 · Turnierauswertung und Rangfolge
+### NEXT-54 · Turnierauswertung und Rangfolge (nächster Schritt)
 - [ ] Ergebnisse als unveränderliche Datensätze (Teilnehmer-IDs, Seed, Gewinner/Unentschieden, Ticks, Reststruktur) erfassen; doppelte Match-IDs ablehnen.
 - [ ] Tabelle aus Ergebnissen berechnen: Spiele, Siege, Unentschieden, Niederlagen, Punkte 3/1/0, Struktur-Differenz.
 - [ ] Gleichstand deterministisch nach Punkten, Struktur-Differenz und stabiler Teilnehmer-ID auflösen; unvollständige Turniere anzeigen.
@@ -381,7 +381,8 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [ ] Engine/Runner/UI entkoppeln, Charakterisierungstests vor Refactoring ergänzen, danach gesamte Testmatrix erneut ausführen.
 - [ ] Folgende 5–10 NEXT-Aufgaben anhand Test- und Nutzerfeedback detailliert planen.
 
-## Planungszyklus
+**Qualitätsnachweise für NEXT-52 und NEXT-53:** Development Tests #40105438397: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün; #40105486356: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün. Beide unveröffentlicht.
+\n## Planungszyklus
 
 - Nach spätestens 10 konkreten NEXT-Schritten oder sobald weniger als 5 konkrete NEXT-Schritte übrig sind, wird ein Planungszyklus fällig.
 - Der Planungszyklus erzeugt wieder mindestens 5 und höchstens 10 kleine, eindeutig abschließbare NEXT-Schritte aus dem nächsten priorisierten Entwicklungsblock.
