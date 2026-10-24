@@ -6,8 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-47 · Replay-Player (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46 (4 Aufgaben).
+**Nächstes Ziel:** NEXT-48 · Replay-Zeitleiste (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47 (5 Aufgaben).
 
 ---
 
@@ -311,11 +311,11 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E als Quellcode ergänzt.
 - [x] Development Tests #40092321506 auf Commit 556a2858: Typecheck, Build, **262 Unit-/Verhaltenstests und 50 Desktop-/Mobile-E2E erfolgreich**; NEXT-46 implementiert und getestet, unveröffentlicht.
 
-### NEXT-47 · Replay-Player (implementiert, CI-Abnahme ausstehend)
+### NEXT-47 · Replay-Player (implementiert und getestet, unveröffentlicht)
 - [x] Ereignisbasierte Player-Zustandsmaschine mit Play/Pause/Einzelschritt/Ende aus validierten Frames; keine RNG-/Simulationsaufrufe.
 - [x] Importierte Aufzeichnung und aktuellen Kampf im eigenen Replay-Dialog mit Tick- und Ereignisanzeige abspielen; Live-Kampf bleibt unverändert.
-- [ ] Vollständige GitHub-Abnahme: 0-Tick, Sofortsieg, 3600 Ticks, Pause/Ende, erneutes Öffnen, importierte JSON-Datei sowie Desktop-/Mobile-E2E grün verifizieren.
-- [ ] Erst danach NEXT-47 als abgeschlossen und kumulativ unveröffentlicht zählen; NEXT-48 übernimmt Zustandsrekonstruktion und grafische Zeitleiste.
+- [x] GitHub Development Tests #40096436278 (SHA 1b7413a): 268 Unit-/Behavior-/Regressionstests und 52 Desktop-/Mobile-E2E, Typecheck/Build grün; 0-Tick, Sofortsieg, 3600 Ticks, Pause/Ende, erneutes Öffnen und importierte JSON-Datei geprüft.
+- [x] NEXT-47 als abgeschlossen und kumulativ unveröffentlicht gezählt; NEXT-48 übernimmt Zustandsrekonstruktion und grafische Zeitleiste.
 
 ### NEXT-48 · Replay-Zeitleiste
 - [ ] Seek auf Tick 0, Mitte, Ende und rückwärts anbieten, deterministische Zustandsrekonstruktion ohne neue Simulation.
