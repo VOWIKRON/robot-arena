@@ -35,3 +35,12 @@
 .replay-damage{fill:none;stroke:#ff6677;stroke-width:1}
 .replay-stats{line-height:1.55;overflow-wrap:anywhere;font-size:.88rem;color:#d4e3f7}
 @media(max-width:650px){.replay-arena{aspect-ratio:1.5/1;min-height:130px}.replay-stats{font-size:.8rem}}
+
+/* NEXT-49: readable, accessible per-robot replay statistics. */
+.replay-analysis{margin-top:14px;padding:12px;border:1px solid #40516f;border-radius:12px;background:#0a1428}
+.replay-analysis[hidden]{display:none}
+.replay-analysis h3{margin:0 0 10px;font-size:1rem}
+.replay-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.replay-stat-side{border:1px solid #2d3954;border-radius:9px;padding:10px;line-height:1.65;overflow-wrap:anywhere}
+#replay-result{margin-bottom:0;font-weight:700}
+@media(max-width:650px){.replay-stat-grid{grid-template-columns:1fr}}
