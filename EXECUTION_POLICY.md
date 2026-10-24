@@ -1,16 +1,23 @@
-# Oberste Ausführungspriorität – Aufgaben vollständig erledigen
+# Oberste Regel: Kein Arbeitsabbruch ohne Erfolg oder nachgewiesene Blockade
 
-**Verbindliche Arbeitsanweisung für alle Entwicklungsrunden und Automationen in Robot Arena.**
+**Diese Regel gilt für jeden beauftragten Robot-Arena-Entwicklungslauf.**
 
-1. **Ausführen statt Zwischenberichte:** Eine vom Nutzer beauftragte Aufgabe wird vollständig und ohne künstliche Unterbrechung bis zur Abnahme bearbeitet. Keine freiwillige Beendigung nach Teil-Commits, einzelnen Tests oder Zwischenständen. Fehlende Zeit oder Kapazität darf nicht als Erfolg dargestellt werden.
-2. **Nur zwei zulässige Abschlussarten:**
-   - **ERFOLG:** Alle beauftragten Akzeptanzkriterien implementiert, dokumentiert, getestet und die Schreibresultate im GitHub-Branch verifiziert; Tests erfolgreich. Erst dann als abgeschlossen melden.
-   - **BLOCKADE / NICHT LÖSBAR:** Wenn tatsächliche Hindernisse eine vollständige Umsetzung verhindern, konkret den Grund, technische Analyse, reproduzierbare Belege, bisherige Versuche, verbleibende Schritte und benötigte Entscheidung melden. Nicht stillschweigend unvollständig stoppen oder Erfolg behaupten.
-3. **Fehler zuerst:** Fehlgeschlagene Tests, Regressionen und Sicherheitsbefunde vor neuen Features beheben. Danach komplette relevante Unit-, Behavior-, deterministische Simulations-, Desktop- und Mobile-Testmatrix wiederholen.
-4. **Vollständigkeit vor Tempo:** Alle expliziten Unterpunkte des NEXT-/Backlog-Eintrags erfüllen; Teilergebnisse nicht als fertig kennzeichnen. Bei notwendigem Refactoring Charakterisierungstests vor und Regressionstests danach.
-5. **Sicherer GitHub-Ablauf:** Tatsächlichen Branch-/PR-/Commit-/CI-Stand vorab prüfen, Änderungen seriell auf dem Entwicklungsbranch vornehmen, Schreibresultate und CI nach jedem Abschluss verifizieren. PROJECT_STATE.md, BACKLOG.md, CHANGELOG.md und RUN_STATE.md konsistent halten.
-6. **Kein Publishing:** Keine Homepage-Änderung, kein publish.php, kein Release- oder Publishing-Workflow, kein Merge nach main bei Deployment-Risiko. Veröffentlichung ausschließlich auf ausdrücklichen manuellen Nutzerauftrag.
-7. **Berichtspflicht:** Nach jedem Lauf kumulativ alle seit dem letzten bestätigten Release vollständig getesteten und noch nicht veröffentlichten NEXT-Aufgaben mit Nummer, Funktion, Teststatus und eindeutiger Kennzeichnung neuer Abschlüsse ausgeben. Ungeklärten Veröffentlichungsstatus ausdrücklich markieren.
-8. **Priorität:** Diese Ausführungsregel hat für die Arbeitsweise Vorrang vor Bequemlichkeit, Statusberichten und dem Start neuer Backlogpunkte. Sicherheits-, System- und Berechtigungsgrenzen bleiben unberührt.
+## Zwingende Abschlussbedingung
 
-**Leitregel: Entweder vollständig liefern und Erfolg nachweisen – oder eine echte Blockade mit Ursachenanalyse melden. Niemals Teilerledigung als Endergebnis verkaufen.**
+**DIE ARBEIT DARF NICHT BEENDET WERDEN, SOLANGE NICHT ENTWEDER (A) DIE GESAMTE BEAUFTRAGTE AUFGABE ERFOLGREICH ABGESCHLOSSEN UND VERIFIZIERT IST ODER (B) EIN TATSÄCHLICHER, KONKRET NACHGEWIESENER HINDERUNGSGRUND DIE FORTSETZUNG UNMÖGLICH MACHT.**
+
+- **A – Erfolg:** Sämtliche Akzeptanzkriterien erledigt, Änderungen auf GitHub geschrieben und geprüft, relevante Unit-/Behavior-/Regressions-/Simulations-/Desktop-/Mobiltests grün. Erst danach Erfolg melden und den Lauf beenden.
+- **B – Echter Hinderungsgrund:** Nur wenn eine konkrete technische, rechtliche, sicherheitsbezogene oder Berechtigungsblockade trotz sinnvoller Diagnose und Behebungsversuche eine Fortsetzung tatsächlich verhindert. Exakte Fehlermeldung, Ursache, Versuche, Belege und erforderliche Entblockung nennen. Erst dann darf der Lauf ohne Erfolg enden.
+
+**Kein dritter Abschlussweg.** Insbesondere sind Zeitaufwand, viele Toolaufrufe, ein Zwischenstand, teilweise erledigte Tasks, noch laufende CI, unvollständige Dokumentation, ein misslungener Test oder ein offener Backlogpunkt **kein Grund zum Beenden**. Bei fehlgeschlagenen Tests Fehler beheben und erneut prüfen. Bei ausstehender CI deren Abschluss abwarten. Bei unvollständigen Akzeptanzkriterien weiterarbeiten.
+
+## Ausführung
+
+1. Nutzerauftrag und Akzeptanzkriterien vorab vollständig erfassen; Fehler und offene Punkte zuerst.
+2. Tatsächlichen GitHub-/Branch-/PR-/Commit-/CI-Stand prüfen, seriell entwickeln, nach jedem Schreibvorgang verifizieren.
+3. Ohne unnötige Rückfragen implementieren, testen, Fehler korrigieren, refactoren, erneut testen, bis A oder B erfüllt ist.
+4. PROJECT_STATE.md, BACKLOG.md, CHANGELOG.md und RUN_STATE.md sowie relevante Quellseiten konsistent aktualisieren; kumulativ alle seit dem letzten bestätigten Release fertig getesteten, aber unveröffentlichten NEXT-Tasks dokumentieren.
+5. **Kein Publishing, kein Deployment, kein publish.php, kein Merge nach main mit Deployment-Risiko.** Nur ausdrücklicher Nutzerauftrag erlaubt Veröffentlichung.
+6. Der Abschlussbericht nennt entweder belegten Gesamterfolg samt Test-/Commitstatus oder eine konkrete, analysierte, tatsächlich unüberwindbare Blockade. **Keine Abschlussmeldung über bloße Fortschritte.**
+
+**Oberste operative Priorität: NICHT AUFHÖREN, BEVOR ERFOLG ODER ECHTE BLOCKADE FESTSTEHT.** Sicherheits- und Systemgrenzen bleiben gültig.
