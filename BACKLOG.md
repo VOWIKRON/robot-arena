@@ -1,3 +1,10 @@
+## Entwicklungsstand · 25.10.2026, 02:00 MESZ · P0 NEXT-78 Testhärtung (offen)
+- [x] Acht Rand-/Eckfälle nun gegen wirkliche Fluchtbewegung und anschließenden Kontakt mit der Arenagrenze abgesichert (Regressionen im Code ergänzt, **noch nicht CI-verifiziert**).
+- [ ] Vollständige GitHub-CI auf aktuellem Head (Unit, Behavior, Regression, deterministische Simulation, Typecheck/Build, Desktop/Mobil, Audit und Reproduzierbarkeit) erfolgreich nachweisen; bei Fehlschlag korrigieren und erneut testen.
+- [ ] NEXT-78 erst nach erfolgreicher CI und überprüften Browser-Randfällen als abgeschlossen markieren.
+- [ ] Danach NEXT-79a UX-Baseline und 79b–79e sequenziert angehen; NEXT-69 ff. erhalten.
+- **Kumulativ 5 bestätigte, nicht veröffentlichte NEXT-Tasks:** 63, 64, 66, 67, 68 (jeweils ältere CI grün). Letztes verifiziertes Live-Release v0.1.55. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Entwicklungsstand · 25.10.2026, 01:00 MESZ · NICHT VERÖFFENTLICHT
 - **NEXT-78 P0 (in Arbeit, CI-Abnahme ausstehend):** Die Engine begrenzt Weltkoordinaten bereits auf 0..100; der 48px-Raptor bzw. 54px-Titan samt Energie-/Strukturbalken wird bislang jedoch am Spielfeldrand abgeschnitten. CSS-Viewport-Clamp für komplette Roboter/HUD implementiert, Rohkoordinaten und deterministische Engine unverändert. Neue feste Engine-Grenztests und Desktop-/Mobile-Playwright-Tests für acht Rand-/Eckfälle sowie reale Defensive hinzugefügt. **Nicht als abgeschlossen zählen, bevor die aktuelle vollständige CI grün ist.**
 - **NEXT-79 P1 (Analyse begonnen, Umsetzung offen):** Quellcode-Audit in `USABILITY_AUDIT.md` mit priorisierten Bedienproblemen und testbaren Folgeschritten 79a–79e; keine UX-Änderung behauptet.
