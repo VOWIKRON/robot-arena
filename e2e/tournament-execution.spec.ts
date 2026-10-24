@@ -181,3 +181,41 @@ test('NEXT-66: match details are accurate, pending values absent and Unicode/HTM
   await page.getByRole('button', { name: 'Turnier schließen' }).click();
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxStyle);
 });
+
+test('NEXT-67: verified tournament replay is isolated, keyboard-accessible and survives archive import', async ({ page }) => {
+  await page.goto('/');
+  const before = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-ticks').fill('1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  const first = page.locator('#tournament-pairings li').first();
+  await expect(first.getByRole('button', { name: /Replay abspielen/ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  const saved = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern' }).click();
+  const archive = await saved;
+  await page.locator('#tournament-file').setInputFiles(await archive.path());
+  await expect(first.getByRole('button', { name: /Replay abspielen/ })).toBeVisible();
+  await first.getByRole('button', { name: /Replay abspielen/ }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  await expect(page.locator('#replay-feedback')).toContainText('Turnierkampf verifiziert');
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(before);
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+});
+
+test('NEXT-67: replay action works in a narrow mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 780 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await page.locator('#tournament-pairings li').first().getByRole('button', { name: /Replay abspielen/ }).click();
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  await expect(page.locator('#replay-progress')).toContainText('0 /');
+});
