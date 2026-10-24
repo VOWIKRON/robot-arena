@@ -536,9 +536,9 @@ function buildTournamentDefinition(): TournamentDefinition {
     baseSeed: seed, maxTicks: ticks, participants
   });
 }
-function renderTournamentPreview(): void {
+function renderTournamentPreview(definitionOverride?: TournamentDefinition): void {
   try {
-    const definition = buildTournamentDefinition();
+    const definition = definitionOverride ?? buildTournamentDefinition();
     const fixtures = createRoundRobinSchedule(definition);
     const result = computeRoundRobinStandings(definition, []);
     const names = new Map(definition.participants.map(robot => [robot.id, robot.name]));
@@ -633,7 +633,7 @@ el('tournament-file').addEventListener('change', async () => {
     el<HTMLInputElement>('tournament-seed').value = String(loaded.definition.baseSeed);
     el<HTMLInputElement>('tournament-ticks').value = String(loaded.definition.maxTicks);
     loaded.definition.participants.forEach((p, i) => { el<HTMLInputElement>(`tournament-name-${i + 1}`).value = p.name; });
-    renderTournamentPreview();
+    renderTournamentPreview(loaded.definition);
     tournamentRun = loaded;
     tournamentStatus();
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Importfehler'; }

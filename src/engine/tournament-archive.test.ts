@@ -21,6 +21,11 @@ describe('NEXT-58 tournament archive', () => {
     expect(next.results[0]).toEqual(first.results[0]);
     expect(finishTournamentRun(next)).toEqual(finishTournamentRun(first));
   });
+  it('roundtrips a completed tournament without changing results or winner ordering', () => {
+    const complete = finishTournamentRun(createTournamentRun(definition));
+    expect(importTournamentRun(exportTournamentRun(complete))).toEqual(complete);
+    expect(continueImportedTournament(complete)).toEqual(complete);
+  });
   it('rejects corrupt progress, duplicated match and oversized archives', () => {
     const run = advanceTournamentRun(createTournamentRun(definition));
     const original = JSON.parse(exportTournamentRun(run));
