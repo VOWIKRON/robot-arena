@@ -1,3 +1,11 @@
+## Neuer Entwicklungsstand · 24.10.2026, 18:56 Europe/Berlin
+- **Release v0.1.54 erfolgreich veröffentlicht und von GitHub Actions verifiziert:** Publish #40111747415, Commit 362f8bdb (Upload, Live-Checks, Deployment-Status grün). Die 13 NEXT-Aufgaben 40 und 44–55 gehören nun zum veröffentlichten Basisstand.
+- Neue unveröffentlichte Entwicklung auf Branch automation/next-56-tournament-runner-unpublished, Draft-PR #47, ohne Merge/Deployment.
+- NEXT-56 implementiert (Runner + Tests), CI-Verifikation ausstehend. Serienausführung pro Match, immutable Snapshots, Pause/Resume/Cancel, deterministische Seeds.
+- Ab NEXT-56 zählt der neue kumulative unveröffentlichte Stand; vor erfolgreichem CI-Abschluss noch **0 bestätigte Aufgaben**.
+- Nach NEXT-56 folgen NEXT-57 K.-o.-Bracket, NEXT-58 Turnier-Import/-Export, NEXT-59 Browser-Integration und E2E.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unveröffentlichte Entwicklungsfortsetzung (24.10.2026, 18:12 Europe/Berlin)
 - NEXT-55 abgeschlossen: unabhängiger responsiver Turnierdialog, 2–16 benennbare Teilnehmer mit Raptor/Titan-Presets, Seed/Ticklimit-Validierung, Round-Robin-Paarungen, Fortschritt und Tabelle. Noch keine automatische Turnierausführung.
 - Browser-Regression für mehrdeutiges Seed-Label behoben; TypeScript-Tupeltyp korrigiert; vollständiger Testlauf #40110813524 auf SHA 9f17bc65 grün (303 Unit/Behavior, 64 Desktop/Mobile, Typecheck/Build).
