@@ -9,6 +9,8 @@ export type FairnessAudit = Readonly<{
   asRobotA: Readonly<Record<string, number>>;
   asRobotB: Readonly<Record<string, number>>;
   seedDigest: string;
+  /** Max |A starts - B starts| across all participants. */
+  maxSideImbalance: number;
 }>;
 /** Pure seed/side audit. Never consumes the simulation RNG. */
 export function auditTournamentFairness(input: TournamentDefinition): FairnessAudit {
@@ -27,15 +29,15 @@ export function auditTournamentFairness(input: TournamentDefinition): FairnessAu
   return deepFreeze({
     participants: definition.participants.length, matches: fixtures.length,
     appearances, asRobotA, asRobotB,
-    seedDigest: fixtures.map(f => f.seed).join(',')
+    seedDigest: fixtures.map(f => f.seed).join(','),
+    maxSideImbalance: Math.max(...definition.participants.map(p => Math.abs(asRobotA[p.id]! - asRobotB[p.id]!)))
   });
 }
-/** Optional alternating sides: preserves the legacy fixture and seed order when disabled. */
-export function createFairSideSchedule(input: TournamentDefinition, alternateSides = false) {
-  const fixtures = createRoundRobinSchedule(input);
-  if (!alternateSides) return fixtures;
-  return deepFreeze(fixtures.map((f, index) => index % 2 === 0 ? f : {
-    ...f, robotAId: f.robotBId, robotBId: f.robotAId
+/** Optional balanced sides: legacy fixture order and seeds stay byte-identical
+ * when disabled; enabled fixtures are exactly those executed by the runner. */
+export function createFairSideSchedule(input: TournamentDefinition, balanced = false) {
+  return createRoundRobinSchedule(createTournamentDefinition({
+    ...input, sideAssignment: balanced ? 'balanced' : undefined
   }));
 }
 
@@ -59,5 +61,6 @@ export function auditSideBias(input: TournamentDefinition) {
     }
   }
   return deepFreeze({ ...counts, sideWinDifference: counts.sideAWins - counts.sideBWins,
-    simulations: fixtures.length * 2 });
+    simulations: fixtures.length * 2,
+    sideBiasRate: Math.abs(counts.sideAWins - counts.sideBWins) / (fixtures.length * 2) });
 }
