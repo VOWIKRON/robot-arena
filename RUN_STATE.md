@@ -1,5 +1,13 @@
 # RUN_STATE
 
+## Vollständiger CI-Nachweis – 24.10.2026
+- Commit e4449845: GitHub CI #40118045416 ERFOLGREICH; TypeScript, Build, 314 Unit-/Behavior-/Regressionstests, 66 Desktop-/Mobile-E2E bestanden.
+- Behobene Regression: NEXT-55 erwartete bisherigen Fortschrittstext „0 / 1 Kämpfe abgeschlossen“; neue Laufstatusanzeige bewahrt diese Formulierung.
+- Kumulativ seit v0.1.54 unveröffentlicht: NEXT-56, NEXT-57 sowie NEXT-58 (Round-Robin-Archiv und UI), NEXT-59 (16-Teilnehmer-Integrations- und Browser-E2E), NEXT-60 (Seed-/A/B-Audit). K.-o.-UI und vollständige Fairness-Simulation sind weitere Ausbaustufen.
+- Sicherheitsgate: npm install meldet 3 Abhängigkeitsschwachstellen (1 moderate, 2 critical); genaue Paket-/Exploit-Bewertung und Abhilfe noch ausstehend. Deshalb **Publish-Reife nicht freigegeben**, trotz grüner funktionaler CI.
+- NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.
+
+
 ## Entwicklungsfortsetzung – Turnieroberfläche und Browser-Regression
 - NEXT-58: UI-Buttons für Nächster Kampf, Pause/Fortsetzen/Abbrechen, JSON-Export und Import mit Ergebnisfortschritt ergänzt.
 - NEXT-59: Desktop-/Mobile-Playwright-Test für Turnierdurchlauf, Pause/Fortsetzen, Download/Upload und Tabellenstand ergänzt.
