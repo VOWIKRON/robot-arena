@@ -1,5 +1,17 @@
 # RUN_STATE
 
+## Entwicklungsfortsetzung 24.10.2026 – NEXT-57 bis NEXT-60
+- Letzter bestätigter Publish: v0.1.54. main und Homepage bleiben unverändert; Draft-PR #47.
+- NEXT-56: bestätigt getestet, unveröffentlicht.
+- NEXT-57: deterministisches K.-o.-Bracket, Freilose und Tie-Break; CI #40116730325 erfolgreich.
+- NEXT-58: Turnierarchiv mit Schema-/Größen-/Fortschrittsprüfung und Wiederaufnahme implementiert; CI-Gesamtprüfung noch offen.
+- NEXT-59: deterministische 16-Teilnehmer-/120-Matches-Integrationsregression implementiert; Browser-E2E und Statistik-UI noch offen.
+- NEXT-60: Fairness-Audit mit A/B-Verteilung, Seed-Prüfung und optionalem Seitenwechsel implementiert; CI-Gesamtprüfung noch offen.
+- Vorübergehende TypeScript-Fehler (unbenutzte Imports) korrigiert. Veröffentlichung erst nach allen grünen Gates und ausdrücklicher Nutzerfreigabe.
+- Kumulativ sicher verifiziert unveröffentlicht: NEXT-56, NEXT-57. NEXT-58–60 erst nach grünem CI als abgeschlossen markieren.
+- NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.
+
+
 ## Entwicklungsrunde · 24.10.2026, 18:56 Europe/Berlin (NEUER RELEASE-BASISSTAND)
 - **Letzter verifizierter Publish: v0.1.54**. GitHub Publish #40111747415 auf main-Commit 362f8bdb10524f216b3be66e3d9dd1d120e26d46: Upload, Online-Verifikation und Deployment-Status erfolgreich (24.10.2026, 18:29 Europe/Berlin).
 - Der alte Stand „13 unveröffentlichte Aufgaben seit v0.1.53“ ist HISTORISCH und wurde durch die erfolgreiche Veröffentlichung abgelöst; NEXT-40 und NEXT-44 bis NEXT-55 gehören zum veröffentlichten Release v0.1.54.
