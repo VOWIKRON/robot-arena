@@ -1,5 +1,5 @@
 import type { MatchRecording } from './recorder';
-import { deepFreeze } from './recorder';
+import { deepFreeze } from './immutable';
 
 export type ReplayDocument = MatchRecording & Readonly<{
   schemaVersion: 1;
