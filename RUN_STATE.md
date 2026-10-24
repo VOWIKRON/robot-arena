@@ -29,3 +29,9 @@
 2. Im nächsten Stundenlauf NEXT-46 Replay-Export/Import beginnen, Testfälle zuerst; höchstens drei weitere NEXT-Abschlüsse.
 3. Rolling Backlog, Testsuite, Changelog und öffentliche Quellseiten synchron halten, ohne Veröffentlichung.
 4. **Kein Publish, kein Deployment, kein Release-Commit und kein Merge auf main.**
+
+## Freigabekandidat 0.1.54 (24.10.2026)
+- NEXT-40, NEXT-44, NEXT-45: Implementierung vorhanden, frühere Entwicklungs-Tests grün.
+- package.json, CHANGELOG.md und öffentliche Release Notes/Backlog/Testsuite auf v0.1.54 vorbereitet.
+- PR #46 bleibt Draft; finale Tests für neuen Head und main noch NICHT bestätigt.
+- Veröffentlichung und Deployment NICHT erfolgt; keine Merge-Freigabe ohne finalen Testnachweis.
