@@ -13,6 +13,7 @@ import { createTournamentDefinition, type TournamentDefinition } from './engine/
 import { createRoundRobinSchedule } from './engine/tournament-schedule';
 import { computeRoundRobinStandings } from './engine/tournament-standings';
 import { tournamentMatchDetails } from './engine/tournament-details';
+import { replayTournamentMatch } from './engine/tournament-replay';
 import { runKnockoutBracket } from './engine/tournament-knockout';
 import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
@@ -479,8 +480,35 @@ function renderTournamentMatchDetails(): void {
     // textContent deliberately prevents participant names from being interpreted as markup.
     item.textContent = `${match.robotAName} gegen ${match.robotBName} · Seed ${match.seed} · ${outcome}`;
     item.dataset.matchId = match.matchId;
+    if (match.status === 'completed') {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'tournament-replay-button';
+      button.textContent = 'Replay abspielen';
+      button.setAttribute('aria-label', 'Replay abspielen: ' + match.robotAName + ' gegen ' + match.robotBName);
+      button.dataset.replayMatchId = match.matchId;
+      item.append(' ', button);
+    }
   });
 }
+/** Delegated event: re-rendering a fixture never leaves stale replay handlers. */
+el('tournament-pairings').addEventListener('click', event => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const button = target.closest<HTMLButtonElement>('button[data-replay-match-id]');
+  if (!button) return;
+  try {
+    if (!tournamentRun) throw new Error('Kein Turnier geladen');
+    const recording = replayTournamentMatch(tournamentRun, button.dataset.replayMatchId ?? '');
+    stopTournamentAuto();
+    loadReplay(recording);
+    el('replay-feedback').textContent = 'Turnierkampf verifiziert und isoliert geladen.';
+    el<HTMLDialogElement>('tournament-dialog').close();
+    el<HTMLDialogElement>('replay-dialog').showModal();
+  } catch (error) {
+    el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Replay konnte nicht geladen werden';
+  }
+});
 function tournamentStatus(): void {
   if (!tournamentRun) return;
   const result = computeRoundRobinStandings(tournamentRun.definition, tournamentRun.results);
