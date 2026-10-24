@@ -39,13 +39,13 @@
 - NEXT-48 bis NEXT-55: geplant, nicht implementiert.
 
 ## Nächste Aktion
-1. Development Tests für finalen Branch-Head prüfen, insbesondere Backlog-HTML-Smoke nach Aktualisierung auf NEXT-47.
-2. Im nächsten Stundenlauf NEXT-47 Replay-Player beginnen, Testfälle zuerst; höchstens drei weitere NEXT-Abschlüsse.
+1. Development Tests für finalen Dokumentations-Head prüfen; NEXT-47-Code-Head #40096436278 ist grün.
+2. Im nächsten Stundenlauf NEXT-48 Replay-Zeitleiste beginnen, Testfälle zuerst; höchstens drei weitere NEXT-Abschlüsse.
 3. Rolling Backlog, Testsuite, Changelog und öffentliche Quellseiten synchron halten, ohne Veröffentlichung.
 4. **Kein Publish, kein Deployment, kein Release-Commit und kein Merge auf main.**
 
 ## Freigabekandidat 0.1.54 (24.10.2026)
-- NEXT-40, NEXT-44, NEXT-45: Implementierung vorhanden, frühere Entwicklungs-Tests grün.
-- package.json, CHANGELOG.md und öffentliche Release Notes/Backlog/Testsuite auf v0.1.54 vorbereitet.
+- NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47: Implementierung vorhanden und Development Tests grün; alle fünf unveröffentlicht.
+- package.json, CHANGELOG.md und öffentliche Release Notes/Backlog/Testsuite auf v0.1.54 vorbereitet, einschließlich der noch unveröffentlichten NEXT-46 und NEXT-47.
 - PR #46 bleibt Draft; finale Tests für neuen Head und main noch NICHT bestätigt.
 - Veröffentlichung und Deployment NICHT erfolgt; keine Merge-Freigabe ohne finalen Testnachweis.
