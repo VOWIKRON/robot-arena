@@ -63,6 +63,21 @@ describe('NEXT-47 deterministic event-only ReplayPlayer', () => {
     expect(player.outcome).toBe('victory');
   });
 
+
+  it('plays a 3600-tick timeout without extra events or RNG', () => {
+    const a = { ...RAPTOR, speed: 0, weaponRange: 0, weaponDamage: 0 };
+    const b = { ...TITAN, speed: 0, weaponRange: 0, weaponDamage: 0 };
+    const recording = parseReplay(serializeReplay(recordMatch(a, b, 4711, 3600)));
+    const player = new ReplayPlayer(recording);
+    expect(player.play()).toBe(true);
+    let count = 0;
+    while (player.advance()) count++;
+    expect(count).toBe(3600);
+    expect(player.tick).toBe(3600);
+    expect(player.outcome).toBe('draw');
+    expect(player.advance()).toBe(false);
+  });
+
   it('is deterministic for identical input and never mutates the imported document', () => {
     const recording = document(20);
     const before = JSON.stringify(recording);
