@@ -58,3 +58,35 @@
 #tournament-preview[hidden]{display:none}
 #tournament-preview h3{margin:18px 0 8px}
 @media(max-width:650px){.tournament-options{grid-template-columns:1fr}.tournament-participant{grid-template-columns:minmax(0,1fr)}.tournament-participants{max-height:32vh}.tournament-table{font-size:.8rem}}
+
+/* NEXT-63: visible keyboard focus, readable table scrolling and 44px touch targets. */
+#tournament-dialog :is(button,input,select,[tabindex]):focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: 3px;
+}
+#tournament-dialog :is(button,input,select) { min-height: 44px; }
+#tournament-dialog :is(.tournament-table-scroll,.tournament-pairings) { scroll-behavior: auto; }
+#tournament-dialog .tournament-pairings:focus-visible,
+#tournament-dialog .tournament-table-scroll:focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: -3px;
+}
+@media (max-width: 375px) {
+  #tournament-dialog .controls button { flex: 1 1 100%; }
+  #tournament-dialog .config-dialog-card { padding: 12px; }
+}
+
+/* NEXT-67: accessible replay affordance, isolated from the sandbox controls. */
+.tournament-replay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  margin: 6px 0 4px 10px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tournament-replay-button:focus-visible { outline: 3px solid #f8d35a; outline-offset: 2px; }

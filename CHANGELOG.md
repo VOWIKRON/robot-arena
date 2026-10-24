@@ -1,3 +1,35 @@
+## Unreleased · 24.10.2026, 23:00 MESZ · NEXT-67 (nur Entwicklungsbranch)
+- **NEU NEXT-67:** Isoliertes Replay abgeschlossener Round-Robin-Kämpfe aus Seed und eingefrorenen Teilnehmern, exakter Abgleich von Sieger/Ticks/Reststruktur mit archiviertem Ergebnis vor Laden; manipulierte oder ausstehende Kämpfe werden abgewiesen.
+- Reines Engine-Modul `tournament-replay.ts`; Replay-Player wird wiederverwendet, ohne Sandbox oder Turnier-RNG zu berühren. Zugänglicher Button je abgeschlossenem Match, Desktop-/Mobile- und Tastaturbedienung.
+- **Development Tests #40132151611 auf ddd26d15 grün:** 365 Unit-/Behavior-/Regressionstests, 86 Desktop-/Mobile-E2E, TypeScript/Build, npm-Audit und identische Clean-Builds. 1/3600 Ticks, 2/3/16 Teilnehmer, Archiv-Roundtrip, Fehlerfälle. 0 Ticks laut Turniermodell unzulässig.
+- **Kumulativ 11 verifizierte NEXT-Aufgaben seit v0.1.54:** 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67. NEXT-56–62: Veröffentlichungsstatus ungeklärt; NEXT-63/64/66/67: nur Draft-PR #48, nicht veröffentlicht. Nächstes Ziel NEXT-68.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## Unreleased · 24.10.2026, 22:00 MESZ · NEXT-64/66 (nur Draft-PR #48)
+- **NEXT-64:** Reproduzierbares npm-Lockfile, saubere npm-ci-Installationen, Audit-Gate ohne bekannte Advisories und zweimaliger SHA256-identischer Dist-Build bei gleichem Commit.
+- **NEXT-66:** Validierte Paarungsdetails (Seed, Ticks, Gewinner/Remis, Reststruktur) nach jedem Kampf, offene Matches ohne erfundene Ergebnisse, sichere Darstellung von Unicode-/HTML-Namen, Archiv-Roundtrip.
+- **Qualität:** Development Tests #40128110261 auf e23323ef: 29 Testdateien, 358 Unit-/Behavior-/Regressionstests, 82 Desktop-/Mobil-E2E, TypeScript/Build, zweimaliger sauberer npm-ci-Install und byteidentischer Dist-SHA256 (1488f94b…), npm audit 0 bekannte Advisories; vollständig erfolgreich. Match-Details als reines Modul ausgegliedert und UI-Integration anschließend vollständig geprüft.
+- **Kumulativ 10 seit v0.1.54 verifizierte Aufgaben:** NEXT-56–64 und NEXT-66; NEXT-65 war Duplikat. Letzte unabhängig bestätigte Live-Version v0.1.54 (#40111747415). main enthält v0.1.55 (809fe86c), aber kein neuer erfolgreicher Publish-Lauf wurde bestätigt; tatsächlicher Live-Status für NEXT-56–62 bleibt 'Veröffentlichungsstatus ungeklärt'. NEXT-63/64/66 sind ausschließlich auf dem Entwicklungsbranch / Draft-PR #48, sicher NICHT veröffentlicht.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## Entwicklungsrunde 24.10.2026, 21:15 MESZ · NEXT-60, NEXT-62, NEXT-63 (maximal drei)
+**Erfolgreich umgesetzt und getestet:** NEXT-60 (ausgeglichene A/B-Zuordnung im echten Runner, Archiv, Tabelle, 25-%-Biasgrenze und Golden-Digests), NEXT-62 (120-Match-Benchmark, CPU/Heap/Wall, UI-Automatik mit Event-Loop-Yield, Pause/Resume/Cancel), NEXT-63 (Fokus, Screenreader-Status, Kontrast, Touch, Doppelklick und ungültige Konfiguration). Refactoring: Fairness-Spielplan und tatsächliche Runner-Schedule vereinheitlicht; UI-Automatik in eigene Terminierung gekapselt. Nach Refactoring **Development Tests #40124222697 auf 01771371 erfolgreich**: 354 Unit/Behavior/Regression, 80 Desktop/Mobile-E2E, TypeScript/Build und npm audit 0 Befunde. Referenzbenchmark: 16 Teilnehmer/120 Kämpfe, Seed 4711/100 Ticks, 191,5 ms Wall, 233,9 ms CPU, +1,70 MiB Heap auf GitHub-CI (keine Endgerätegarantie).
+
+**WICHTIGE VERÖFFENTLICHUNGSABWEICHUNG:** Während dieses Laufs wurde **PR #47 außerhalb dieses Laufs um 19:09:30 UTC gemergt**, danach auf main **v0.1.55** per Commit **809fe86c** eingetragen. Dieser Lauf hat **weder Merge noch Publish/Deployment ausgelöst**. Die tatsächliche Live-Veröffentlichung von v0.1.55 konnte nicht unabhängig bestätigt werden: **Veröffentlichungsstatus ungeklärt**. Letzte unabhängig bestätigte Live-Version bleibt v0.1.54 (Publish #40111747415). Aktueller Entwicklungsstand nach dem Merge ist ausschließlich **Draft-PR #48**, ohne Merge.
+
+**Kumulativ seit dem letzten unabhängig bestätigten Live-Release v0.1.54: acht vollständig implementierte und getestete NEXT-Aufgaben:**
+- **NEXT-56** · Deterministischer Round-Robin-Runner, Pause/Resume/Cancel. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-57** · K.-o.-Bracket mit Freilosen und Tie-Break. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-58** · Validiertes Turnierarchiv, Import/Export und Wiederaufnahme. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-59** · K.-o.-Browser-E2E, 16-Teilnehmer-Golden-Digests, Refactoring. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-60 – NEU in diesem Lauf verifiziert** · Faire A/B-Zuordnung und Side-Bias-Audit, Runner/Archiv/Tabellenintegration. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-61** · Versionierte Tabellenexporte CSV/JSON mit Formel-Schutz. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-62 – NEU** · Benchmark und nicht blockierende automatische Turnierausführung. **Tests grün**, main v0.1.55, **Veröffentlichungsstatus ungeklärt**.
+- **NEXT-63 – NEU** · Accessibility/Robustheit (375px, Touch, Fokus, Doppelklick, Invalid-Plan). **Tests grün**, **NICHT VERÖFFENTLICHT**, nur Draft-PR #48.
+NEXT-65 ist ein bereits durch NEXT-59 erledigtes Duplikat und wird nicht zusätzlich gezählt. Nächste Aufgabe NEXT-64; detaillierter Rolling Backlog NEXT-66–71.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell** (gilt für den aktuellen unveröffentlichten Entwicklungsstand in Draft-PR #48). Kein publish.php, kein Release-Commit, kein Homepage-Update durch diesen Lauf.
+
 ## NEXT-60 abgeschlossen · 24.10.2026 · nicht veröffentlicht
 - Tatsächliche CI #40123159397 erfolgreich (auf Code- und Teststand vor dieser Dokumentationsänderung).
 - Opt-in-Seitenbalance ist im Spielplan und tatsächlichen Runner implementiert, mit identischen Match-IDs/Seeds, gültigen Archiven und deterministischer Tabellenwertung.

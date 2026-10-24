@@ -1,13 +1,22 @@
+## Aktueller Zustand · 24.10.2026, 23:00 MESZ
+**NEXT-67 – NEU vollständig abgeschlossen und getestet:** Isoliertes Replay abgeschlossener Turnierkämpfe, reproduziert aus Original-Seed und eingefrorenen Roboterdefinitionen. Exakte archivierte Sieger-/Tick-/Reststrukturwerte müssen übereinstimmen; keine Replay-Wiedergabe bei Manipulation oder offenen Kämpfen. Sandbox und aktives Turnier bleiben unverändert. 2/3/16 Teilnehmer, 1/3600 Ticks, Desktop/Mobil und Tastatur getestet. 0 Ticks im Turniermodell absichtlich ungültig.
+**Development Tests #40132151611 auf ddd26d15:** 365 Unit/Behavior/Regression (30 Dateien), 86 Desktop-/Mobile-E2E, Typecheck, Build, Audit und zweimaliger reproduzierbarer Build grün.
+**Kumulativ 11 seit letztem unabhängig bestätigten Live-Release v0.1.54:** NEXT-56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67. NEXT-65 in NEXT-59 enthalten. NEXT-56–62: **Veröffentlichungsstatus ungeklärt** (main v0.1.55); NEXT-63/64/66/67: nur Entwicklungsbranch/Draft-PR #48, **NICHT VERÖFFENTLICHT**. Nächste Aufgabe NEXT-68, danach NEXT-69/70; detaillierte Planung bis NEXT-74.
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 # Backlog
 
 Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro stündlichem Lauf werden bis zu drei unabhängige oder sicher sequenzierbare Schritte bearbeitet; unvollständige Schritte werden zuerst fortgesetzt. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
-## Aktueller Zustand
+## Aktueller Zustand · 24.10.2026, 22:00 MESZ
 
-**Phase:** Turnierlauf/Archiv verifiziert; K.-o.-UI und Fairness-Audit im Ausbau  
-**Aktuelle stabile Version:** 0.1.54 (Publish #40111747415 am 24.10.2026 verifiziert)
-**Nächstes Ziel:** NEXT-59 · Turnier-E2E/Refactoring vollständig abschließen (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit bestätigtem Release v0.1.54 vollständig getestet, nicht veröffentlicht:** **3 Aufgaben (NEXT-56, NEXT-57, NEXT-58)**. Development Tests #40119157124/#40119160281: 335 Unit-/Behavior-/Regressionstests, 68 Desktop-/Mobile-E2E, TypeScript/Build und npm audit (0 Befunde) grün. NEXT-59/60 teilweise implementiert, noch nicht abgeschlossen.
+**Neue Runde vollständig getestet:** NEXT-64 (reproduzierbare Abhängigkeiten) und NEXT-66 (Matchdetails), Development Tests #40128110261 auf e23323ef: 29 Testdateien, 358 Unit-/Behavior-/Regressionstests, 82 Desktop-/Mobil-E2E, TypeScript/Build, zweimaliger sauberer npm-ci-Install und byteidentischer Dist-SHA256 (1488f94b…), npm audit 0 bekannte Advisories; vollständig erfolgreich. **Kumulativ 10 getestete NEXT-Aufgaben seit v0.1.54; 63/64/66 sicher nicht veröffentlicht.** Nächstes Ziel NEXT-67.
+**Letzte unabhängig bestätigte Live-Veröffentlichung:** v0.1.54, Publish #40111747415. **main inzwischen v0.1.55** (Commit 809fe86c; Release-Bump nach Merge von PR #47 um 19:09 UTC). **Live-Veröffentlichung von v0.1.55 NICHT verifiziert; Veröffentlichungsstatus ungeklärt.** Dieser Lauf hat weder Merge noch Publish ausgelöst.
+**Aktuelle sichere Entwicklung:** Branch `automation/next-56-tournament-runner-unpublished`, **Draft-PR #48**, kein Merge. Development Tests **#40128110261** auf Commit e23323ef: **358 Unit-/Behavior-/Regressionstests, 82 Desktop-/Mobile-E2E**, Typecheck, Build und npm audit (0 Advisories) erfolgreich.
+**Insgesamt zehn seit v0.1.54 implementierte und verifizierte Aufgaben:** NEXT-56, 57, 58, 59, 60, 61, 62, 63, 64, 66.
+**Davon sicher noch nicht in main:** **NEXT-63, NEXT-64 und NEXT-66** (nur Draft-PR #48). **NEXT-56 bis NEXT-62:** inzwischen in main integriert; **Veröffentlichungsstatus ungeklärt** bis zur unabhängigen Prüfung der tatsächlich ausgelieferten Homepage. Sie dürfen weder pauschal als unveröffentlicht noch als live behauptet werden.
+**Nächster offener Schritt:** NEXT-67 (isoliertes Turnierkampf-Replay). NEXT-65 war in NEXT-59 bereits enthalten und wird nicht doppelt gezählt; Rolling Backlog NEXT-67 bis NEXT-74 ist detailliert.
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell** (für den aktuellen Draft-PR #48).
 
 ---
 
@@ -386,36 +395,86 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] 16-Teilnehmer-SHA256-Referenz-Digests für Tabelle und Bracket mit festen Seeds festgeschrieben; 30-Sekunden-Engine-Laufzeitlimit in CI geprüft. Speicherlimit wird durch die feste Teilnehmergrenze (max. 16) und vollständige Testmatrix begrenzt, nicht durch eine separat gemessene Heap-Obergrenze.
 - [x] SHA256-Charakterisierung vor K.-o.-Seed-Refactoring, danach vollständige Unit-/Behavior-/Regression-/E2E-Matrix erneut erfolgreich ausgeführt (CI #40123058094).
 
-### NEXT-60 · Turnier-Fairness und Seed-Audit (vollständig getestet, unveröffentlicht)
-- [x] Reines Modul zählt Auftritte, A/B-Zuordnung und deterministische Seeds ohne Simulations-RNG.
-- [x] Optional alternierende Seitenzuordnung; bestehender Spielplan bleibt im Default unverändert. Prototypartige Teilnehmer-IDs werden sicher gezählt.
-- [x] Für 2/3/4/16 Teilnehmer A/B-Verteilung und Side-Swap-Simulationen deterministisch geprüft; 16er-Golden-SHA256 und Bias-Grenze (max. 25 % im fixierten Referenzszenario) getestet.
-- [x] Opt-in-Seitenbalance ist im echten Spielplan, Runner, Archiv und in der Auswertung integriert; Side-Swap, unveränderte Seeds, Wiederaufnahme und Legacy-Golden-Digest mit Regressionstests abgesichert (CI #40123159397).
+### NEXT-60 · Turnier-Fairness und Seed-Audit (vollständig getestet; Live-Status ungeklärt)
+- [x] Reines Audit zählt A/B-Auftritte, Spielplan-IDs, Seeds und Teilnehmer ohne Simulations-RNG; sichere Sonder-IDs.
+- [x] Optionales `sideAssignment: 'balanced'` verteilt A/B-Starts bei 2/3/4/5/16 Teilnehmern mit maximal 1 Unterschied; klassischer Default unverändert.
+- [x] Echte Runner-, Tabellen- und Archiv-Integration mit identischen Match-IDs/Seeds, Pause/Resume/Import/Export und Browser-Selektor; Desktop/Mobile verifiziert.
+- [x] Paarweise Side-Swap-Simulation mit quantifizierter 25-%-Biasgrenze, 16-Teilnehmer-SHA256-Referenz-Digests für Balanced und Legacy.
+- [x] CI #40123664899 grün; main enthält den Code seit PR #47, tatsächliche Homepage-Veröffentlichung ungeklärt.
 
 ### NEXT-61 · Exportierbare Turniertabelle (implementiert, getestet)
 - [x] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
 - [x] Feste Spaltenreihenfolge, Unicode, dezimalpunktbasierte numerische Werte, CSV-Quoting, Formel-Injection-Schutz und unvollständige Turniere implementieren.
 - [x] Unit-/Behavior-Tests für Sonderzeichen, 0 Ergebnisse und 16 Teilnehmer; Desktop-/Mobile-Download erfolgreich.
 
-### NEXT-62 · Turnier-Leistung und Abbruchgrenzen
-- [ ] 16-Teilnehmer-Round-Robin mit 120 Paarungen unter reproduzierbaren Bedingungen benchmarken; CPU-/Speicherbedarf erfassen.
-- [ ] Matchgrenzen für Pause/Resume/Cancel und deterministische Zwischenspeicherung unter Last prüfen.
-- [ ] Keine UI-Blockade: Ausführungsstrategie und Fortschrittsanzeige nach Messergebnissen festlegen; Regressionen absichern.
+### NEXT-62 · Turnier-Leistung und Abbruchgrenzen (vollständig getestet; Live-Status ungeklärt)
+- [x] Reproduzierbarer Benchmark: 16 Teilnehmer, 120 Paarungen, Seed 4711, 100 Ticks, Wall/CPU/Heap-Messung; CI #40124222697: 191,5 ms Wall, 233,9 ms CPU, 1,70 MiB Heap-Wachstum (Referenzmessung, keine Endgerätegarantie).
+- [x] CI-Regressionsgrenzen: <30 s Wall, <30 s CPU, <128 MiB Heap-Wachstum; deterministische Ergebniskontrolle.
+- [x] Pause bei 60/120, Archiv-Roundtrip, Resume ohne Duplikate und Cancel ohne zusätzliche Matches unter Last getestet.
+- [x] Browser-Automatik spielt maximal ein Match pro Event-Loop-Aufgabe und gibt UI zwischen Matches frei; Fortschritt, Pause/Resume/Cancel und Sandbox-Isolation auf Desktop/Mobile getestet.
+- [x] CI #40123885631/#40124222697 grün; main enthält den Code, tatsächliche Homepage-Veröffentlichung ungeklärt.
 
-### NEXT-63 · Turnier-Zugänglichkeit und Robustheit
-- [ ] Tastaturfokus, Screenreader-Status, Kontrast und Touch-Ziele in Dialog, Tabelle und Bracket prüfen.
-- [ ] Ungültige Konfigurationen, Doppelklicks, wiederholtes Starten und Fenstergrößen 375px/Desktop abfangen.
-- [ ] Browser-Behavior-Tests für Bedienung, Fehlerzustände und unveränderte Sandbox; vollständige Regression.
+### NEXT-63 · Turnier-Zugänglichkeit und Robustheit (NEU vollständig getestet, NICHT veröffentlicht)
+- [x] Dialogbeschreibung, Screenreader-Live-Fortschritt, fokussierbare Spielplan-/Tabellen-Scrollbereiche und sichtbare Tastaturfokus-Ringe ergänzt.
+- [x] 44px Touch-Ziele, lesbarer Dialogkontrast (WCAG ≥4,5:1 im Browser-Test), 375px-Layout und Desktop-/Mobile-Bedienung geprüft.
+- [x] Doppelklick auf `Nächster Kampf` führt nur einen Kampf aus; erneutes Erstellen identischer aktiver Pläne setzt den Fortschritt nicht zurück.
+- [x] Ungültige neue Konfiguration verwirft kein laufendes Turnier; Dialog schließen stoppt Automatik; Sandbox bleibt unverändert.
+- [x] Vollständige CI #40124222697 auf 01771371: 354 Unit-/Behavior-/Regressionstests, 80 Desktop-/Mobile-E2E, Typecheck/Build/Audit grün; ausschließlich Draft-PR #48.
 
-### NEXT-64 · Reproduzierbare und sichere Entwicklungsabhängigkeiten
-- [ ] Deterministischen Lockfile-Prozess einführen, Abhängigkeitsversionen dokumentieren und `npm ci` auf Development Tests umstellen.
-- [ ] Sicherheitsgate für neue Advisories und verifizierte Update-Strategie festlegen; keine automatische Veröffentlichung.
-- [ ] CI-/Build-Reproduzierbarkeit auf unverändertem SHA mindestens zweimal verifizieren.
+### NEXT-64 · Reproduzierbare und sichere Entwicklungsabhängigkeiten (NEU abgeschlossen, NICHT veröffentlicht)
+- [x] Lockfile v3 aus realem CI-Install erstellt; `npm ci` statt `npm install` und Cache-Key auf Lockfile-Hash; Update-Strategie: bewusster Lockfile-Update-PR mit Audit, Unit/E2E und zwei Builds.
+- [x] Sicherheitsgate lehnt jede bekannte Advisory ab (npm audit, 0 Befunde im CI); keine automatische Veröffentlichung.
+- [x] Zweimal `npm ci` und zweimal Build auf identischem SHA; Dist-SHA256 byteidentisch (1488f94b…); CI #40128110261 erfolgreich.
 
-### NEXT-65 · K.-o.-Turnier im Browser
-- [ ] K.-o.-Format auswählbar machen, Bracket und Freilose/Champion responsiv anzeigen.
-- [ ] Ergebnisse mit dem isolierten Engine-Modul berechnen, ohne Sandbox oder laufendes Round-Robin-Turnier zu verändern.
-- [ ] Desktop-/Mobile-Behavior-E2E für 3/5/16 Teilnehmer, Fokus/Touch, Seed-/Tie-Break-Anzeige und Reset ergänzen.
+### NEXT-65 · K.-o.-Turnier im Browser (bereits in NEXT-59 erledigt – DUPLIKAT, nicht erneut zählen)
+- [x] K.-o.-Format, Bracket, Freilose und Champion responsiv dargestellt.
+- [x] Isolierte Engine ohne Sandbox-Veränderung; Desktop-/Mobile-Behavior-E2E 3/5/16 Teilnehmer.
+- [x] Mit NEXT-59 getestet; kein neuer separater Entwicklungsabschluss.
+
+### NEXT-66 · Detailansicht einzelner Turnierkämpfe (NEU abgeschlossen, NICHT veröffentlicht)
+- [x] Paarungsdetails aus validiertem, immutable Runner-Snapshot nach jedem Match anzeigen: Seed, Ticks, Gewinner/Remis, Reststruktur A/B.
+- [x] Ausstehende Paarungen mit `Ausstehend` ohne erfundene Ticks/Sieger/Reststruktur; Unicode- und HTML-artige Namen nur via `textContent`.
+- [x] 2/16 Teilnehmer, Timeout/Remis, ungültige Seeds, deterministische Wiederholung, Archiv-Roundtrip und Desktop/Mobil im CI #40128110261 verifiziert.
+
+### NEXT-67 · Turnierkampf-Replay aus reproduzierbaren Seeds · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Reproduzierbaren Replay-Snapshot für abgeschlossenen Kampf isoliert aus Original-Seed und Turnierdefinition erzeugen, ohne Sandbox oder aktives Turnier zu verändern.
+- [x] Archiviertes Ergebnis exakt auf Sieger, Tick und beide Reststrukturen prüfen (kollisionsfreier Feldvergleich statt verlustbehaftetem Digest); manipulierte Ergebnisse und offene Kämpfe explizit ablehnen.
+- [x] Zugängliche Replay-Schaltfläche je abgeschlossener Paarung, vorhandener Replay-Player, 1/3600-Tick-Grenzen, 0-Tick-Validierungsfehler, 2/3/16 Teilnehmer, Desktop-/Mobile-E2E und Tastatur prüfen. CI #40132151611 grün: 365 Unit/Behavior/Regression und 86 E2E.
+
+### NEXT-68 · Sicheres automatisches Turnier-Zwischenspeichern
+- [ ] Opt-in-LocalStorage-Snapshot nur an Matchgrenzen mit Version/Größenlimit und Validierung, keine Hintergrund-Übertragung.
+- [ ] Korrupte/zu große Daten abweisen und gültiges aktives Turnier unangetastet lassen.
+- [ ] Wiederaufnahme nach Reload, Pause/Cancel-Semantik und Desktop-/Mobile-Tests absichern.
+
+### NEXT-69 · Eigene Roboterkonfigurationen im Turnier
+- [ ] Validierte aktuelle A/B-Konfigurationen als optionale Teilnehmer-Presets übernehmen, ohne Live-Sandboxzustand zu mutieren.
+- [ ] Namens-/ID-Duplikate, Komponentenlimits und Strategiewerte für bis zu 16 Teilnehmer prüfen.
+- [ ] Deterministische Paarungen, Export/Import und Browser-Behavior-Tests ergänzen.
+
+### NEXT-70 · Turnierergebnis-Export je Match
+- [ ] CSV/JSON mit Match-ID, A/B-IDs, Seed, Ticks, Gewinner und Reststruktur versioniert exportieren.
+- [ ] Formel-Injection-/Unicode-/CSV-Quoting-Schutz und unvollständige Turniere testen.
+- [ ] Browser-Downloads Desktop/Mobile sowie JSON-Roundtrip ohne Sandbox-Änderung prüfen.
+
+### NEXT-71 · Turnier-Regression, Refactoring und Release-Readiness
+- [ ] Seit NEXT-60 neu hinzugekommene Module auf Duplikate, Kopplungen und versteckte RNG-Verwendungen prüfen.
+- [ ] Vor jedem Refactoring Charakterisierung, danach komplette Unit-/Behavior-/Desktop-/Mobile-Matrix und SHA256-Digests erneut ausführen.
+- [ ] Versions-/Live-Status, Draft-PR, Deployment-Gates und manuelle Freigabe dokumentieren; **kein Publish**.
+
+### NEXT-72 · Best-of-N Turnierserie (geplant, noch nicht implementiert)
+- [ ] Ungerade Serienlängen 1/3/5 als validiertes Modell definieren; feste Seedfolge und stabile Seitenzuordnung.
+- [ ] Abbruch sobald eine Seite uneinholbar führt, Remis-/Tie-Break-Regel dokumentieren; keine versteckte RNG-Nutzung.
+- [ ] Golden-Digests, 2/16 Teilnehmer, Archive und Desktop-/Mobile-Regressionen absichern.
+
+### NEXT-73 · Match-Statistik im Turnier (geplant)
+- [ ] Treffer, Schüsse, Schaden und Energieverbrauch je Match aus deterministischen Ereignissen ableiten.
+- [ ] Statistik von bereits archivierten Matches als optional kennzeichnen; keine Werte erfinden.
+- [ ] Unit/Behavior/Replay-Golden-Digests und responsives Layout prüfen.
+
+### NEXT-74 · Turnierdaten-Validierung und Missbrauchsgrenzen (geplant)
+- [ ] Importgröße, Duplikate, Prototyp-Namen, verschachtelte Objekte und nicht endliche Zahlen prüfen.
+- [ ] Fehlerhafte Daten dürfen laufendes Turnier und Sandbox nicht verändern.
+- [ ] Fuzz-/Property-Tests mit festen Seeds, Desktop/Mobil und vollständige Regressionen ergänzen.
 
 ## Planungszyklus
 
