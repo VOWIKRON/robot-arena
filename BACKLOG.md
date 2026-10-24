@@ -6,8 +6,8 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 **Phase:** Strategiesystem / Replay-Planung  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-46 · Replay exportieren und importieren (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45 (3 Aufgaben).
+**Nächstes Ziel:** NEXT-47 · Replay-Player (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46 (4 Aufgaben).
 
 ---
 
@@ -303,13 +303,13 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Development Tests #40088913689 auf SHA 9d6f719c: 258 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
 - [x] Replay-Format als abgeschlossen und unveröffentlicht gezählt; NEXT-46 folgt frühestens im nächsten Stundenlauf.
 
-### NEXT-46 · Replay exportieren und importieren · IMPLEMENTIERT / TESTS AUSSTEHEND
+### NEXT-46 · Replay exportieren und importieren · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
 - [x] Live-Recorder um unveränderliche, wiederholbare Snapshots ohne Abschluss erweitern.
 - [x] Deterministische JSON-Dateinamen, Browser-Download, 2-MB-Grenze und Schema-/ID-/Tick-Validierung beim Import.
 - [x] Separaten zugänglichen Replay-Dialog mit Import-/Export-Knöpfen, Dateiauswahl und verständlicher Rückmeldung ergänzen.
 - [x] Ungültiger Import und gültige Dateivorschau verändern den laufenden Kampf nicht; Wiedergabe erst NEXT-47.
 - [x] Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E als Quellcode ergänzt.
-- [ ] Finalen Head mit Typecheck, Unit-/Verhaltens-/Regressionstests, Build und Desktop-/Mobile-E2E grün bestätigen; erst dann als abgeschlossen zählen.
+- [x] Development Tests #40092321506 auf Commit 556a2858: Typecheck, Build, **262 Unit-/Verhaltenstests und 50 Desktop-/Mobile-E2E erfolgreich**; NEXT-46 implementiert und getestet, unveröffentlicht.
 
 ### NEXT-47 · Replay-Player
 - [ ] Player-Zustandsmaschine mit Play/Pause/Einzelschritt/Ende aus validierten Frames definieren; keinerlei neue RNG-Aufrufe.
