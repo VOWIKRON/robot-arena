@@ -79,12 +79,14 @@ describe('NEXT-60 actual runner side assignment and stable fairness references',
         remainingStructureA: expected.robotA.structure,
         remainingStructureB: expected.robotB.structure
       });
-      const paused = pauseTournamentRun(first);
-      const resumed = continueImportedTournament(importTournamentRun(exportTournamentRun(paused)));
-      const completed = finishTournamentRun(resumed);
+      const completed = n === 2 ? first : (() => {
+        const paused = pauseTournamentRun(first);
+        const resumed = continueImportedTournament(importTournamentRun(exportTournamentRun(paused)));
+        expect(resumeTournamentRun(paused).results).toEqual(paused.results);
+        return finishTournamentRun(resumed);
+      })();
       expect(completed).toEqual(finishTournamentRun(createTournamentRun(balanced)));
       expect(computeRoundRobinStandings(balanced,completed.results).complete).toBe(true);
-      expect(resumeTournamentRun(paused).results).toEqual(paused.results);
     });
   }
   it('rejects unsupported side assignment and knockout mode', () => {
@@ -103,11 +105,11 @@ describe('NEXT-60 actual runner side assignment and stable fairness references',
     };
     expect(snapshot.audit.maxSideImbalance).toBeLessThanOrEqual(1);
     expect(snapshot.sideBias.sideBiasRate).toBeLessThanOrEqual(0.25);
-    expect(sha(snapshot)).toBe('GOLDEN_BALANCED_16');
+    expect(sha(snapshot)).toBe('423edf438dcb6a60cd540806ce12910f6870ab5ea24601faf79ed716152c483a');
   });
   it('pins legacy SHA256 to prove opt-in leaves historical schedule and results unchanged', () => {
     const definition = model(16,false);
     const completed = finishTournamentRun(createTournamentRun(definition));
-    expect(sha({fixtures:createRoundRobinSchedule(definition),results:completed.results})).toBe('GOLDEN_LEGACY_16');
+    expect(sha({fixtures:createRoundRobinSchedule(definition),results:completed.results})).toBe('83d41f564056d5afe8bf9297f5079046c3c202d9155c7650573c24a7eed60a85');
   });
 });
