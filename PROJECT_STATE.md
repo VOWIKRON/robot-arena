@@ -126,3 +126,12 @@ Release-Gates 0.1.53 bestanden: PR-CI https://github.com/VOWIKRON/robot-arena/ac
 ## Arbeitsbranch NEXT-40 (24.10.2026, unveröffentlicht)
 
 Geplante Energiereserve (0–100 % Maximalenergie, Default 0 %) wird in der Schussfreigabe nach Regeneration berücksichtigt. Quellcode für getrennte A/B-Eingaben, Validierung und Tests liegt auf dem Entwicklungsbranch. **Nicht abgeschlossen:** Unit-/Verhaltenstests, vollständige Regression, Desktop-/Mobile-E2E und Freigabe müssen auf dem neuen Head nachgewiesen werden. Stabile Version auf main bleibt 0.1.53; kein Merge, kein Publish.
+
+## Unveröffentlichte Entwicklung · 24.10.2026
+
+- Stabil auf main: **0.1.53**, unverändert; Veröffentlichung ausschließlich nach manueller Nutzerfreigabe.
+- Branch: `automation/next-40-energy-reserve-unpublished`, Draft-PR #46, nicht mergen.
+- **NEXT-40 abgeschlossen und nicht veröffentlicht:** Energiereserve 0–100 % für A/B mit Default 0 %, Validierung, zentrale Schussfreigabe und Regressionen. Development Tests #40085113036 (SHA `193f42d07cb1a6827799e2ac6fe92a974b7ddae2`): 246 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
+- **NEXT-44 implementiert, Abnahme ausstehend:** append-only Recorder mit Seed, initialen RobotDefinition-Snapshots, Tick-Events, Endzustand und Tests für 0/1/3600 Ticks sowie Sofortsieg. Noch nicht als abgeschlossen zählen, bis Tests auf dem aktuellen Head erfolgreich sind.
+- Testworkflow auf dem Entwicklungsbranch heißt `Development Tests`; der `Publish`-Workflow auf main reagiert nur auf `CI`, bleibt aber grundsätzlich automatisch konfiguriert. Nicht auf main mergen und keinen Publish-Workflow auslösen.
+- Kumulativ seit v0.1.53: **1 vollständig getestete, unveröffentlichte Aufgabe (NEXT-40)**. Weitere offene Schritte: NEXT-44, danach NEXT-45 bis NEXT-51.
