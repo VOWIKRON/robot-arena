@@ -3,6 +3,8 @@ import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MO
 import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, DEFAULT_STRATEGY, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
 import { createMatch, stepMatchWithEvents } from './engine/simulation';
 import { SeededRandom } from './engine/random';
+import { EventRecorder } from './engine/recorder';
+import { downloadReplay, readReplayFile } from './engine/replay-io';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
@@ -24,7 +26,8 @@ app.innerHTML = `
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
-<div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button></div>
+<div class="controls"><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button><button id="open-config">Konfiguration</button><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"></div>
+<div id="replay-feedback" class="status" role="status" aria-live="polite"></div>
 <div class="status" id="status"></div>
 </section>
 <aside class="card battle-panel"><h2>Kampfstatus</h2><div id="stats"></div><div class="battle-hint">Konfiguration über den Button unter der Arena ändern.</div></aside>\n<dialog id="config-dialog" aria-labelledby="config-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="config-title">Roboter konfigurieren</h2><button id="close-config" aria-label="Konfiguration schließen">×</button></div><div class="config-grid"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie A <select id="energy-a"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor A <select id="sensor-a"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label>${strategyControls('a')}<div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie B <select id="energy-b"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor B <select id="sensor-b"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label>${strategyControls('b')}<div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div class="dialog-actions"><button id="apply-config">Übernehmen &amp; Kampf zurücksetzen</button></div></div></dialog>
@@ -42,6 +45,7 @@ app.innerHTML = `
 
 let state: MatchState;
 let rng: SeededRandom;
+let recorder: EventRecorder;
 let timer: number | null = null;
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -135,6 +139,8 @@ function resetMatch(): void {
   if (!configurationValid()) return;
   state = createMatch(selectedRobotA(), selectedRobotB());
   rng = new SeededRandom(seedValue());
+  recorder = new EventRecorder(state.robotA.definition, state.robotB.definition, seedValue());
+  el('replay-feedback').textContent = '';
   render();
 }
 
@@ -168,6 +174,7 @@ function tick(): void {
     return;
   }
   const result = stepMatchWithEvents(state, rng);
+  recorder.append(result);
   state = result.state;
   render();
   renderCombatEffects(result.events);
@@ -298,6 +305,28 @@ async function loadFooterMetadata(): Promise<void> {
 el<HTMLButtonElement>('open-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').showModal());
 el<HTMLButtonElement>('close-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').close());
 el<HTMLButtonElement>('apply-config').addEventListener('click', () => { renderPreview(); if (configurationValid()) { resetMatch(); el<HTMLDialogElement>('config-dialog').close(); } });
+el('replay-export').addEventListener('click', () => {
+  try {
+    downloadReplay(recorder.snapshot(state));
+    el('replay-feedback').textContent = `Replay für ${state.tick} Ticks exportiert.`;
+  } catch (error) {
+    el('replay-feedback').textContent = `Replay-Export fehlgeschlagen: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
+  }
+});
+el('replay-import').addEventListener('click', () => el<HTMLInputElement>('replay-file').click());
+el<HTMLInputElement>('replay-file').addEventListener('change', async (event) => {
+  const input = event.currentTarget as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  try {
+    const replay = await readReplayFile(file);
+    el('replay-feedback').textContent = `Replay geprüft: Seed ${replay.seed}, ${replay.frames.length} Ticks, ${replay.robotA.name} gegen ${replay.robotB.name}. Wiedergabe folgt mit NEXT-47.`;
+  } catch (error) {
+    el('replay-feedback').textContent = `Replay-Import abgelehnt: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
+  } finally {
+    input.value = '';
+  }
+});
 el('start').addEventListener('click', start);
 el('pause').addEventListener('click', pause);
 el('step').addEventListener('click', tick);
