@@ -27,11 +27,11 @@ describe('NEXT-44 append-only event recorder', () => {
     recorder.append(result);
     const recording = recorder.finish();
     expect(recording.frames).toHaveLength(1);
-    expect(recording.frames[0].tick).toBe(1);
-    expect(recording.frames[0].events).toEqual(result.events);
+    expect(recording.frames[0]!.tick).toBe(1);
+    expect(recording.frames[0]!.events).toEqual(result.events);
     expect(recording.finalState).toEqual(result.state);
     expect(initial.tick).toBe(0);
-    expect(Object.isFrozen(recording.frames[0].events)).toBe(true);
+    expect(Object.isFrozen(recording.frames[0]!.events)).toBe(true);
     expect(() => recorder.append(result)).toThrow(/abgeschlossen/);
   });
 
@@ -50,7 +50,7 @@ describe('NEXT-44 append-only event recorder', () => {
     const b = { ...TITAN, speed: 0, weaponRange: 0, weaponDamage: 0 };
     const recording = recordMatch(a, b, 4711, 3600);
     expect(recording.frames).toHaveLength(3600);
-    expect(recording.frames[0].tick).toBe(1);
+    expect(recording.frames[0]!.tick).toBe(1);
     expect(recording.frames.at(-1)?.tick).toBe(3600);
     expect(recording.frames.every((frame, i) => frame.tick === i + 1)).toBe(true);
     expect(recording.finalState).toEqual(runMatch(a, b, 4711, 3600));
@@ -62,7 +62,7 @@ describe('NEXT-44 append-only event recorder', () => {
     const b = { ...TITAN, speed: 0 };
     const recording = recordMatch(a, b, 12, 3600);
     expect(recording.frames).toHaveLength(1);
-    expect(recording.frames[0].events.map(event => event.type)).toEqual(['shot', 'hit', 'damage', 'victory']);
+    expect(recording.frames[0]!.events.map(event => event.type)).toEqual(['shot', 'hit', 'damage', 'victory']);
     expect(recording.finalState.outcome).toBe('victory');
     expect(recording.finalState).toEqual(runMatch(a, b, 12, 3600));
   });
