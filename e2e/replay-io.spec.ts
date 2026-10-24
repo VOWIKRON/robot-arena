@@ -1,5 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
+import { RAPTOR, TITAN } from '../src/engine/presets';
+import { recordMatch } from '../src/engine/recorder';
+import { serializeReplay } from '../src/engine/replay-format';
 
 test('NEXT-46 replay export/import is keyboard accessible and does not change the match', async ({ page }) => {
   await page.goto('/');
@@ -29,5 +32,35 @@ test('NEXT-46 replay export/import is keyboard accessible and does not change th
   expect(await page.locator('#status').innerText()).toBe(tickBefore);
   await page.getByRole('button', { name: 'Replay importieren' }).focus();
   await expect(page.getByRole('button', { name: 'Replay importieren' })).toBeFocused();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test('NEXT-50 malformed and oversized replay imports preserve loaded replay and live battle', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: '1 Tick', exact: true }).click();
+  const live = await page.locator('#status').innerText();
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  const json = serializeReplay(recordMatch(RAPTOR, TITAN, 4711, 3));
+  const input = page.locator('#replay-file');
+  await input.setInputFiles({ name: 'good.json', mimeType: 'application/json', buffer: Buffer.from(json) });
+  await expect(page.locator('#replay-progress')).toContainText('Replay Tick 0 / 3');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('Replay Tick 1 / 3');
+  const beforeStats = await page.locator('#replay-stat-a').innerText();
+  const malformed = JSON.parse(json);
+  malformed.frames.splice(0, 1);
+  await input.setInputFiles({
+    name: 'missing-frame.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(malformed))
+  });
+  await expect(page.locator('#replay-feedback')).toContainText('Import abgelehnt');
+  await expect(page.locator('#replay-progress')).toContainText('Replay Tick 1 / 3');
+  expect(await page.locator('#replay-stat-a').innerText()).toBe(beforeStats);
+  await input.setInputFiles({
+    name: 'oversized.json', mimeType: 'application/json', buffer: Buffer.alloc(2_000_001, 32)
+  });
+  await expect(page.locator('#replay-feedback')).toContainText('2 MB');
+  await expect(page.locator('#replay-progress')).toContainText('Replay Tick 1 / 3');
+  await page.getByRole('button', { name: 'Schließen' }).click();
+  expect(await page.locator('#status').innerText()).toBe(live);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
