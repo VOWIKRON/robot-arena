@@ -8,7 +8,7 @@
 - refactoring: Tabellenberechnung in reines, von UI/Simulation entkoppeltes Modul `src/engine/tournament-standings.ts` ausgelagert; vollständige Tests danach erfolgreich.
 - current_next: NEXT-55 (responsives Turnier-UI), danach NEXT-56 (Runner).
 - cumulative_unpublished: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 (12).
-- final_documentation_head_ci: ausstehend; Code-HEAD ist verifiziert, Dokumentationsänderungen werden separat getestet.
+- final_documentation_head_ci: Development Tests #40110105950 auf Dokumentations-HEAD a6eb67d0 grün (303 Unit/Behavior, 60 Desktop/Mobile, Typecheck/Build).
 - live_website_status: Veröffentlichung extern nicht unabhängig bestätigt; bei manueller Veröffentlichung ohne GitHub-Merge **Veröffentlichungsstatus ungeklärt**.
 - **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, kein Deployment, kein publish.php.
 

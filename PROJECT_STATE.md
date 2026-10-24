@@ -2,7 +2,7 @@
 - NEXT-54: Deterministische Round-Robin-Auswertung (3/1/0 Punkte, Spiele/Siege/Remis/Niederlagen, Reststruktur-Differenz, stabile Sortierung und unvollständige Turniere); doppelte/ungültige Match-IDs, Seeds, Teilnehmer und Reststruktur werden abgewiesen. Validierte Ergebnis-Snapshots sind unveränderlich. Development Tests #40109944097 auf Commit 431ee335: 303 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 - Kumulativ 12 getestete Aufgaben seit v0.1.53, NICHT VERÖFFENTLICHT: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54.
 - Nächster Schritt NEXT-55; Rolling Backlog NEXT-55 bis NEXT-63. PR #46 Draft, main unverändert, kein Publish/Deployment.
-- Finale CI nach Dokumentationscommit noch prüfen.
+- Vollständige Development Tests nach Dokumentationsänderungen #40110105950 auf a6eb67d0 grün.
 
 ## Unveröffentlichte Entwicklungsrunde (24.10.2026, 17:00 Europe/Berlin)
 - NEXT-51 abgeschlossen: `deepFreeze` aus Recorder in `src/engine/immutable.ts` extrahiert; Replay-Format/State ohne Runtime-Abhängigkeit vom Recorder; Recorder-Export rückwärtskompatibel. Charakterisierungstests und vollständige CI #40105284320 grün.
