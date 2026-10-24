@@ -132,6 +132,7 @@ Geplante Energiereserve (0–100 % Maximalenergie, Default 0 %) wird in der Schu
 - Stabil auf main: **0.1.53**, unverändert; Veröffentlichung ausschließlich nach manueller Nutzerfreigabe.
 - Branch: `automation/next-40-energy-reserve-unpublished`, Draft-PR #46, nicht mergen.
 - **NEXT-40 abgeschlossen und nicht veröffentlicht:** Energiereserve 0–100 % für A/B mit Default 0 %, Validierung, zentrale Schussfreigabe und Regressionen. Development Tests #40085113036 (SHA `193f42d07cb1a6827799e2ac6fe92a974b7ddae2`): 246 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
-- **NEXT-44 implementiert, Abnahme ausstehend:** append-only Recorder mit Seed, initialen RobotDefinition-Snapshots, Tick-Events, Endzustand und Tests für 0/1/3600 Ticks sowie Sofortsieg. Noch nicht als abgeschlossen zählen, bis Tests auf dem aktuellen Head erfolgreich sind.
+- **NEXT-44 abgeschlossen und nicht veröffentlicht:** Append-only Recorder mit Seed, initialen RobotDefinition-Snapshots, Tick-Events und Endzustand. Development Tests #40088595774 (SHA 7df3cacc): 252 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
+- **NEXT-45 implementiert, Tests ausstehend:** Replay-Dateiformat schemaVersion 1, JSON-Roundtrip, ID-/Tick-/Event-/Arena-/Zahlenvalidierung; aktueller Entwicklungs-Head muss noch grün nachgewiesen werden.
 - Testworkflow auf dem Entwicklungsbranch heißt `Development Tests`; der `Publish`-Workflow auf main reagiert nur auf `CI`, bleibt aber grundsätzlich automatisch konfiguriert. Nicht auf main mergen und keinen Publish-Workflow auslösen.
-- Kumulativ seit v0.1.53: **1 vollständig getestete, unveröffentlichte Aufgabe (NEXT-40)**. Weitere offene Schritte: NEXT-44, danach NEXT-45 bis NEXT-51.
+- Kumulativ seit v0.1.53: **2 vollständig getestete, unveröffentlichte Aufgaben (NEXT-40, NEXT-44)**. Weitere offene Schritte: NEXT-45 bis NEXT-51.
