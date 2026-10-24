@@ -4,10 +4,10 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Aktueller Zustand
 
-**Phase:** Turnierlauf/Archiv verifiziert; K.-o.-UI und Fairness-Audit im Ausbau  
-**Aktuelle stabile Version:** 0.1.54 (Publish #40111747415 am 24.10.2026 verifiziert)
-**Nächstes Ziel:** NEXT-59 · Turnier-E2E/Refactoring vollständig abschließen (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit bestätigtem Release v0.1.54 vollständig getestet, nicht veröffentlicht:** **3 Aufgaben (NEXT-56, NEXT-57, NEXT-58)**. Development Tests #40119157124/#40119160281: 335 Unit-/Behavior-/Regressionstests, 68 Desktop-/Mobile-E2E, TypeScript/Build und npm audit (0 Befunde) grün. NEXT-59/60 teilweise implementiert, noch nicht abgeschlossen.
+**Phase:** NEXT-56 bis NEXT-61 in main integriert; Release v0.1.55 zur Veröffentlichung vorgesehen  
+**Letzte nachweislich live bestätigte Version:** 0.1.54 (Publish #40111747415); **Release-Kandidat:** 0.1.55
+**Nächstes Ziel:** v0.1.55 nach erfolgreicher main-CI veröffentlichen und Live-Build-Commit prüfen; anschließend NEXT-62
+**In v0.1.55 enthalten:** NEXT-56, NEXT-57, NEXT-58, NEXT-59, NEXT-60, NEXT-61. Alle sechs in main integriert; Live-Verifikation noch offen.
 
 ---
 
