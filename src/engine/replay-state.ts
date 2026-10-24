@@ -1,5 +1,5 @@
 import type { CombatEvent } from './events';
-import { deepFreeze } from './recorder';
+import { deepFreeze } from './immutable';
 import type { ReplayDocument } from './replay-format';
 import type { MatchState, RobotState } from './types';
 
