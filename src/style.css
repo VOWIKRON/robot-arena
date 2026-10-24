@@ -47,6 +47,10 @@
 
 /* NEXT-55: independent, keyboard-accessible tournament planner. */
 .tournament-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.tournament-local-save{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:12px 0;padding:10px;border:1px solid #3d5270;border-radius:10px}
+.tournament-local-save label{display:flex;align-items:center;gap:10px;flex:1 1 210px}
+#tournament-dialog #tournament-autosave{width:44px;min-width:44px;height:44px;flex:none}
+.tournament-local-save button{flex:1 1 145px}
 .tournament-participants{display:grid;gap:8px;max-height:35vh;overflow:auto;padding:4px;scrollbar-gutter:stable}
 .tournament-participant{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,140px);gap:10px;border:1px solid #2d3954;padding:9px;border-radius:10px;background:#0a1428}
 .tournament-participant label{min-width:0}
