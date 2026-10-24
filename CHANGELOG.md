@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased · Qualitätsrunde 24.10.2026, 20:08 (nicht veröffentlicht)
+- NEXT-56/57/58 vollständig implementiert und verifiziert; K.-o.-Bracket, Round-Robin-Runner, Turnier-JSON mit Browser-Import/Export und fehlerfreier Wiederaufnahme. NEXT-59/60 nur teilweise umgesetzt.
+- Fehlende Engine-Testdateien durch Erweiterung der Vitest-Discovery aktiviert. Archiv-Endstatus validiert; importierte benutzerdefinierte Teilnehmer-IDs bleiben im Browser erhalten; korrupter Import bewahrt laufendes Turnier; sichere Zähler für Prototype-ähnliche IDs.
+- Vitest 5.x ersetzt verwundbare Vitest-3.x-Abhängigkeiten. npm audit: 0 bekannte Schwachstellen. `Development Tests` #40119157124/#40119160281 auf 8dc5633a: 335 Unit/Behavior/Regression, 68 Desktop/Mobile, TypeScript, Build, Audit grün.
+- Draft-PR #47, kein Merge, keine Website-Aktualisierung. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · NEXT-56 (vollständig getestet, nicht veröffentlicht)
 - Separater, UI-unabhängiger Round-Robin-Runner führt Paarungen seriell mit den definierten Seeds und Ticklimits aus; immutable Ergebnis-Snapshots und deterministische Reihenfolge.
 - Pause/Fortsetzen/Abbrechen ausschließlich an Matchgrenzen, bereits abgeschlossene Ergebnisse bleiben erhalten. Tests für 2/4/16 Teilnehmer, 120 Matches, Timeout, Seeds und Zustandsübergänge ergänzt. CI #40113922862 auf 453f5ef5 grün: 314 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, TypeScript und Build.

@@ -4,10 +4,10 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Aktueller Zustand
 
-**Phase:** Turnier-UI-Grundgerüst  
+**Phase:** Turnierlauf/Archiv verifiziert; K.-o.-UI und Fairness-Audit im Ausbau  
 **Aktuelle stabile Version:** 0.1.54 (Publish #40111747415 am 24.10.2026 verifiziert)
-**Nächstes Ziel:** NEXT-56 · Deterministische Turnierausführung (Entwicklungsbranch, unveröffentlicht)
-**Kumulativ seit bestätigtem Release v0.1.54 getestet, nicht veröffentlicht:** 1 Aufgabe (NEXT-56); CI #40113922862: 314 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, TypeScript/Build grün. Die zuvor offenen 13 Aufgaben wurden mit v0.1.54 veröffentlicht.
+**Nächstes Ziel:** NEXT-59 · Turnier-E2E/Refactoring vollständig abschließen (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit bestätigtem Release v0.1.54 vollständig getestet, nicht veröffentlicht:** **3 Aufgaben (NEXT-56, NEXT-57, NEXT-58)**. Development Tests #40119157124/#40119160281: 335 Unit-/Behavior-/Regressionstests, 68 Desktop-/Mobile-E2E, TypeScript/Build und npm audit (0 Befunde) grün. NEXT-59/60 teilweise implementiert, noch nicht abgeschlossen.
 
 ---
 
@@ -369,28 +369,28 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [x] Kein versteckter RNG; identische Definitionen liefern identische Ergebnisse und Reihenfolge, auch nach Pause.
 - [x] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust (CI #40113922862 grün: 314 Unit/Behavior, 64 Desktop/Mobile).
 
-### NEXT-57 · K.-o.-Bracket
-- [ ] Single-Elimination für 2–16 Teilnehmer mit dokumentierter Bye-Regel für Nicht-Zweierpotenzen; keine doppelte Teilnahme pro Runde.
-- [ ] Unentschieden deterministisch und fair nach vorab definierter Tie-Break-Regel auflösen; keine impliziten Zufallsziehungen.
-- [ ] Tests: 2/3/5/8/16 Teilnehmer, Bye-Reihenfolge, Finalpaarung, Champion, Replay-Seeds.
+### NEXT-57 · K.-o.-Bracket (vollständig getestet, unveröffentlicht)
+- [x] Single-Elimination für 2–16 Teilnehmer, deterministische Freilose für die zuerst gesetzten Teilnehmer und keine doppelte Teilnahme pro Runde.
+- [x] Unentschieden über Reststrukturanteil und danach stabile Setzreihenfolge auflösen, ohne RNG-Zusatz.
+- [x] Engine-Regressionen 2/3/5/8/16 Teilnehmer, stabile Seeds/Champion/Matchzahl. CI #40119157124: grün. Browser-K.-o.-UI ist getrennte Folgeaufgabe.
 
-### NEXT-58 · Turnier-Import/-Export und Wiederaufnahme
-- [ ] Versioniertes JSON für Definition, Spielplan, Ergebnisse, Seeds und Fortschritt; Größe begrenzen, Schema/IDs streng prüfen.
-- [ ] Fehlerhafter Import verändert weder Sandbox noch aktives Turnier; Wiederaufnahme ohne doppelte Ergebnisse.
-- [ ] JSON-Roundtrip und Resume-Digests für vollständige/unterbrochene Turniere; Desktop-/Mobile-Dateiauswahl testen.
+### NEXT-58 · Turnier-Import/-Export und Wiederaufnahme (vollständig getestet, unveröffentlicht)
+- [x] Versioniertes JSON mit Schema-/Größen-/Status-/Matchreihenfolgeprüfung und immutable Ergebnissen.
+- [x] Browser-Import/Export, Resume an Matchgrenzen, keine doppelten Kämpfe; ungültiger Import erhält den laufenden Turnierstand.
+- [x] Tests: pausierter und abgeschlossener Roundtrip, fehlerhafte Zustände/Progress/IDs, Sonder-IDs, Desktop-/Mobile-Dateiimport; CI #40119157124: grün.
 
-### NEXT-59 · Turnier-E2E, Statistik und Refactoring
-- [ ] Browser-E2E für Round Robin und K.-o. inklusive Touch/Tastatur, Pause/Resume und Ergebnisanzeige.
-- [ ] 16 Teilnehmer mit festen Seeds deterministisch gegen Tabellen-/Bracket-Digests prüfen; Laufzeit-/Speichergrenzen dokumentieren.
-- [ ] Engine/Runner/UI entkoppeln, Charakterisierungstests vor Refactoring ergänzen, danach gesamte Testmatrix erneut ausführen.
-- [ ] Folgende 5–10 NEXT-Aufgaben anhand Test- und Nutzerfeedback detailliert planen.
+### NEXT-59 · Turnier-E2E, Statistik und Refactoring (TEILWEISE – nicht abgeschlossen)
+- [x] Engine-Integration für 16 Teilnehmer/120 Round-Robin-Matches; Import-/Resume-Ergebnisse stimmen mit direktem Lauf überein.
+- [x] Browser-E2E für Round Robin mit Pause/Resume, JSON-Download/-Upload und Tabellenstand; Desktop und Mobile.
+- [ ] K.-o.-Turnier in der Browseroberfläche integrieren und Desktop-/Mobile-E2E inklusive Touch/Tastatur, Gewinneranzeige und ungültiger Konfiguration ergänzen.
+- [ ] 16-Teilnehmer-Referenz-Digests für Tabelle und Bracket mit festen Seeds erstellen; Performance-/Speichergrenzen dokumentieren.
+- [ ] Charakterisierung vor Runner/UI-Refactoring, anschließend vollständige Unit-/Behavior-/Regression-/E2E-Matrix erneut ausführen.
 
-**Qualitätsnachweise für NEXT-52 und NEXT-53:** Development Tests #40105438397: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün; #40105486356: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün. Beide unveröffentlicht.
-\n
-### NEXT-60 · Turnier-Fairness und Seed-Audit
-- [ ] Paarungsreihenfolge, Seitenzuweisung A/B und deterministische Seed-Ableitung auf Verzerrungen prüfen; bestehendes Verhalten zuerst charakterisieren.
-- [ ] Alternierende Startseiten als optionalen Modus entwerfen, ohne bestehende Round-Robin-Snapshots zu ändern.
-- [ ] Referenztests mit 2/3/4/16 Teilnehmern, festen Seeds und identischen Roboterdefinitionen; keine versteckte RNG-Nutzung.
+### NEXT-60 · Turnier-Fairness und Seed-Audit (TEILWEISE – nicht abgeschlossen)
+- [x] Reines Modul zählt Auftritte, A/B-Zuordnung und deterministische Seeds ohne Simulations-RNG.
+- [x] Optional alternierende Seitenzuordnung; bestehender Spielplan bleibt im Default unverändert. Prototypartige Teilnehmer-IDs werden sicher gezählt.
+- [ ] Für 2/3/4/16 Teilnehmer quantifizierte A/B-Verteilung und systematische Seitenverzerrung charakterisieren; erwartete Grenzwerte und Referenz-Digests dokumentieren.
+- [ ] Alternierendes Format mit realem Runner und Ergebnis-/Seed-Ableitung abstimmen; regressionssichere Tests für Side-Swap und faire Turnierauswertung.
 
 ### NEXT-61 · Exportierbare Turniertabelle
 - [ ] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
@@ -406,6 +406,16 @@ NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der n
 - [ ] Tastaturfokus, Screenreader-Status, Kontrast und Touch-Ziele in Dialog, Tabelle und Bracket prüfen.
 - [ ] Ungültige Konfigurationen, Doppelklicks, wiederholtes Starten und Fenstergrößen 375px/Desktop abfangen.
 - [ ] Browser-Behavior-Tests für Bedienung, Fehlerzustände und unveränderte Sandbox; vollständige Regression.
+
+### NEXT-64 · Reproduzierbare und sichere Entwicklungsabhängigkeiten
+- [ ] Deterministischen Lockfile-Prozess einführen, Abhängigkeitsversionen dokumentieren und `npm ci` auf Development Tests umstellen.
+- [ ] Sicherheitsgate für neue Advisories und verifizierte Update-Strategie festlegen; keine automatische Veröffentlichung.
+- [ ] CI-/Build-Reproduzierbarkeit auf unverändertem SHA mindestens zweimal verifizieren.
+
+### NEXT-65 · K.-o.-Turnier im Browser
+- [ ] K.-o.-Format auswählbar machen, Bracket und Freilose/Champion responsiv anzeigen.
+- [ ] Ergebnisse mit dem isolierten Engine-Modul berechnen, ohne Sandbox oder laufendes Round-Robin-Turnier zu verändern.
+- [ ] Desktop-/Mobile-Behavior-E2E für 3/5/16 Teilnehmer, Fokus/Touch, Seed-/Tie-Break-Anzeige und Reset ergänzen.
 
 ## Planungszyklus
 
