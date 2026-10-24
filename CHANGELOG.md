@@ -1,3 +1,9 @@
+## Unreleased · 25.10.2026, 01:00 MESZ · NEXT-78 P0 in Verifikation, NEXT-79 Audit
+- **Fix vorbereitet, noch nicht abgenommen:** Arena-Darstellung klemmt die sichtbaren Raptor-/Titan-Chassis inklusive Waffe und Energie-/Lebensbalken an allen vier Rändern und Ecken in den Viewport. Engine-Weltkoordinaten, Seeds und Replay bleiben unverändert; Inline-Rohwerte für bestehende Diagnosen erhalten.
+- **Tests ergänzt (Ausführung der neuen vollständigen CI noch ausstehend):** Engine-Defensive an Rändern/Ecken, 1000-Schritt-Checks und Seeds 1/12/4711; Desktop-/Mobile-E2E mit 375px und 1280px, acht Grenzlagen und realem defensivem Kampf.
+- **NEXT-79 Analyse:** Usability-Audit in `USABILITY_AUDIT.md` dokumentiert; UX-Änderungen noch offen.
+- **Veröffentlichungsstatus:** Letztes bestätigtes Live-Release v0.1.55; fünf zuvor grün getestete NEXT-63/64/66/67/68 bleiben unveröffentlicht. NEXT-78/79 nicht als fertig markieren. **Kein Publishing, kein Merge.**
+
 ## Unreleased · 25.10.2026, 00:08 MESZ · NEXT-68 (nur Entwicklungsbranch)
 - **NEXT-68 NEU vollständig implementiert und getestet:** Browser-lokale, explizit aktivierte Turnier-Zwischenspeicherung an Matchgrenzen. Validiertes Archiv (Version 1, 2-MB-Grenze), Wiederherstellung nach Browser-Reload per Benutzeraktion, Schutz gegen beschädigte/überlange Sicherungen und Speicherkontingentfehler, kein Netztransfer. Ausschalten löscht Sicherung und Einwilligung. Pause, Cancel und deterministische 16-Teilnehmer-Fortsetzung geprüft.
 - **Refactoring:** Dateiimport und LocalStorage-Restore verwenden dieselbe validierte UI-Importfunktion; lokale Persistenz und Archivprüfung in eigenständiges Engine-Modul extrahiert.
