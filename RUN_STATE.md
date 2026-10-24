@@ -13,7 +13,7 @@
 - testing: Development Tests #40100789839 (274 Unit/Behavior, 56 Desktop/Mobile), #40100953952 (281/58), #40101113261 (284/60), alle inklusive Typecheck/Build erfolgreich
 - deterministic_checks: Tick 0/Mitte/Ende/Rückwärts, 0/1/3600 Ticks, Sofortsieg, 16 Strategiepaarungen × 3 Seeds, JSON-Roundtrip, Event-/Zustands-Digests, beschädigte und übergroße Dateien
 - refactoring: Zustandsrekonstruktion `src/engine/replay-state.ts` und Kampfauswertung `src/engine/replay-stats.ts` als reine Module von Player und UI getrennt; komplette Tests nach Änderung erfolgreich
-- blocker: kein Code-/Testblocker; letzter Dokumentations-Head wird separat geprüft
+- blocker: keiner; Dokumentations- und Smoke-Tests auf Commit 3b16313e erfolgreich (Development Tests #40101321193: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck und Build)
 - publishing: AUSDRÜCKLICH VERBOTEN. Kein Merge auf main, kein Publish/Deployment, kein Aufruf von publish.php.
 - publish_workflow_on_main: reagiert noch auf alten CI-Namen; kein Release-Workflow ausgelöst
 - unrelated_prs: #5 und #8 nicht verändert
@@ -36,7 +36,7 @@
 - **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
 
 ## Nächster Haltepunkt
-1. Letzten Dokumentations-Commit durch `Development Tests` prüfen.
+1. Vor dem nächsten Lauf GitHub-HEAD und den letzten vollständigen Development-Tests-Lauf erneut prüfen.
 2. Nächster Lauf: NEXT-51 Refactoring/Turnierplanung; zuerst offene Fehler, maximal drei NEXT-Abschlüsse.
 3. Rolling Backlog, Testsuite und Release Notes synchron halten, ohne Homepage-Update.
 4. Keine anderen Automationen verändern; PR #46 bleibt Draft und main unverändert.
