@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased · NEXT-51, NEXT-52 und NEXT-53 (getestet, nicht veröffentlicht)
+- NEXT-51: `deepFreeze` als reines, gemeinsam verwendetes Modul ausgegliedert; Recorder-API bleibt kompatibel, Replay-Format und Rekonstruktion ohne Runtime-Recorder-Abhängigkeit. Immutable-Charakterisierung und vollständige Tests grün (#40105284320).
+- NEXT-52: Validiertes, versioniertes und unveränderliches Turnierdatenmodell mit 2–16 Teilnehmern, Formaten Round Robin/K.-o., Seeds, Ticklimit und deterministischem JSON-Roundtrip. #40105438397: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-53: Round-Robin-Spielplan mit jeder Paarung genau einmal, stabiler Reihenfolge und Seed-Ableitung ohne globalen RNG; Tests für 2/3/4/16 Teilnehmer und Seed-Grenzen. #40105486356: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- Noch keine Turnierausführung oder -oberfläche (NEXT-54 ff.); keine Veröffentlichung, main unverändert.
+
 ## Unreleased · NEXT-48, NEXT-49 und NEXT-50 (vollständig getestet, nicht veröffentlicht)
 - NEXT-48: Grafische Replay-Zeitleiste mit deterministischem Seek in beide Richtungen, unabhängiger Arenaansicht, Struktur-/Energie-/Positionsrekonstruktion und reproduzierbaren Schuss-/Treffereffekten. Development Tests #40100789839: 274 Unit-/Behavior-Tests und 56 Desktop-/Mobile-E2E erfolgreich.
 - NEXT-49: Ereignisbasierte A/B-Kampfstatistiken (Schüsse, Treffer, effektiver Schaden, Energieverbrauch), Deduplizierung, Überkill-Schutz, Sofortsieg, Timeout und 0 Ticks. Development Tests #40100953952: 281 Unit-/Behavior-Tests und 58 Desktop-/Mobile-E2E erfolgreich.
