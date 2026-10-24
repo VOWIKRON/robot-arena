@@ -1,4 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { createHash } from 'node:crypto';
+import { RAPTOR, TITAN } from './presets';
+import { runMatch } from './simulation';
+import { createTournamentRun, advanceTournamentRun, finishTournamentRun, pauseTournamentRun, resumeTournamentRun } from './tournament-runner';
+import { exportTournamentRun, importTournamentRun, continueImportedTournament } from './tournament-archive';
+import { computeRoundRobinStandings } from './tournament-standings';
 import { createTournamentDefinition } from './tournament-model';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { auditTournamentFairness, auditSideBias, createFairSideSchedule } from './tournament-fairness';
@@ -36,4 +42,72 @@ describe('NEXT-60 paired side bias', () => {
       expect(Math.abs(audit.sideWinDifference)).toBeLessThanOrEqual(audit.simulations);
     });
   }
+});
+
+describe('NEXT-60 actual runner side assignment and stable fairness references', () => {
+  const model = (n: number, balanced = true) => createTournamentDefinition({
+    schemaVersion: 1, id: 'balanced-fixtures', format: 'round-robin', baseSeed: 4711,
+    maxTicks: 25,
+    ...(balanced ? { sideAssignment: 'balanced' as const } : {}),
+    participants: Array.from({length:n}, (_,i) => ({
+      ...(i % 2 ? TITAN : RAPTOR), id: 'r'+i, name: 'Robot '+i
+    }))
+  });
+  const sha = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  for (const n of [2,3,4,5,16]) {
+    it('balances both actual fixture and runner sides for '+n+' players', () => {
+      const canonical = model(n, false);
+      const balanced = model(n);
+      const original = createRoundRobinSchedule(canonical);
+      const changed = createRoundRobinSchedule(balanced);
+      expect(changed.map(f => [f.id,f.seed])).toEqual(original.map(f => [f.id,f.seed]));
+      expect(changed.map(f => [f.robotAId,f.robotBId].sort())).toEqual(original.map(f => [f.robotAId,f.robotBId].sort()));
+      const audit = auditTournamentFairness(balanced);
+      expect(audit.maxSideImbalance).toBeLessThanOrEqual(1);
+      expect(Object.values(audit.appearances)).toEqual(Array(n).fill(n-1));
+      expect(createFairSideSchedule(canonical, true)).toEqual(changed);
+      expect(createFairSideSchedule(balanced, false)).toEqual(original);
+      expect(Object.isFrozen(changed)).toBe(true);
+      const first = advanceTournamentRun(createTournamentRun(balanced));
+      const fixture = changed[0]!;
+      const left = balanced.participants.find(p=>p.id===fixture.robotAId)!;
+      const right = balanced.participants.find(p=>p.id===fixture.robotBId)!;
+      const expected = runMatch(left,right,fixture.seed,balanced.maxTicks);
+      expect(first.results[0]).toMatchObject({
+        robotAId: fixture.robotAId, robotBId: fixture.robotBId,
+        seed: fixture.seed, winnerId: expected.winner,
+        remainingStructureA: expected.robotA.structure,
+        remainingStructureB: expected.robotB.structure
+      });
+      const paused = pauseTournamentRun(first);
+      const resumed = continueImportedTournament(importTournamentRun(exportTournamentRun(paused)));
+      const completed = finishTournamentRun(resumed);
+      expect(completed).toEqual(finishTournamentRun(createTournamentRun(balanced)));
+      expect(computeRoundRobinStandings(balanced,completed.results).complete).toBe(true);
+      expect(resumeTournamentRun(paused).results).toEqual(paused.results);
+    });
+  }
+  it('rejects unsupported side assignment and knockout mode', () => {
+    expect(() => createTournamentDefinition({...model(2),sideAssignment:'random'})).toThrow(/Seitenzuordnung/);
+    expect(() => createTournamentDefinition({...model(2),format:'knockout'})).toThrow(/Seitenbalance/);
+  });
+  it('pins SHA256 of 16-player balanced fixtures, results, standings and side-bias audit', () => {
+    const definition = model(16);
+    const completed = finishTournamentRun(createTournamentRun(definition));
+    const snapshot = {
+      fixtures: createRoundRobinSchedule(definition),
+      results: completed.results,
+      standings: computeRoundRobinStandings(definition,completed.results),
+      audit: auditTournamentFairness(definition),
+      sideBias: auditSideBias(definition)
+    };
+    expect(snapshot.audit.maxSideImbalance).toBeLessThanOrEqual(1);
+    expect(snapshot.sideBias.sideBiasRate).toBeLessThanOrEqual(0.25);
+    expect(sha(snapshot)).toBe('GOLDEN_BALANCED_16');
+  });
+  it('pins legacy SHA256 to prove opt-in leaves historical schedule and results unchanged', () => {
+    const definition = model(16,false);
+    const completed = finishTournamentRun(createTournamentRun(definition));
+    expect(sha({fixtures:createRoundRobinSchedule(definition),results:completed.results})).toBe('GOLDEN_LEGACY_16');
+  });
 });
