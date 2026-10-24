@@ -1,26 +1,72 @@
 # RUN_STATE
 
-## Aktueller Lauf
-- step: Defensive-Korrektur auf Nutzerauftrag
-- status: COMPLETE
-- version: 0.1.53
-- branch: main
-- local_typecheck: GREEN
-- local_unit_tests: GREEN (225)
-- local_build: GREEN
-- pr_tests: GREEN (225 Unit-/Verhaltenstests, 46 Desktop-/Mobile-E2E)
-- pr: https://github.com/VOWIKRON/robot-arena/pull/45
-- pr_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40018423641
-- main_tests: GREEN (vollständig einschließlich Desktop und Mobile)
-- main_ci: https://github.com/VOWIKRON/robot-arena/actions/runs/40018619403
-- publish: SUCCESS
-- publish_run: https://github.com/VOWIKRON/robot-arena/actions/runs/40018744209
-- published_commit: ec81e688fe92c79e8baf922583eb40132c4b3830
-- online_smoke: GREEN (Publish verifiziert Arena, Infoseiten, Versionsarchiv und exakten Commit)
-- blocker: none
+## Fortsetzung der Entwicklungsrunde · 24.10.2026, 18:12 Europe/Berlin
+- NEU abgeschlossen: NEXT-55 · Responsiver Turnierplanungsdialog mit 2–16 Teilnehmern, Preset- und Namenswahl, validierten Seeds/Ticklimits, deterministischen Paarungen, Fortschritt 0/N und Punktetabelle.
+- Verifiziert: Development Tests #40110813524 auf Code-SHA 9f17bc65: 303 Unit-/Behavior-/Regressionstests, 64 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
+- Testreview: zuerst TypeScript-Tupeltyp korrigiert; danach Browser-Regression wegen mehrdeutigem Seed-Label korrigiert. Vollständiger erneuter Testlauf grün.
+- Refactoring/Isolation: Turnier-Vorschau verwendet reine Tournament-Engine-Module; keine Mutation von Sandbox-State oder Sandbox-RNG; dynamische Inhalte per textContent statt HTML-Injektion.
+- Kumulativ 13 vollständig getestete NEXT-Aufgaben seit v0.1.53: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55.
+- Nächster Schritt: NEXT-56 · deterministischer serieller Turnier-Runner; NEXT-57 K.-o.-Bracket.
+- Veröffentlichungsstatus extern nicht unabhängig bestätigt; bei manueller externer Veröffentlichung ohne GitHub-Merge: **Veröffentlichungsstatus ungeklärt**.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, kein Deployment, kein publish.php.
 
-## Scope
-Frühzeitiger Sicherheitsabstand, auf 95 % eigene Reichweite begrenzt; Verfolgungsstopp ab 70 % Struktur. Keine Änderung von Schaden, Tempo, Energie oder anderen Strategien. 21 defensive Referenzstreams bewusst aktualisiert, 27 Referenzen aus v0.1.51 unverändert. Standard-Raptor weicht bei Tick 20 zurück und gewinnt 93 von 100 festen Seeds, zuvor 0; Titan weicht bei Tick 21 zurück. Keine allgemeine Sieggarantie.
 
-## Nächstes Gate
-Defensive-Korrektur vollständig integriert und veröffentlicht. NEXT-40 · Energieverwaltungsparameter bleibt offen. Dieser Abschlusscommit aktualisiert ausschließlich Projektmetadaten; das veröffentlichte Produkt bleibt unverändert. Vor neuem Produktzyklus tatsächlichen main-/Publish-Zustand prüfen.
+## Aktuelle Entwicklungsrunde · 24.10.2026, 18:00 Europe/Berlin
+- branch: `automation/next-40-energy-reserve-unpublished`; PR #46 Draft, main bleibt bei b90c7448 / v0.1.53.
+- completed_this_round: NEXT-54 (1 von maximal 3); NEXT-55/56 nicht begonnen.
+- verified: #40109944097 auf Code-SHA 431ee335: 303 Unit-/Behavior-/Regressionstests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- functionality: immutable Result-Snapshots, 3/1/0-Punkte, Struktur-Differenz, stabile Rangfolge, unvollständige Tabellen; strenge Match-/Seed-/ID-/Werteprüfung.
+- refactoring: Tabellenberechnung in reines, von UI/Simulation entkoppeltes Modul `src/engine/tournament-standings.ts` ausgelagert; vollständige Tests danach erfolgreich.
+- current_next: NEXT-55 (responsives Turnier-UI), danach NEXT-56 (Runner).
+- cumulative_unpublished: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 (12).
+- final_documentation_head_ci: Development Tests #40110105950 auf Dokumentations-HEAD a6eb67d0 grün (303 Unit/Behavior, 60 Desktop/Mobile, Typecheck/Build).
+- live_website_status: Veröffentlichung extern nicht unabhängig bestätigt; bei manueller Veröffentlichung ohne GitHub-Merge **Veröffentlichungsstatus ungeklärt**.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge, kein Deployment, kein publish.php.
+
+
+## Aktuelle Entwicklungsrunde · 24.10.2026, 17:00 Europe/Berlin
+- branch: `automation/next-40-energy-reserve-unpublished`
+- pull_request: #46 (Draft; NICHT MERGEN)
+- main_sha: `b90c7448419a134cd5e764e1243dc04fd5958715` (per GitHub-Compare weiterhin unverändert)
+- last_documented_verified_release: v0.1.53 (laut BACKLOG.md / PROJECT_STATE.md)
+- live_website_check: nicht unabhängig bestätigt; bei externer manueller Veröffentlichung ohne GitHub-Merge **Veröffentlichungsstatus ungeklärt**
+- package_version_on_branch: 0.1.54 (unveröffentlichter Release-Kandidat)
+- current_next: NEXT-54 · Turnierauswertung
+- round_completed: NEXT-51, NEXT-52, NEXT-53 (3 von maximal 3)
+- round_status: ALLE DREI IMPLEMENTIERT UND VOLLSTÄNDIG GETESTET
+- tests: Development Tests #40105284320 (Replay-Refactoring), #40105438397 (290 Unit/Behavior, 60 Desktop/Mobile), #40105486356 (297 Unit/Behavior, 60 Desktop/Mobile), jeweils Typecheck/Build erfolgreich
+- deterministic_checks: Immutable-Snapshots; Turniermodell-Grenzen 2/16, IDs, Seeds und JSON-Roundtrip; Round Robin 2/3/4/16, Paarungsformel, Reihenfolge und Seeds bis MAX_SAFE_INTEGER
+- refactoring: `deepFreeze` in eigenständiges reines Modul verschoben; Recorder-Runtime-Abhängigkeit in Replay-Format und State beseitigt; bestehende Recorder-API unverändert
+- blocker: keiner für Entwicklung; finalen Testlauf nach Dokumentationsänderungen separat prüfen
+- publishing: AUSDRÜCKLICH VERBOTEN. Kein Merge auf main, kein Publish/Deployment, kein Aufruf von publish.php.
+- publish_workflow_on_main: reagiert weiterhin auf alten CI-Namen; kein Release-Workflow ausgelöst
+- unrelated_prs: #5 und #8 nicht verändert
+
+## Kumulative vollständig getestete, seit v0.1.53 nicht in main integrierte Aufgaben
+| NEXT | Funktion | Nachweis | Status |
+| --- | --- | --- | --- |
+| 40 | Energiereserve A/B (0–100 %), Validierung, Schussfreigabe | Development Tests #40085113036 · 246 Unit/Behavior, 48 Desktop/Mobile | Implementiert, getestet, unveröffentlicht |
+| 44 | Deterministischer Event Recorder und unveränderliche Snapshots | #40088595774 · 252 / 48 | Implementiert, getestet, unveröffentlicht |
+| 45 | Versioniertes Replay-JSON und Schema-/Tick-/ID-Validierung | #40088913689 · 258 / 48 | Implementiert, getestet, unveröffentlicht |
+| 46 | Replay-Import/-Export mit 2-MB-Grenze und Live-Isolation | #40092321506 · 262 / 50 | Implementiert, getestet, unveröffentlicht |
+| 47 | Eventbasierter Replay-Player mit Play/Pause/Step/Reset | #40096610594 · 268 / 52 | Implementiert, getestet, unveröffentlicht |
+| **48 – NEU** | Grafische Replay-Zeitleiste, Seek, Zustands-/Effektrekonstruktion | **#40100789839 · 274 / 56** | **Implementiert, getestet, unveröffentlicht** |
+| **49 – NEU** | Kampfstatistiken A/B mit Deduplizierung und Überkill-Begrenzung | **#40100953952 · 281 / 58** | **Implementiert, getestet, unveröffentlicht** |
+| **50 – NEU** | 48 Strategie-/Seed-Roundtrips, Hash-Digests, Import-Härtung | **#40101113261 · 284 / 60** | **Implementiert, getestet, unveröffentlicht** |
+
+| **51 – NEU** | Replay-Refactoring: Immutable-Helper und Recorder-Entkopplung | #40105284320 · vollständige Development Tests | **Implementiert, getestet, unveröffentlicht** |
+| **52 – NEU** | Validiertes, unveränderliches Turnierdatenmodell | #40105438397 · 290 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+| **53 – NEU** | Deterministischer Round-Robin-Spielplan und Seeds | #40105486356 · 297 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+| **54 – NEU** | Turnierauswertung, 3/1/0 Punkte, Reststruktur-Differenz, immutable Ergebnis-Snapshots | #40109944097 · 303 Unit/Behavior, 60 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+| **55 – NEU** | Responsiver Turnierplanungsdialog, 2–16 Teilnehmer, Presets, Paarungen, Fortschritt und Tabelle, Sandbox-Isolation | #40110813524 · 303 Unit/Behavior, 64 Desktop/Mobile | **Implementiert, getestet, unveröffentlicht** |
+
+**Gesamtzahl vollständig getesteter, seit v0.1.53 nicht in main integrierter Aufgaben: 13.**
+- NEXT-55 abgeschlossen; NEXT-56 bis NEXT-63 geplant, noch nicht implementiert.
+- Veröffentlichung auf der externen Website konnte in diesem Lauf nicht unabhängig abgerufen werden; falls eine manuelle externe Veröffentlichung ohne GitHub-Merge erfolgt ist, ist deren Status **Veröffentlichungsstatus ungeklärt**.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## Nächster Haltepunkt
+1. Letzten vollständigen Development-Tests-Lauf auf dem aktuellen Dokumentations-HEAD prüfen; keine neue Aufgabe als getestet melden, bevor der Test grün ist.
+2. Nächster Lauf: NEXT-54 Turnierauswertung; Fehler vor Features, maximal drei Aufgaben.
+3. Rolling Backlog und Test-/Release-Dokumentation synchron halten; keine Homepage-Aktualisierung.
+4. Keine anderen Automationen verändern; PR #46 bleibt Draft und main unverändert.

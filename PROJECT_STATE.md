@@ -1,8 +1,43 @@
+## Unveröffentlichte Entwicklungsfortsetzung (24.10.2026, 18:12 Europe/Berlin)
+- NEXT-55 abgeschlossen: unabhängiger responsiver Turnierdialog, 2–16 benennbare Teilnehmer mit Raptor/Titan-Presets, Seed/Ticklimit-Validierung, Round-Robin-Paarungen, Fortschritt und Tabelle. Noch keine automatische Turnierausführung.
+- Browser-Regression für mehrdeutiges Seed-Label behoben; TypeScript-Tupeltyp korrigiert; vollständiger Testlauf #40110813524 auf SHA 9f17bc65 grün (303 Unit/Behavior, 64 Desktop/Mobile, Typecheck/Build).
+- Kumulativ 13 unveröffentlichte Aufgaben seit v0.1.53 (NEXT-40, 44–55). Nächster Schritt NEXT-56; PR #46 Draft, main unverändert, kein Publish/Deployment.
+- Veröffentlichungsstatus der externen Homepage unabhängig ungeklärt; **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell**.
+
+## Unveröffentlichte Entwicklungsrunde (24.10.2026, 18:00 Europe/Berlin)
+- NEXT-54: Deterministische Round-Robin-Auswertung (3/1/0 Punkte, Spiele/Siege/Remis/Niederlagen, Reststruktur-Differenz, stabile Sortierung und unvollständige Turniere); doppelte/ungültige Match-IDs, Seeds, Teilnehmer und Reststruktur werden abgewiesen. Validierte Ergebnis-Snapshots sind unveränderlich. Development Tests #40109944097 auf Commit 431ee335: 303 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- Kumulativ 12 getestete Aufgaben seit v0.1.53, NICHT VERÖFFENTLICHT: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54.
+- Nächster Schritt NEXT-55; Rolling Backlog NEXT-55 bis NEXT-63. PR #46 Draft, main unverändert, kein Publish/Deployment.
+- Vollständige Development Tests nach Dokumentationsänderungen #40110105950 auf a6eb67d0 grün.
+
+## Unveröffentlichte Entwicklungsrunde (24.10.2026, 17:00 Europe/Berlin)
+- NEXT-51 abgeschlossen: `deepFreeze` aus Recorder in `src/engine/immutable.ts` extrahiert; Replay-Format/State ohne Runtime-Abhängigkeit vom Recorder; Recorder-Export rückwärtskompatibel. Charakterisierungstests und vollständige CI #40105284320 grün.
+- NEXT-52 abgeschlossen: unveränderliches, validiertes Turniermodell für 2–16 Teilnehmer, Format, Seed, maxTicks und JSON-Roundtrip; doppelte IDs/ungültige Werte abgewiesen. #40105438397 grün: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E.
+- NEXT-53 abgeschlossen: deterministische Round-Robin-Paarungen und Seeds, 2/3/4/16 Teilnehmer, keine Duplikate/Selbstpaarungen, sichere Seeds bis MAX_SAFE_INTEGER. #40105486356 grün: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E.
+- Kumulativ 11 implementierte und vollständig getestete Aufgaben seit v0.1.53, NICHT VERÖFFENTLICHT: NEXT-40, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53.
+- Nächster Schritt: NEXT-54 Turnierauswertung. PR #46 Draft, main unverändert, kein Publish/Deployment.
+
 # PROJECT_STATE
+
+## Aktuelle unveröffentlichte Entwicklungsrunde (24.10.2026, 16:00 Europe/Berlin)
+- NEXT-48: Eventbasierte, unveränderliche Zustandsrekonstruktion und Seek-Zeitleiste mit Position, Energie, Struktur, Schuss-/Treffereffekten; Tastatur und Mobile-Touch getestet. Development Tests #40100789839: 274 Unit-/Behavior-Tests, 56 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-49: Reine Replay-Statistik (Schüsse, Treffer, effektiver Schaden, Energieverbrauch), Deduplizierung und Überkill-Begrenzung; responsiver A/B-Vergleich. Development Tests #40100953952: 281 Unit-/Behavior-Tests, 58 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-50: 16 Strategiepaarungen × Seeds 1/12/4711, JSON-Roundtrip, Event-/Zustands-Digests, korrupte/übergroße Imports, Desktop-/Mobile-Regressionen. Development Tests #40101113261: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- Refactoring: Replay-Zustandsrekonstruktion und Kampfauswertung als getrennte, RNG-freie Engine-Module; UI verwendet nur diese Modelle. Danach vollständige Tests erfolgreich.
+- Kumulativ 8 vollständig getestete, unveröffentlichte Aufgaben seit v0.1.53: NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50.
+- Nächster Schritt: NEXT-51 · Replay-Refactoring/Turnierplanung. Hauptbranch und stabile Version v0.1.53 unverändert; PR #46 Draft, kein Merge, kein Publish.
+
+## Unveröffentlichte Entwicklung NEXT-47 (24.10.2026, vollständig getestet)
+- Eventbasierter Replay-Player ohne RNG/Engine-Simulation auf Entwicklungsbranch implementiert; Play/Pause/Step/Reset, Ereignisanzeige und Laden importierter Dateien bzw. des aktuellen Kampfes.
+- Separate Replay-Uhr; der laufende Sandbox-Kampf wird durch Import und Wiedergabe nicht verändert.
+- Unit-/Behavior-/Regressionstests für 0/1/3600 Ticks, Sofortsieg, Pause, Ende und deterministische Wiedergabe; Desktop-/Mobile-E2E für Dialog und Dateiimport ergänzt.
+- Development Tests #40096436278 auf Code-SHA 1b7413a grün: 268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck und Build. NEXT-47 abgeschlossen; finale Dokumentationsänderungen separat prüfen.
+- Kumulativ bereits verifiziert, aber nicht veröffentlicht: NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47 (5).
+- Stabile Version auf main: 0.1.53; PR #46 Draft, kein Merge/Publish.
 
 ## Aktueller Stand
 
-- Projektphase: Strategiesystem ausgebaut; Energieverwaltung offen, Replay geplant
+- Projektphase: Strategiesystem stabil auf main; unveröffentlichte Energieverwaltung, Recorder und Replay-Format fertig getestet; Replay-Import/-Export auf Entwicklungsbranch implementiert und getestet
 - Aktuelle stabile Version: 0.1.53
 - Branch: main
 - CI: aktiv
@@ -77,7 +112,7 @@ NEXT-27 abgeschlossen: Start und Reset repariert; Bedienverhalten, deterministis
 
 ## Rolling Backlog
 
-BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Der jeweils nächste Lauf bearbeitet genau einen davon. Sobald weniger als 5 konkrete Schritte verbleiben, wird vor dem Leerlaufen ein Planungszyklus fällig.
+BACKLOG.md hält mindestens die nächsten 5–10 konkreten Schritte in Reihenfolge sichtbar. Pro stündlichem Lauf sind bis zu drei verifizierte Abschlüsse erlaubt; ein unvollständiger Schritt hat Vorrang. Sobald weniger als 5 konkrete Schritte verbleiben, wird vor dem Leerlaufen ein Planungszyklus fällig.
 
 
 ## Aktueller Testausbau
@@ -122,3 +157,23 @@ Der fällige 5-Läufe-Testreview wurde durchgeführt: NEXT-06 ergänzt Grenztest
 Die bisherigen 35-%-/größere-Reichweite-Regeln oben beschreiben v0.1.50–52. Neu: Defensive korrigiert Sicherheitsabstand frühzeitig in beide Richtungen; Abstand = min(gegnerische Waffenreichweite × Faktor, 95 % eigene Waffenreichweite). Ab standardmäßig 70 % Struktur kein Nachsetzen mehr. Reine Abstandspolitik gekapselt, gemeinsame Bewegungsgeometrie und Schussfreigabe unverändert. In 100 festen Standardkämpfen gewinnt der defensive Raptor 93 statt zuvor 0; beide Roboter weichen früh zurück. Keine allgemeine Sieggarantie. 21 neue defensive Referenzstreams ergänzen 27 unveränderte Altversionsreferenzen. NEXT-40 bleibt offen.
 
 Release-Gates 0.1.53 bestanden: PR-CI https://github.com/VOWIKRON/robot-arena/actions/runs/40018423641 und main-CI https://github.com/VOWIKRON/robot-arena/actions/runs/40018619403 grün (225 Unit-/Verhaltenstests, 46 Desktop-/Mobile-E2E). Publish https://github.com/VOWIKRON/robot-arena/actions/runs/40018744209 erfolgreich; Online-Smoke einschließlich Infoseiten, Versionsarchiv und exaktem Commit grün. PR #45 integriert. Produktcommit ec81e688fe92c79e8baf922583eb40132c4b3830. NEXT-40 bleibt der nächste offene Entwicklungsschritt.
+
+## Arbeitsbranch NEXT-40 (24.10.2026, unveröffentlicht)
+
+Geplante Energiereserve (0–100 % Maximalenergie, Default 0 %) wird in der Schussfreigabe nach Regeneration berücksichtigt. Quellcode für getrennte A/B-Eingaben, Validierung und Tests liegt auf dem Entwicklungsbranch. **Nicht abgeschlossen:** Unit-/Verhaltenstests, vollständige Regression, Desktop-/Mobile-E2E und Freigabe müssen auf dem neuen Head nachgewiesen werden. Stabile Version auf main bleibt 0.1.53; kein Merge, kein Publish.
+
+## Unveröffentlichte Entwicklung · 24.10.2026
+
+- Stabil auf main: **0.1.53**, unverändert; Veröffentlichung ausschließlich nach manueller Nutzerfreigabe.
+- Branch: `automation/next-40-energy-reserve-unpublished`, Draft-PR #46, nicht mergen.
+- **NEXT-40 abgeschlossen und nicht veröffentlicht:** Energiereserve 0–100 % für A/B mit Default 0 %, Validierung, zentrale Schussfreigabe und Regressionen. Development Tests #40085113036 (SHA `193f42d07cb1a6827799e2ac6fe92a974b7ddae2`): 246 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
+- **NEXT-44 abgeschlossen und nicht veröffentlicht:** Append-only Recorder mit Seed, initialen RobotDefinition-Snapshots, Tick-Events und Endzustand. Development Tests #40088595774 (SHA 7df3cacc): 252 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
+- **NEXT-45 abgeschlossen und nicht veröffentlicht:** Replay-Dateiformat schemaVersion 1, JSON-Roundtrip, ID-/Tick-/Event-/Arena-/Zahlenvalidierung. Development Tests #40088913689 (SHA 9d6f719c): 258 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
+- Testworkflow auf dem Entwicklungsbranch heißt `Development Tests`; der `Publish`-Workflow auf main reagiert nur auf `CI`, bleibt aber grundsätzlich automatisch konfiguriert. Nicht auf main mergen und keinen Publish-Workflow auslösen.
+- Kumulativ seit v0.1.53: **4 vollständig getestete, unveröffentlichte Aufgaben (NEXT-40, NEXT-44, NEXT-45, NEXT-46)**. Weitere offene Schritte: NEXT-47 bis NEXT-51.
+
+## NEXT-46 · Replay-Import/-Export (Entwicklungsbranch)
+- Implementiert: separater Replay-Dialog, Live-Snapshot ohne Recorder-Abschluss, JSON-Download mit stabilem Namen, Dateiimport mit 2-MB-Grenze und Schema-Prüfung.
+- Import zeigt nur geprüfte Metadaten; laufender Kampf bleibt unverändert. Player folgt mit NEXT-47.
+- Unit-/Behavior-/Regression- und Desktop-/Mobile-Tests auf Commit 556a2858 grün: Development Tests #40092321506, 262 Unit-/Verhaltenstests und 50 Desktop-/Mobile-E2E, Typecheck und Build. NEXT-46 abgeschlossen und unveröffentlicht; Dokumentations-Head separat prüfen.
+- main und Live-Version 0.1.53 unverändert; kein Merge, Publish oder Deployment.

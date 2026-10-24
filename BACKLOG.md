@@ -1,12 +1,13 @@
 # Backlog
 
-Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro planmäßigem Lauf wird genau ein Schritt bearbeitet. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
+Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro stündlichem Lauf werden bis zu drei unabhängige oder sicher sequenzierbare Schritte bearbeitet; unvollständige Schritte werden zuerst fortgesetzt. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
 ## Aktueller Zustand
 
-**Phase:** Strategiesystem / Replay-Planung  
+**Phase:** Turnier-UI-Grundgerüst  
 **Aktuelle stabile Version:** 0.1.53
-**Nächstes Ziel:** NEXT-40 · Energieverwaltungsparameter (in diesem Auftrag ausdrücklich nicht bearbeitet)
+**Nächstes Ziel:** NEXT-56 · Deterministische Turnierausführung (Entwicklungsbranch, unveröffentlicht)
+**Kumulativ seit v0.1.53 vollständig getestet, nicht veröffentlicht:** NEXT-40, NEXT-44, NEXT-45, NEXT-46, NEXT-47, NEXT-48, NEXT-49, NEXT-50, NEXT-51, NEXT-52, NEXT-53, NEXT-54, NEXT-55 (13 Aufgaben).
 
 ---
 
@@ -258,11 +259,13 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 - [x] aktuelle Strategie in der Konfiguration sichtbar machen
 - [x] Desktop- und Mobile-E2E ergänzen
 
-### NEXT-40 · Energieverwaltungsparameter
-- [ ] Strategieparameter für Energiereserve definieren
-- [ ] Schussfreigabe abhängig von Reserve modellieren
-- [ ] Grenzfälle 0 %, Maximum und Regeneration testen
-- [ ] deterministisches Verhalten absichern
+### NEXT-40 · Energieverwaltungsparameter · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
+- [x] Optionale Energiereserve 0–100 % der maximalen Energie, Default 0 %, mit Builder-Validierung modelliert
+- [x] Schuss nur zulassen, wenn nach Energieverbrauch die Reserve erhalten bleibt; Regeneration erfolgt vor der Prüfung
+- [x] Eingabe und Vorschau für A/B im Config-Dialog als Quellcode ergänzt, Reset auf 0 %
+- [x] Unit-, Behavior-, Seed- und Desktop-/Mobile-Testfälle als Quellcode ergänzt
+- [x] Development Tests #40085113036 auf Commit 193f42d0: 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich
+- [x] Default 0 % und feste Seeds gegen Regressionen geprüft; Veröffentlichung bleibt ausschließlich manuell und steht aus
 
 ### Erledigt in v0.1.52 · NEXT-41 · Strategieparameter im Config-Dialog
 - [x] relevante Strategieparameter abhängig vom Strategietyp anzeigen
@@ -284,31 +287,125 @@ Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reih
 
 ## Folgezyklus · F · Replay & Analyse
 
-NEXT-40 bleibt zuvor offen; die folgenden Schritte sind geplant und noch nicht implementiert.
+NEXT-40 und NEXT-44 sind getestet, aber nicht veröffentlicht. NEXT-45 ist der nächste offene Schritt; weitere Schritte sind geplant.
 
-### NEXT-44 · Event Recorder
-- [ ] Events pro Tick mit Seed und Ausgangskonfiguration unveränderlich aufzeichnen; Reihenfolge und Abschlusszustand testen.
+### NEXT-44 · Event Recorder · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
+- [x] Seed, Startkonfigurationen, Initial-/Endzustand und Tick-Events in einem unveränderlichen Snapshot aufzeichnen.
+- [x] Append-only-Recorder mit fortlaufenden Tick-IDs, Ereignisreihenfolge und Ende-Sperre ergänzen.
+- [x] Tests für 0/1/3600 Ticks, Sofortsieg und Seed-Determinismus implementieren.
+- [x] Development Tests #40088595774 auf SHA 7df3cacc: 252 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
+- [x] Recorder-Tests und unveränderte Default-Kämpfe verifiziert; NEXT-44 als abgeschlossen und unveröffentlicht gezählt.
 
-### NEXT-45 · Replay-Dateiformat und Validierung
-- [ ] Versioniertes JSON-Format mit Metadaten definieren; ungültige Versionen und inkonsistente Tick-/Robot-Referenzen ablehnen.
+### NEXT-45 · Replay-Dateiformat und Validierung · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
+- [x] JSON-Schema-Version 1 mit Seed, Arena, RobotDefinition-Snapshots, Tick-Events und Endzustand ergänzen.
+- [x] Validierung von Schema-Version, Robot-IDs, Tick-Folge, Event-Referenzen, Arena und nicht endlichen Werten implementieren.
+- [x] Unit-/Behavior-/Regressionstests für JSON-Roundtrip, 0-Tick, Sofortsieg und ungültige Daten ergänzen.
+- [x] Development Tests #40088913689 auf SHA 9d6f719c: 258 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build erfolgreich.
+- [x] Replay-Format als abgeschlossen und unveröffentlicht gezählt; NEXT-46 folgt frühestens im nächsten Stundenlauf.
 
-### NEXT-46 · Replay exportieren und importieren
-- [ ] Download/Dateiimport im separaten Dialog anbieten; validierte Dateien und verständliche Fehler auf Desktop/Mobile absichern.
+### NEXT-46 · Replay exportieren und importieren · ABGESCHLOSSEN / NICHT VERÖFFENTLICHT
+- [x] Live-Recorder um unveränderliche, wiederholbare Snapshots ohne Abschluss erweitern.
+- [x] Deterministische JSON-Dateinamen, Browser-Download, 2-MB-Grenze und Schema-/ID-/Tick-Validierung beim Import.
+- [x] Separaten zugänglichen Replay-Dialog mit Import-/Export-Knöpfen, Dateiauswahl und verständlicher Rückmeldung ergänzen.
+- [x] Ungültiger Import und gültige Dateivorschau verändern den laufenden Kampf nicht; Wiedergabe erst NEXT-47.
+- [x] Unit-/Behavior-/Regressionstests und Desktop-/Mobile-E2E als Quellcode ergänzt.
+- [x] Development Tests #40092321506 auf Commit 556a2858: Typecheck, Build, **262 Unit-/Verhaltenstests und 50 Desktop-/Mobile-E2E erfolgreich**; NEXT-46 implementiert und getestet, unveröffentlicht.
 
-### NEXT-47 · Replay-Player
-- [ ] Play/Pause/Einzelschritt aus aufgezeichneten Daten statt neuer Simulation; Abbruch und Kampfende absichern.
+### NEXT-47 · Replay-Player (implementiert und getestet, unveröffentlicht)
+- [x] Ereignisbasierte Player-Zustandsmaschine mit Play/Pause/Einzelschritt/Ende aus validierten Frames; keine RNG-/Simulationsaufrufe.
+- [x] Importierte Aufzeichnung und aktuellen Kampf im eigenen Replay-Dialog mit Tick- und Ereignisanzeige abspielen; Live-Kampf bleibt unverändert.
+- [x] GitHub Development Tests #40096436278 (SHA 1b7413a): 268 Unit-/Behavior-/Regressionstests und 52 Desktop-/Mobile-E2E, Typecheck/Build grün; 0-Tick, Sofortsieg, 3600 Ticks, Pause/Ende, erneutes Öffnen und importierte JSON-Datei geprüft.
+- [x] NEXT-47 als abgeschlossen und kumulativ unveröffentlicht gezählt; NEXT-48 übernimmt Zustandsrekonstruktion und grafische Zeitleiste.
 
-### NEXT-48 · Replay-Zeitleiste
-- [ ] Zu aufgezeichneten Ticks springen; konsistente Anzeigen und reproduzierbares Vor-/Zurückspringen testen.
+### NEXT-48 · Replay-Zeitleiste · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Seek auf Tick 0, Mitte, Ende und rückwärts; deterministische Zustandsrekonstruktion ohne neue Simulation.
+- [x] Struktur, Energie, Position und Kampfeffekte nach Seek konsistent; Mobile-Touch und Tastatur geprüft.
+- [x] Referenzzustände und Eventreihenfolge mit festen Seeds getestet; Development Tests #40100789839: 274 Unit-/Behavior-Tests, 56 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-49 · Kampfstatistiken
-- [ ] Schüsse, Schaden und Energieverbrauch aus Events berechnen; keine unbelegten oder doppelt gezählten Werte.
+### NEXT-49 · Kampfstatistiken · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Schüsse, Treffer, effektiven Schaden und Energieverbrauch aus aufgezeichneten Events berechnen.
+- [x] Doppelte Events, Überkill, Sofortsieg, 0 Ticks und Timeout gesondert getestet.
+- [x] A/B-Vergleich mit zugänglichen Labels und responsiver Ansicht; Development Tests #40100953952: 281 Unit-/Behavior-Tests, 58 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-50 · Replay-Roundtrip und Testreview
-- [ ] Alle Strategiepaarungen Aufnahme→Export→Import→Wiedergabe vergleichen; Desktop/Mobile-Regressionen erweitern.
+### NEXT-50 · Replay-Roundtrip und Testreview · ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Alle 16 Strategiepaarungen × Seeds 1/12/4711: Aufnahme→Export→Import→Player mit Zustands-/Event-Digests verglichen (48 Fälle).
+- [x] Maximalgröße, beschädigte JSON-Daten, fehlende Frames und Desktop-/Mobile-E2E abgesichert.
+- [x] Referenz-Snapshots, stabile Hash-Vergleiche und Performance der 48-Fälle-Suite im vollständigen CI-Lauf geprüft; Development Tests #40101113261: 284 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
 
-### NEXT-51 · Replay-Refactoring und Turnierplanung
-- [ ] Recorder/Player nach Charakterisierung refactoren; nächsten Turnierblock in 5–10 konkrete Schritte zerlegen.
+### NEXT-51 · Replay-Refactoring und Turnierplanung (erledigt, unveröffentlicht)
+- [x] Gemeinsames `deepFreeze` in `src/engine/immutable.ts` extrahiert; Recorder-Export für Kompatibilität beibehalten; Replay-Format und Zustandsrekonstruktion importieren direkt aus dem reinen Modul.
+- [x] Charakterisierungstests für verschachtelte Event-/Zustands-Snapshots, referenztreue Rückgabe, Primitivwerte und bereits eingefrorene Werte ergänzt.
+- [x] Vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Tests erfolgreich: Development Tests #40105284320 (gemeinsamer Immutable-Helper), anschließend #40105438397 und #40105486356.
+- [x] Turnier-NEXT-52 bis NEXT-59 mit Datenmodell, Seeds, Round-Robin, Auswertung, UI, K.-o., Persistenz und E2E-Abnahmen konkret geplant.
+
+### NEXT-52 · Turnierdatenmodell und Validierung (erledigt, unveröffentlicht)
+- [x] Reines Modul `src/engine/tournament-model.ts`: Teilnehmer mit stabiler eindeutiger ID und validierter RobotDefinition, Turnier-ID, `format` (round-robin/knockout), `baseSeed` und `maxTicks`.
+- [x] 2–16 Teilnehmer erzwingen; doppelte IDs, ungültige Definitionen, Nicht-Finite-Werte, negative/unsichere Seeds und leere Namen mit verständlichen Fehlern ablehnen.
+- [x] Eingaben niemals mutieren; serialisierbare, versionierte Turnierdefinition mit deterministischem JSON-Roundtrip.
+- [x] Unit-/Behavior-Tests: Grenzen 1/2/16/17, Duplikate, Invalid-Inputs, Deep-Copy, Wiederholbarkeit.
+
+### NEXT-53 · Deterministischer Round-Robin-Spielplan (erledigt, unveröffentlicht)
+- [x] Paarungen für 2–16 Teilnehmer genau einmal pro ungeordnetem Paar erzeugen: `n*(n-1)/2`; keine Selbstpaarungen.
+- [x] Paarungsreihenfolge und Seeds allein aus Turnierdefinition und Matchindex ableiten, ohne globalen RNG; unabhängig von UI-/Ausführungsreihenfolge.
+- [x] Gerade/ungerade Teilnehmerzahl, 2/3/4/16 Teilnehmer und Seed-Grenzen testen; Snapshot-Digests für feste Referenzturniere.
+
+### NEXT-54 · Turnierauswertung und Rangfolge (abgeschlossen und getestet)
+- [x] Ergebnisse als unveränderliche Datensätze (Teilnehmer-IDs, Seed, Gewinner/Unentschieden, Ticks, Reststruktur) erfassen; doppelte Match-IDs ablehnen.
+- [x] Tabelle aus Ergebnissen berechnen: Spiele, Siege, Unentschieden, Niederlagen, Punkte 3/1/0, Struktur-Differenz.
+- [x] Gleichstand deterministisch nach Punkten, Struktur-Differenz und stabiler Teilnehmer-ID auflösen; unvollständige Turniere anzeigen.
+- [x] Unit-/Behavior-Tests: 0 Matches, Draw, Sieg, Überzählung, Duplikate, stabile Sortierung, keine Eingabemutation.
+
+- Qualitätsnachweis: Development Tests #40109944097 (303 Unit/Behavior, 60 Desktop/Mobile, Typecheck/Build erfolgreich); unveröffentlicht.
+
+### NEXT-55 · Responsives Turnier-UI-Grundgerüst
+- [x] Eigenständiger Dialog mit Teilnehmern, Paarungen, Fortschritt und Tabelle; Sandbox-Kampfzustand strikt unverändert.
+- [x] Tastaturbedienung, Fokusmanagement, klare Fehlerzustände und responsive Darstellung auf 375px und Desktop.
+- [x] Playwright-E2E: Öffnen/Schließen, gültige/ungültige Eingaben, Scrollen, Touch und unveränderte Sandbox.
+
+- **Verifiziert:** Development Tests #40110813524 auf SHA 9f17bc65: 303 Unit-/Behavior-Tests, 64 Desktop-/Mobile-E2E, Typecheck/Build erfolgreich; Sandbox-Isolation, 375px, Escape/Fokus und ungültige Eingaben geprüft.
+
+### NEXT-56 · Deterministische Turnierausführung
+- [ ] Runner verarbeitet geplante Paarungen seriell mit `runMatch`/Engine ohne UI-Kopplung; Pause/Fortsetzen/Abbrechen an Matchgrenzen.
+- [ ] Kein versteckter RNG; identische Definitionen liefern identische Ergebnisse und Reihenfolge, auch nach Pause.
+- [ ] Unit-/Behavior-/Performance-Tests für 2/4/16 Teilnehmer, feste Seeds, Timeout und Abbruch ohne Teilzustandsverlust.
+
+### NEXT-57 · K.-o.-Bracket
+- [ ] Single-Elimination für 2–16 Teilnehmer mit dokumentierter Bye-Regel für Nicht-Zweierpotenzen; keine doppelte Teilnahme pro Runde.
+- [ ] Unentschieden deterministisch und fair nach vorab definierter Tie-Break-Regel auflösen; keine impliziten Zufallsziehungen.
+- [ ] Tests: 2/3/5/8/16 Teilnehmer, Bye-Reihenfolge, Finalpaarung, Champion, Replay-Seeds.
+
+### NEXT-58 · Turnier-Import/-Export und Wiederaufnahme
+- [ ] Versioniertes JSON für Definition, Spielplan, Ergebnisse, Seeds und Fortschritt; Größe begrenzen, Schema/IDs streng prüfen.
+- [ ] Fehlerhafter Import verändert weder Sandbox noch aktives Turnier; Wiederaufnahme ohne doppelte Ergebnisse.
+- [ ] JSON-Roundtrip und Resume-Digests für vollständige/unterbrochene Turniere; Desktop-/Mobile-Dateiauswahl testen.
+
+### NEXT-59 · Turnier-E2E, Statistik und Refactoring
+- [ ] Browser-E2E für Round Robin und K.-o. inklusive Touch/Tastatur, Pause/Resume und Ergebnisanzeige.
+- [ ] 16 Teilnehmer mit festen Seeds deterministisch gegen Tabellen-/Bracket-Digests prüfen; Laufzeit-/Speichergrenzen dokumentieren.
+- [ ] Engine/Runner/UI entkoppeln, Charakterisierungstests vor Refactoring ergänzen, danach gesamte Testmatrix erneut ausführen.
+- [ ] Folgende 5–10 NEXT-Aufgaben anhand Test- und Nutzerfeedback detailliert planen.
+
+**Qualitätsnachweise für NEXT-52 und NEXT-53:** Development Tests #40105438397: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün; #40105486356: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün. Beide unveröffentlicht.
+\n
+### NEXT-60 · Turnier-Fairness und Seed-Audit
+- [ ] Paarungsreihenfolge, Seitenzuweisung A/B und deterministische Seed-Ableitung auf Verzerrungen prüfen; bestehendes Verhalten zuerst charakterisieren.
+- [ ] Alternierende Startseiten als optionalen Modus entwerfen, ohne bestehende Round-Robin-Snapshots zu ändern.
+- [ ] Referenztests mit 2/3/4/16 Teilnehmern, festen Seeds und identischen Roboterdefinitionen; keine versteckte RNG-Nutzung.
+
+### NEXT-61 · Exportierbare Turniertabelle
+- [ ] Validierte Ergebnis- und Tabellen-Snapshots als versioniertes JSON und CSV ausgeben, ohne laufende Sandbox zu verändern.
+- [ ] Spaltenreihenfolge, Dezimalformat, Unicode-Namen, Formel-Injection-Schutz und unvollständige Turniere dokumentieren.
+- [ ] Unit-/Behavior-Tests für Roundtrip, Sonderzeichen, 0 Ergebnisse und 16 Teilnehmer; Desktop-/Mobile-Download prüfen.
+
+### NEXT-62 · Turnier-Leistung und Abbruchgrenzen
+- [ ] 16-Teilnehmer-Round-Robin mit 120 Paarungen unter reproduzierbaren Bedingungen benchmarken; CPU-/Speicherbedarf erfassen.
+- [ ] Matchgrenzen für Pause/Resume/Cancel und deterministische Zwischenspeicherung unter Last prüfen.
+- [ ] Keine UI-Blockade: Ausführungsstrategie und Fortschrittsanzeige nach Messergebnissen festlegen; Regressionen absichern.
+
+### NEXT-63 · Turnier-Zugänglichkeit und Robustheit
+- [ ] Tastaturfokus, Screenreader-Status, Kontrast und Touch-Ziele in Dialog, Tabelle und Bracket prüfen.
+- [ ] Ungültige Konfigurationen, Doppelklicks, wiederholtes Starten und Fenstergrößen 375px/Desktop abfangen.
+- [ ] Browser-Behavior-Tests für Bedienung, Fehlerzustände und unveränderte Sandbox; vollständige Regression.
 
 ## Planungszyklus
 
@@ -382,3 +479,13 @@ Stabile Sandbox mit Editor, Strategien, Replay, Turnieren, Testlabor und reprodu
 6. anschließend die größeren Entwicklungsblöcke.
 
 So bleibt jederzeit sichtbar, was beim nächsten Lauf passiert und was unmittelbar danach vorgesehen ist.
+
+## Detaillierte Folgeabnahme (Planung, noch nicht implementiert)
+- **NEXT-44 Recorder:** Seed und beide RobotDefinition-Snapshots einmalig beim Matchstart einfrieren; Tick/Events nur append-only; bei Replay-Aufnahme 0, 1 und 3600 Ticks sowie sofortigem Sieg Ereignisreihenfolge und unveränderte Eingaben prüfen.
+- **NEXT-45 Replay-Format:** schemaVersion=1, Seed, Arenaabmessungen, Roboterdefinitionen, Tick-/Eventliste und Endzustand; ungültige IDs, Ticks, Versionen und Nicht-Finite-Werte mit benannten Fehlern ablehnen; JSON-Roundtrip deterministisch.
+- **NEXT-46 Import/Export:** Download mit stabiler Dateibenennung; Dateiimport mit Größenlimit, Fehlerdialog und ohne Änderung des laufenden Matchs bei ungültigen Daten; Desktop/Mobile und Tastatur testen.
+- **NEXT-47 Player:** Aufzeichnungen ohne SeededRandom erneut abspielen; Play/Pause/Step und Ende deterministisch; keine Simulation im Player; Tests für leere und früh beendete Kämpfe.
+- **NEXT-48 Zeitleiste:** seek(0), seek(mitte), seek(ende), rückwärts springen; Energie/Struktur/Position/Effekte konsistent rekonstruieren; Desktop/Mobile inklusive Touch testen.
+- **NEXT-49 Statistiken:** Shot-, Damage- und Energy-Kennzahlen ausschließlich aus Events ableiten; negative/überzählige Schäden ausschließen; Sieger/Unentschieden getrennt anzeigen.
+- **NEXT-50 Roundtrip:** Alle 16 Strategiepaarungen × Seeds 1/12/4711 mit Export→Import→Player gegen Zustands-/Event-Digests prüfen; Speichergrenzen und Browser-E2E aufnehmen.
+- **NEXT-51 Refactoring/Turnierplanung:** Recorder/Player-Schnittstellen nach Charakterisierung entkoppeln; bestehende Referenzen unverändert halten; 5–10 konkrete Turnieraufgaben mit Abnahmetests planen.

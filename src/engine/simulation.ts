@@ -3,6 +3,7 @@ import type { CombatEvent, MoveEvent } from './events';
 import { createDamageEvent, createHitEvent, createMoveEvent, createShotEvent, createVictoryEvent } from './events';
 import { SeededRandom } from './random';
 import { nextCombatPosition } from './movement';
+import { strategyParameters } from './strategy-config';
 
 export type StepResult = Readonly<{ state: MatchState; events: readonly CombatEvent[]; }>;
 const distance = (a: Vec2, b: Vec2): number => Math.hypot(a.x - b.x, a.y - b.y);
@@ -21,9 +22,10 @@ function moveRobot(self: RobotState, enemy: RobotState, tick: number, width: num
   return createMoveEvent(tick, self.definition.id, from, to);
 }
 function canFire(self: RobotState, enemy: RobotState): boolean {
+  const reserve = self.definition.maxEnergy * strategyParameters(self.definition.strategy, self.definition.strategyParameters).energyReserveRatio;
   return distance(self.position,enemy.position)<=self.definition.weaponRange
     && self.cooldown===0
-    && self.energy>=self.definition.weaponEnergy;
+    && self.energy>=self.definition.weaponEnergy + reserve;
 }
 function prepareAction(self: RobotState, enemy: RobotState, tick: number, events: CombatEvent[], width: number, height: number): void {
   self.energy=Math.min(self.definition.maxEnergy,self.energy+self.definition.energyRegen);

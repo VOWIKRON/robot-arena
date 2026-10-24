@@ -1,5 +1,46 @@
 # Changelog
 
+## Unreleased · NEXT-55 (getestet, nicht veröffentlicht)
+- Responsiver, eigenständiger Turnierdialog: 2–16 Teilnehmer mit Namens- und Presetwahl, sichere Eingabevalidierung, Round-Robin-Paarungen, Fortschrittsanzeige und Tabelle. Sandbox-Zustand und RNG bleiben unverändert.
+- TypeScript-/Browser-Regressionen korrigiert, inklusive eindeutiger Eingabelabels. Development Tests #40110813524 auf SHA 9f17bc65 erfolgreich: 303 Unit-/Behavior-Tests, 64 Desktop-/Mobile-E2E, Typecheck/Build.
+- Automatische Turnierausführung folgt in NEXT-56; kein Merge oder Deployment.
+
+## Unreleased · NEXT-54 (getestet, nicht veröffentlicht)
+- NEXT-54: Deterministische Round-Robin-Auswertung (3/1/0 Punkte, Spiele/Siege/Remis/Niederlagen, Reststruktur-Differenz, stabile Sortierung und unvollständige Turniere); doppelte/ungültige Match-IDs, Seeds, Teilnehmer und Reststruktur werden abgewiesen. Validierte Ergebnis-Snapshots sind unveränderlich. Development Tests #40109944097 auf Commit 431ee335: 303 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-55 (Turnier-UI) und NEXT-56 (Runner) bleiben offen; keine Veröffentlichung.
+
+
+## Unreleased · NEXT-51, NEXT-52 und NEXT-53 (getestet, nicht veröffentlicht)
+- NEXT-51: `deepFreeze` als reines, gemeinsam verwendetes Modul ausgegliedert; Recorder-API bleibt kompatibel, Replay-Format und Rekonstruktion ohne Runtime-Recorder-Abhängigkeit. Immutable-Charakterisierung und vollständige Tests grün (#40105284320).
+- NEXT-52: Validiertes, versioniertes und unveränderliches Turnierdatenmodell mit 2–16 Teilnehmern, Formaten Round Robin/K.-o., Seeds, Ticklimit und deterministischem JSON-Roundtrip. #40105438397: 290 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- NEXT-53: Round-Robin-Spielplan mit jeder Paarung genau einmal, stabiler Reihenfolge und Seed-Ableitung ohne globalen RNG; Tests für 2/3/4/16 Teilnehmer und Seed-Grenzen. #40105486356: 297 Unit-/Behavior-Tests, 60 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- Noch keine Turnierausführung oder -oberfläche (NEXT-54 ff.); keine Veröffentlichung, main unverändert.
+
+## Unreleased · NEXT-48, NEXT-49 und NEXT-50 (vollständig getestet, nicht veröffentlicht)
+- NEXT-48: Grafische Replay-Zeitleiste mit deterministischem Seek in beide Richtungen, unabhängiger Arenaansicht, Struktur-/Energie-/Positionsrekonstruktion und reproduzierbaren Schuss-/Treffereffekten. Development Tests #40100789839: 274 Unit-/Behavior-Tests und 56 Desktop-/Mobile-E2E erfolgreich.
+- NEXT-49: Ereignisbasierte A/B-Kampfstatistiken (Schüsse, Treffer, effektiver Schaden, Energieverbrauch), Deduplizierung, Überkill-Schutz, Sofortsieg, Timeout und 0 Ticks. Development Tests #40100953952: 281 Unit-/Behavior-Tests und 58 Desktop-/Mobile-E2E erfolgreich.
+- NEXT-50: 48 Replay-Roundtrips (16 Strategiepaarungen × 3 Seeds) mit SHA-256-Vergleich von Events und Zuständen, beschädigten/fehlenden Frames, 2-MB-Grenze und Browser-Regressionen. Development Tests #40101113261: 284 Unit-/Behavior-Tests und 60 Desktop-/Mobile-E2E erfolgreich.
+- Replay-Zustandsrekonstruktion und Statistik als reine, von der UI getrennte Module refaktoriert. Vollständiger Typecheck und Build erfolgreich. Alle drei Aufgaben bleiben unveröffentlicht; Live-Version v0.1.53 unverändert.
+
+## Unreleased · NEXT-47 (implementiert und getestet, unveröffentlicht)
+- Replay-Player mit Play/Pause, Einzelschritt, Reset und Endzustand; importierte Aufzeichnungen oder aktuellen Kampf im Replay-Dialog ereignisbasiert wiedergeben, ohne Engine oder RNG erneut auszuführen.
+- Unit-/Behavior-Tests für leere, sofort beendete und 3600-Tick-Replays, deterministische Ereignisreihenfolge sowie Desktop-/Mobile-E2E für Dateiimport und unveränderten Live-Kampf erfolgreich: Development Tests #40096436278 (SHA 1b7413a), 268 Unit-/Verhaltenstests, 52 Desktop-/Mobile-E2E, Typecheck/Build grün.
+- Grafische Zustandsrekonstruktion und Seek gehören erst zu NEXT-48; keine Veröffentlichung oder Deployment.
+
+
+## Unreleased · NEXT-46 (implementiert und getestet, noch nicht veröffentlicht)
+- Replay-Dialog mit JSON-Export des aktuellen Kampfs und Importvalidierung bis 2 MB; Live-Kampf bleibt bei gültigen und ungültigen Imports unverändert.
+- Recorder-Snapshot refaktoriert; deterministische Dateinamen und Unit-/Behavior-/Desktop-/Mobile-Tests ergänzt. Development Tests #40092321506 auf Commit 556a2858 erfolgreich: 262 Unit-/Verhaltenstests, 50 Desktop-/Mobile-E2E, Typecheck und Build; Dokumentations-Head separat prüfen.
+- Kein Merge, kein Deployment, keine Veröffentlichung.
+
+## 0.1.54 – Freigabekandidat (noch nicht veröffentlicht) · NEXT-40, NEXT-44, NEXT-45
+- NEXT-40: Energiereserve 0–100 % pro Roboter, zentrale Schussfreigabe, getrennte Konfiguration A/B und Default 0 % implementiert und geprüft.
+- NEXT-40: Development Tests #40085113036 auf SHA 193f42d0 erfolgreich: 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build.
+- NEXT-44: Append-only-Event-Recorder mit Seed, unveränderlichen Start-/End-Snapshots und Ereignissen pro Tick. Development Tests #40088595774 auf SHA 7df3cacc erfolgreich: 252 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build.
+- NEXT-45: Replay-JSON schemaVersion 1, Arena-/Seed-/RobotDefinition-Metadaten, Tick-/Event-/Zustandsprüfung und JSON-Roundtrip implementiert. Development Tests #40088913689 auf SHA 9d6f719c: 258 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build grün. Drei NEXT-Aufgaben sind getestet und unveröffentlicht.
+- Entwicklungstests durch Workflow-Namen `Development Tests` vom bisherigen Publish-Auslöser `CI` getrennt. Publish auf main ist noch automatisch konfiguriert.
+- Release-Kandidat v0.1.54; Veröffentlichung erst nach Tests des finalen Heads und expliziter Freigabe.
+
 ## 0.1.53 – 2026-10-23
 - Defensive hält Sicherheitsabstand bereits vor kritischem Schaden; ab standardmäßig 70 % Struktur kein Nachsetzen mehr (zuvor erst 35 %).
 - Sicherheitsabstand bezieht sich auf die gegnerische Waffenreichweite und bleibt auf 95 % der eigenen begrenzt: Rückzug opfert nicht mehr die Schussmöglichkeit.
