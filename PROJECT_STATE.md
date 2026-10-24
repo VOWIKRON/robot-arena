@@ -136,3 +136,9 @@ Geplante Energiereserve (0–100 % Maximalenergie, Default 0 %) wird in der Schu
 - **NEXT-45 abgeschlossen und nicht veröffentlicht:** Replay-Dateiformat schemaVersion 1, JSON-Roundtrip, ID-/Tick-/Event-/Arena-/Zahlenvalidierung. Development Tests #40088913689 (SHA 9d6f719c): 258 Unit-/Verhaltenstests und 48 Desktop-/Mobile-E2E, Typecheck und Build grün.
 - Testworkflow auf dem Entwicklungsbranch heißt `Development Tests`; der `Publish`-Workflow auf main reagiert nur auf `CI`, bleibt aber grundsätzlich automatisch konfiguriert. Nicht auf main mergen und keinen Publish-Workflow auslösen.
 - Kumulativ seit v0.1.53: **3 vollständig getestete, unveröffentlichte Aufgaben (NEXT-40, NEXT-44, NEXT-45)**. Weitere offene Schritte: NEXT-46 bis NEXT-51.
+
+## NEXT-46 · Replay-Import/-Export (Entwicklungsbranch)
+- Implementiert: separater Replay-Dialog, Live-Snapshot ohne Recorder-Abschluss, JSON-Download mit stabilem Namen, Dateiimport mit 2-MB-Grenze und Schema-Prüfung.
+- Import zeigt nur geprüfte Metadaten; laufender Kampf bleibt unverändert. Player folgt mit NEXT-47.
+- Unit-/Behavior-/Regression- und Desktop-/Mobile-Testquellen ergänzt. Vollständige Tests des letzten Branch-Heads noch offen; NEXT-46 erst nach grünen Tests als abgeschlossen zählen.
+- main und Live-Version 0.1.53 unverändert; kein Merge, Publish oder Deployment.
