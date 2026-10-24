@@ -16,6 +16,7 @@ export function runKnockoutBracket(input: TournamentDefinition): KnockoutBracket
   const definition = createTournamentDefinition(input);
   if (definition.format !== 'knockout') throw new Error('K.-o.-Turnier benötigt knockout-Format');
   const byId = new Map(definition.participants.map(p => [p.id, p]));
+  const seedOf = (index: number) => Number((BigInt(definition.baseSeed) + BigInt(index)) % MODULUS);
   let entrants = definition.participants.map(p => p.id);
   const matches: KnockoutMatch[] = [];
   let round = 0;
@@ -25,7 +26,7 @@ export function runKnockoutBracket(input: TournamentDefinition): KnockoutBracket
     // A bye goes to the first seeds; remaining entrants compete in stable order.
     for (const id of entrants.slice(0, byeCount)) {
       const index = matches.length;
-      matches.push({ round, index, robotAId: id, robotBId: null, seed: Number((BigInt(definition.baseSeed) + BigInt(index)) % MODULUS), winnerId: id, drawn: false });
+      matches.push({ round, index, robotAId: id, robotBId: null, seed: seedOf(index), winnerId: id, drawn: false });
       next.push(id);
     }
     const competing = entrants.slice(byeCount);
@@ -33,7 +34,7 @@ export function runKnockoutBracket(input: TournamentDefinition): KnockoutBracket
       const a = competing[i]!;
       const b = competing[i + 1]!;
       const index = matches.length;
-      const seed = Number((BigInt(definition.baseSeed) + BigInt(index)) % MODULUS);
+      const seed = seedOf(index);
       const state = runMatch(byId.get(a)!, byId.get(b)!, seed, definition.maxTicks);
       if (state.outcome === 'active') throw new Error('K.-o.-Kampf nicht abgeschlossen');
       // Draw: higher remaining structure fraction wins; if equal, earlier tournament seed wins.
