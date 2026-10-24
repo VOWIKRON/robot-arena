@@ -35,8 +35,8 @@ describe('NEXT-54 immutable deterministic round-robin standings', () => {
     expect(results).toEqual(before);
     expect(output).toMatchObject({ complete: true, completedMatches: 3, totalMatches: 3 });
     expect(output.standings.map(row => [row.participantId, row.points, row.played, row.wins, row.draws, row.losses]))
-      .toEqual([['r0', 4, 2, 1, 1, 0], ['r2', 4, 2, 1, 1, 0], ['r1', 0, 2, 0, 0, 2]]);
-    expect(output.standings.map(row => row.structureDifference)).toEqual([20, 30, -50]);
+      .toEqual([['r2', 4, 2, 1, 1, 0], ['r0', 4, 2, 1, 1, 0], ['r1', 0, 2, 0, 0, 2]]);
+    expect(output.standings.map(row => row.structureDifference)).toEqual([30, 20, -50]);
   });
 
   it('uses structure difference and then ID for equal points, regardless of input order', () => {
