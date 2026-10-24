@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { runKnockoutBracket } from './tournament-knockout';
 import { createTournamentDefinition } from './tournament-model';
-import { ROBOT_PRESETS } from './components';
+
 
 function fixture(count: number) {
-  const prototype = Object.values(ROBOT_PRESETS)[0]!;
+  const prototype = { strategy: 'aggressive', maxStructure: 100, maxEnergy: 100, energyRegen: 2, speed: 1, sensorRange: 150, weaponRange: 100, weaponDamage: 10, weaponEnergy: 5, cooldownTicks: 1 };
   return createTournamentDefinition({
     schemaVersion: 1, id: 'knockout-test', format: 'knockout',
     baseSeed: 4711, maxTicks: 12,
