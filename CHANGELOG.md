@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased · NEXT-56 (Implementierung vorhanden, abschließende CI-Verifikation ausstehend)
+- Separater, UI-unabhängiger Round-Robin-Runner führt Paarungen seriell mit den definierten Seeds und Ticklimits aus; immutable Ergebnis-Snapshots und deterministische Reihenfolge.
+- Pause/Fortsetzen/Abbrechen ausschließlich an Matchgrenzen, bereits abgeschlossene Ergebnisse bleiben erhalten. Tests für 2/4/16 Teilnehmer, 120 Matches, Timeout, Seeds und Zustandsübergänge ergänzt.
+- **Nicht veröffentlicht**, Entwicklungsbranch und Draft-PR #47; kein Merge, kein Deployment.
+
+## 0.1.54 – 2026-10-24 (erfolgreich veröffentlicht)
+- Release v0.1.54 mit NEXT-40 und NEXT-44 bis NEXT-55 auf main integriert. Publish #40111747415: Upload, Live-Verifikation und Deployment-Status erfolgreich; Build-Commit 362f8bdb.
+- Historische, unten stehende „Unreleased“-Abschnitte für NEXT-40 bis NEXT-55 beschreiben den Zustand vor dieser Veröffentlichung und sind jetzt Teil von v0.1.54.
+
 ## Unreleased · NEXT-55 (getestet, nicht veröffentlicht)
 - Responsiver, eigenständiger Turnierdialog: 2–16 Teilnehmer mit Namens- und Presetwahl, sichere Eingabevalidierung, Round-Robin-Paarungen, Fortschrittsanzeige und Tabelle. Sandbox-Zustand und RNG bleiben unverändert.
 - TypeScript-/Browser-Regressionen korrigiert, inklusive eindeutiger Eingabelabels. Development Tests #40110813524 auf SHA 9f17bc65 erfolgreich: 303 Unit-/Behavior-Tests, 64 Desktop-/Mobile-E2E, Typecheck/Build.
