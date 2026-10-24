@@ -58,3 +58,20 @@
 #tournament-preview[hidden]{display:none}
 #tournament-preview h3{margin:18px 0 8px}
 @media(max-width:650px){.tournament-options{grid-template-columns:1fr}.tournament-participant{grid-template-columns:minmax(0,1fr)}.tournament-participants{max-height:32vh}.tournament-table{font-size:.8rem}}
+
+/* NEXT-63: visible keyboard focus, readable table scrolling and 44px touch targets. */
+#tournament-dialog :is(button,input,select,[tabindex]):focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: 3px;
+}
+#tournament-dialog :is(button,input,select) { min-height: 44px; }
+#tournament-dialog :is(.tournament-table-scroll,.tournament-pairings) { scroll-behavior: auto; }
+#tournament-dialog .tournament-pairings:focus-visible,
+#tournament-dialog .tournament-table-scroll:focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: -3px;
+}
+@media (max-width: 375px) {
+  #tournament-dialog .controls button { flex: 1 1 100%; }
+  #tournament-dialog .config-dialog-card { padding: 12px; }
+}
