@@ -1,3 +1,9 @@
+## 25.10.2026, 02:00 MESZ – P0 NEXT-78 weiterhin in Verifikation (nicht veröffentlicht)
+- Regression gegen Scheinabdeckung verstärkt: alle acht Fluchtrichtungen müssen nun tatsächlich Bewegung und Randkontakt nachweisen, statt nur Koordinaten von untätigen Robotern zu prüfen. Commit `63a0b632`; GitHub-Schreibresultat durch erneutes Lesen geprüft.
+- **Keine vollständige aktuelle CI bestätigt:** NEXT-78 offen; NEXT-79 UX-Audit dokumentiert, Umsetzung offen. Vorherige CI #40137115159 (372 Unit/Behavior/Regression, 92 E2E) betrifft nur NEXT-63/64/66/67/68.
+- **Unveröffentlichte bestätigte Abschlüsse: 5** – NEXT-63, NEXT-64, NEXT-66, NEXT-67, NEXT-68. Letztes verifiziertes Live-Release v0.1.55. Draft-PR #48, Entwicklungsbranch; kein Merge/Publish.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 25.10.2026, 01:00 MESZ – priorisierter P0-Fix in Verifikation (nicht veröffentlicht)
 - **NEXT-78:** Rendering-Ursache des Raptor-Randfehlers analysiert: Engine-Koordinaten 0..100, Robotergrafik/HUD in festen Pixelmaßen und bisher nicht vollständig innerhalb der Arena gehalten. CSS-Clamp mit 24/27px Chassis-Halbe und 53/56px HUD-Kopffreiraum ergänzt. Simulation, Seeds, Rohpositionen und Replay unverändert. Neue Engine-/Browser-Regressionen committed, aber vollständige CI noch nicht bestätigt; NEXT-78 **offen**.
 - **NEXT-79:** UX-Quellcodeanalyse in `USABILITY_AUDIT.md` mit Prioritäten und testbaren 79a–79e. Umsetzung/Browser-Abnahme noch offen.
