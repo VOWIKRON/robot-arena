@@ -48,10 +48,9 @@ export class EventRecorder {
     this.lastState = structuredClone(result.state);
   }
 
-  finish(finalState: MatchState = this.lastState): MatchRecording {
-    if (this.completed) throw new Error('Aufzeichnung bereits abgeschlossen');
+  /** An immutable preview for export, without closing the live recording. */
+  snapshot(finalState: MatchState = this.lastState): MatchRecording {
     if (finalState.tick !== this.lastState.tick) throw new Error('Abschluss-Tick stimmt nicht überein');
-    this.completed = true;
     const recording: MatchRecording = {
       seed: this.seed,
       robotA: structuredClone(this.initialState.robotA.definition),
@@ -61,6 +60,13 @@ export class EventRecorder {
       finalState: structuredClone(finalState)
     };
     return deepFreeze(recording);
+  }
+
+  finish(finalState: MatchState = this.lastState): MatchRecording {
+    if (this.completed) throw new Error('Aufzeichnung bereits abgeschlossen');
+    const recording = this.snapshot(finalState);
+    this.completed = true;
+    return recording;
   }
 }
 
