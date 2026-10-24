@@ -212,8 +212,10 @@ function pct(value: number, max: number): string {
 
 function renderRobot(id: string, x: number, y: number, chassisId: string, weaponId: string, structure: number, maxStructure: number, energy: number, maxEnergy: number): void {
   const node = el<HTMLDivElement>(id);
-  node.style.left = `${x}%`;
-  node.style.top = `${y}%`;
+  // The simulation owns coordinates 0..100; CSS keeps the entire robot and HUD visible.
+  // Never clamp engine positions here: that would change deterministic matches and replays.
+  node.style.setProperty('--arena-x', `${x}%`);
+  node.style.setProperty('--arena-y', `${y}%`);
   node.dataset.chassis = chassisId;
   node.dataset.weapon = weaponId;
   node.dataset.x = x.toFixed(3);
