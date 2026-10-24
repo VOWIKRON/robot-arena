@@ -1,41 +1,31 @@
 # RUN_STATE
 
-## Aktueller Arbeitslauf (24.10.2026, 12:00 Europe/Berlin)
-- step: NEXT-40
-- phase: IMPLEMENTING / WAITING_TESTS
-- status: IN_PROGRESS; unveröffentlicht; nicht als abgeschlossen zählen
+## Aktueller Entwicklungsstand (24.10.2026, stündlicher Lauf)
+- stable_version: 0.1.53; main-SHA: b90c7448419a134cd5e764e1243dc04fd5958715
 - branch: automation/next-40-energy-reserve-unpublished
-- last_inspected_branch_head: 7cf4efee5e6f11a9cc7d962bf3c7cd101e84cd04 (vor dieser Dokumentationsänderung)
-- base_main_sha: b90c7448419a134cd5e764e1243dc04fd5958715
-- stable_version: 0.1.53; main unverändert
-- pr_for_NEXT_40: none
-- open_unrelated_prs: #5 und #8 (alte NEXT-10/11, nicht anfassen)
-- isolated_behavior_checks: PASS (23 Quellcode-/Verhaltensprüfungen; keine vollständige Vitest-Ausführung)
-- unit_behavior_regression_tests_for_NEXT_40: NOT_VERIFIED
-- desktop_mobile_e2e_for_NEXT_40: NOT_VERIFIED
-- last_verified_main_tests: GREEN (run 40018986554, SHA b90c7448419a134cd5e764e1243dc04fd5958715, 23.10.2026; nicht NEXT-40)
-- latest_publish_run: 40080528304 SKIPPED; nicht deployed
-- last_confirmed_published_version: 0.1.53 (GitHub Publish 40019085126 SUCCESS, 23.10.2026)
-- publish: FORBIDDEN; ausschließlich manuelle Nutzeraktion
+- pr: #46 (DRAFT; NICHT MERGEN)
+- current_next: NEXT-44
+- phase: VERIFYING_DEVELOPMENT_TESTS
+- publishing: VERBOTEN; ausschließlich Nutzer manuell; kein Merge auf main
+- test_workflow: Development Tests (auf Branch von bisherigem CI->Publish-Namen entkoppelt)
+- publish_workflow_on_main: workflow_run nach CI; NICHT manuell-only umgestellt
+- verified_next_40: YES; workflow 40085113036 auf SHA 193f42d07cb1a6827799e2ac6fe92a974b7ddae2; 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck/Build grün
+- next_44: Event Recorder implementiert, Tests für 0/1/3600 Ticks, Sofortsieg, Snapshots, Tick- und Event-Reihenfolge ergänzt
+- next_44_first_test: 40088447274 ROT wegen TS2532 im Testcode (Array-Index unter strict TypeScript)
+- next_44_fix: Test-Indexverengung mit Non-Null-Assertion; SHA 7df3cacc4bc4a12b493f9d30abf011e7f5c12dc2
+- next_44_retest: 40088595774 (zuletzt in Bearbeitung; endgültiges Ergebnis prüfen)
+- branch_head: bei nächstem Lauf frisch lesen; Dokumentationscommits nach Testfix
+- unrelated_open_prs: #5, #8 (nicht anfassen)
 
-## Kumulative unveröffentlichte Aufgaben seit dem letzten bestätigten Publish (0.1.53)
-**Vollständig implementiert UND mit erforderlichen Tests verifiziert UND noch unveröffentlicht: 0 Aufgaben.**
-- Keine. NEXT-40 ist implementiert, aber die vollständigen Tests fehlen; daher NICHT in diese Liste aufnehmen.
-- NEXT-40 · Energiereserve pro Roboter (0–100 %, Default 0 %) mit zentraler Schussfreigabe und Konfigurationsdialog: QUELLCODE VORHANDEN, UNIT/BEHAVIOR/REGRESSION/E2E NICHT VERIFIZIERT, NICHT VERÖFFENTLICHT.
-- NEXT-44 bis NEXT-51: nur geplant; keine Implementierung/Abnahme.
+## Kumulative vollständig getestete, unveröffentlichte Aufgaben seit v0.1.53
+1. NEXT-40 · Energieverwaltungsparameter: **IMPLEMENTIERT UND GETESTET**, unveröffentlicht. Separater A/B-Reserveparameter, 0–100 %, Default 0 %, Validierung, zentrale Schussfreigabe, deterministische Regressionen und Desktop/Mobile; Tests 40085113036 grün.
 
-## Sicherheitsblocker und Ursache
-`.github/workflows/ci.yml` startet den Workflow mit Namen `CI` auf Branch-Push und Pull Request.
-`.github/workflows/publish.yml` auf main reagiert über `workflow_run` auf jeden abgeschlossenen `CI`-Lauf. Auch bei Entwicklungsbranches wird dadurch ein Publish-Workflow erzeugt (Run 40080528304: SKIPPED); ein tatsächliches Deployment fand dabei nicht statt.
-Die bisherigen NEXT-40-Commits nutzten `[skip ci]` und haben daher keinen vollständigen Testlauf des neuen Heads ausgelöst.
-**Keine Tests auf GitHub starten, solange dies einen Publish-Workflow auslösen könnte. Keine Commits/Merges auf main.**
-Eine Änderung von publish.yml allein auf dem Entwicklungsbranch löst die Kopplung nicht, weil workflow_run auf dem Default-Branch ausgewertet wird.
-Sichere Entkopplung braucht eine gesonderte Testausführung ohne CI->Publish-Trigger oder eine vom Nutzer freigegebene manuelle Publish-Only-Konfiguration auf main.
+**Gesamtzahl verifizierter, noch nicht veröffentlichter NEXT-Aufgaben: 1.**
+- NEXT-44 · Event Recorder: implementiert, vollständige Tests noch nicht bestätigt; **NICHT als abgeschlossen zählen**.
+- NEXT-45 bis NEXT-51: geplant, nicht implementiert.
 
 ## Nächste Aktion
-1. NEXT-40 auf demselben Branch fortsetzen, ohne neue NEXT-Nummer zu beginnen.
-2. Erst einen nachweislich vom Publish-Workflow entkoppelten Testpfad schaffen; bis dahin keine riskanten GitHub-Testtrigger.
-3. Typecheck, Unit-/Behavior-/Regressionstests, feste Seeds sowie Desktop-/Mobile-E2E auf exakt dem Entwicklungs-Head nachweisen; Fehler vor weiteren Features beheben.
-4. Erst nach vollständiger Verifikation NEXT-40 als abgeschlossen in die kumulative Liste aufnehmen. Keine automatische Veröffentlichung.
-
-**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+1. Development Tests auf dem aktuellen Branch-Head prüfen; wenn rot, Logs analysieren und zuerst NEXT-44 reparieren.
+2. Bei grün NEXT-44 als abgeschlossen aufnehmen und erst dann NEXT-45 beginnen; maximal drei verifizierte NEXT-Abschlüsse pro Lauf.
+3. Rolling Backlog, Testsuite, Changelog und öffentliche Quellseiten synchron halten, ohne Veröffentlichung.
+4. **Kein Publish, kein Deployment, kein Release-Commit und kein Merge auf main.**
