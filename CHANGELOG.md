@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased · NEXT-46 (Entwicklung, Testfreigabe ausstehend)
+- Replay-Dialog mit JSON-Export des aktuellen Kampfs und Importvalidierung bis 2 MB; Live-Kampf bleibt bei gültigen und ungültigen Imports unverändert.
+- Recorder-Snapshot refaktoriert; deterministische Dateinamen und Unit-/Behavior-/Desktop-/Mobile-Tests ergänzt. Testfreigabe für aktuellen Head ausstehend.
+- Kein Merge, kein Deployment, keine Veröffentlichung.
+
 ## 0.1.54 – Freigabekandidat (noch nicht veröffentlicht) · NEXT-40, NEXT-44, NEXT-45
 - NEXT-40: Energiereserve 0–100 % pro Roboter, zentrale Schussfreigabe, getrennte Konfiguration A/B und Default 0 % implementiert und geprüft.
 - NEXT-40: Development Tests #40085113036 auf SHA 193f42d0 erfolgreich: 246 Unit-/Verhaltenstests, 48 Desktop-/Mobile-E2E, Typecheck und Build.
