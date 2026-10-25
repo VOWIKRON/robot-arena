@@ -13,7 +13,7 @@ describe('NEXT-69 tournament configurations', () => {
     expect(a).toEqual(b);
     expect(Object.isFrozen(a)).toBe(true);
     expect(a.participants.map(p => p.id)).toEqual(['custom-raptor', 'custom-titan']);
-    expect(a.participants[0].name).toBe('Eigener Raptor');
+    expect(a.participants[0]?.name).toBe('Eigener Raptor');
   });
   it('rejects duplicate stable robot IDs', () => {
     expect(() => tournamentFromConfigurations({ ...input, configurations: [raptor, { ...titan, id: raptor.id }] })).toThrow(/doppelte Teilnehmer-ID/);
