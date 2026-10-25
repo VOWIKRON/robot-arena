@@ -1,3 +1,11 @@
+## Fortschritt · 25.10.2026, 07:00 MEZ · NEXT-79c Schutz vor versehentlichem Turnier-Neustart
+- [x] Bei einem aktiven Turnier blockiert „Spielplan erstellen“ jetzt auch abweichende gültige Formulareinstellungen; vorher konnte ein aktiver Spielplan stillschweigend ersetzt werden. Erst explizit abbrechen, dann neu planen. Runner-Status bleibt die einzige Quelle.
+- [x] E2E-Regression ergänzt: ungültige Eingabe lässt aktiven Plan stehen, geänderte gültige Eingabe ersetzt ihn nicht, Cancel erlaubt Neustart und Kampf. Code und Tests auf GitHub geschrieben und zurückgelesen.
+- [ ] Vollständige aktuelle CI für NEXT-79c/d nachweisen (Unit/Behavior/Regression, Desktop/Mobil, Typecheck, Build, Audit, reproduzierbar); erst danach Freigabe. GitHub-Commit-Runs/Status ohne verwertbares Ergebnis; lokaler Clone wegen DNS nicht möglich.
+- [ ] NEXT-79d: konkrete Hilfen bei Eingabefehlern/Validierung und Kontrast-/Fokus-/Touch-Abnahme.
+- [ ] NEXT-79e: abschließende responsive, Tastatur-, Screenreader- und Import/Export/Autosave-Regressionen; vollständige CI nach Refactoring.
+- **Kumulativ 6 CI-getestete unveröffentlichte ganze NEXT-Aufgaben seit Live-v0.1.55:** 63, 64, 66, 67, 68, 78; NEXT-79a/b als getestete Teilaufgaben. NEXT-79c/d bleiben offen. Kein Publishing.
+
 ## Fortschritt · 25.10.2026, 06:00 MEZ · NEXT-79c Pause-/Fortsetzen-Regression ergänzt
 - [x] Bei pausiertem Turnier sind jetzt beide Startaktionen deaktiviert; nur „Fortsetzen“ nimmt den Lauf wieder auf. UI verwendet weiterhin allein `tournamentRun.status`, keinen zweiten Zustand.
 - [x] Desktop-/Mobil-Playwright-Test ergänzt: Plan erstellen → Pause → Startaktionen deaktiviert → Fortsetzen → Kampf. Code und Test aus GitHub zurückgelesen.
