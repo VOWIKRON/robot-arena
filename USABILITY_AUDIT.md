@@ -1,3 +1,10 @@
+## Fortschritt · 25.10.2026, 06:00 MEZ · NEXT-79c Pause-/Fortsetzen-Regression ergänzt
+- [x] Bei pausiertem Turnier sind jetzt beide Startaktionen deaktiviert; nur „Fortsetzen“ nimmt den Lauf wieder auf. UI verwendet weiterhin allein `tournamentRun.status`, keinen zweiten Zustand.
+- [x] Desktop-/Mobil-Playwright-Test ergänzt: Plan erstellen → Pause → Startaktionen deaktiviert → Fortsetzen → Kampf. Code und Test aus GitHub zurückgelesen.
+- [ ] Vollständige aktuelle CI für NEXT-79c/d nachweisen; keine Abschlussfreigabe vor grünem Unit-/Behavior-/Regression-/Desktop-/Mobil-Gate. GitHub-Commit-Runs-Suche liefert keine verwertbaren Statusdaten, selbst bei älteren nachweislich grünen Runs.
+- [ ] NEXT-79e erst danach: Screenreader-Labels, Tastatur, 375/768/1280px, Status-/Fehlertexte und Regressionen; anschließend Refactoring und volle CI.
+- Kumulativ 6 CI-bestätigte unveröffentlichte NEXT-Aufgaben seit Live-v0.1.55: 63, 64, 66, 67, 68, 78. NEXT-79a/b getestete Teilaufgaben; 79c/d in Abnahme, 79e offen. **Kein Publishing.**
+
 ## Fortschritt · 25.10.2026, 05:00 MEZ · NEXT-79c/d CI-Abnahme offen
 - [x] NEXT-79c: Drei Turnierabschnitte, Tastaturnavigation und Aktionsgates implementiert; Playwright-Tests im Branch.
 - [x] NEXT-79d: Kontext-Hilfetexte zu Strategie, Energiereserve, Seed/Startwert, Ticklimit, Turnierformat und Reststruktur sowie `aria-describedby` und CSS-Stile implementiert; neue Desktop-/Mobil-Regressionen im Branch.
