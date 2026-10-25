@@ -727,7 +727,11 @@ el('tournament-create').addEventListener('click', () => {
         : 'Ein Turnier läuft bereits. Bitte zuerst abbrechen, bevor du einen neuen Spielplan erstellst.';
       return;
     }
-  } catch { /* renderTournamentPreview reports the validation error without losing an active run. */ }
+  } catch (error) {
+    // Report invalid draft inputs without mutating the active tournament or its auto-play.
+    el('tournament-feedback').textContent = `Turnier ungültig: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
+    return;
+  }
   if (!renderTournamentPreview() || !tournamentDefinition) return;
   // Only a successfully validated replacement may stop an earlier auto-run.
   stopTournamentAuto();
