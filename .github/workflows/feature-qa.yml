@@ -5,6 +5,10 @@ on:
     branches:
       - qa/NEXT-79e-isolated-validation
 
+  pull_request:
+    branches:
+      - qa/NEXT-79e-isolated-validation
+
 permissions:
   contents: read
 
