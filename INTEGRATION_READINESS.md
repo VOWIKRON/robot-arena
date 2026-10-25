@@ -23,7 +23,7 @@ Beide bearbeiten auch `BACKLOG.md`, `PROJECT_STATE.md`, `RUN_STATE.md`, `CHANGEL
 Das neue Skript `scripts/check-integration-conflicts.mjs` prüft gemeinsame Basis, gemeinsame Dateien und sich überlappende Quelltext-Hunks und meldet Dokumentationsabgleich separat. Lokale Node-Selbsttests: **4/4 erfolgreich**. Auf einem Checkout mit allen Branches:
 
 ```sh
-node --test tests/check-integration-conflicts.test.mjs
+node --test tests/check-integration-conflicts.check.mjs
 node scripts/check-integration-conflicts.mjs main feature/NEXT-69-validated-tournament-presets feature/NEXT-70-match-export
 ```
 
