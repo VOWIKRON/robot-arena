@@ -1,3 +1,11 @@
+## NEXT-82 abgeschlossen / Rolling Backlog · 26.10.2026 · NICHT VERÖFFENTLICHT
+- [x] **NEXT-82 – Match-Downloadfehler:** gemeinsame Downloadfunktion extrahiert; fehlende Blob-/ObjectURL-APIs, Klickfehler, sichere Dateinamen und Cleanup mit Unit-/Desktop-/Mobiltests abgesichert. QA-only #40243348670 **SUCCESS: 425/425 Unit, 156/156 Browser**. Draft-PR #63, noch nicht in sechs-Aufgaben-Kandidaten integriert.
+- [ ] **NEXT-76 – Turniersuche/Filter:** separate Entwicklung/QA, erst nach vollständigem isoliertem Test als fertig markieren.
+- [ ] **NEXT-79e – manuelle Barrierefreiheit:** NVDA/VoiceOver/Touch/Kontrast auf echten Geräten mit Befunden und Regressionen.
+- [ ] **NEXT-80 – Cross-Tab-CAS:** gleichzeitige Writes per Scheduler nachstellen, Locking-Fallback mit deterministischen Tests und Desktop/Mobil absichern.
+- [ ] **NEXT-84 – Browserkompatibilität:** Safari/iOS ohne ObjectURL und blockierte Downloads auf echten Geräten testen; Ergebnisse dokumentieren.
+- **Kumulativ fertig/getestet/unveröffentlicht: 7 NEXT-69/70/71/74/75/77/82.** Kein Publishing.
+
 ## Rolling Backlog / Runde 26.10.2026, 00:00 MEZ · NICHT VERÖFFENTLICHT
 - [~] **NEXT-82 (P0) – Match-Downloadfehler:** Gemeinsame Browser-Downloadroutine refactored, Dateinamen gehärtet, fehlende Blob-/ObjectURL-APIs, click()-Ausnahme und Cleanup mit Vitest und Desktop-/Mobil-E2E abgesichert. Implementierung auf eigenem Branch, **CI #40243185882 noch abzuwarten**, dann bei Grün abhaken.
 - [ ] **NEXT-79e (P0) – praktische Barrierefreiheit:** NVDA/Windows und VoiceOver/macOS/iOS mit Version, Ansagetext, Fokusreihenfolge und 375px-Touchbedienung protokollieren; reale Kontrastprüfung; Befunde beheben und Regressionstests ergänzen. Ohne manuelle Abnahme nicht abschließen.
