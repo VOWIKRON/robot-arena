@@ -1,3 +1,29 @@
+## NEXT-79e – Manuelle Abnahme vorbereitet · 25.10.2026, 17:00 MEZ · KEIN PUBLISHING
+- Neu: `ACCESSIBILITY_MANUAL_QA.md` mit reproduzierbarer NVDA-/VoiceOver-, Tastatur-, Touch-, Fokus- und Kontrast-Abnahmematrix. **Alle manuellen Prüffälle bleiben OFFEN**; keine unbelegte Erfolgsbehauptung.
+- Automatisierte QA weiterhin zuletzt erfolgreich #40204710908 (383 Unit-/Behavior-/Regression-/Determinismus-, 130 Browserprüfungen). Diese Änderung betrifft ausschließlich die Dokumentation.
+- NEXT-79e nicht abgeschlossen. Kumulativ seit Live v0.1.56: **0 vollständig abgeschlossene unveröffentlichte NEXT-Aufgaben**. NEXT-69 wird separat auf eigenem Branch bearbeitet.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## NEXT-79e – Isolierte vollständige QA erfolgreich · 25.10.2026, 16:00 MEZ · NICHT VERÖFFENTLICHT
+- **Automatische Qualitätsprüfung erfolgreich:** separater, ausdrücklich NICHT zur Integration vorgesehener Branch `qa/NEXT-79e-isolated-validation`, Run **#40204710908**, Commit `971cf6b5406f`, Ergebnis **SUCCESS**. 32/32 Testdateien, **383/383 Unit-/Behavior-/Regressions-/Determinismustests**, **130/130 Playwright Desktop/Mobil**, TypeScript-Typecheck, Build, zweifach reproduzierbarer Build, npm-Audit **0 bekannte Advisories**.
+- **Nachweis der Codegleichheit:** Vergleich `feature/NEXT-79e-accessibility-matrix` (`df3fa836`) gegen QA-Branch zeigt **ausschließlich zwei QA-Workflow-Dateien** als Unterschiede; Produktivcode und NEXT-79e-Testdatei sind identisch. Der temporäre QA-Branch hat die Development-Tests-Trigger auf sich selbst unterbunden und nur `Isolated Feature QA – no publishing` ausgeführt. **Kein Publish-Workflow und kein Deployment durch diese QA ausgelöst.**
+- **NEXT-79e noch offen:** Manuelle NVDA-/VoiceOver-Abnahme (gesprochene Feld-/Dialognamen, Live-Region, Fokusfalle und Rückgabe), echte Touch-/visuelle Kontrast-Abnahme auf 375/768/1280px sowie Review des Draft-PR **#51**. Automatisierte Tests sind grün, ersetzen die manuelle Abnahme nicht.
+- **Kumulativ seit bestätigter Live-Version v0.1.56: 0 vollständig abgeschlossene, getestete, unveröffentlichte NEXT-Aufgaben.** NEXT-79e ist in Arbeit; die Testergänzung ist noch keine vollständig abgenommene NEXT-Aufgabe. NEXT-63/64/66/67/68/78 und 79a–d sind bereits veröffentlicht.
+- **Fehler-Radar:** Draft-PR #52 wurde als Duplikat von #51 ohne Merge geschlossen. Dessen früherer CI-Run #40203189256 hatte 127/128 E2E bestanden; ein Desktop-Replay-Test (NEXT-67, Import → Tastatur) schlug fehl. Die identische bestehende Regression war im isolierten QA-Run grün. Ein sporadischer Fehler ist nicht ausgeschlossen; bei erneutem Auftreten eigene NEXT-67-Fehleraufgabe und Branch anlegen.
+- **Rolling Backlog:** P0 echte Screenreader-/Touch-Abnahme NEXT-79e und Fokus-Retests; P1 NEXT-69 versionierte Sandbox-Roboterpresets für Turniere, NEXT-70 sichere Match-CSV/JSON-Exporte, NEXT-71 Refactoring/Release-Readiness. Jede NEXT separat auf Branch und Draft-PR, kein Sammelmerge.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge nach main, keine Homepage-Änderung, kein publish.php, keine Veröffentlichung ausgelöst.
+
+## Rolling Backlog ab v0.1.56 · 25.10.2026, 15:00 MEZ
+- **Release-Baseline korrigiert:** v0.1.56 auf main (`3d516317`) mit GitHub-Deploymentstatus `robot-arena/deployment: success`. NEXT-63, 64, 66, 67, 68, 78 und NEXT-79a–d gehören zum bestätigten Release und sind **nicht mehr unveröffentlicht**. Frühere Angaben zu v0.1.55 und 10 unveröffentlichten Einträgen sind historische Zwischenstände, nicht die aktuelle Bilanz.
+- [ ] **NEXT-79e – P0 / in Arbeit / eigener Branch:** Tastatur-/ARIA-/Fokus-/Responsive-Testdatei committed; Desktop- und Mobil-CI, echte NVDA-/VoiceOver-Abnahme und visuelle 375/768/1280px-/Touch-/Kontrastprüfung noch offen. Akzeptanz: 0 Testfehler, zugängliche Dialog-/Feldnamen, Live-Status, korrekte Fehlermeldungs- und Fokusführung, Tabelle per Tastatur scrollbar, Escape/Fokusrückgabe, Import/Export/Autosave/Cancel/Resume ohne versteckte Kämpfe. Bei Rot zuerst beheben und erneut vollständig testen.
+- [ ] **NEXT-69 – P1:** Versionierte Roboterpresets aus Sandbox-Konfiguration, stabile IDs, Grenzen, Importvalidierung, deterministische Engine- und Browser-Tests; erst auf eigenem Branch beginnen.
+- [ ] **NEXT-70 – P1:** Match-CSV/JSON mit Schema, Unicode und Formel-Injection-Schutz, Downloads und Browser-Regression; eigener Branch.
+- [ ] **NEXT-71 – P1:** Release-Readiness/Branch-Isolation ab bestätigter v0.1.56; keine Veröffentlichung, eigener Branch.
+- [ ] **NEXT-72–77:** Bestehende Akzeptanzkriterien unverändert weiterführen, jeweils eigener Branch.
+- **Kumulativ fertig implementiert, getestet, aber seit v0.1.56 NICHT veröffentlicht: 0 NEXT-/Teilaufgaben.** NEXT-79e ist nur implementierte Testvorbereitung, nicht fertig verifiziert. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge nach main, kein Release, kein publish.php, keine Homepage-Änderung.
+
+---
+
 ## Priorisierte Fortsetzung · 25.10.2026, 14:00 MEZ · unveröffentlicht
 - [ ] **NEXT-79e (P0):** Neue Playwright-Tastatur-/Screenreader-Namensmatrix auf Entwicklungs-HEAD vollständig in GitHub CI bestätigen (Desktop + Mobil; neuer Test 2 Ausführungen), Fehler zuerst beheben. Anschließend echte NVDA-/VoiceOver-Prüfung: Dialogtitel, Feldnamen, Live-Status, Fehlerhinweise, Fokusfalle/Fokusrückgabe. Visuelle Touch-/Kontrastprüfung 375/768/1280px; vollständige CI nach jedem Fix. **Noch nicht abgeschlossen.**
 - [ ] **NEXT-71 (Release-Readiness, keine Veröffentlichung):** Die vom Nutzer nur für NEXT-63 und NEXT-64 erteilte Freigabe respektieren: Abhängigkeiten zur bereits veröffentlichten v0.1.55 prüfen, Änderungen isolieren, Test- und Release-SHA dokumentieren. Der aktuelle Sammelbranch enthält viele weitere unveröffentlichte Features und liegt 4 Commits hinter main. **Kein Merge, kein Deployment.**
