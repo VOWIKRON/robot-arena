@@ -1,3 +1,8 @@
+## Verifizierte Veröffentlichung v0.1.57 / korrigierter Entwicklungsstand · 26.10.2026
+- main `1ad7a64b7eaac10b6a6adc8bee6d655a8ed3405c`, Version 0.1.57, `robot-arena/deployment = success`; NEXT-69/70/71/74/75/77 sind veröffentlicht. Frühere Angaben, diese sechs seien unveröffentlicht, sind überholt.
+- **Unveröffentlicht seit v0.1.57: genau NEXT-82, NEXT-76, NEXT-85 (3).** Alle drei neu abgeschlossen/getestet; isolierte QA #40244234652 auf finalem acht-Feature-Integrations-HEAD erfolgreich (429 Unit, 160 Browser, TypeScript/Build/reproduzierbarer Build/Audit).
+- Branch/PR #65 ist DRAFT und gegenüber dem inzwischen veröffentlichten main diverged. Rebase/Neuintegration auf v0.1.57 vor manueller Freigabe notwendig. Kein Publishing durch diesen Entwicklungslauf.
+
 ## Acht-Feature-Integrationskandidat QA-grün · 26.10.2026 · NICHT VERÖFFENTLICHT
 - NEXT-76 und NEXT-82 in sechs-Aufgaben-Kandidaten integriert; src/main.ts hunkweise reconciliert, Suchfilter und gemeinsamer Downloadadapter bleiben erhalten. QA-only Draft-PR #65 gegen isolierten QA-Branch.
 - Kombinierte CI #40243980520 SUCCESS auf Code-SHA `5b1bada2c7262e245cda95a8adf1e647e4eb9924`: 429 Unit-/Behavior-/Regressions-/Determinismustests, 160 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Build und Security-Gate erfolgreich. Nach Dokumentation erneute QA offen.
