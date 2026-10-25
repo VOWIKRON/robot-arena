@@ -1,3 +1,10 @@
+## Entwicklungsstand · 25.10.2026, 06:00 MEZ · NEXT-79c/d weiter in Abnahme, KEIN PUBLISHING
+- [x] NEXT-79c: Pausenbedienung korrigiert: „Nächster Kampf“ **und** „Alle Kämpfe spielen“ bei pausiertem Turnier deaktiviert, ausschließlich explizites „Fortsetzen“ erlaubt. Desktop-/Mobil-Regression für Pausieren, Aktionsgates und Fortsetzen ergänzt und committed.
+- [ ] **NEXT-79c/d Abnahme:** vollständige aktuelle CI für Unit/Behavior/Regression, Desktop/Mobil, Typecheck, Build, Audit und reproduzierbare Builds nachweisen; neue Regression erst dann als bestanden markieren. Für den aktuellen Head keine verwertbaren GitHub-Run-Statusdaten; lokale Tests wegen fehlendem GitHub-Netzwerkzugang nicht möglich.
+- [ ] NEXT-79e: abschließende Screenreader-/Fokus-/Responsive-/Fehlertextmatrix und Refactoring nach bestätigter 79c/d-Abnahme. Danach NEXT-69–77 unverändert fortsetzen.
+- **Kumulativ seit Live-v0.1.55: 6 vollständig getestete, NICHT veröffentlichte NEXT-Aufgaben 63, 64, 66, 67, 68, 78.** NEXT-79a/b als getestete Teilaufgaben; 79c/d ohne aktuelle CI, 79e offen. Letzte bestätigte CI #40153366228: 383 Unit/Behavior/Regression, 102 Desktop/Mobil-E2E.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Draft-PR #48; kein Merge, Release oder Deployment.
+
 ## Entwicklungsstand · 25.10.2026, 05:00 MEZ · NEXT-79c/d in Abnahme, NICHT VERÖFFENTLICHT
 - [x] NEXT-79c: Turnierdialog-Schrittfolge und zustandsabhängige Aktionsfreigabe implementiert; Desktop-/Mobil-/Tastaturtests committed.
 - [x] NEXT-79d: Erklärungen zu Seed/Startwert, Tick, Strategie, Energiereserve, Reststruktur und Turnierformat sowie `aria-describedby` und responsive Browser-Regressionen implementiert.
