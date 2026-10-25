@@ -79,7 +79,7 @@ test('NEXT-79b: combat controls and tools are grouped and fight phase is explici
   await page.setViewportSize({ width: 375, height: 780 });
   await expect(combat).toBeVisible();
   await expect(tools).toBeVisible();
-  await expectNoPageOverflow(page, 375);
+  await expectNoPageOverflow(page, page.viewportSize()?.width ?? 375);
 });
 
 
@@ -132,7 +132,7 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
     await expect(dialog.locator('.tournament-advanced')).toHaveAttribute('open', '');
     await expect(dialog.locator('#tournament-import')).toBeVisible();
     await expect(dialog.locator('#tournament-autosave')).toBeVisible();
-    await expectNoPageOverflow(page, 375);
+    await expectNoPageOverflow(page, page.viewportSize()?.width ?? 375);
     await dialog.locator('#close-tournament').click();
     completedPriorRun = true;
   }
@@ -195,7 +195,7 @@ test('NEXT-79d: contextual guidance is readable, linked to inputs and usable on 
       const size = await link.boundingBox();
       expect(size?.height ?? 0).toBeGreaterThanOrEqual(44);
     }
-    await expectNoPageOverflow(page, 375);
+    await expectNoPageOverflow(page, page.viewportSize()?.width ?? 375);
   }
 });
 
@@ -573,7 +573,7 @@ test('NEXT-79e: keyboard-only tournament flow announces state and restores focus
   expect(await table.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
   await page.keyboard.press('ArrowRight');
   await expect.poll(() => table.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
-  await expectNoPageOverflow(page, 375);
+  await expectNoPageOverflow(page, page.viewportSize()?.width ?? 375);
 
   await page.keyboard.press('Escape');
   await expect(dialog).not.toBeVisible();
