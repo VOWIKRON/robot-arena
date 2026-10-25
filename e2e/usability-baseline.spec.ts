@@ -105,6 +105,14 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
     await expect(dialog.locator('#tournament-run')).toBeEnabled();
     await expect(dialog.locator('#tournament-pause')).toBeEnabled();
     await expect(dialog.locator('#tournament-resume')).toBeDisabled();
+    // Pause is a real state boundary: no alternate start action may silently resume it.
+    await dialog.locator('#tournament-pause').click();
+    await expect(dialog.locator('#tournament-progress')).toContainText('paused');
+    await expect(dialog.locator('#tournament-run')).toBeDisabled();
+    await expect(dialog.locator('#tournament-auto')).toBeDisabled();
+    await expect(dialog.locator('#tournament-resume')).toBeEnabled();
+    await dialog.locator('#tournament-resume').click();
+    await expect(dialog.locator('#tournament-run')).toBeEnabled();
 
     await dialog.locator('#tournament-run').click();
     await expect(dialog.locator('#tournament-progress')).toContainText('1 / 1');
