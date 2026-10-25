@@ -20,7 +20,7 @@ Enthalten:
 ## Lokal starten
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -55,3 +55,7 @@ Im Konfigurationsdialog sind Strategien für A und B unabhängig wählbar. Ände
 Energiereserven/Schussfreigabeparameter gehören zu NEXT-40 und sind noch nicht umgesetzt. Die 48 festen Regression-Digests in `tests/strategy-stream-fixtures.json` stammen aus v0.1.51 (Commit 732cefd) und vergleichen Zustände/Event-Streams aller 16 Strategiepaarungen mit Seeds 1, 12 und 4711 nach höchstens 500 Ticks. Schlüssel werden kanonisch sortiert, Zahlen auf 1e-9 gerundet; dadurch werden keine bloßen Objekt-Schlüsselreihenfolgen eingefroren.
 
 Die beabsichtigte Defensive-Korrektur in v0.1.53 besitzt 21 eigene Referenzen in `tests/defensive-stream-fixtures.json`. Nur Paarungen mit Defensiv verwenden diese; die übrigen 27 Digests bleiben unverändert aus v0.1.51. Ein 100-Seed-Balancetest hält die konkrete Standardpaarung fest (93 Raptor-Siege statt zuvor 0), ohne eine allgemeine Sieggarantie zu behaupten.
+
+## Reproduzierbare Entwicklung (NEXT-64, unveröffentlicht)
+
+Die Abhängigkeiten sind in `package-lock.json` (Lockfile v3) festgehalten. Lokale Entwicklung und Development Tests verwenden `npm ci` mit Node.js 22. Dependency-Updates nur durch bewusstes `npm install` auf einem separaten Entwicklungsbranch, Lockfile-Diff prüfen, Audit/Unit/E2E ausführen. Das CI-Gate stoppt bei jeder bekannten npm-Advisory und prüft durch zwei saubere Installationen/Builds den identischen SHA256-Digest von `dist` bei unverändertem Commit. CI #40128110261: erfolgreich, 358 Unit-/Behavior-Tests und 82 Desktop-/Mobile-E2E. Diese Dokumentation ist ausschließlich im Draft-PR #48, nicht veröffentlicht.
