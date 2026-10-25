@@ -1,3 +1,10 @@
+## 25.10.2026, 05:00 MEZ – NEXT-79c/d im Entwicklungsbranch, aktuelle CI noch nicht bestätigt · NICHT VERÖFFENTLICHT
+- NEXT-79c (Turnierschritte, Keyboard, statusabhängige Aktionen) weiterhin in CI-Abnahme; nicht abgeschlossen.
+- NEXT-79d: Verständliche Hilfetexte und `aria-describedby` für Strategie, Energiereserve, Startwert/Seed, Ticklimit, Turnierformat sowie Erklärung der Reststruktur implementiert. CSS-Hilfestil und Browser-Regressionen für Desktop/Mobil, Fokus und 44px-Navigation ergänzt. **CI für diese Änderungen ausstehend; noch nicht abgeschlossen.**
+- Letzte grüne vollständige CI vor NEXT-79c/d: #40153366228 (383 Unit/Behavior/Regression, 102 E2E). Neue Tests noch nicht als bestanden melden. Simulation und RNG unverändert.
+- Kumulativ 6 zuvor vollständig CI-getestete, NICHT veröffentlichte NEXT-Aufgaben seit Live-v0.1.55: 63, 64, 66, 67, 68, 78. NEXT-79a/b getestet, 79c/d unbestätigt, 79e offen. Draft-PR #48; kein Merge/Publish/Deployment.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 25.10.2026, 04:00 MEZ – NEXT-79c Entwicklungsstand, keine Testfreigabe, NICHT VERÖFFENTLICHT
 - Drei klar beschriftete Turnierschritte mit Tastatur-Sprungnavigation und gruppierten Aktionen in `src/main.ts`; responsives Layout in `src/style.css`. Button-Freigabe zentral aus dem Runner-Status abgeleitet, keine Engine-Änderung.
 - Neue Playwright-Tests für Desktop/Mobil, Keyboard, Erstellen → Kampf → Ergebnisse, Sicherung und ungültige Aktionen committed. **Aktuelle vollständige CI ausstehend; NEXT-79c bleibt offen.** Letzte bestätigte CI #40153366228: 383 Unit/Behavior/Regression, 102 E2E grün (vor NEXT-79c).
