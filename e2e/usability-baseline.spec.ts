@@ -392,3 +392,34 @@ test('NEXT-79d: invalid participant count retains draft names and accessible err
   await page.locator('#tournament-create').click();
   await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
 });
+
+
+test('NEXT-79c: Escape cancel event suspends queued auto-play before close', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+
+  // Model the native Escape event sequence in one browser task to catch a
+  // timer race: cancel must suspend immediately, not only after close.
+  const beforeClose = await page.evaluate(() => {
+    const dialog = document.getElementById('tournament-dialog') as HTMLDialogElement;
+    (document.getElementById('tournament-auto') as HTMLButtonElement).click();
+    dialog.dispatchEvent(new Event('cancel', { bubbles: false, cancelable: true }));
+    const before = document.getElementById('tournament-progress')?.textContent ?? '';
+    dialog.close();
+    return before;
+  });
+  expect(beforeClose).toContain('paused');
+  expect(beforeClose).toContain('0 / 3');
+  await expect(page.locator('#tournament-dialog')).not.toBeVisible();
+  await page.waitForTimeout(80);
+  await page.locator('#open-tournament').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+  await expect(page.locator('#tournament-resume')).toBeEnabled();
+  await page.locator('#tournament-resume').click();
+  await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
+});
