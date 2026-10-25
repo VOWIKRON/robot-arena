@@ -3,11 +3,11 @@ name: Isolated Feature QA – no publishing
 on:
   push:
     branches:
-      - qa/NEXT-70-isolated-validation
+      - qa/NEXT-71-combined-integration
 
   pull_request:
     branches:
-      - qa/NEXT-70-isolated-validation
+      - qa/NEXT-71-combined-integration
 
 permissions:
   contents: read
