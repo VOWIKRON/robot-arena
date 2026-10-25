@@ -75,3 +75,37 @@ test('NEXT-79b: combat controls and tools are grouped and fight phase is explici
   await expect(tools).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+
+test('NEXT-79c: tournament has navigable setup, play and results sections on mobile and desktop', async ({ page }) => {
+  await page.goto('/');
+  for (const width of [375, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.locator('#open-tournament').click();
+    const dialog = page.locator('#tournament-dialog');
+    for (const [id, heading] of [
+      ['tournament-setup', '1 · Einrichten'],
+      ['tournament-play', '2 · Spielen'],
+      ['tournament-results', '3 · Ergebnisse']
+    ]) {
+      await expect(dialog.locator('#' + id)).toBeVisible();
+      await expect(dialog.locator('#' + id).getByRole('heading', { name: heading })).toBeVisible();
+      const link = dialog.getByRole('navigation', { name: 'Turnierschritte' }).getByRole('link', { name: heading });
+      await link.focus();
+      await page.keyboard.press('Enter');
+      await expect(link).toHaveAttribute('href', '#' + id);
+    }
+    await expect(dialog.locator('#tournament-count')).toBeVisible();
+    await expect(dialog.locator('#tournament-run')).toBeVisible();
+    await dialog.locator('#tournament-create').click();
+    await expect(dialog.locator('#tournament-progress')).toContainText('0 / 1');
+    await dialog.locator('#tournament-run').click();
+    await expect(dialog.locator('#tournament-progress')).toContainText('1 / 1');
+    await expect(dialog.locator('#tournament-table tbody tr')).toHaveCount(2);
+    await expect(dialog.locator('.tournament-advanced')).toHaveAttribute('open', '');
+    await expect(dialog.locator('#tournament-import')).toBeVisible();
+    await expect(dialog.locator('#tournament-autosave')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await dialog.locator('#close-tournament').click();
+  }
+});
