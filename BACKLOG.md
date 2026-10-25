@@ -1,3 +1,10 @@
+## Publish-Reife Arbeitsstand · 25.10.2026 · KEIN PUBLISHING
+- **Auftrag:** Angefangene Pakete bis zur Veröffentlichungsreife bringen; Freigabeumfang NEXT-63/64/66/67/68/78, NEXT-79a/b bereits getestet; NEXT-79c/d/e erst nach vollständiger CI-Abnahme. Keine Veröffentlichung in diesem Arbeitsschritt.
+- **NEXT-79d heute weiterbearbeitet:** Präzise Fehlertexte für ungültigen Seed (0..MAX_SAFE_INTEGER), Ticklimit (1..3600), fehlende und doppelte Teilnehmernamen vor Planerstellung ergänzt. Neuer Playwright-Test prüft ungültige Eingaben und anschließend erfolgreiche Erstellung. Produktionscode/Test im Entwicklungsbranch committed und per GitHub-Readback verifiziert. **Noch nicht ausgeführt; keine CI-Freigabe.**
+- **Release-Gate:** Aktuellen Branch vollständig testen (Typecheck, 383+ Unit/Behavior/Regression, deterministische Engine, Desktop/Mobil Playwright, Audit, reproduzierbarer Build), danach NEXT-79c/d und NEXT-79e abschließen. Vor Release zusätzlich Divergenz zu main (zuletzt 4 Commits hinter main) auflösen und danach komplette Regression wiederholen. Keine ungeprüften Änderungen veröffentlichen.
+- **Kumulativ weiterhin 6 vollständig getestete, unveröffentlichte ganze NEXT-Aufgaben:** 63, 64, 66, 67, 68, 78; NEXT-79a/b getestete Teilaufgaben; NEXT-79c/d in Abnahme; NEXT-79e offen. Letzte bestätigte Live-Version v0.1.55.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Entwicklungsstand · 25.10.2026, ca. 08:00 MEZ · NEXT-79c Auto-Play-Guard nachgebessert · KEIN PUBLISHING
 - [x] **NEXT-79c P1 Bugfix implementiert:** Versuch einer Neuanlage bei aktivem Turnier und bloße Änderung der Teilnehmerzahl dürfen eine angehaltene/automatische Turnierausführung nicht heimlich stoppen. Timer/Auto-Absicht nur nach erfolgreicher echter Neuanlage beenden; bestehender Runner-Status bleibt maßgeblich.
 - [x] **Regression als Code ergänzt:** 3 Teilnehmer, Ticklimit 1, Auto → Pause → ungültige und gültige geänderte Seeds → Teilnehmer-Update → explizit Fortsetzen → automatischer Abschluss aller 3 Kämpfe; Desktop-/Mobil-Projekte. GitHub-Code und -Test nach Schreiben zurückgelesen, **noch nicht ausgeführt**.
