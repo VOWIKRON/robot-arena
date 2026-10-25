@@ -278,7 +278,9 @@ test('NEXT-68: cancelled autosave stays cancelled after reload; disabling opt-in
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
   await expect(page.locator('#tournament-progress')).toContainText('cancelled');
-  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  // NEXT-79c disables actions for a cancelled run: clicking a disabled button
+  // times out in Playwright and is not the correct behavior contract.
+  await expect(page.getByRole('button', { name: 'Nächster Kampf' })).toBeDisabled();
   await expect(page.locator('#tournament-progress')).toContainText('cancelled');
   await page.locator('#tournament-autosave').uncheck();
   const saved = await page.evaluate(() => ({
