@@ -1,3 +1,10 @@
+## 25.10.2026, 06:00 MEZ – NEXT-79c Pause-Aktionsgate gehärtet, CI-Abnahme offen · NICHT VERÖFFENTLICHT
+- NEXT-79c: `syncTournamentActions()` deaktiviert nun während `paused` sowohl den Einzelkampf- als auch den Automatik-Startknopf. Fortsetzen bleibt die einzige explizite Wiederaufnahme; Desktop-/Mobil-Regression ergänzt. Quellcode und Test nach GitHub-Schreiboperation zurückgelesen. **Kein vollständiger CI-Nachweis auf dem aktuellen Head; NEXT-79c bleibt offen.**
+- NEXT-79d: bereits implementierte ARIA-/Hilfetexte warten ebenfalls auf aktuelle vollständige CI. NEXT-79e folgt erst nach Abnahme.
+- Refactoring nur der Aktionsfreigabe aus dem vorhandenen Runner-Status; deterministische Simulation, Seeds und Turnierarchive unverändert. Letzte bestätigte CI #40153366228 (383 Unit/Behavior/Regression, 102 E2E) betrifft den vorherigen Stand.
+- Kumulativ 6 vollständig CI-getestete, unveröffentlichte NEXT-Aufgaben seit bestätigtem Live-v0.1.55: 63, 64, 66, 67, 68, 78. NEXT-79a/b getestete Teilaufgaben; 79c/d offen, 79e geplant. Draft-PR #48, vier Commits hinter main; kein Merge/Publish.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 25.10.2026, 05:00 MEZ – NEXT-79c/d im Entwicklungsbranch, aktuelle CI noch nicht bestätigt · NICHT VERÖFFENTLICHT
 - NEXT-79c (Turnierschritte, Keyboard, statusabhängige Aktionen) weiterhin in CI-Abnahme; nicht abgeschlossen.
 - NEXT-79d: Verständliche Hilfetexte und `aria-describedby` für Strategie, Energiereserve, Startwert/Seed, Ticklimit, Turnierformat sowie Erklärung der Reststruktur implementiert. CSS-Hilfestil und Browser-Regressionen für Desktop/Mobil, Fokus und 44px-Navigation ergänzt. **CI für diese Änderungen ausstehend; noch nicht abgeschlossen.**
