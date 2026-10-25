@@ -20,7 +20,8 @@ import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/to
 import { exportTournamentMatchCsv, exportTournamentMatchJson } from './engine/tournament-match-export';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
-import { isTournamentAutosaveEnabled, saveTournamentSnapshot, restoreTournamentSnapshot, setTournamentAutosaveEnabled } from './engine/tournament-local-save';
+import { isTournamentAutosaveEnabled, restoreTournamentSnapshot } from './engine/tournament-local-save';
+import { TournamentAutosaveGuard, formatTournamentStorageError, AUTOSAVE_CONFLICT_NOTICE } from './engine/tournament-storage-guard';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
@@ -476,6 +477,12 @@ let tournamentDefinition: TournamentDefinition | null = null;
 let tournamentRun: TournamentRun | null = null;
 let tournamentAutoTimer: number | null = null;
 let tournamentAutoRequested = false;
+/** NEXT-77: capture the local storage revision at page load, before another tab changes it. */
+let tournamentAutosaveGuard: TournamentAutosaveGuard | null = null;
+function autosaveGuard(): TournamentAutosaveGuard {
+  if (!tournamentAutosaveGuard) tournamentAutosaveGuard = new TournamentAutosaveGuard(window.localStorage);
+  return tournamentAutosaveGuard;
+}
 /** NEXT-79c: available actions are derived from the runner, never a second UI state. */
 function syncTournamentActions(): void {
   const status = tournamentRun?.status;
@@ -495,9 +502,9 @@ function syncTournamentActions(): void {
 function persistTournamentSnapshot(): void {
   if (!tournamentRun || !el<HTMLInputElement>('tournament-autosave').checked) return;
   try {
-    saveTournamentSnapshot(tournamentRun, window.localStorage);
+    autosaveGuard().save(tournamentRun);
   } catch (error) {
-    el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + (error instanceof Error ? error.message : 'Speicher nicht verfügbar');
+    el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + formatTournamentStorageError(error);
   }
 }
 function stopTournamentAuto(clearIntent = true): void {
@@ -571,12 +578,7 @@ el('tournament-pairings').addEventListener('click', event => {
     const content = format === 'csv'
       ? exportTournamentMatchCsv(tournamentRun, matchId)
       : exportTournamentMatchJson(tournamentRun, matchId);
-    const url = URL.createObjectURL(new Blob([content], { type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json' }));
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `robot-arena-${matchId.replace(/[^a-z0-9_-]/gi, '_')}.${format}`;
-    anchor.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadTournamentFile(content, format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json', `robot-arena-${matchId.replace(/[^a-z0-9_-]/gi, '_')}.${format}`);
     el('tournament-feedback').textContent = `Kampf ${matchId} als ${format.toUpperCase()} exportiert.`;
   } catch (error) {
     el('tournament-feedback').textContent = 'Kampfexport fehlgeschlagen: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
@@ -928,13 +930,33 @@ el('tournament-resume').addEventListener('click', () => {
   if (tournamentAutoRequested) scheduleTournamentAuto();
 });
 el('tournament-cancel').addEventListener('click', () => { stopTournamentAuto(); tournamentAction(cancelTournamentRun); });
+/** NEXT-77: one download path for archive, CSV and JSON, including browser failures. */
+function downloadTournamentFile(content: string, mime: string, filename: string): void {
+  let objectUrl: string | null = null;
+  let anchor: HTMLAnchorElement | null = null;
+  try {
+    objectUrl = URL.createObjectURL(new Blob([content], { type: mime }));
+    anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    anchor.click();
+  } catch (error) {
+    throw new Error('Download konnte nicht gestartet werden: ' + (error instanceof Error ? error.message : 'Browserfehler'));
+  } finally {
+    anchor?.remove();
+    if (objectUrl !== null) {
+      const urlToRevoke = objectUrl;
+      window.setTimeout(() => { try { URL.revokeObjectURL(urlToRevoke); } catch { /* best effort */ } }, 1000);
+    }
+  }
+}
 function downloadTournamentTable(format: 'csv' | 'json'): void {
   try {
     if (!tournamentRun) throw new Error('Für den Tabellenexport ist ein Round-Robin-Turnier erforderlich');
     const content = format === 'csv' ? exportTournamentTableCsv(tournamentRun) : exportTournamentTableJson(tournamentRun);
-    const url = URL.createObjectURL(new Blob([content], {type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json'}));
-    const a = document.createElement('a'); a.href = url; a.download = 'robot-arena-tabelle.' + format; a.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadTournamentFile(content, format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json', 'robot-arena-tabelle.' + format);
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
 }
 el('tournament-table-csv').addEventListener('click', () => downloadTournamentTable('csv'));
@@ -942,9 +964,7 @@ el('tournament-table-json').addEventListener('click', () => downloadTournamentTa
 el('tournament-export').addEventListener('click', () => {
   try {
     if (!tournamentRun) throw new Error('Kein Turnier vorhanden');
-    const url = URL.createObjectURL(new Blob([exportTournamentRun(tournamentRun)], { type: 'application/json' }));
-    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'robot-arena-turnier.json'; anchor.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadTournamentFile(exportTournamentRun(tournamentRun), 'application/json', 'robot-arena-turnier.json');
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
 });
 /** A single import path is shared by file import and validated local recovery. */
@@ -972,18 +992,20 @@ function applyImportedTournament(loaded: TournamentRun): void {
 el('tournament-autosave').addEventListener('change', () => {
   const checkbox = el<HTMLInputElement>('tournament-autosave');
   try {
-    setTournamentAutosaveEnabled(window.localStorage, checkbox.checked);
+    autosaveGuard().setEnabled(checkbox.checked);
     el('tournament-feedback').textContent = checkbox.checked ? 'Lokale Sicherung aktiviert (nur dieses Gerät).' : 'Lokale Sicherung deaktiviert und gelöscht.';
     persistTournamentSnapshot();
   } catch (error) {
-    checkbox.checked = false;
-    el('tournament-feedback').textContent = 'Lokaler Speicher nicht verfügbar: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+    try { checkbox.checked = isTournamentAutosaveEnabled(window.localStorage); } catch { checkbox.checked = false; }
+    el('tournament-feedback').textContent = 'Lokaler Speicher nicht verfügbar: ' + formatTournamentStorageError(error);
   }
 });
 el('tournament-restore').addEventListener('click', () => {
   try {
     const loaded = restoreTournamentSnapshot(window.localStorage);
     if (!loaded) throw new Error('Keine lokale Turniersicherung vorhanden');
+    // A verified restore explicitly accepts the other tab's saved revision.
+    autosaveGuard().acceptVerifiedRestore();
     // Invalid or absent local data must not cancel an existing automatic run.
     stopTournamentAuto();
     applyImportedTournament(loaded);
@@ -994,11 +1016,19 @@ el('tournament-restore').addEventListener('click', () => {
 });
 el('tournament-clear-saved').addEventListener('click', () => {
   try {
-    setTournamentAutosaveEnabled(window.localStorage, false);
+    autosaveGuard().setEnabled(false);
     el<HTMLInputElement>('tournament-autosave').checked = false;
     el('tournament-feedback').textContent = 'Lokale Turniersicherung und automatische Speicherung gelöscht.';
   } catch (error) {
-    el('tournament-feedback').textContent = 'Lokale Sicherung konnte nicht gelöscht werden: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+    el('tournament-feedback').textContent = 'Lokale Sicherung konnte nicht gelöscht werden: ' + formatTournamentStorageError(error);
+  }
+});
+/** Another tab's changes must be visible; do not silently overwrite its saved snapshot. */
+window.addEventListener('storage', event => {
+  if (tournamentAutosaveGuard?.noteExternalChange(event.key)) {
+    el('tournament-feedback').textContent = AUTOSAVE_CONFLICT_NOTICE;
+    try { el<HTMLInputElement>('tournament-autosave').checked = isTournamentAutosaveEnabled(window.localStorage); }
+    catch { el<HTMLInputElement>('tournament-autosave').checked = false; }
   }
 });
 el('tournament-import').addEventListener('click', () => el<HTMLInputElement>('tournament-file').click());
@@ -1041,8 +1071,10 @@ for (const side of ['a', 'b'] as const) {
 renderPreview();
 resetMatch();
 try {
+  tournamentAutosaveGuard = new TournamentAutosaveGuard(window.localStorage);
   el<HTMLInputElement>('tournament-autosave').checked = isTournamentAutosaveEnabled(window.localStorage);
 } catch {
+  tournamentAutosaveGuard = null;
   el<HTMLInputElement>('tournament-autosave').checked = false;
 }
 void loadFooterMetadata();
