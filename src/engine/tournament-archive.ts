@@ -1,4 +1,5 @@
 import { createTournamentDefinition } from './tournament-model';
+import { assertSafeTournamentInput } from './tournament-input-guard';
 import { advanceTournamentRun, type TournamentRun } from './tournament-runner';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { createTournamentMatchResult } from './tournament-standings';
@@ -9,6 +10,7 @@ export type TournamentArchive = Readonly<{ schemaVersion: 1; run: TournamentRun 
 
 /** Validates the complete prefix against the deterministic fixture order. */
 export function validateTournamentArchive(input: unknown): TournamentArchive {
+  assertSafeTournamentInput(input);
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Turnierarchiv: Objekt erwartet');
   const archive = input as Record<string, unknown>;
   if (archive.schemaVersion !== 1 || !archive.run || typeof archive.run !== 'object') throw new Error('Turnierarchiv: ungültige Version');
