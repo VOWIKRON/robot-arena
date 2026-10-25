@@ -71,6 +71,11 @@ test('NEXT-60: opt-in balanced side assignment survives save/load and drives the
   await page.locator('#tournament-file').setInputFiles(await file.path());
   await expect(page.locator('#tournament-side-assignment')).toHaveValue('balanced');
   await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  // A serialized running state has no live browser timer: imported runs pause
+  // until the user explicitly resumes them, preserving the balanced fixtures.
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+  await expect(page.getByRole('button', { name: 'Nächster Kampf' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Fortsetzen' }).click();
   await page.getByRole('button', { name: 'Nächster Kampf' }).click();
   await expect(page.locator('#tournament-progress')).toContainText('2 / 6');
   await page.getByRole('button', { name: 'Turnier schließen' }).click();
