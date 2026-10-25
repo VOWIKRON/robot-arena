@@ -1,3 +1,9 @@
+## Unreleased · Acht-Feature-Integration erfolgreich · 26.10.2026
+- NEXT-76: zugängliche Turniersuche nach Match-ID/Teilnehmernamen, Statusfilter, Debounce, Reset, Unicode/375px.
+- NEXT-82: Browserdownload für Einzelkämpfe, Tabellen und Archive gehärtet, sichere Dateinamen, ObjectURL-Cleanup und Fehlerbehandlung.
+- NEXT-85: beide Features konfliktfrei mit NEXT-69/70/71/74/75/77 kombiniert; QA-only #40243980520 SUCCESS: 429 Unit-/Behavior-/Regression-/Determinismustests, 160 Desktop-/Mobiltests, Build/reproduzierbarer Build/Audit grün. Finale Doku-QA folgt.
+- Neun NEXT-Aufgaben vollständig entwickelt und getestet, aber NICHT VERÖFFENTLICHT. NEXT-79e manuell offen.
+
 ## Unreleased · 26.10.2026 · NEXT-76 und NEXT-82 verifiziert
 - NEXT-76: zugängliche, debounced Turniersuche nach Namen/Match-ID, Statusfilter und Reset; Unicode- und 375px-Unterstützung, unveränderte Snapshots.
 - NEXT-82: gemeinsame sichere Downloadroutine für Turnierarchive, Tabellen und Matches, Dateinamen- und Fehlerabsicherung, URL-Cleanup.
