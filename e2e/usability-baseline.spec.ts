@@ -296,3 +296,33 @@ test('NEXT-79d: invalid seed, ticklimit and participant names focus their fields
   await create.click();
   await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
 });
+
+
+test('NEXT-79c: invalid restore and invalid import preserve paused auto-play intent', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+
+  await page.evaluate(() => {
+    (document.getElementById('tournament-auto') as HTMLButtonElement).click();
+    (document.getElementById('tournament-pause') as HTMLButtonElement).click();
+  });
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-feedback')).toContainText('Keine lokale Turniersicherung');
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+
+  await page.locator('#tournament-file').setInputFiles({
+    name: 'invalid-tournament.json', mimeType: 'application/json', buffer: Buffer.from('{invalid')
+  });
+  await expect(page.locator('#tournament-feedback')).toContainText('Importfehler');
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+
+  await page.getByRole('button', { name: 'Fortsetzen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
+});
