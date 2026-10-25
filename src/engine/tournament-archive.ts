@@ -1,4 +1,5 @@
 import { createTournamentDefinition } from './tournament-model';
+import { assertSafeTournamentInput } from './tournament-input-guard';
 import { advanceTournamentRun, type TournamentRun } from './tournament-runner';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { createTournamentMatchResult } from './tournament-standings';
@@ -39,7 +40,9 @@ export function exportTournamentRun(run: TournamentRun): string {
 }
 export function importTournamentRun(json: string): TournamentRun {
   if (new TextEncoder().encode(json).length > MAX_BYTES) throw new Error('Turnierarchiv: Datei zu groß');
-  return validateTournamentArchive(JSON.parse(json) as unknown).run;
+  const parsed = JSON.parse(json) as unknown;
+  assertSafeTournamentInput(parsed);
+  return validateTournamentArchive(parsed).run;
 }
 /** Imported paused/running tournaments resume from the next match boundary. */
 export function continueImportedTournament(run: TournamentRun): TournamentRun {
