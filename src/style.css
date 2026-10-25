@@ -69,6 +69,8 @@
   outline-offset: 3px;
 }
 #tournament-dialog :is(button,input,select) { min-height: 44px; }
+/* NEXT-79e: 3:1+ non-text contrast for essential tournament control boundaries. */
+#tournament-dialog :is(button,input,select) { border-color: #607da5; }
 #tournament-dialog :is(.tournament-table-scroll,.tournament-pairings) { scroll-behavior: auto; }
 #tournament-dialog .tournament-pairings:focus-visible,
 #tournament-dialog .tournament-table-scroll:focus-visible {
