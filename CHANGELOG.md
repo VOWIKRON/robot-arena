@@ -1,3 +1,8 @@
+## Unreleased · NEXT-82 abgeschlossen · 26.10.2026
+- Sichere, gemeinsame Downloadroutine für Turnierarchive, Tabellen und Einzelkämpfe mit Dateinamenbereinigung, Browser-API-Prüfung, Klickfehlern und URL-Cleanup.
+- Isolierte QA #40243348670 erfolgreich: 425 Unit-/Behavior-/Regressionstests und 156 Desktop-/Mobiltests, Build und Security-Gate grün.
+- NEXT-82 fertig, aber nicht veröffentlicht; kumulativ sieben fertig getestete NEXT-Aufgaben (69/70/71/74/75/77/82). NEXT-79e manuell offen.
+
 ## Unreleased · 26.10.2026 · NEXT-82 QA noch offen
 - Refactoring: einheitlicher Browser-Downloadadapter für Turnierarchive, Ergebnistabellen und Einzelkämpfe.
 - Robustheit: Dateinamen ohne Pfad-/Steuerzeichen, explizite Fehler bei fehlenden Blob-/ObjectURL-APIs oder blockiertem Klick, best-effort URL-Revoke auch im Fehlerpfad.
