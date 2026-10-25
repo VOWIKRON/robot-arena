@@ -33,6 +33,12 @@ export class TournamentAutosaveGuard {
 
   noteExternalChange(key: string | null): boolean {
     if (key !== null && key !== TOURNAMENT_AUTOSAVE_KEY && key !== TOURNAMENT_AUTOSAVE_ENABLED_KEY) return false;
+    // A second tab may re-save identical bytes (for example after Restore).
+    // Only actual changes to the snapshot or opt-in state create a conflict.
+    try {
+      if (this.storage.getItem(TOURNAMENT_AUTOSAVE_KEY) === this.expectedArchive &&
+          isTournamentAutosaveEnabled(this.storage) === this.expectedOptIn) return false;
+    } catch { /* blocked storage is conservatively treated as a conflict */ }
     this.stale = true;
     return true;
   }

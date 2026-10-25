@@ -50,12 +50,14 @@ describe('NEXT-77 local storage and cross-tab errors', () => {
     first.save(fixture());
     const second = new TournamentAutosaveGuard(storage);
     expect(second.noteExternalChange('unrelated-key')).toBe(false);
+    expect(second.noteExternalChange(TOURNAMENT_AUTOSAVE_KEY)).toBe(false); // same bytes
+    first.save(advanceTournamentRun(fixture()));
     expect(second.noteExternalChange(TOURNAMENT_AUTOSAVE_KEY)).toBe(true);
     expect(() => second.save(fixture())).toThrow(/Andere Registerkarte/);
-    expect(restoreTournamentSnapshot(storage)).toEqual(fixture());
-    second.acceptVerifiedRestore();
-    second.save(advanceTournamentRun(fixture()));
     expect(restoreTournamentSnapshot(storage)?.results).toHaveLength(1);
+    second.acceptVerifiedRestore();
+    second.save(fixture());
+    expect(restoreTournamentSnapshot(storage)?.results).toHaveLength(0);
   });
   it('preserves previous snapshot when quota is exhausted', () => {
     const { storage } = memoryStorage();
