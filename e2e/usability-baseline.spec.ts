@@ -119,3 +119,35 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
     await dialog.locator('#close-tournament').click();
   }
 });
+
+test('NEXT-79d: contextual guidance is readable, linked to inputs and usable on mobile', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
+  for (const side of ['a', 'b']) {
+    await expect(page.locator(`#strategy-${side}`)).toHaveAttribute('aria-describedby', `strategy-help-${side}`);
+    await expect(page.locator(`#strategy-help-${side}`)).toContainText('Strategie');
+    await expect(page.locator(`#reserve-${side}`)).toHaveAttribute('aria-describedby', `reserve-help-${side}`);
+    await expect(page.locator(`#reserve-help-${side}`)).toContainText('zurückgehalten');
+  }
+  await page.getByRole('button', { name: 'Konfiguration schließen' }).click();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  for (const [input, help, expected] of [
+    ['tournament-seed', 'tournament-seed-help', 'Startwert'],
+    ['tournament-ticks', 'tournament-ticks-help', 'Simulationsschritt'],
+    ['tournament-format', 'tournament-format-help', 'K.-o.']
+  ]) {
+    await expect(page.locator('#' + input)).toHaveAttribute('aria-describedby', help);
+    await expect(page.locator('#' + help)).toContainText(expected);
+  }
+  await expect(page.locator('#tournament-results .field-help')).toContainText('Reststruktur');
+  for (const width of [375, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await expect(page.locator('#tournament-seed-help')).toBeVisible();
+    const nav = page.getByRole('navigation', { name: 'Turnierschritte' });
+    for (const link of await nav.getByRole('link').all()) {
+      const size = await link.boundingBox();
+      expect(size?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
