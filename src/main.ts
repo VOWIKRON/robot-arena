@@ -614,15 +614,21 @@ function buildTournamentDefinition(): TournamentDefinition {
   const count = tournamentCount();
   const seed = el<HTMLInputElement>('tournament-seed').valueAsNumber;
   const ticks = el<HTMLInputElement>('tournament-ticks').valueAsNumber;
+  if (!Number.isSafeInteger(seed) || seed < 0 || seed > Number.MAX_SAFE_INTEGER) {
+    throw new Error('Turnier-Startwert: Bitte eine ganze Zahl zwischen 0 und 9007199254740991 eingeben.');
+  }
+  if (!Number.isSafeInteger(ticks) || ticks < 1 || ticks > 3600) {
+    throw new Error('Ticklimit: Bitte eine ganze Zahl zwischen 1 und 3600 eingeben.');
+  }
   const participants = Array.from({ length: count }, (_, index) => {
     const name = el<HTMLInputElement>(`tournament-name-${index + 1}`).value.trim();
     const preset = el<HTMLSelectElement>(`tournament-preset-${index + 1}`).value;
     const robot = preset === 'titan' ? TITAN : RAPTOR;
     return { ...robot, id: `participant-${index + 1}`, name };
   });
-  if (participants.some(participant => !participant.name)) throw new Error('Alle Teilnehmer benötigen einen Namen.');
+  if (participants.some(participant => !participant.name)) throw new Error('Teilnehmername fehlt: Bitte für jeden Roboter einen Namen eingeben.');
   if (new Set(participants.map(participant => participant.name.toLocaleLowerCase('de'))).size !== count) {
-    throw new Error('Teilnehmernamen müssen eindeutig sein.');
+    throw new Error('Teilnehmernamen doppelt: Bitte jedem Roboter einen unterschiedlichen Namen geben.');
   }
   return createTournamentDefinition({
     schemaVersion: 1, id: 'sandbox-tournament', format: el<HTMLSelectElement>('tournament-format').value as 'round-robin' | 'knockout',
