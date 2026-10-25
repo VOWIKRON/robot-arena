@@ -1,3 +1,12 @@
+## NEXT-76 und NEXT-82 abgeschlossen · 26.10.2026 · NICHT VERÖFFENTLICHT
+- [x] **NEXT-76 – Turniersuche/Ergebnisfilter:** Debounced Suche nach Teilnehmer/Match-ID, Statusfilter, Zurücksetzen, Unicode/HTML-Namen als Text, 120 Paarungen, Desktop/Mobil/Import/Replay. QA-only #40243725469 SUCCESS (423 Unit, 156 Browser); bestehende Accessibility-Regression behoben.
+- [x] **NEXT-82 – Match-Downloadhärtung:** fehlende Browser-APIs, click()-Fehler, URL-Cleanup und sichere Dateinamen. QA-only #40243672046 SUCCESS (425 Unit, 156 Browser).
+- [ ] **NEXT-79e (P0) – manuelle Accessibility-Abnahme:** NVDA/VoiceOver und echte Touch-/Kontrastabnahme mit reproduzierbaren Befunden, Regressionen und Geräte-/Versionsangaben.
+- [ ] **NEXT-80 (P1) – atomare Cross-Tab-Speicherung:** gleichzeitige Speicheroperationen deterministisch simulieren, Browser-Lock + Fallback, Verlustfreiheit und 375px-Regression.
+- [ ] **NEXT-85 (P1) – acht-Aufgaben-Integration:** NEXT-76/82 konfliktfrei auf QA-grünen sechs-Aufgaben-Integrationskandidaten aufsetzen, Typecheck/Unit/Behavior/Determinismus/Desktop/Mobil/Security/reproduzierbaren Build auf EINEM Commit erneut erfolgreich ausführen. Ohne gemeinsamen Test keine acht-Aufgaben-Publishfreigabe.
+- [ ] **NEXT-84 (P2) – Safari/iOS-Downloadmatrix:** reale Geräte für fehlende ObjectURL-/Blob-APIs und Cleanup dokumentieren.
+- **Kumulativ 8 einzeln fertig/getestet, aber unveröffentlicht: NEXT-69/70/71/74/75/77/82/76.** Kein Publishing.
+
 ## Gemeinsamer sechs-Aufgaben-QA-Erfolg · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **NEXT-74/75/77 in NEXT-69/70/71 integriert und gemeinsam verifiziert.** Isolierte QA-only CI #40238144023 auf Code-HEAD `e7967c636716582fe6bfeab8652ca9b24196abac` erfolgreich: 419/419 Unit-/Behavior-/Regressions-/Determinismustests, 152/152 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Zweitbuild, 0 bekannte Dependency-Schwachstellen.
 - **Kumulativ 6 fertig entwickelte und gemeinsam getestete, unveröffentlichte NEXT-Aufgaben:** NEXT-69 Presets; NEXT-70 Kampfexport; NEXT-71 Integration; NEXT-74 Importvalidierung; NEXT-75 V1-Archivkompatibilität; NEXT-77 Autosave-/Downloadfehler. **Neu abgeschlossen: 0; 3 bestehende Aufgaben integriert.**
