@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createHash } from 'node:crypto';
 import { createTournamentDefinition } from './tournament-model';
 import { createTournamentRun, advanceTournamentRun, finishTournamentRun, pauseTournamentRun, cancelTournamentRun } from './tournament-runner';
 import { continueImportedTournament, exportTournamentRun, importTournamentRun } from './tournament-archive';
@@ -84,6 +85,28 @@ describe('NEXT-58 tournament archive', () => {
     expect(completed.results).toHaveLength(120);
     expect(importTournamentRun(archive)).toEqual(completed);
     expect(exportTournamentRun(importTournamentRun(archive))).toBe(archive);
+  });
+
+  it('records fixed-seed V1 golden-archive digests for 2 and 16 participants', () => {
+    for (const count of [2, 16]) {
+      const participants = Array.from({ length: count }, (_, i) => robot('golden-' + i));
+      const fixture = createTournamentDefinition({
+        schemaVersion: 1, id: 'compat-golden-' + count, format: 'round-robin', baseSeed: 4711,
+        maxTicks: 1, participants
+      });
+      const base = createTournamentRun(fixture);
+      const first = advanceTournamentRun(base);
+      const cases = {
+        paused: pauseTournamentRun(first),
+        cancelled: cancelTournamentRun(first),
+        completed: finishTournamentRun(base)
+      };
+      for (const [status, run] of Object.entries(cases)) {
+        const digest = createHash('sha256').update(exportTournamentRun(run)).digest('hex');
+        console.log('NEXT75_GOLDEN', count, status, digest);
+        expect(digest).toMatch(/^[0-9a-f]{64}$/);
+      }
+    }
   });
 
 });
