@@ -1,3 +1,9 @@
+## Unreleased · 25.10.2026, 06:00 MEZ · NEXT-79c Pausensteuerung verbessert, CI offen
+- Ein pausiertes Turnier lässt sich nicht mehr unbeabsichtigt mit „Alle Kämpfe spielen“ fortsetzen: Beide Startaktionen sind bis zum ausdrücklichen „Fortsetzen“ deaktiviert. Vorhandene Runner-Statusableitung vereinheitlicht, Engine/RNG unverändert.
+- Neue Playwright-Regressionen für Desktop/Mobil prüfen Pause, deaktivierte Startaktionen und Wiederaufnahme. **Tests im Branch, aktuelle vollständige CI noch nicht nachgewiesen.** NEXT-79c/d bleiben offen.
+- Letzte bestätigte vollständige CI vor den neuen UX-Änderungen: #40153366228 (383 Unit/Behavior/Regression, 102 E2E). Sechs zuvor CI-getestete, unveröffentlichte NEXT-Aufgaben seit Live-v0.1.55: 63, 64, 66, 67, 68, 78.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · 25.10.2026, 05:00 MEZ · NEXT-79d Hilfetexte implementiert, NEXT-79c/d CI ausstehend
 - Direkt an den Eingaben: kurze verständliche Erklärungen für Strategie, Energiereserve, Turnier-Startwert, Ticklimit und Turnierformate; Reststruktur im Ergebnisbereich erklärt. `aria-describedby` für Screenreader, kontrastreiche responsive `.field-help`-Stile.
 - Neue Playwright-Regressionen prüfen Beschriftungen/ARIA-Verknüpfung, Touch-Navigation ≥44px, 375/1280px und keinen horizontalen Seitenscroll. NEXT-79c-Dreischritt-Dialog weiter in Abnahme.
