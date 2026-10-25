@@ -63,7 +63,7 @@ export function parseRobotPreset(input: unknown): RobotConfiguration {
   if (!STRATEGY_TYPES.includes(raw.strategy as StrategyType)) throw new Error('Roboterpreset: unbekannte Strategie');
   const parameters = object(raw.strategyParameters, 'Strategieparameter');
   if (Object.keys(parameters).some(key => !paramKeys.includes(key))) throw new Error('Roboterpreset: unbekannter Strategieparameter');
-  const errors = validateStrategyParameters(parameters as StrategyParameters);
+  const errors = validateStrategyParameters(parameters as unknown as StrategyParameters);
   if (errors.length) throw new Error('Roboterpreset: ' + errors.join(', '));
   const configuration: RobotConfiguration = {
     id: raw.id, name: raw.name,
@@ -74,7 +74,7 @@ export function parseRobotPreset(input: unknown): RobotConfiguration {
     sensor: pick(sensors, raw.sensor, 'Sensor'),
     weapon: pick(weapons, raw.weapon, 'Waffe'),
     strategy: raw.strategy as StrategyType,
-    strategyParameters: { ...parameters } as StrategyParameters
+    strategyParameters: { ...parameters } as unknown as StrategyParameters
   };
   buildRobotDefinition(configuration); // includes weight and strategy validation
   return Object.freeze({ ...configuration, strategyParameters: Object.freeze({ ...configuration.strategyParameters }) });
