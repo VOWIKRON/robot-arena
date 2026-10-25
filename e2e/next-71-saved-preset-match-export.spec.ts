@@ -29,6 +29,7 @@ test('NEXT-71 combined: persisted custom robot survives reload and exports its c
   });
 
   await page.locator('#tournament-run').click();
+  await expect(page.locator('button[data-match-export-format="json"]')).toHaveCount(1);
   const [matchDownload] = await Promise.all([
     page.waitForEvent('download'),
     page.locator('button[data-match-export-format="json"]').click()
