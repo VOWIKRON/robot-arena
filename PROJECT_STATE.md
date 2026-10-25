@@ -1,3 +1,21 @@
+## NEXT-77 abgeschlossen · 25.10.2026, 22:05 MEZ · NICHT VERÖFFENTLICHT
+- **NEU vollständig implementiert und verifiziert: NEXT-77** – verständliche Quota-/Security-/Download-Fehler; konsolidierter Blob-Download mit URL-Cleanup; lokale Opt-out-Löschreihenfolge; optimistischer Versionsschutz vor stillen Überschreibungen durch andere Tabs; explizite Wiederaufnahme nach validiertem Restore.
+- **Isolierte QA #40233631492 SUCCESS** auf Code-/Test-SHA `f77c81b548efba5540c9af59af8895256b9c62e5`: **388/388 Unit-/Behavior-/Regression-/Determinismustests (33 Dateien)**, **134/134 Desktop-/Mobil-Playwright**, TypeScript, npm audit 0 bekannte Schwachstellen, Build und reproduzierbarer Zweitbuild erfolgreich. 5 neue Unit-Tests und 4 neue Browserfälle je Desktop/Mobil. Der Dokumentationscommit danach enthält keinen Produktivcode.
+- **Refactoring:** Gemeinsamer Download-Helper und separate `TournamentAutosaveGuard`-Klasse; Simulationsengine, Seeds und Archivschema unverändert.
+- **Konkurrierende Tabs:** Speicherrevision vor jedem Schreib-/Löschvorgang prüfen und externe `storage`-Events beachten. Das ist optimistischer Konfliktschutz, **keine atomare Compare-and-Swap-Transaktion**; extrem zeitgleiche Schreibvorgänge bleiben als Härtungsbedarf im Rolling Backlog dokumentiert.
+- **Letzter bestätigter Live-Release:** v0.1.56, main `3d516317128578e374ec39eacd8991649c1815cc`, GitHub-Deployment-Status `robot-arena/deployment: success` vom 25.10.2026 13:19 UTC. Kein neues Deployment durch diese Runde.
+- **Kumulativ fertig, vollständig getestet, aber NICHT veröffentlicht: 6 NEXT-Aufgaben:**
+- NEXT-69 – Eigene Roboterpresets in Turnieren (391 Unit/Behavior/Regression + 134 Browser; PR #53).
+- NEXT-70 – Kampfexport CSV/JSON (387 + 130; PR #57).
+- NEXT-71 – Gemeinsame Integration 69+70 (395 + 4 Konfliktprüfungen + 144 Browser; PR #59).
+- NEXT-74 – Robuste Turnierimport-Validierung (392 + 128; PR #61).
+- NEXT-75 – Archivversions-/Kompatibilitätsprüfung (393 + 126; Branch feature/NEXT-75-archive-compatibility).
+- NEXT-77 – Autosave-Konflikte und Speicher-/Downloadfehler (388 + 134; Branch feature/NEXT-77-storage-export-errors; **NEU**).
+- **Aktuelle Runde:** NEXT-79e (weiterhin offen, echte NVDA-/VoiceOver-/Touch-/Kontrastabnahme fehlt); NEXT-77 (NEU fertig); keine dritte NEXT-Aufgabe begonnen.
+- **Nächste Schritte / Rolling Backlog:** (1) NEXT-79e praktische Screenreader-/Touch-/Kontrastabnahme und Fixes; (2) gemeinsame Integrations-QA von NEXT-69/70/71/74/75/77 auf separatem, nicht deployendem Teststand; (3) NEXT-76 Suche/Filter mit 120 Paarungen, Unicode/HTML, Tastatur, Desktop/Mobil; (4) NEXT-72 Best-of-N, danach NEXT-73 Kampfstatistik; (5) atomare Multi-Tab-Speicherkoordination (z. B. Web Locks mit Browser-Fallback) gesondert spezifizieren und testen, falls strikt gleichzeitige Schreibvorgänge garantiert verhindert werden sollen; (6) Release nur nach ausdrücklicher Nutzerfreigabe.
+- **Branch/Workflow-Schutz:** `feature/NEXT-77-storage-export-errors`, `ci.yml` auf main begrenzt, isolierte `isolated-next77.yml` ohne Publishing; kein PR gegen main, weil der dortige `pull_request`-Trigger den regulären Development-Tests/Publish-Zyklus auslösen könnte.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Statuskorrektur 25.10.2026, 14:00 MEZ · main parallel verändert · KEIN PUBLISHING durch diese Runde
 - Nach der Entwicklungsschreibfolge wurde **main unabhängig** um Commit `ff81817644df` erweitert (GitHub-Commit-Nachricht „release: NEXT-64 reproducible builds and security CI“, nur `.github/workflows/ci.yml` und `package-lock.json`). Dieser Commit stammt **nicht** aus der hier dokumentierten Entwicklungsrunde; wir haben weder main verändert noch ein Deployment ausgelöst.
 - **NEXT-64: in main integriert, aber tatsächlicher Live-Veröffentlichungsstatus ungeklärt.** GitHub-Publish-Workflow/Website konnten nicht erfolgreich verifiziert werden; daher NEXT-64 nicht aus der kumulativen Liste entfernen. NEXT-63 weiterhin nicht als live bestätigt. Der Entwicklungssammelbranch liegt nach der Änderung zuletzt 208 Commits vor und 5 hinter main; kein pauschaler Merge zulässig.
