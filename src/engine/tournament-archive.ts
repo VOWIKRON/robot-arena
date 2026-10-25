@@ -11,7 +11,10 @@ export type TournamentArchive = Readonly<{ schemaVersion: 1; run: TournamentRun 
 export function validateTournamentArchive(input: unknown): TournamentArchive {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Turnierarchiv: Objekt erwartet');
   const archive = input as Record<string, unknown>;
-  if (archive.schemaVersion !== 1 || !archive.run || typeof archive.run !== 'object') throw new Error('Turnierarchiv: ungültige Version');
+  // V1 is the only supported on-disk format. Never silently reinterpret future versions.
+  if (!Object.hasOwn(archive, 'schemaVersion')) throw new Error('Turnierarchiv: Versionsfeld fehlt');
+  if (archive.schemaVersion !== 1) throw new Error('Turnierarchiv: nicht unterstützte Version (nur v1)');
+  if (!archive.run || typeof archive.run !== 'object' || Array.isArray(archive.run)) throw new Error('Turnierarchiv: Laufdaten fehlen');
   const raw = archive.run as Record<string, unknown>;
   const definition = createTournamentDefinition(raw.definition);
   if (definition.format !== 'round-robin') throw new Error('Turnierarchiv: derzeit nur Round Robin unterstützt');
@@ -39,7 +42,13 @@ export function exportTournamentRun(run: TournamentRun): string {
 }
 export function importTournamentRun(json: string): TournamentRun {
   if (new TextEncoder().encode(json).length > MAX_BYTES) throw new Error('Turnierarchiv: Datei zu groß');
-  return validateTournamentArchive(JSON.parse(json) as unknown).run;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(json) as unknown;
+  } catch {
+    throw new Error('Turnierarchiv: beschädigtes JSON');
+  }
+  return validateTournamentArchive(parsed).run;
 }
 /** Imported paused/running tournaments resume from the next match boundary. */
 export function continueImportedTournament(run: TournamentRun): TournamentRun {
