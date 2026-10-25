@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test('NEXT-79a: first-time sandbox journey is reachable at phone, tablet and desktop widths', async ({ page }) => {
   await page.goto('/');
@@ -428,4 +429,103 @@ test('NEXT-79c: Escape cancel event suspends queued auto-play before close', asy
   await expect(page.locator('#tournament-resume')).toBeEnabled();
   await page.locator('#tournament-resume').click();
   await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
+});
+
+
+test('NEXT-79e: in-progress autosave restores paused after reload and can be cleared', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.locator('#tournament-autosave').check();
+  await page.locator('#tournament-create').click();
+  await page.locator('#tournament-run').click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 3');
+  await expect(page.locator('#tournament-progress')).toContainText('running');
+
+  await page.reload();
+  await page.locator('#open-tournament').click();
+  await expect(page.locator('#tournament-autosave')).toBeChecked();
+  await page.locator('#tournament-restore').click();
+  await expect(page.locator('#tournament-feedback')).toContainText('geprüft und geladen');
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 3');
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+  await expect(page.locator('#tournament-run')).toBeDisabled();
+  await expect(page.locator('#tournament-resume')).toBeEnabled();
+  await page.locator('#tournament-resume').click();
+  await page.locator('#tournament-run').click();
+  await page.locator('#tournament-run').click();
+  await expect(page.locator('#tournament-progress')).toContainText('3 / 3');
+  await page.locator('#tournament-clear-saved').click();
+  await expect(page.locator('#tournament-autosave')).not.toBeChecked();
+  await page.reload();
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-restore').click();
+  await expect(page.locator('#tournament-feedback')).toContainText('Keine lokale Turniersicherung');
+});
+
+test('NEXT-79e: tournament JSON export and import require explicit resume for running snapshots', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.locator('#tournament-create').click();
+  await page.locator('#tournament-run').click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 3');
+
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#tournament-export').click()
+  ]);
+  const archive = await readFile(await download.path());
+  const document = JSON.parse(archive.toString('utf8')) as { run: { status: string; results: unknown[] } };
+  expect(document.run.status).toBe('running');
+  expect(document.run.results).toHaveLength(1);
+  await page.locator('#tournament-cancel').click();
+  await expect(page.locator('#tournament-progress')).toContainText('cancelled');
+  await page.locator('#tournament-file').setInputFiles({
+    name: 'saved-tournament.json', mimeType: 'application/json', buffer: archive
+  });
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 3');
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+  await expect(page.locator('#tournament-run')).toBeDisabled();
+  await page.locator('#tournament-resume').click();
+  await page.locator('#tournament-run').click();
+  await page.locator('#tournament-run').click();
+  await expect(page.locator('#tournament-progress')).toContainText('3 / 3');
+  await expect(page.locator('#tournament-table tbody tr')).toHaveCount(3);
+});
+
+test('NEXT-79e: tournament accessibility and responsive results at 375, 768 and 1280px', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-create').click();
+  await page.locator('#tournament-run').click();
+  for (const width of [375, 768, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await expect(page.locator('#tournament-dialog')).toBeVisible();
+    await expect(page.locator('#tournament-progress')).toHaveAttribute('role', 'status');
+    await expect(page.locator('#tournament-progress')).toHaveAttribute('aria-live', 'polite');
+    await expect(page.locator('#tournament-feedback')).toHaveAttribute('role', 'status');
+    await expect(page.locator('#tournament-table-scroll')).toHaveAttribute('role', 'region');
+    await expect(page.locator('#tournament-table-scroll')).toHaveAttribute('aria-label', 'Turniertabelle, horizontal scrollbar');
+    await expect(page.locator('#tournament-export')).toBeEnabled();
+    await expect(page.locator('#tournament-run')).toBeDisabled();
+    const links = page.getByRole('navigation', { name: 'Turnierschritte' }).getByRole('link');
+    for (const link of await links.all()) {
+      const rect = await link.boundingBox();
+      expect(rect?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const table = page.locator('#tournament-table-scroll');
+    await table.focus();
+    await expect(table).toBeFocused();
+    if (width === 375) {
+      expect(await table.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+    }
+  }
+  await page.locator('#close-tournament').click();
+  await expect(page.locator('#open-tournament')).toBeFocused();
 });
