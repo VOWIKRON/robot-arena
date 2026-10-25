@@ -10,15 +10,18 @@ import { ReplayPlayer } from './engine/replay-player';
 import { analyzeReplay, type ReplayStatistics } from './engine/replay-stats';
 import { RAPTOR, TITAN } from './engine/presets';
 import { createTournamentDefinition, type TournamentDefinition } from './engine/tournament-model';
+import { serializeRobotPreset, importRobotPreset } from './engine/robot-preset-format';
 import { createRoundRobinSchedule } from './engine/tournament-schedule';
 import { computeRoundRobinStandings } from './engine/tournament-standings';
 import { tournamentMatchDetails } from './engine/tournament-details';
 import { replayTournamentMatch } from './engine/tournament-replay';
 import { runKnockoutBracket } from './engine/tournament-knockout';
 import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
+import { exportTournamentMatchCsv, exportTournamentMatchJson } from './engine/tournament-match-export';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
-import { isTournamentAutosaveEnabled, saveTournamentSnapshot, restoreTournamentSnapshot, setTournamentAutosaveEnabled } from './engine/tournament-local-save';
+import { isTournamentAutosaveEnabled, restoreTournamentSnapshot } from './engine/tournament-local-save';
+import { TournamentAutosaveGuard, formatTournamentStorageError, AUTOSAVE_CONFLICT_NOTICE } from './engine/tournament-storage-guard';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
@@ -45,7 +48,7 @@ app.innerHTML = `
 <dialog id="replay-dialog" aria-labelledby="replay-title"><div class="config-dialog-card"><h2 id="replay-title">Replay-Dateien</h2><p>Aktuellen Kampf als JSON exportieren oder eine Replay-Datei prüfen. Die Wiedergabe zeigt aufgezeichnete Ereignisse ohne erneute Simulation; ein Import verändert den laufenden Kampf nicht.</p><div class="controls"><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><button id="replay-load-current">Aktuellen Kampf laden</button><button id="close-replay">Schließen</button></div><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"><p id="replay-feedback" class="status" role="status" aria-live="polite"></p><div class="controls" aria-label="Replay-Steuerung"><button id="replay-play" disabled>Abspielen</button><button id="replay-pause" disabled>Pausieren</button><button id="replay-step" disabled>Replay-Schritt</button><button id="replay-reset" disabled>Replay-Anfang</button></div><p id="replay-progress" role="status" aria-live="polite">Kein Replay geladen</p><label for="replay-seek">Replay-Zeitleiste (Tick)<input id="replay-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Replay-Zeitleiste"></label><div id="replay-arena" class="replay-arena" role="img" aria-label="Rekonstruierte Roboterpositionen im Replay" hidden><svg id="replay-effects" class="replay-effects" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><span id="replay-bot-a" class="replay-marker replay-marker-a">A</span><span id="replay-bot-b" class="replay-marker replay-marker-b">B</span></div><p id="replay-stats" class="replay-stats" role="status" aria-live="polite"></p><p id="replay-events" aria-label="Ereignisse im aktuellen Replay-Tick"></p><section id="replay-analysis" class="replay-analysis" aria-label="Replay-Kampfstatistik" hidden><h3>Kampfstatistik (gesamte Aufzeichnung)</h3><div class="replay-stat-grid"><div id="replay-stat-a" class="replay-stat-side"></div><div id="replay-stat-b" class="replay-stat-side"></div></div><p id="replay-result"></p></section></div></dialog>
 <div class="status" id="status"></div>
 </section>
-<aside class="card battle-panel"><h2>Kampfstatus</h2><div id="stats"></div><div class="battle-hint">Konfiguration über den Button unter der Arena ändern.</div></aside>\n<dialog id="config-dialog" aria-labelledby="config-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="config-title">Roboter konfigurieren</h2><button id="close-config" aria-label="Konfiguration schließen">×</button></div><div class="config-grid"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie A <select id="energy-a"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor A <select id="sensor-a"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label>${strategyControls('a')}<div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie B <select id="energy-b"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor B <select id="sensor-b"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label>${strategyControls('b')}<div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div class="dialog-actions"><button id="apply-config">Übernehmen &amp; Kampf zurücksetzen</button></div></div></dialog>
+<aside class="card battle-panel"><h2>Kampfstatus</h2><div id="stats"></div><div class="battle-hint">Konfiguration über den Button unter der Arena ändern.</div></aside>\n<dialog id="config-dialog" aria-labelledby="config-title"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="config-title">Roboter konfigurieren</h2><button id="close-config" aria-label="Konfiguration schließen">×</button></div><div class="config-grid"><div class="builder"><h2>Roboter A</h2><label>Chassis A <select id="chassis-a"><option value="raptor">Raptor Chassis</option><option value="titan">Titan Chassis</option></select></label><label>Motor A <select id="motor-a"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung A <select id="armor-a"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie A <select id="energy-a"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor A <select id="sensor-a"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe A <select id="weapon-a"><option value="raptor">Raptor Cannon</option><option value="titan">Titan Cannon</option></select></label>${strategyControls('a')}<div class="preview" id="preview-a"></div><div class="validation" id="validation-a" role="status"></div></div><div class="builder"><h2>Roboter B</h2><label>Chassis B <select id="chassis-b"><option value="titan">Titan Chassis</option><option value="raptor">Raptor Chassis</option></select></label><label>Motor B <select id="motor-b"><option value="balanced">Balanced Motor</option><option value="swift">Swift Motor</option><option value="heavy">Heavy Motor</option></select></label><label>Panzerung B <select id="armor-b"><option value="standard">Standard Armor</option><option value="light">Light Armor</option><option value="heavy">Heavy Armor</option></select></label><label>Energie B <select id="energy-b"><option value="standard">Standard Energy</option><option value="capacity">Capacity Energy</option><option value="regen">Regen Energy</option></select></label><label>Sensor B <select id="sensor-b"><option value="standard">Standard Sensor</option><option value="short">Short Sensor</option><option value="long">Long Sensor</option></select></label><label>Waffe B <select id="weapon-b"><option value="titan">Titan Cannon</option><option value="raptor">Raptor Cannon</option></select></label>${strategyControls('b')}<div class="preview" id="preview-b"></div><div class="validation" id="validation-b" role="status"></div></div></div><label>Seed <input id="seed" type="number" value="4711" /></label><div class="controls" role="group" aria-label="Roboterpresets"><button id="save-robot-preset-a" type="button">Roboter A als Preset speichern</button><button id="save-robot-preset-b" type="button">Roboter B als Preset speichern</button><button id="import-robot-preset" type="button">Preset-Datei importieren</button></div><input id="robot-preset-file" type="file" accept=".json,application/json" hidden aria-label="Roboterpreset-Datei"><p id="robot-preset-feedback" class="status" role="status" aria-live="polite"></p><div class="dialog-actions"><button id="apply-config">Übernehmen &amp; Kampf zurücksetzen</button></div></div></dialog>
 </div>
 <footer class="site-footer" aria-label="Projektinformationen">
   <a href="./testsuite.html">Testsuite</a>
@@ -474,6 +477,12 @@ let tournamentDefinition: TournamentDefinition | null = null;
 let tournamentRun: TournamentRun | null = null;
 let tournamentAutoTimer: number | null = null;
 let tournamentAutoRequested = false;
+/** NEXT-77: capture the local storage revision at page load, before another tab changes it. */
+let tournamentAutosaveGuard: TournamentAutosaveGuard | null = null;
+function autosaveGuard(): TournamentAutosaveGuard {
+  if (!tournamentAutosaveGuard) tournamentAutosaveGuard = new TournamentAutosaveGuard(window.localStorage);
+  return tournamentAutosaveGuard;
+}
 /** NEXT-79c: available actions are derived from the runner, never a second UI state. */
 function syncTournamentActions(): void {
   const status = tournamentRun?.status;
@@ -493,9 +502,9 @@ function syncTournamentActions(): void {
 function persistTournamentSnapshot(): void {
   if (!tournamentRun || !el<HTMLInputElement>('tournament-autosave').checked) return;
   try {
-    saveTournamentSnapshot(tournamentRun, window.localStorage);
+    autosaveGuard().save(tournamentRun);
   } catch (error) {
-    el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + (error instanceof Error ? error.message : 'Speicher nicht verfügbar');
+    el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + formatTournamentStorageError(error);
   }
 }
 function stopTournamentAuto(clearIntent = true): void {
@@ -524,6 +533,16 @@ function renderTournamentMatchDetails(): void {
       button.setAttribute('aria-label', 'Replay abspielen: ' + match.robotAName + ' gegen ' + match.robotBName);
       button.dataset.replayMatchId = match.matchId;
       item.append(' ', button);
+      for (const format of ['csv', 'json'] as const) {
+        const exportButton = document.createElement('button');
+        exportButton.type = 'button';
+        exportButton.className = 'tournament-replay-button';
+        exportButton.textContent = format.toUpperCase();
+        exportButton.setAttribute('aria-label', `Kampf ${format.toUpperCase()} exportieren: ${match.robotAName} gegen ${match.robotBName}`);
+        exportButton.dataset.matchExportId = match.matchId;
+        exportButton.dataset.matchExportFormat = format;
+        item.append(' ', exportButton);
+      }
     }
   });
 }
@@ -543,6 +562,26 @@ el('tournament-pairings').addEventListener('click', event => {
     el<HTMLDialogElement>('replay-dialog').showModal();
   } catch (error) {
     el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Replay konnte nicht geladen werden';
+  }
+});
+/** NEXT-70: only completed, validated match details can be downloaded. */
+el('tournament-pairings').addEventListener('click', event => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const button = target.closest<HTMLButtonElement>('button[data-match-export-id]');
+  if (!button) return;
+  try {
+    if (!tournamentRun) throw new Error('Kein Turnier geladen');
+    const matchId = button.dataset.matchExportId ?? '';
+    const format = button.dataset.matchExportFormat;
+    if (format !== 'csv' && format !== 'json') throw new Error('Unbekanntes Exportformat');
+    const content = format === 'csv'
+      ? exportTournamentMatchCsv(tournamentRun, matchId)
+      : exportTournamentMatchJson(tournamentRun, matchId);
+    downloadTournamentFile(content, format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json', `robot-arena-${matchId.replace(/[^a-z0-9_-]/gi, '_')}.${format}`);
+    el('tournament-feedback').textContent = `Kampf ${matchId} als ${format.toUpperCase()} exportiert.`;
+  } catch (error) {
+    el('tournament-feedback').textContent = 'Kampfexport fehlgeschlagen: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
   }
 });
 function tournamentStatus(): void {
@@ -593,7 +632,7 @@ function renderTournamentParticipants(): void {
       const select = document.createElement('select');
       select.id = `tournament-preset-${index + 1}`;
       select.dataset.participantPreset = 'true';
-      for (const [value, title] of [['raptor', 'Raptor'], ['titan', 'Titan']] as const) {
+      for (const [value, title] of [['raptor', 'Raptor'], ['titan', 'Titan'], ['sandbox-a', 'Sandbox-Roboter A (aktuelle Konfiguration)'], ['sandbox-b', 'Sandbox-Roboter B (aktuelle Konfiguration)'], ['saved-a', 'Gespeichertes Preset A'], ['saved-b', 'Gespeichertes Preset B'], ['saved-imported', 'Importiertes Preset']] as const) {
         const option = document.createElement('option');
         option.value = value;
         option.textContent = title;
@@ -620,11 +659,12 @@ function reportTournamentDraftError(error: unknown): void {
   const message = error instanceof Error ? error.message : 'unbekannter Fehler';
   el('tournament-feedback').textContent = 'Turnier ungültig: ' + message;
   const nameInputs = [...el('tournament-participants').querySelectorAll<HTMLInputElement>('input[data-participant-name]')];
-  let target: HTMLInputElement | null = null;
+  let target: HTMLInputElement | HTMLSelectElement | null = null;
   if (message.startsWith('Teilnehmerzahl')) target = el<HTMLInputElement>('tournament-count');
   else if (message.startsWith('Turnier-Startwert')) target = el<HTMLInputElement>('tournament-seed');
   else if (message.startsWith('Ticklimit')) target = el<HTMLInputElement>('tournament-ticks');
   else if (message.startsWith('Teilnehmername fehlt')) target = nameInputs.find(input => !input.value.trim()) ?? null;
+  else if (message.startsWith('Roboterpreset')) target = [...el('tournament-participants').querySelectorAll<HTMLSelectElement>('select[data-participant-preset]')].find(input => input.value.startsWith('saved-')) ?? null;
   else if (message.startsWith('Teilnehmernamen doppelt')) {
     const seen = new Set<string>();
     target = nameInputs.find(input => {
@@ -658,6 +698,40 @@ el('tournament-dialog').addEventListener('input', event => {
     el('tournament-feedback').textContent = 'Eingabe geändert. Bitte Spielplan erstellen, um die Änderungen zu prüfen.';
   }
 });
+const ROBOT_PRESET_KEY = 'robot-arena:robot-preset:';
+function loadSavedRobotPreset(slot: string) {
+  const stored = window.localStorage.getItem(ROBOT_PRESET_KEY + slot);
+  if (!stored) throw new Error('Roboterpreset fehlt: Bitte zuerst in der Konfiguration speichern oder importieren.');
+  return importRobotPreset(stored);
+}
+for (const side of ['a', 'b'] as const) {
+  el(`save-robot-preset-${side}`).addEventListener('click', () => {
+    try {
+      const configuration = side === 'a' ? configurationA() : configurationB();
+      window.localStorage.setItem(ROBOT_PRESET_KEY + side, serializeRobotPreset(configuration));
+      el('robot-preset-feedback').textContent = `Roboter ${side.toUpperCase()} als versioniertes Preset gespeichert.`;
+    } catch (error) {
+      el('robot-preset-feedback').textContent = 'Preset konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+    }
+  });
+}
+el('import-robot-preset').addEventListener('click', () => el<HTMLInputElement>('robot-preset-file').click());
+el<HTMLInputElement>('robot-preset-file').addEventListener('change', async event => {
+  const input = event.currentTarget as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  try {
+    if (file.size > 16 * 1024) throw new Error('Roboterpreset: Datei zu groß');
+    const content = await file.text();
+    const validated = importRobotPreset(content);
+    window.localStorage.setItem(ROBOT_PRESET_KEY + 'imported', serializeRobotPreset(validated));
+    el('robot-preset-feedback').textContent = 'Preset importiert: ' + validated.name;
+  } catch (error) {
+    el('robot-preset-feedback').textContent = 'Preset-Import abgelehnt: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+  } finally {
+    input.value = '';
+  }
+});
 function buildTournamentDefinition(): TournamentDefinition {
   const count = tournamentCount();
   const seed = el<HTMLInputElement>('tournament-seed').valueAsNumber;
@@ -671,7 +745,11 @@ function buildTournamentDefinition(): TournamentDefinition {
   const participants = Array.from({ length: count }, (_, index) => {
     const name = el<HTMLInputElement>(`tournament-name-${index + 1}`).value.trim();
     const preset = el<HTMLSelectElement>(`tournament-preset-${index + 1}`).value;
-    const robot = preset === 'titan' ? TITAN : RAPTOR;
+    // Snapshot the validated sandbox robot without changing the live sandbox state.
+    const robot = preset === 'sandbox-a' ? selectedRobotA()
+      : preset === 'sandbox-b' ? selectedRobotB()
+      : preset.startsWith('saved-') ? buildRobotDefinition(loadSavedRobotPreset(preset.slice(6)))
+      : preset === 'titan' ? TITAN : RAPTOR;
     return { ...robot, id: `participant-${index + 1}`, name };
   });
   if (participants.some(participant => !participant.name)) throw new Error('Teilnehmername fehlt: Bitte für jeden Roboter einen Namen eingeben.');
@@ -852,13 +930,33 @@ el('tournament-resume').addEventListener('click', () => {
   if (tournamentAutoRequested) scheduleTournamentAuto();
 });
 el('tournament-cancel').addEventListener('click', () => { stopTournamentAuto(); tournamentAction(cancelTournamentRun); });
+/** NEXT-77: one download path for archive, CSV and JSON, including browser failures. */
+function downloadTournamentFile(content: string, mime: string, filename: string): void {
+  let objectUrl: string | null = null;
+  let anchor: HTMLAnchorElement | null = null;
+  try {
+    objectUrl = URL.createObjectURL(new Blob([content], { type: mime }));
+    anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    anchor.click();
+  } catch (error) {
+    throw new Error('Download konnte nicht gestartet werden: ' + (error instanceof Error ? error.message : 'Browserfehler'));
+  } finally {
+    anchor?.remove();
+    if (objectUrl !== null) {
+      const urlToRevoke = objectUrl;
+      window.setTimeout(() => { try { URL.revokeObjectURL(urlToRevoke); } catch { /* best effort */ } }, 1000);
+    }
+  }
+}
 function downloadTournamentTable(format: 'csv' | 'json'): void {
   try {
     if (!tournamentRun) throw new Error('Für den Tabellenexport ist ein Round-Robin-Turnier erforderlich');
     const content = format === 'csv' ? exportTournamentTableCsv(tournamentRun) : exportTournamentTableJson(tournamentRun);
-    const url = URL.createObjectURL(new Blob([content], {type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json'}));
-    const a = document.createElement('a'); a.href = url; a.download = 'robot-arena-tabelle.' + format; a.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadTournamentFile(content, format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json', 'robot-arena-tabelle.' + format);
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
 }
 el('tournament-table-csv').addEventListener('click', () => downloadTournamentTable('csv'));
@@ -866,9 +964,7 @@ el('tournament-table-json').addEventListener('click', () => downloadTournamentTa
 el('tournament-export').addEventListener('click', () => {
   try {
     if (!tournamentRun) throw new Error('Kein Turnier vorhanden');
-    const url = URL.createObjectURL(new Blob([exportTournamentRun(tournamentRun)], { type: 'application/json' }));
-    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'robot-arena-turnier.json'; anchor.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadTournamentFile(exportTournamentRun(tournamentRun), 'application/json', 'robot-arena-turnier.json');
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Exportfehler'; }
 });
 /** A single import path is shared by file import and validated local recovery. */
@@ -896,18 +992,20 @@ function applyImportedTournament(loaded: TournamentRun): void {
 el('tournament-autosave').addEventListener('change', () => {
   const checkbox = el<HTMLInputElement>('tournament-autosave');
   try {
-    setTournamentAutosaveEnabled(window.localStorage, checkbox.checked);
+    autosaveGuard().setEnabled(checkbox.checked);
     el('tournament-feedback').textContent = checkbox.checked ? 'Lokale Sicherung aktiviert (nur dieses Gerät).' : 'Lokale Sicherung deaktiviert und gelöscht.';
     persistTournamentSnapshot();
   } catch (error) {
-    checkbox.checked = false;
-    el('tournament-feedback').textContent = 'Lokaler Speicher nicht verfügbar: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+    try { checkbox.checked = isTournamentAutosaveEnabled(window.localStorage); } catch { checkbox.checked = false; }
+    el('tournament-feedback').textContent = 'Lokaler Speicher nicht verfügbar: ' + formatTournamentStorageError(error);
   }
 });
 el('tournament-restore').addEventListener('click', () => {
   try {
     const loaded = restoreTournamentSnapshot(window.localStorage);
     if (!loaded) throw new Error('Keine lokale Turniersicherung vorhanden');
+    // A verified restore explicitly accepts the other tab's saved revision.
+    autosaveGuard().acceptVerifiedRestore();
     // Invalid or absent local data must not cancel an existing automatic run.
     stopTournamentAuto();
     applyImportedTournament(loaded);
@@ -918,11 +1016,19 @@ el('tournament-restore').addEventListener('click', () => {
 });
 el('tournament-clear-saved').addEventListener('click', () => {
   try {
-    setTournamentAutosaveEnabled(window.localStorage, false);
+    autosaveGuard().setEnabled(false);
     el<HTMLInputElement>('tournament-autosave').checked = false;
     el('tournament-feedback').textContent = 'Lokale Turniersicherung und automatische Speicherung gelöscht.';
   } catch (error) {
-    el('tournament-feedback').textContent = 'Lokale Sicherung konnte nicht gelöscht werden: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
+    el('tournament-feedback').textContent = 'Lokale Sicherung konnte nicht gelöscht werden: ' + formatTournamentStorageError(error);
+  }
+});
+/** Another tab's changes must be visible; do not silently overwrite its saved snapshot. */
+window.addEventListener('storage', event => {
+  if (tournamentAutosaveGuard?.noteExternalChange(event.key)) {
+    el('tournament-feedback').textContent = AUTOSAVE_CONFLICT_NOTICE;
+    try { el<HTMLInputElement>('tournament-autosave').checked = isTournamentAutosaveEnabled(window.localStorage); }
+    catch { el<HTMLInputElement>('tournament-autosave').checked = false; }
   }
 });
 el('tournament-import').addEventListener('click', () => el<HTMLInputElement>('tournament-file').click());
@@ -965,8 +1071,10 @@ for (const side of ['a', 'b'] as const) {
 renderPreview();
 resetMatch();
 try {
+  tournamentAutosaveGuard = new TournamentAutosaveGuard(window.localStorage);
   el<HTMLInputElement>('tournament-autosave').checked = isTournamentAutosaveEnabled(window.localStorage);
 } catch {
+  tournamentAutosaveGuard = null;
   el<HTMLInputElement>('tournament-autosave').checked = false;
 }
 void loadFooterMetadata();

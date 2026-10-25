@@ -1,3 +1,43 @@
+## Gemeinsame Integrations-CI erfolgreich · 25.10.2026 · NICHT VERÖFFENTLICHT
+- **Aktuelle Runde: NEXT-74, NEXT-75, NEXT-77** in den bereits geprüften NEXT-69/70/71-Stand integriert; gemeinsamer QA-only Draft-PR #62.
+- **Ergebnis:** isolierte QA #40238144023 SUCCESS auf `e7967c636716582fe6bfeab8652ca9b24196abac`: **419/419 Unit/Behavior/Regression/Determinismus (37 Testdateien), 152/152 Desktop-/Mobiltests**, TypeScript, Produktionsbuild, reproduzierbarer Build und Security-Gate (0 bekannte Schwachstellen) erfolgreich.
+- **Kumulativ vollständig entwickelt, einzeln und gemeinsam getestet, NICHT VERÖFFENTLICHT: 6:** NEXT-69 (Roboterpresets), NEXT-70 (CSV-/JSON-Kampfexport), NEXT-71 (Integration Presets/Export), NEXT-74 (Importvalidierung), NEXT-75 (V1-Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler). **Neu als NEXT-Aufgabe abgeschlossen: 0**; drei bestehende NEXT-Aufgaben integriert.
+- **Refactoring:** Gemeinsamer Blob-Download für Kampf/Turniertabelle/Archiv mit URL-Aufräumen; deterministische Engine unverändert.
+- **Offen:** NEXT-79e manuelle NVDA-/VoiceOver-/Touch-/Kontrastabnahme; ausgeschlossen vom Releasekandidaten. Dokumentations-Follow-up-Commit benötigt erneut QA.
+- **Commit-/PR-Status:** Draft-PR #62 ausschließlich gegen QA-Branch; main weiterhin `3d516317` / v0.1.56.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Keine Homepage-, Release- oder Publishing-Aktion.
+
+## Integration NEXT-74 → NEXT-75 → NEXT-77 · 25.10.2026, 23:00 MEZ · NICHT VERÖFFENTLICHT
+- **3 bearbeitete Aufgaben:** NEXT-74, NEXT-75, NEXT-77 in bestehenden NEXT-69/70/71-QA-Stand integriert. Archive/Model/Guard, Golden-Tests, Storage-Guard, Desktop/Mobile-Tests und `src/main.ts` zusammengeführt. Match-CSV/JSON-Download benutzt jetzt denselben Fehler-/Cleanup-Pfad wie Tabellen- und Archivdownload.
+- **Kumulativ vollständig implementiert und EINZELN getestet, aber UNVERÖFFENTLICHT: 6:** NEXT-69 (Presets; 391 Unit + 134 E2E), NEXT-70 (Kampfexport; 387 + 130), NEXT-71 (Presets/Export-Integration; 395 + 144 + 4 Guard), NEXT-74 (Import-Validierung; 392 + 128), NEXT-75 (Archivkompatibilität; 393 + 126), NEXT-77 (Autosave-/Exportfehler; 388 + 134). **Neu als NEXT-Aufgabe abgeschlossen: 0.**
+- **Release-Gate:** sechs-Aufgaben-Gesamttests noch nicht bestätigt; gemeinsamer Kandidat NICHT publish-reif, bis CI auf aktuellem SHA grün. NEXT-79e manuell weiterhin offen und ausgeschlossen.
+- **Refactoring:** Einheitlicher Blob-Download; Simulationsengine unverändert.
+- **Schreib-/PR-Status:** isolierter Branch `integration/NEXT-69-70-71-74-75-77-release-candidate`; Integration-PR zur isolierten QA vorgesehen. Keine Änderung an main, keine Veröffentlichung oder Deployment.
+- **Nächste Schritte:** isolierte QA ausführen, Fehler beheben, Regressionssuite erneut prüfen; danach Publish-Readiness ohne tatsächliche Veröffentlichung dokumentieren.
+
+## Release candidate preparation · 25.10.2026 · NOT PUBLISHED
+- Isolated integration branch: `integration/NEXT-69-70-71-74-75-77-release-candidate`, based on combined NEXT-69/70/71 QA.
+- **Cumulative completed, individually tested, unpublished:** NEXT-69 (presets), NEXT-70 (match export), NEXT-71 (combined integration), NEXT-74 (input validation), NEXT-75 (archive compatibility), NEXT-77 (storage/export errors). **6 total; 0 newly completed this preparation run.**
+- **Release readiness BLOCKED:** NEXT-74/75/77 not yet reconciled into the combined branch; six-task CI has not run. See RELEASE_CANDIDATE_GATE.md.
+- **NEXT-79e:** accessibility manual acceptance remains open; excluded from candidate.
+- No merge to main, release commit, publish.php, deployment or homepage change.
+
+## NEXT-71 · Kombinierter QA-Kandidat · 25.10.2026, 19:00 MEZ · KEIN PUBLISHING
+- **Neu in dieser Runde:** Auf isoliertem Branch `qa/NEXT-71-combined-integration` die Implementierungen NEXT-69 (versionierte Roboterpresets) und NEXT-70 (Kampfexport CSV/JSON) gemeinsam zusammengeführt; sechs getrennte `src/main.ts`-Diff-Hunks gegen main verifiziert, Quellcode zusammengeführt und per GitHub-Readback kontrolliert.
+- **Neue kombinierte Behavior-/Desktop-/Mobil-Regression:** `e2e/next-71-combined-integration.spec.ts` prüft Sandbox-Preset → Turnierkampf → CSV-/JSON-Export derselben Teilnehmer und 375px-Touchlayout. Zusätzlich NEXT-69/70-Tests und NEXT-71-Konfliktguard eingebunden.
+- **Qualitätsstatus:** Gemeinsame QA wird erst nach Abschluss aller Branch-Dateien ausgeführt; bis dahin KEIN erfolgreicher Integrationstest behauptet. NEXT-71 bleibt offen bis vollständiger grüner CI.
+- **NEXT-79e:** Echte NVDA-/VoiceOver-/Touch-/Kontrastabnahme fehlt weiterhin; automatisierte Tests sind kein Ersatz. **NEXT-74:** geplant, noch nicht begonnen.
+- **Kumulativ seit verifiziert live v0.1.56: 2 vollständig implementierte, isoliert getestete, UNVERÖFFENTLICHTE Aufgaben:** NEXT-69 (391 Unit + 134 E2E), NEXT-70 (387 Unit + 130 E2E). NEXT-71 und NEXT-79e offen. Keine Aufgabe neu vollständig abgeschlossen.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** main, Homepage und Publish-Workflow unverändert.
+
+## NEXT-71 · Integrationsvorbereitung · 25.10.2026, 18:00 MEZ · KEIN PUBLISHING
+- **Aktuelle Runde:** NEXT-71 begonnen: `scripts/check-integration-conflicts.mjs` und 4 Node-Regressionstests (lokal **4/4 grün**) sowie `INTEGRATION_READINESS.md` erstellt. Automatische kombinierte CI auf einem gemeinsamen NEXT-69+70-Stand **noch nicht durchgeführt**; NEXT-71 **nicht abgeschlossen**.
+- **Quellstandsprüfung:** main v0.1.56 `3d516317`; NEXT-69 PR #53 und NEXT-70 PR #57 sind isoliert auf demselben main-Commit, Quelltextänderungen in `src/main.ts` betreffen nach statischem Diff unterschiedliche Bereiche. Dokumentations-/HTML-Quellseiten überschneiden sich und müssen später zusammengeführt werden.
+- **QA nachgeprüft:** NEXT-69 #40210126969 (391 Unit + 134 E2E) SUCCESS; NEXT-70 #40210582101 (387 Unit + 130 E2E) SUCCESS; NEXT-79e #40204710908 (383 Unit + 130 E2E) SUCCESS, aber echte Screenreader-/Touch-/Kontrast-Abnahme fehlt.
+- **Kumulativ vollständig implementiert, isoliert getestet und NICHT VERÖFFENTLICHT seit v0.1.56: 2 Aufgaben:** NEXT-69 (versionierte Sandbox-Presets im Turnier), NEXT-70 (Einzelkampf-CSV/JSON). **Neu abgeschlossen in dieser Runde: 0.** NEXT-71 und NEXT-79e sind offen.
+- **Nächste Schritte:** Gemeinsame isolierte QA ohne Publishing für NEXT-69+70; Dokumentationsabgleich; End-to-End-Kombinationstest; NEXT-79e manuelle Abnahme; anschließend weitere NEXT-72–77 gemäß Akzeptanzkriterien.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge nach main, kein publish.php, keine Homepage-Änderung.
+
 ## Priorisierte Fortsetzung · 25.10.2026, 14:00 MEZ · unveröffentlicht
 - [ ] **NEXT-79e (P0):** Neue Playwright-Tastatur-/Screenreader-Namensmatrix auf Entwicklungs-HEAD vollständig in GitHub CI bestätigen (Desktop + Mobil; neuer Test 2 Ausführungen), Fehler zuerst beheben. Anschließend echte NVDA-/VoiceOver-Prüfung: Dialogtitel, Feldnamen, Live-Status, Fehlerhinweise, Fokusfalle/Fokusrückgabe. Visuelle Touch-/Kontrastprüfung 375/768/1280px; vollständige CI nach jedem Fix. **Noch nicht abgeschlossen.**
 - [ ] **NEXT-71 (Release-Readiness, keine Veröffentlichung):** Die vom Nutzer nur für NEXT-63 und NEXT-64 erteilte Freigabe respektieren: Abhängigkeiten zur bereits veröffentlichten v0.1.55 prüfen, Änderungen isolieren, Test- und Release-SHA dokumentieren. Der aktuelle Sammelbranch enthält viele weitere unveröffentlichte Features und liegt 4 Commits hinter main. **Kein Merge, kein Deployment.**

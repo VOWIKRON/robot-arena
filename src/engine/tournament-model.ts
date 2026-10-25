@@ -1,4 +1,5 @@
 import { deepFreeze } from './immutable';
+import { assertSafeTournamentInput } from './tournament-input-guard';
 import { STRATEGY_TYPES, validateStrategyParameters } from './strategy-config';
 import type { RobotDefinition } from './types';
 
@@ -87,5 +88,8 @@ export function serializeTournamentDefinition(value: TournamentDefinition): stri
 }
 
 export function parseTournamentDefinition(json: string): TournamentDefinition {
-  return createTournamentDefinition(JSON.parse(json) as unknown);
+  if (new TextEncoder().encode(json).length > 2 * 1024 * 1024) throw new Error('Turnierimport: Datei zu groß');
+  const parsed = JSON.parse(json) as unknown;
+  assertSafeTournamentInput(parsed);
+  return createTournamentDefinition(parsed);
 }
