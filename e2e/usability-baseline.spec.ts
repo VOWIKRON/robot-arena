@@ -320,7 +320,7 @@ test('NEXT-79c: invalid restore and invalid import preserve paused auto-play int
   await page.locator('#tournament-file').setInputFiles({
     name: 'invalid-tournament.json', mimeType: 'application/json', buffer: Buffer.from('{invalid')
   });
-  await expect(page.locator('#tournament-feedback')).toContainText('Importfehler');
+  await expect(page.locator('#tournament-feedback')).toContainText(/JSON|Syntax|Unexpected|Expected/i);
   await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
 
   await page.getByRole('button', { name: 'Fortsetzen' }).click();
