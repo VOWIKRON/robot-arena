@@ -1,3 +1,11 @@
+## Integration NEXT-74 → NEXT-75 → NEXT-77 · 25.10.2026, 23:00 MEZ · NICHT VERÖFFENTLICHT
+- **3 bearbeitete Aufgaben:** NEXT-74, NEXT-75, NEXT-77 in bestehenden NEXT-69/70/71-QA-Stand integriert. Archive/Model/Guard, Golden-Tests, Storage-Guard, Desktop/Mobile-Tests und `src/main.ts` zusammengeführt. Match-CSV/JSON-Download benutzt jetzt denselben Fehler-/Cleanup-Pfad wie Tabellen- und Archivdownload.
+- **Kumulativ vollständig implementiert und EINZELN getestet, aber UNVERÖFFENTLICHT: 6:** NEXT-69 (Presets; 391 Unit + 134 E2E), NEXT-70 (Kampfexport; 387 + 130), NEXT-71 (Presets/Export-Integration; 395 + 144 + 4 Guard), NEXT-74 (Import-Validierung; 392 + 128), NEXT-75 (Archivkompatibilität; 393 + 126), NEXT-77 (Autosave-/Exportfehler; 388 + 134). **Neu als NEXT-Aufgabe abgeschlossen: 0.**
+- **Release-Gate:** sechs-Aufgaben-Gesamttests noch nicht bestätigt; gemeinsamer Kandidat NICHT publish-reif, bis CI auf aktuellem SHA grün. NEXT-79e manuell weiterhin offen und ausgeschlossen.
+- **Refactoring:** Einheitlicher Blob-Download; Simulationsengine unverändert.
+- **Schreib-/PR-Status:** isolierter Branch `integration/NEXT-69-70-71-74-75-77-release-candidate`; Integration-PR zur isolierten QA vorgesehen. Keine Änderung an main, keine Veröffentlichung oder Deployment.
+- **Nächste Schritte:** isolierte QA ausführen, Fehler beheben, Regressionssuite erneut prüfen; danach Publish-Readiness ohne tatsächliche Veröffentlichung dokumentieren.
+
 ## Release candidate preparation · 25.10.2026 · NOT PUBLISHED
 - Isolated integration branch: `integration/NEXT-69-70-71-74-75-77-release-candidate`, based on combined NEXT-69/70/71 QA.
 - **Cumulative completed, individually tested, unpublished:** NEXT-69 (presets), NEXT-70 (match export), NEXT-71 (combined integration), NEXT-74 (input validation), NEXT-75 (archive compatibility), NEXT-77 (storage/export errors). **6 total; 0 newly completed this preparation run.**
