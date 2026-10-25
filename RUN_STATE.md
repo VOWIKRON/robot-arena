@@ -1,3 +1,11 @@
+## Stündliche Entwicklungsrunde · 26.10.2026, 00:00 MEZ · NICHT VERÖFFENTLICHT
+- **Aktuelle Runde (1 Aufgabe): NEXT-82** – Downloadfehlerbehandlung auf isoliertem Feature-Branch implementiert, Vitest- und Desktop-/Mobil-Playwright-Regressionen ergänzt; Draft-PR #63 nur gegen QA-Branch. **Abnahme bis zum endgültigen CI-Ergebnis offen; nicht als fertig zählen.**
+- **Kumulativ seit verifiziertem Live-Release v0.1.56 vollständig implementiert, getestet und unveröffentlicht: 6:** NEXT-69 (Roboterpresets), NEXT-70 (CSV-/JSON-Kampfexport), NEXT-71 (Integration), NEXT-74 (Importvalidierung), NEXT-75 (V1-Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler). Neu in dieser Runde vollständig abgeschlossen: **0**, solange NEXT-82-QA aussteht.
+- **Refactoring:** Browserdownload aus src/main.ts in src/engine/tournament-download.ts extrahiert; gemeinsamer Pfad für Match-, Tabellen- und Archivdateien, Dateinamen bereinigt, Object-URL-Fehler/Click-Fehler/URL-Cleanup behandelt. Simulationsengine unverändert.
+- **Prüfungen:** Vorheriger sechs-Aufgaben-Integrationsstand QA #40238418497 SUCCESS (419 Unit/Behavior/Regression/Determinismus + 152 Desktop/Mobil). NEXT-82 isolierte QA #40243185882 läuft/Ergebnis noch nicht bestätigt; keine erfundenen Testzahlen.
+- **Offen:** NEXT-79e manuelle NVDA-/VoiceOver-/Touch-/Kontrastabnahme; NEXT-76 Suche/Ergebnisfilter; NEXT-80 Cross-Tab-CAS. PR #62 bleibt unveröffentlichter sechs-Aufgaben-Kandidat.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge nach main, kein Release, kein Deployment, kein publish.php.
+
 ## Gemeinsame Integrations-CI erfolgreich · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **Aktuelle Runde: NEXT-74, NEXT-75, NEXT-77** in den bereits geprüften NEXT-69/70/71-Stand integriert; gemeinsamer QA-only Draft-PR #62.
 - **Ergebnis:** isolierte QA #40238144023 SUCCESS auf `e7967c636716582fe6bfeab8652ca9b24196abac`: **419/419 Unit/Behavior/Regression/Determinismus (37 Testdateien), 152/152 Desktop-/Mobiltests**, TypeScript, Produktionsbuild, reproduzierbarer Build und Security-Gate (0 bekannte Schwachstellen) erfolgreich.
