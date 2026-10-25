@@ -1,3 +1,9 @@
+## 25.10.2026, 07:00 MEZ – NEXT-79c verhindert Datenverlust durch Neuanlage eines aktiven Turniers · NICHT VERÖFFENTLICHT
+- Ein aktiver Turnierlauf wird bei geänderten Einstellungen nicht mehr durch „Spielplan erstellen“ ersetzt; die Bedienung verlangt vorherigen expliziten Abbruch. Bestehende Engine/Simulation unverändert. Playwright-Regression für ungültige/geänderte Eingaben, Cancel und Neustart im Entwicklungsbranch ergänzt und zurückgelesen.
+- **Aktuelle vollständige CI noch nicht nachweisbar** (GitHub-Commit-Runs-/Statusabfrage ohne Ergebnis; lokaler Clone wegen DNS nicht möglich). NEXT-79c und NEXT-79d bleiben offen, NEXT-79e folgt. Letzte bestätigte CI vor diesen Änderungen: #40153366228 (383 Unit/Behavior/Regression, 102 Desktop/Mobil-E2E).
+- **Kumulativ 6 vollständig CI-getestete, unveröffentlichte NEXT-Aufgaben seit Live-v0.1.55:** 63, 64, 66, 67, 68, 78. NEXT-79a/b getestet; 79c/d noch nicht vollständig abgenommen. Draft-PR #48, keine Veröffentlichung.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 25.10.2026, 06:00 MEZ – NEXT-79c Pause-Aktionsgate gehärtet, CI-Abnahme offen · NICHT VERÖFFENTLICHT
 - NEXT-79c: `syncTournamentActions()` deaktiviert nun während `paused` sowohl den Einzelkampf- als auch den Automatik-Startknopf. Fortsetzen bleibt die einzige explizite Wiederaufnahme; Desktop-/Mobil-Regression ergänzt. Quellcode und Test nach GitHub-Schreiboperation zurückgelesen. **Kein vollständiger CI-Nachweis auf dem aktuellen Head; NEXT-79c bleibt offen.**
 - NEXT-79d: bereits implementierte ARIA-/Hilfetexte warten ebenfalls auf aktuelle vollständige CI. NEXT-79e folgt erst nach Abnahme.
