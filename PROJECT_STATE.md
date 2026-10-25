@@ -1,3 +1,8 @@
+## Acht-Feature-Integrationskandidat QA-grün · 26.10.2026 · NICHT VERÖFFENTLICHT
+- NEXT-76 und NEXT-82 in sechs-Aufgaben-Kandidaten integriert; src/main.ts hunkweise reconciliert, Suchfilter und gemeinsamer Downloadadapter bleiben erhalten. QA-only Draft-PR #65 gegen isolierten QA-Branch.
+- Kombinierte CI #40243980520 SUCCESS auf Code-SHA `5b1bada2c7262e245cda95a8adf1e647e4eb9924`: 429 Unit-/Behavior-/Regressions-/Determinismustests, 160 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Build und Security-Gate erfolgreich. Nach Dokumentation erneute QA offen.
+- Kumulativ **9 fertig implementierte und getestet, aber unveröffentlichte NEXT-Aufgaben:** NEXT-69 (Roboterpresets), NEXT-70 (Kampfexport), NEXT-71 (Preset-/Exportintegration), NEXT-74 (sichere Importe), NEXT-75 (Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler), NEXT-82 (Downloadhärtung), NEXT-76 (Turniersuche/Ergebnisfilter), NEXT-85 (gemeinsame Acht-Feature-Integration). NEXT-79e manuelle Abnahme offen, NEXT-80 CAS noch geplant. main v0.1.56 unverändert.
+
 ## NEXT-76 und NEXT-82 QA-grün · 26.10.2026 · NICHT VERÖFFENTLICHT
 - NEXT-76: Debounced, zugängliche Suche über Match-ID/Teilnehmernamen plus Statusfilter und Reset, immutable Filterfunktion, 120 Paarungen, Unicode und 375px. QA-only #40243725469 SUCCESS: 423 Unit/Behavior/Regression/Determinismus und 156 Desktop/Mobil. Regression mit doppelt belegter .field-help-Klasse behoben und erneut getestet.
 - NEXT-82: Downloadadapter für Match/Tabellen/Archive, Dateinamen und Fehlerpfade gehärtet; QA-only nach Doku #40243672046 SUCCESS: 425 Unit/Behavior/Regression und 156 Desktop/Mobil.
