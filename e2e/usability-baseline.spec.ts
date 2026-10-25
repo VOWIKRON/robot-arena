@@ -22,7 +22,7 @@ test('NEXT-79a: first-time sandbox journey is reachable at phone, tablet and des
   await expect(config).toBeFocused();
 
   await page.getByRole('button', { name: 'Start', exact: true }).click();
-  await expect(page.locator('#stats')).toContainText(/Tick: [1-9]\\d*/);
+  await expect(page.locator('#stats')).toContainText(/Tick: [1-9]\d*/);
   await page.getByRole('button', { name: 'Pause', exact: true }).click();
   const stopped = await page.locator('#stats').getByText(/Tick:/).innerText();
   await page.waitForTimeout(160);
