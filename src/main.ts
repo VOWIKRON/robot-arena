@@ -645,7 +645,14 @@ function clearTournamentDraftError(input: HTMLInputElement): void {
   else input.removeAttribute('aria-describedby');
 }
 el('tournament-dialog').addEventListener('input', event => {
-  if (event.target instanceof HTMLInputElement) clearTournamentDraftError(event.target);
+  if (!(event.target instanceof HTMLInputElement)) return;
+  const wasInvalid = event.target.getAttribute('aria-invalid') === 'true';
+  clearTournamentDraftError(event.target);
+  // A corrected field must not leave an obsolete error announced as current.
+  // The new draft is not marked valid until the user creates the plan again.
+  if (wasInvalid && el('tournament-feedback').textContent?.startsWith('Turnier ungültig:')) {
+    el('tournament-feedback').textContent = 'Eingabe geändert. Bitte Spielplan erstellen, um die Änderungen zu prüfen.';
+  }
 });
 function buildTournamentDefinition(): TournamentDefinition {
   const count = tournamentCount();
