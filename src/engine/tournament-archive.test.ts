@@ -50,7 +50,7 @@ describe('NEXT-58 tournament archive', () => {
   it.each([0, 2, 999, '1', null])('refuses unsupported archive schemaVersion %s without migration', version => {
     const archived = JSON.parse(exportTournamentRun(createTournamentRun(definition)));
     archived.schemaVersion = version;
-    expect(() => importTournamentRun(JSON.stringify(archived))).toThrow(/nicht unterstützte Version/);
+    expect(() => importTournamentRun(JSON.stringify(archived))).toThrow(/ungültige Version/);
   });
   it('distinguishes missing version, missing run, malformed JSON and oversized input', () => {
     const archived = JSON.parse(exportTournamentRun(createTournamentRun(definition)));
