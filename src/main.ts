@@ -474,6 +474,20 @@ let tournamentDefinition: TournamentDefinition | null = null;
 let tournamentRun: TournamentRun | null = null;
 let tournamentAutoTimer: number | null = null;
 let tournamentAutoRequested = false;
+/** NEXT-79c: available actions are derived from the runner, never a second UI state. */
+function syncTournamentActions(): void {
+  const status = tournamentRun?.status;
+  const active = Boolean(status && status !== 'completed' && status !== 'cancelled');
+  for (const id of ['tournament-run', 'tournament-auto']) {
+    el<HTMLButtonElement>(id).disabled = !active || status === 'paused' && id === 'tournament-run';
+  }
+  el<HTMLButtonElement>('tournament-pause').disabled = !active || status === 'paused';
+  el<HTMLButtonElement>('tournament-resume').disabled = status !== 'paused';
+  el<HTMLButtonElement>('tournament-cancel').disabled = !active;
+  for (const id of ['tournament-export', 'tournament-table-csv', 'tournament-table-json']) {
+    el<HTMLButtonElement>(id).disabled = !tournamentRun;
+  }
+}
 /** Only explicit opt-in writes a validated archive at match/status boundaries. */
 function persistTournamentSnapshot(): void {
   if (!tournamentRun || !el<HTMLInputElement>('tournament-autosave').checked) return;
@@ -542,6 +556,7 @@ function tournamentStatus(): void {
     [participant?.name ?? entry.participantId, entry.played, entry.wins, entry.draws, entry.losses, entry.points, entry.structureDifference].forEach((value, j) => { if (cells[j]) cells[j]!.textContent = String(value); });
   });
   renderTournamentMatchDetails();
+  syncTournamentActions();
 }
 function tournamentCount(): number {
   const count = el<HTMLInputElement>('tournament-count').valueAsNumber;
@@ -680,6 +695,7 @@ el('open-tournament').addEventListener('click', () => {
   const dialog = el<HTMLDialogElement>('tournament-dialog');
   dialog.showModal();
   if (!tournamentDefinition) renderTournamentParticipants();
+  syncTournamentActions();
   el<HTMLInputElement>('tournament-count').focus();
 });
 el('close-tournament').addEventListener('click', () => { stopTournamentAuto(); el<HTMLDialogElement>('tournament-dialog').close(); });
@@ -705,6 +721,7 @@ el('tournament-create').addEventListener('click', () => {
   if (!renderTournamentPreview() || !tournamentDefinition) return;
   tournamentRun = tournamentDefinition.format === 'round-robin' ? createTournamentRun(tournamentDefinition) : null;
   if (tournamentRun) { tournamentStatus(); persistTournamentSnapshot(); }
+  syncTournamentActions();
 });
 function tournamentAction(action: (run: TournamentRun) => TournamentRun): void {
   try {
