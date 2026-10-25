@@ -753,8 +753,11 @@ el('close-tournament').addEventListener('click', () => {
   suspendTournamentOnDialogClose();
   el<HTMLDialogElement>('tournament-dialog').close();
 });
+// The cancel event fires before the dialog closes: stop the queued 0ms match timer
+// immediately on Escape instead of racing the asynchronous close event.
+el('tournament-dialog').addEventListener('cancel', () => suspendTournamentOnDialogClose());
 el('tournament-dialog').addEventListener('close', () => {
-  suspendTournamentOnDialogClose(); // Also covers Escape and native dialog close.
+  suspendTournamentOnDialogClose(); // Idempotent fallback for native dialog close.
   el<HTMLButtonElement>('open-tournament').focus();
 });
 el('tournament-count').addEventListener('change', renderTournamentParticipants);
