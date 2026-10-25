@@ -854,7 +854,12 @@ function applyImportedTournament(loaded: TournamentRun): void {
   el<HTMLSelectElement>('tournament-side-assignment').disabled = loaded.definition.format === 'knockout';
   el<HTMLInputElement>('tournament-seed').value = String(loaded.definition.baseSeed);
   el<HTMLInputElement>('tournament-ticks').value = String(loaded.definition.maxTicks);
-  loaded.definition.participants.forEach((p, i) => { el<HTMLInputElement>(`tournament-name-${i + 1}`).value = p.name; });
+  loaded.definition.participants.forEach((p, i) => {
+    el<HTMLInputElement>(`tournament-name-${i + 1}`).value = p.name;
+    // The editor must reflect the validated archive, not the previous draft's presets.
+    el<HTMLSelectElement>(`tournament-preset-${i + 1}`).value =
+      p.maxStructure === TITAN.maxStructure && p.weaponDamage === TITAN.weaponDamage ? 'titan' : 'raptor';
+  });
   if (!renderTournamentPreview(loaded.definition)) throw new Error('Geladenes Turnier konnte nicht angezeigt werden');
   tournamentRun = loaded;
   tournamentStatus();
