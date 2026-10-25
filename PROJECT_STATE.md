@@ -1,3 +1,8 @@
+## NEXT-82 Entwicklungsstand · 26.10.2026 · NICHT VERÖFFENTLICHT
+- Feature-Branch `feature/NEXT-82-match-download-hardening` aus dem grünen sechs-Aufgaben-Integrationskandidaten abgezweigt. Downloadfunktion in getesteten Browser-Adapter ausgelagert, unsichere Dateinamen neutralisiert, fehlende Browser-APIs und Klickausnahmen als sichtbare Fehler behandelt, Object-URLs auch bei Fehlern bereinigt.
+- Vitest-Regressionsfälle und Playwright Desktop/Mobil ergänzt; isolierte QA #40243185882 zunächst ausstehend. **NEXT-82 erst nach grüner finaler CI als fertig markieren.**
+- Kumulativ fertig/getestet, aber unveröffentlicht: **6** (NEXT-69 (Roboterpresets), NEXT-70 (CSV-/JSON-Kampfexport), NEXT-71 (Integration), NEXT-74 (Importvalidierung), NEXT-75 (V1-Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler)). NEXT-79e manuelle Abnahme offen. Keine Homepage-Änderung; main v0.1.56 unverändert.
+
 ## Gemeinsamer sechs-Aufgaben-QA-Erfolg · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **NEXT-74/75/77 in NEXT-69/70/71 integriert und gemeinsam verifiziert.** Isolierte QA-only CI #40238144023 auf Code-HEAD `e7967c636716582fe6bfeab8652ca9b24196abac` erfolgreich: 419/419 Unit-/Behavior-/Regressions-/Determinismustests, 152/152 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Zweitbuild, 0 bekannte Dependency-Schwachstellen.
 - **Kumulativ 6 fertig entwickelte und gemeinsam getestete, unveröffentlichte NEXT-Aufgaben:** NEXT-69 Presets; NEXT-70 Kampfexport; NEXT-71 Integration; NEXT-74 Importvalidierung; NEXT-75 V1-Archivkompatibilität; NEXT-77 Autosave-/Downloadfehler. **Neu abgeschlossen: 0; 3 bestehende Aufgaben integriert.**
