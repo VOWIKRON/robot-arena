@@ -1,0 +1,48 @@
+name: Isolated NEXT-77 QA - no publishing
+
+on:
+  push:
+    branches:
+      - feature/NEXT-77-archive-compatibility
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Enforce zero known dependency advisories
+        run: npm audit --audit-level=low
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Verify reproducible second build
+        shell: bash
+        run: |
+          before="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          npm ci --no-audit --no-fund
+          npm run build
+          after="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          test "$before" = "$after"
+      - name: Cache Playwright Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install chromium
+      - name: Verify Chromium runtime and install missing libraries only when needed
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          if ! node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'; then
+            npx playwright install-deps chromium
+            node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'
+          fi
+      - run: npm run test:e2e
