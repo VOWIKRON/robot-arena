@@ -1,3 +1,9 @@
+## NEXT-82 abgeschlossen · 26.10.2026, 00:15 MEZ · NICHT VERÖFFENTLICHT
+- **NEU fertig und getestet: NEXT-82** – sichere Dateinamen, fehlende ObjectURL-/Blob-APIs, Download-Klickfehler und URL-Aufräumen. Isolierte QA-only GitHub Actions **#40243348670 SUCCESS** auf Commit `90719ebcddbf26adc835bc7d38647058daae0499`: **425/425 Unit/Behavior/Regression/Determinismus (38 Dateien), 156/156 Desktop/Mobil**, TypeScript, Build, reproduzierbarer Zweitbuild, Audit-Gate grün. Refactoring nach Änderung vollständig erneut getestet.
+- **Kumulativ vollständig implementiert, getestet, NICHT VERÖFFENTLICHT: 7:** NEXT-69 Presets, NEXT-70 Kampfexport, NEXT-71 Integration, NEXT-74 Importvalidierung, NEXT-75 Archivkompatibilität, NEXT-77 Autosave/Downloadfehler, **NEXT-82 (NEU) Browser-Downloadhärtung**. Sechs-Aufgaben-Kandidat PR #62 separat integriert; NEXT-82 PR #63 bleibt Draft und wurde noch nicht in PR #62 integriert.
+- **Offen:** NEXT-79e manuelle Accessibility-Abnahme, NEXT-76 Suche/Filter auf eigenem Entwicklungsbranch in QA, NEXT-80 Cross-Tab-CAS. Keine Veröffentlichung, kein Merge nach main, keine Homepage-Aktualisierung.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Stündliche Entwicklungsrunde · 26.10.2026, 00:00 MEZ · NICHT VERÖFFENTLICHT
 - **Aktuelle Runde (1 Aufgabe): NEXT-82** – Downloadfehlerbehandlung auf isoliertem Feature-Branch implementiert, Vitest- und Desktop-/Mobil-Playwright-Regressionen ergänzt; Draft-PR #63 nur gegen QA-Branch. **Abnahme bis zum endgültigen CI-Ergebnis offen; nicht als fertig zählen.**
 - **Kumulativ seit verifiziertem Live-Release v0.1.56 vollständig implementiert, getestet und unveröffentlicht: 6:** NEXT-69 (Roboterpresets), NEXT-70 (CSV-/JSON-Kampfexport), NEXT-71 (Integration), NEXT-74 (Importvalidierung), NEXT-75 (V1-Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler). Neu in dieser Runde vollständig abgeschlossen: **0**, solange NEXT-82-QA aussteht.
