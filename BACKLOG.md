@@ -1,3 +1,14 @@
+## Rolling Backlog ab v0.1.56 · 25.10.2026, 15:00 MEZ
+- **Release-Baseline korrigiert:** v0.1.56 auf main (`3d516317`) mit GitHub-Deploymentstatus `robot-arena/deployment: success`. NEXT-63, 64, 66, 67, 68, 78 und NEXT-79a–d gehören zum bestätigten Release und sind **nicht mehr unveröffentlicht**. Frühere Angaben zu v0.1.55 und 10 unveröffentlichten Einträgen sind historische Zwischenstände, nicht die aktuelle Bilanz.
+- [ ] **NEXT-79e – P0 / in Arbeit / eigener Branch:** Tastatur-/ARIA-/Fokus-/Responsive-Testdatei committed; Desktop- und Mobil-CI, echte NVDA-/VoiceOver-Abnahme und visuelle 375/768/1280px-/Touch-/Kontrastprüfung noch offen. Akzeptanz: 0 Testfehler, zugängliche Dialog-/Feldnamen, Live-Status, korrekte Fehlermeldungs- und Fokusführung, Tabelle per Tastatur scrollbar, Escape/Fokusrückgabe, Import/Export/Autosave/Cancel/Resume ohne versteckte Kämpfe. Bei Rot zuerst beheben und erneut vollständig testen.
+- [ ] **NEXT-69 – P1:** Versionierte Roboterpresets aus Sandbox-Konfiguration, stabile IDs, Grenzen, Importvalidierung, deterministische Engine- und Browser-Tests; erst auf eigenem Branch beginnen.
+- [ ] **NEXT-70 – P1:** Match-CSV/JSON mit Schema, Unicode und Formel-Injection-Schutz, Downloads und Browser-Regression; eigener Branch.
+- [ ] **NEXT-71 – P1:** Release-Readiness/Branch-Isolation ab bestätigter v0.1.56; keine Veröffentlichung, eigener Branch.
+- [ ] **NEXT-72–77:** Bestehende Akzeptanzkriterien unverändert weiterführen, jeweils eigener Branch.
+- **Kumulativ fertig implementiert, getestet, aber seit v0.1.56 NICHT veröffentlicht: 0 NEXT-/Teilaufgaben.** NEXT-79e ist nur implementierte Testvorbereitung, nicht fertig verifiziert. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein Merge nach main, kein Release, kein publish.php, keine Homepage-Änderung.
+
+---
+
 ## Priorisierte Fortsetzung · 25.10.2026, 14:00 MEZ · unveröffentlicht
 - [ ] **NEXT-79e (P0):** Neue Playwright-Tastatur-/Screenreader-Namensmatrix auf Entwicklungs-HEAD vollständig in GitHub CI bestätigen (Desktop + Mobil; neuer Test 2 Ausführungen), Fehler zuerst beheben. Anschließend echte NVDA-/VoiceOver-Prüfung: Dialogtitel, Feldnamen, Live-Status, Fehlerhinweise, Fokusfalle/Fokusrückgabe. Visuelle Touch-/Kontrastprüfung 375/768/1280px; vollständige CI nach jedem Fix. **Noch nicht abgeschlossen.**
 - [ ] **NEXT-71 (Release-Readiness, keine Veröffentlichung):** Die vom Nutzer nur für NEXT-63 und NEXT-64 erteilte Freigabe respektieren: Abhängigkeiten zur bereits veröffentlichten v0.1.55 prüfen, Änderungen isolieren, Test- und Release-SHA dokumentieren. Der aktuelle Sammelbranch enthält viele weitere unveröffentlichte Features und liegt 4 Commits hinter main. **Kein Merge, kein Deployment.**
