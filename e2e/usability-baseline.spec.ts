@@ -128,6 +128,35 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
   }
 });
 
+test('NEXT-79c: editing setup cannot overwrite an active tournament; cancellation permits restart', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+
+  // Invalid edits must not discard the valid run or its result controls.
+  await page.locator('#tournament-seed').fill('-1');
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-feedback')).toContainText('Turnier ungültig');
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+  await expect(page.locator('#tournament-run')).toBeEnabled();
+
+  // A different valid definition must not silently replace a running/ready plan.
+  await page.locator('#tournament-seed').fill('12345');
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-feedback')).toContainText('Bitte zuerst abbrechen');
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+  await expect(page.locator('#tournament-run')).toBeEnabled();
+
+  await page.locator('#tournament-cancel').click();
+  await expect(page.locator('#tournament-progress')).toContainText('cancelled');
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+  await expect(page.locator('#tournament-feedback')).toContainText('Spielplan mit 2 Teilnehmern');
+  await page.locator('#tournament-run').click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+});
+
 test('NEXT-79d: contextual guidance is readable, linked to inputs and usable on mobile', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Konfiguration', exact: true }).click();
