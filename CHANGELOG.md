@@ -1,3 +1,9 @@
+## Unreleased · 26.10.2026 · NEXT-82 QA noch offen
+- Refactoring: einheitlicher Browser-Downloadadapter für Turnierarchive, Ergebnistabellen und Einzelkämpfe.
+- Robustheit: Dateinamen ohne Pfad-/Steuerzeichen, explizite Fehler bei fehlenden Blob-/ObjectURL-APIs oder blockiertem Klick, best-effort URL-Revoke auch im Fehlerpfad.
+- Tests ergänzt: sechs Unit-/Regressionstests und zwei Desktop-/Mobil-Playwright-Fälle; isolierte QA #40243185882 läuft, Abschluss erst nach grünem CI-Nachweis.
+- Unveröffentlicht: NEXT-69/70/71/74/75/77 (6 zuvor erfolgreich gemeinsam getestet). NEXT-79e bleibt offen. Keine Änderung an main oder Homepage.
+
 ## Gemeinsamer sechs-Aufgaben-QA-Erfolg · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **NEXT-74/75/77 in NEXT-69/70/71 integriert und gemeinsam verifiziert.** Isolierte QA-only CI #40238144023 auf Code-HEAD `e7967c636716582fe6bfeab8652ca9b24196abac` erfolgreich: 419/419 Unit-/Behavior-/Regressions-/Determinismustests, 152/152 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Zweitbuild, 0 bekannte Dependency-Schwachstellen.
 - **Kumulativ 6 fertig entwickelte und gemeinsam getestete, unveröffentlichte NEXT-Aufgaben:** NEXT-69 Presets; NEXT-70 Kampfexport; NEXT-71 Integration; NEXT-74 Importvalidierung; NEXT-75 V1-Archivkompatibilität; NEXT-77 Autosave-/Downloadfehler. **Neu abgeschlossen: 0; 3 bestehende Aufgaben integriert.**
