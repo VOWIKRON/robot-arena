@@ -1,4 +1,5 @@
 import { buildRobotDefinition, type RobotConfiguration } from './components';
+import { deepFreeze } from './immutable';
 import { DEFAULT_STRATEGY, STRATEGY_TYPES, validateStrategyParameters, type StrategyParameters, type StrategyType } from './strategy-config';
 import {
   RAPTOR_CHASSIS, TITAN_CHASSIS, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR,
@@ -77,7 +78,7 @@ export function parseRobotPreset(input: unknown): RobotConfiguration {
     strategyParameters: { ...parameters } as unknown as StrategyParameters
   };
   buildRobotDefinition(configuration); // includes weight and strategy validation
-  return Object.freeze({ ...configuration, strategyParameters: Object.freeze({ ...configuration.strategyParameters }) });
+  return deepFreeze(structuredClone(configuration));
 }
 export function serializeRobotPreset(configuration: RobotConfiguration): string {
   return JSON.stringify(createRobotPreset(configuration));
