@@ -13,7 +13,7 @@ export function validateTournamentArchive(input: unknown): TournamentArchive {
   const archive = input as Record<string, unknown>;
   // V1 is the only supported on-disk format. Never silently reinterpret future versions.
   if (!Object.hasOwn(archive, 'schemaVersion')) throw new Error('Turnierarchiv: Versionsfeld fehlt');
-  if (archive.schemaVersion !== 1) throw new Error('Turnierarchiv: nicht unterstützte Version (nur v1)');
+  if (archive.schemaVersion !== 1) throw new Error('Turnierarchiv: ungültige Version (nicht unterstützt; nur v1)');
   if (!archive.run || typeof archive.run !== 'object' || Array.isArray(archive.run)) throw new Error('Turnierarchiv: Laufdaten fehlen');
   const raw = archive.run as Record<string, unknown>;
   const definition = createTournamentDefinition(raw.definition);
