@@ -1,3 +1,17 @@
+## Release-Candidate-Integration · 25.10.2026, 23:00 MEZ · NICHT VERÖFFENTLICHT
+- **Diese Runde (3 Integrationsaufgaben):** NEXT-74 (Import-Guard + Model-Validierung), NEXT-75 (V1-Archivkompatibilität + Golden-Tests) und NEXT-77 (Autosave-Konflikte + gemeinsame Downloads) in den isolierten NEXT-69/70/71-Integrationsbranch übernommen; `src/engine/tournament-archive.ts` aus NEXT-74 und NEXT-75 bewusst kombiniert; `src/main.ts` mit NEXT-77 hunkweise gegen main abgeglichen, Match-CSV/JSON ebenfalls auf gemeinsame Downloadfunktion umgestellt. GitHub-Schreibresultate geprüft.
+- **Kumulativ seit verifiziert live v0.1.56: 6 einzeln fertig implementierte und getestete, aber unveröffentlichte Aufgaben:** NEXT-69 (Presets; 391 Unit + 134 Browser), NEXT-70 (Kampfexport; 387 + 130), NEXT-71 (gemeinsame Preset/Export-Integration; 395 + 144, 4 Konfliktprüfungen), NEXT-74 (Importgrenzen; 392 + 128), NEXT-75 (Archivkompatibilität; 393 + 126), NEXT-77 (Autosave/Exportfehler; 388 + 134). **Neu als eigenständige NEXT-Aufgaben abgeschlossen: 0**; diese Runde integriert drei bestehende Aufgaben.
+- **WICHTIG: Gemeinsame sechs-Aufgaben-CI noch NICHT bestätigt.** Individuelle CI-Erfolge gelten nicht als kombinierte Releasefreigabe. Bei Fehlschlag Fehler beheben und vollständig erneut testen.
+- **NEXT-79e bleibt offen:** echte NVDA-/VoiceOver-, Touch- und visuelle Kontrastabnahme ausstehend; nicht Teil dieses Kandidaten.
+- **Kein Publishing:** main unverändert; kein Release-Commit, kein Deployment, keine Homepage-Aktualisierung. Veröffentlichung nur durch Nutzer.
+- **Refactoring:** Match-, Tabellen- und Archivdownloads teilen denselben sicheren Blob-Download mit URL-Aufräumen; deterministische Simulationsengine unverändert.
+
+### Rolling Backlog · Nächste überprüfbare Schritte
+- [ ] **NEXT-80 · Cross-Tab-CAS:** Race zwischen zwei gleichzeitig speichernden Tabs mit festem Scheduler reproduzieren; atomare Sperrstrategie (z. B. Web Locks API mit sicherem Fallback) implementieren; kein stilles Überschreiben; Desktop-/Mobil-Regression.
+- [ ] **NEXT-81 · Gesamtrelease-Gate:** Sechs-Aufgaben-Integrationsbranch mit Typecheck, Unit, Behavior, deterministischen Seeds, Desktop/Mobil, reproduzierbarem Build und Security-Audit vollständig grün; nur dann manuelle Releasefreigabe vorschlagen.
+- [ ] **NEXT-82 · Match-Downloadfehler:** Fehlende Blob-/ObjectURL-APIs, click()-Ausnahme, URL-Aufräumen, schädliche Dateinamen und fehlende Matches im kombinierten NEXT-70/77-Pfad absichern.
+- [ ] **NEXT-83 · Accessibility-Matrix:** Manuelle NVDA-/VoiceOver-, Tastatur-, Touch- und Kontrastabnahme mit Gerät/Version, erwarteten Ansagen und dokumentierten Befunden durchführen; NEXT-79e erst dann schließen.
+
 ## NEXT-71 · Kombinierter QA-Kandidat · 25.10.2026, 19:00 MEZ · KEIN PUBLISHING
 - **Neu in dieser Runde:** Auf isoliertem Branch `qa/NEXT-71-combined-integration` die Implementierungen NEXT-69 (versionierte Roboterpresets) und NEXT-70 (Kampfexport CSV/JSON) gemeinsam zusammengeführt; sechs getrennte `src/main.ts`-Diff-Hunks gegen main verifiziert, Quellcode zusammengeführt und per GitHub-Readback kontrolliert.
 - **Neue kombinierte Behavior-/Desktop-/Mobil-Regression:** `e2e/next-71-combined-integration.spec.ts` prüft Sandbox-Preset → Turnierkampf → CSV-/JSON-Export derselben Teilnehmer und 375px-Touchlayout. Zusätzlich NEXT-69/70-Tests und NEXT-71-Konfliktguard eingebunden.
