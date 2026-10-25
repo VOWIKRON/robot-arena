@@ -1,3 +1,17 @@
+## NEXT-71 · Kombinierte Integrationsabnahme ERFOLGREICH · 25.10.2026, 20:02 MEZ · UNVERÖFFENTLICHT
+- **NEU entwicklungsseitig abgeschlossen:** NEXT-71. GitHub Isolated Feature QA #40223947082 auf getestetem Code/Test-Commit `e7a4a612df0a81f75acfc96357d45723a05c5ee1`: 395/395 Vitest, 4/4 Konfliktguard, 144/144 Playwright Desktop/Mobil, Typecheck, npm audit 0, reproduzierbarer Build grün.
+- **Kumulativ seit bestätigter Live-v0.1.56:** 3 fertig getestete, NICHT veröffentlichte NEXT-Aufgaben: 69 (Roboterpresets), 70 (Kampfexport CSV/JSON), 71 (gemeinsame Integration/Release-Readiness). NEXT-79e (echte Screenreader-/Touch-/Kontrastabnahme) und NEXT-74 (Importhärtung) offen.
+- **Kein Merge, kein Deployment, kein Release-Commit, keine Homepage-Aktualisierung. NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
+## NEXT-71 · Kombinierte QA-Erweiterung · 25.10.2026, 20:00 MEZ · NICHT VERÖFFENTLICHT
+- **Aktuelle Runde:** NEXT-71 priorisiert, 79e weiterhin offen (echte NVDA-/VoiceOver-/Touch-/Kontrast-Abnahme fehlt), NEXT-74 noch nicht begonnen.
+- **NEU:** Branch `feature/NEXT-71-combined-validation`, Draft-PR #59 gegen `qa/NEXT-71-combined-integration` (NICHT gegen main). Zusätzlicher Playwright-Behavior-Test `e2e/next-71-saved-preset-match-export.spec.ts`: Roboterpreset speichern → Seite neu laden → Turnier erstellen → Archiv-Roboterdaten prüfen → Kampf abschließen → Match-JSON prüfen. Läuft auf Desktop und Mobil, sofern isolierte QA erfolgreich abgeschlossen wird.
+- **CI-Gate:** Workflow `Isolated Feature QA – no publishing` ist auf dem QA-Zielbranch konfiguriert; aktueller PR-Head wurde noch NICHT als vollständig grün nachgewiesen. Daher NEXT-71 weiterhin offen. Keine lokalen Node-/Browser-Tests möglich (GitHub-DNS im Container nicht erreichbar).
+- **Refactoring/Qualität:** Keine produktive Engine-Änderung in dieser Runde; gezielter integrativer Behavior-Test, Schreib-Readback verifiziert. Vor Abschluss kombinierte Typecheck-, Audit-, Unit-/Behavior-/Regression-/Determinismus-, Build- und Desktop-/Mobil-Ergebnisse prüfen.
+- **Kumulativ seit bestätigter Live-Version v0.1.56: genau 2 vollständig isoliert getestete, aber UNVERÖFFENTLICHTE NEXT-Aufgaben:** NEXT-69 (391 Unit + 134 Browser) und NEXT-70 (387 Unit + 130 Browser). **Neu abgeschlossen: 0.** NEXT-71, NEXT-79e und NEXT-74 nicht als fertig zählen.
+- **Rolling Backlog:** P0 kombinierte QA PR #59 auswerten → bei Fehlern auf demselben NEXT-71-Branch beheben und erneut testen → NEXT-79e manuelle Abnahme mit Befundprotokoll → NEXT-74 auf eigenem Branch: Größenlimits, Duplikate, Prototyp-Schlüssel, tiefe Objekte, nicht endliche Zahlen, Zustandsintegrität und Fuzz-/Property-/Browser-Tests.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Keine Änderung an main, Homepage, publish.php oder Publishing-Workflows.
+
 ## NEXT-71 · Kombinierter QA-Kandidat · 25.10.2026, 19:00 MEZ · KEIN PUBLISHING
 - **Neu in dieser Runde:** Auf isoliertem Branch `qa/NEXT-71-combined-integration` die Implementierungen NEXT-69 (versionierte Roboterpresets) und NEXT-70 (Kampfexport CSV/JSON) gemeinsam zusammengeführt; sechs getrennte `src/main.ts`-Diff-Hunks gegen main verifiziert, Quellcode zusammengeführt und per GitHub-Readback kontrolliert.
 - **Neue kombinierte Behavior-/Desktop-/Mobil-Regression:** `e2e/next-71-combined-integration.spec.ts` prüft Sandbox-Preset → Turnierkampf → CSV-/JSON-Export derselben Teilnehmer und 375px-Touchlayout. Zusätzlich NEXT-69/70-Tests und NEXT-71-Konfliktguard eingebunden.
