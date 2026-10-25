@@ -1,3 +1,9 @@
+## NEXT-79e – Manuelle Abnahme vorbereitet · 25.10.2026, 17:00 MEZ · KEIN PUBLISHING
+- Neu: `ACCESSIBILITY_MANUAL_QA.md` mit reproduzierbarer NVDA-/VoiceOver-, Tastatur-, Touch-, Fokus- und Kontrast-Abnahmematrix. **Alle manuellen Prüffälle bleiben OFFEN**; keine unbelegte Erfolgsbehauptung.
+- Automatisierte QA weiterhin zuletzt erfolgreich #40204710908 (383 Unit-/Behavior-/Regression-/Determinismus-, 130 Browserprüfungen). Diese Änderung betrifft ausschließlich die Dokumentation.
+- NEXT-79e nicht abgeschlossen. Kumulativ seit Live v0.1.56: **0 vollständig abgeschlossene unveröffentlichte NEXT-Aufgaben**. NEXT-69 wird separat auf eigenem Branch bearbeitet.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## NEXT-79e – Isolierte vollständige QA erfolgreich · 25.10.2026, 16:00 MEZ · NICHT VERÖFFENTLICHT
 - **Automatische Qualitätsprüfung erfolgreich:** separater, ausdrücklich NICHT zur Integration vorgesehener Branch `qa/NEXT-79e-isolated-validation`, Run **#40204710908**, Commit `971cf6b5406f`, Ergebnis **SUCCESS**. 32/32 Testdateien, **383/383 Unit-/Behavior-/Regressions-/Determinismustests**, **130/130 Playwright Desktop/Mobil**, TypeScript-Typecheck, Build, zweifach reproduzierbarer Build, npm-Audit **0 bekannte Advisories**.
 - **Nachweis der Codegleichheit:** Vergleich `feature/NEXT-79e-accessibility-matrix` (`df3fa836`) gegen QA-Branch zeigt **ausschließlich zwei QA-Workflow-Dateien** als Unterschiede; Produktivcode und NEXT-79e-Testdatei sind identisch. Der temporäre QA-Branch hat die Development-Tests-Trigger auf sich selbst unterbunden und nur `Isolated Feature QA – no publishing` ausgeführt. **Kein Publish-Workflow und kein Deployment durch diese QA ausgelöst.**
