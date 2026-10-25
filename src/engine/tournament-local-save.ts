@@ -29,7 +29,8 @@ export function isTournamentAutosaveEnabled(storage: TournamentSnapshotStorage):
 export function setTournamentAutosaveEnabled(storage: TournamentSnapshotStorage, enabled: boolean): void {
   if (enabled) storage.setItem(TOURNAMENT_AUTOSAVE_ENABLED_KEY, '1');
   else {
-    storage.removeItem(TOURNAMENT_AUTOSAVE_ENABLED_KEY);
+    // Remove the snapshot first: if deletion is denied, the opt-in flag stays accurate.
     storage.removeItem(TOURNAMENT_AUTOSAVE_KEY);
+    storage.removeItem(TOURNAMENT_AUTOSAVE_ENABLED_KEY);
   }
 }

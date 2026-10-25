@@ -1,3 +1,40 @@
+## NEXT-82 abgeschlossen / Rolling Backlog · 26.10.2026 · NICHT VERÖFFENTLICHT
+- [x] **NEXT-82 – Match-Downloadfehler:** gemeinsame Downloadfunktion extrahiert; fehlende Blob-/ObjectURL-APIs, Klickfehler, sichere Dateinamen und Cleanup mit Unit-/Desktop-/Mobiltests abgesichert. QA-only #40243348670 **SUCCESS: 425/425 Unit, 156/156 Browser**. Draft-PR #63, noch nicht in sechs-Aufgaben-Kandidaten integriert.
+- [ ] **NEXT-76 – Turniersuche/Filter:** separate Entwicklung/QA, erst nach vollständigem isoliertem Test als fertig markieren.
+- [ ] **NEXT-79e – manuelle Barrierefreiheit:** NVDA/VoiceOver/Touch/Kontrast auf echten Geräten mit Befunden und Regressionen.
+- [ ] **NEXT-80 – Cross-Tab-CAS:** gleichzeitige Writes per Scheduler nachstellen, Locking-Fallback mit deterministischen Tests und Desktop/Mobil absichern.
+- [ ] **NEXT-84 – Browserkompatibilität:** Safari/iOS ohne ObjectURL und blockierte Downloads auf echten Geräten testen; Ergebnisse dokumentieren.
+- **Kumulativ fertig/getestet/unveröffentlicht: 7 NEXT-69/70/71/74/75/77/82.** Kein Publishing.
+
+## Rolling Backlog / Runde 26.10.2026, 00:00 MEZ · NICHT VERÖFFENTLICHT
+- [~] **NEXT-82 (P0) – Match-Downloadfehler:** Gemeinsame Browser-Downloadroutine refactored, Dateinamen gehärtet, fehlende Blob-/ObjectURL-APIs, click()-Ausnahme und Cleanup mit Vitest und Desktop-/Mobil-E2E abgesichert. Implementierung auf eigenem Branch, **CI #40243185882 noch abzuwarten**, dann bei Grün abhaken.
+- [ ] **NEXT-79e (P0) – praktische Barrierefreiheit:** NVDA/Windows und VoiceOver/macOS/iOS mit Version, Ansagetext, Fokusreihenfolge und 375px-Touchbedienung protokollieren; reale Kontrastprüfung; Befunde beheben und Regressionstests ergänzen. Ohne manuelle Abnahme nicht abschließen.
+- [ ] **NEXT-76 (P1) – Turniersuche/Ergebnisfilter:** Reine Snapshot-Filterfunktion für Teilnehmer, Match-ID und Status, Unicode und 120 Paarungen; Debounce, zugängliche Such-/Resetsteuerung, E2E für Import, Replay, Pause und 375px.
+- [ ] **NEXT-80 (P1) – Cross-Tab-CAS:** Zwei simultane Schreibvorgänge deterministisch schedulen, Browser-Lock und Fallback evaluieren, Verlustfreiheit und Fehlermeldungen per Behavior-/Browser-Regression prüfen.
+- [ ] **NEXT-84 (P2) – Browser-Downloadmatrix:** Safari/iOS ohne ObjectURL und blockierte Blob-Downloads auf echten Geräten prüfen, Fehlertext/URL-Cleanup protokollieren, gegebenenfalls kompatiblen Fallback implementieren.
+- **Kumulativ vollständig getestet, unveröffentlicht: 6** (NEXT-69 (Roboterpresets), NEXT-70 (CSV-/JSON-Kampfexport), NEXT-71 (Integration), NEXT-74 (Importvalidierung), NEXT-75 (V1-Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler)); NEXT-82 noch nicht als abgeschlossen gezählt. **Kein Publishing.**
+
+## Gemeinsamer sechs-Aufgaben-QA-Erfolg · 25.10.2026 · NICHT VERÖFFENTLICHT
+- **NEXT-74/75/77 in NEXT-69/70/71 integriert und gemeinsam verifiziert.** Isolierte QA-only CI #40238144023 auf Code-HEAD `e7967c636716582fe6bfeab8652ca9b24196abac` erfolgreich: 419/419 Unit-/Behavior-/Regressions-/Determinismustests, 152/152 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Zweitbuild, 0 bekannte Dependency-Schwachstellen.
+- **Kumulativ 6 fertig entwickelte und gemeinsam getestete, unveröffentlichte NEXT-Aufgaben:** NEXT-69 Presets; NEXT-70 Kampfexport; NEXT-71 Integration; NEXT-74 Importvalidierung; NEXT-75 V1-Archivkompatibilität; NEXT-77 Autosave-/Downloadfehler. **Neu abgeschlossen: 0; 3 bestehende Aufgaben integriert.**
+- **Refactoring:** Kampf-/Tabellen-/Archivdownload vereinheitlicht, Objekt-URL-Cleanup. Deterministische Engine unverändert.
+- **Releasekandidat:** Draft-PR #62 gegen isolierten QA-Branch, nicht main. Dokumentations-Follow-up benötigt erneuten CI-Erfolg vor Freigabe. NEXT-79e praktische Barrierefreiheitsabnahme weiterhin offen und ausgeschlossen.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** main v0.1.56 unverändert.
+
+## Release-Candidate-Integration · 25.10.2026, 23:00 MEZ · NICHT VERÖFFENTLICHT
+- **Diese Runde (3 Integrationsaufgaben):** NEXT-74 (Import-Guard + Model-Validierung), NEXT-75 (V1-Archivkompatibilität + Golden-Tests) und NEXT-77 (Autosave-Konflikte + gemeinsame Downloads) in den isolierten NEXT-69/70/71-Integrationsbranch übernommen; `src/engine/tournament-archive.ts` aus NEXT-74 und NEXT-75 bewusst kombiniert; `src/main.ts` mit NEXT-77 hunkweise gegen main abgeglichen, Match-CSV/JSON ebenfalls auf gemeinsame Downloadfunktion umgestellt. GitHub-Schreibresultate geprüft.
+- **Kumulativ seit verifiziert live v0.1.56: 6 einzeln fertig implementierte und getestete, aber unveröffentlichte Aufgaben:** NEXT-69 (Presets; 391 Unit + 134 Browser), NEXT-70 (Kampfexport; 387 + 130), NEXT-71 (gemeinsame Preset/Export-Integration; 395 + 144, 4 Konfliktprüfungen), NEXT-74 (Importgrenzen; 392 + 128), NEXT-75 (Archivkompatibilität; 393 + 126), NEXT-77 (Autosave/Exportfehler; 388 + 134). **Neu als eigenständige NEXT-Aufgaben abgeschlossen: 0**; diese Runde integriert drei bestehende Aufgaben.
+- **WICHTIG: Gemeinsame sechs-Aufgaben-CI noch NICHT bestätigt.** Individuelle CI-Erfolge gelten nicht als kombinierte Releasefreigabe. Bei Fehlschlag Fehler beheben und vollständig erneut testen.
+- **NEXT-79e bleibt offen:** echte NVDA-/VoiceOver-, Touch- und visuelle Kontrastabnahme ausstehend; nicht Teil dieses Kandidaten.
+- **Kein Publishing:** main unverändert; kein Release-Commit, kein Deployment, keine Homepage-Aktualisierung. Veröffentlichung nur durch Nutzer.
+- **Refactoring:** Match-, Tabellen- und Archivdownloads teilen denselben sicheren Blob-Download mit URL-Aufräumen; deterministische Simulationsengine unverändert.
+
+### Rolling Backlog · Nächste überprüfbare Schritte
+- [ ] **NEXT-80 · Cross-Tab-CAS:** Race zwischen zwei gleichzeitig speichernden Tabs mit festem Scheduler reproduzieren; atomare Sperrstrategie (z. B. Web Locks API mit sicherem Fallback) implementieren; kein stilles Überschreiben; Desktop-/Mobil-Regression.
+- [ ] **NEXT-81 · Gesamtrelease-Gate:** Sechs-Aufgaben-Integrationsbranch mit Typecheck, Unit, Behavior, deterministischen Seeds, Desktop/Mobil, reproduzierbarem Build und Security-Audit vollständig grün; nur dann manuelle Releasefreigabe vorschlagen.
+- [ ] **NEXT-82 · Match-Downloadfehler:** Fehlende Blob-/ObjectURL-APIs, click()-Ausnahme, URL-Aufräumen, schädliche Dateinamen und fehlende Matches im kombinierten NEXT-70/77-Pfad absichern.
+- [ ] **NEXT-83 · Accessibility-Matrix:** Manuelle NVDA-/VoiceOver-, Tastatur-, Touch- und Kontrastabnahme mit Gerät/Version, erwarteten Ansagen und dokumentierten Befunden durchführen; NEXT-79e erst dann schließen.
+
 ## NEXT-71 · Kombinierter QA-Kandidat · 25.10.2026, 19:00 MEZ · KEIN PUBLISHING
 - **Neu in dieser Runde:** Auf isoliertem Branch `qa/NEXT-71-combined-integration` die Implementierungen NEXT-69 (versionierte Roboterpresets) und NEXT-70 (Kampfexport CSV/JSON) gemeinsam zusammengeführt; sechs getrennte `src/main.ts`-Diff-Hunks gegen main verifiziert, Quellcode zusammengeführt und per GitHub-Readback kontrolliert.
 - **Neue kombinierte Behavior-/Desktop-/Mobil-Regression:** `e2e/next-71-combined-integration.spec.ts` prüft Sandbox-Preset → Turnierkampf → CSV-/JSON-Export derselben Teilnehmer und 375px-Touchlayout. Zusätzlich NEXT-69/70-Tests und NEXT-71-Konfliktguard eingebunden.
