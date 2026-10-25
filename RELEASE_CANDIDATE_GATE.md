@@ -1,3 +1,11 @@
+# Latest publication reconciliation · 26.10.2026
+
+**CONFIRMED LIVE v0.1.57:** main `1ad7a64b7eaac10b6a6adc8bee6d655a8ed3405c`, GitHub status `robot-arena/deployment: success`. NEXT-69/70/71/74/75/77 are already published. Older six-/nine-unpublished counts below are historical and superseded.
+
+**Exactly 3 tested but unpublished NEXT tasks:** NEXT-82 (download hardening), NEXT-76 (tournament search/filter), NEXT-85 (combined QA integration). Isolated eight-feature QA #40244234652 SUCCESS (429 unit, 160 desktop/mobile), but this branch is **diverged from main** after the external v0.1.57 release. Rebase the three new tasks onto current main and rerun the full isolated gate before any manual publication. Do not publish from this old-base branch.
+
+**NO MAIN MERGE, NO PUBLISHING, NO DEPLOYMENT in this development run.** NEXT-79e manual acceptance remains open.
+
 # NEXT-85 · Acht-Feature-Integrationsgate · 26.10.2026 · NICHT VERÖFFENTLICHT
 
 **Neuester Stand hat Vorrang vor dem historischen Sechs-Aufgaben-Plan unten.** NEXT-76 (Turniersuche) und NEXT-82 (Downloadhärtung) wurden auf isoliertem Branch mit NEXT-69/70/71/74/75/77 kombiniert. Draft-PR #65 zielt nur auf `qa/NEXT-71-combined-integration`.
