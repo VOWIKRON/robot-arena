@@ -1,3 +1,11 @@
+## Kombinierter QA-Kandidat (25.10.2026, 19:00 MEZ)
+- Isolierter Branch `qa/NEXT-71-combined-integration` basiert auf `qa/NEXT-70-acceptance` (main-basierter NEXT-70-Code mit publishing-sicherer QA-Konfiguration).
+- NEXT-69 wurde selektiv hinzugefügt: fünf neue Quell-/Testdateien sowie sechs eindeutig passende `src/main.ts`-Hunks. Die Patch-Anwendung auf unverändertes `main` wurde bytegenau gegen den NEXT-69-Featurestand validiert; auf NEXT-70 angewendet ergaben sich eindeutige Kontexttreffer.
+- NEXT-71-Konfliktguard und vier Selbsttests sind ebenfalls eingebunden. Neuer kombinierter Desktop-/Mobil-Playwright-Test prüft Preset → Turnierkampf → CSV/JSON-Export.
+- `main` wurde nicht verändert. Die QA-Branch-CI ist von `Development Tests` entkoppelt, damit `Publish` nicht ausgelöst wird. **Vollständige kombinierte QA noch ausstehend**; keine Releasefreigabe.
+- Kumulativ seit bestätigter Live-Version v0.1.56: **NEXT-69 und NEXT-70 (2)** isoliert fertig getestet, aber unveröffentlicht. NEXT-71 bleibt bis grüner Integration offen; NEXT-79e benötigt reale Screenreader-/Touch-/Kontrastabnahme. NEXT-74 ist noch offen.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 # NEXT-71 – Integrationsvorbereitung (ohne Veröffentlichung)
 
 Stand: 25.10.2026, 18:00 MEZ. **Nicht integriert, nicht veröffentlicht.** Verifizierte Live-Basis: v0.1.56 / main `3d516317128578e374ec39eacd8991649c1815cc`.
