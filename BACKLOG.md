@@ -1,3 +1,14 @@
+## Rolling Backlog · v0.1.57 live bestätigt · 26.10.2026 · NICHT VERÖFFENTLICHT
+- **Releasebasis korrigiert:** v0.1.57, main `1ad7a64b7eaac10b6a6adc8bee6d655a8ed3405c`, GitHub-Deploymentstatus SUCCESS. NEXT-69/70/71/74/75/77 wurden veröffentlicht; frühere Neun-unveröffentlicht-Angaben sind überholt.
+- [x] **NEXT-82 – Browser-Downloadhärtung:** einzeln und gemeinsam grün; unveröffentlicht.
+- [x] **NEXT-76 – Turniersuche/Ergebnisfilter:** einzeln und gemeinsam grün; unveröffentlicht.
+- [x] **NEXT-85 – Acht-Feature-Integration/QA:** finaler QA-only Lauf #40244234652 SUCCESS (429 Unit/Behavior/Regression/Determinismus, 160 Desktop/Mobil), aber Branch ist nicht auf neuem main v0.1.57 rebased; unveröffentlicht.
+- [ ] **NEXT-86 (P0) – v0.1.57-Rebase ohne Publishing:** NEXT-76/82/85 aus Draft-PR #65 gegen aktuellen main abgleichen; ausschließlich diese neuen Änderungen übernehmen, Workflow- und Release-Dateien nicht blind überschreiben; volle isolierte QA auf finalem HEAD; KEIN main-Merge oder Deployment.
+- [ ] **NEXT-79e (P0) – manuelle NVDA-/VoiceOver-/Touch-/Kontrastabnahme:** echte Geräte, Versionen, Fokus/Ansagen und Befunde dokumentieren.
+- [ ] **NEXT-80 (P1) – atomare Cross-Tab-CAS:** simultane Writes deterministisch reproduzieren, Lock-/Fallback-Strategie und Browserregression.
+- [ ] **NEXT-84 (P2) – Safari/iOS-Downloadmatrix:** reale Geräte und Browser-APIs testen.
+- **Kumulativ seit letzter bestätigter Veröffentlichung: 3 fertig/getestet, NICHT VERÖFFENTLICHT (NEXT-82, NEXT-76, NEXT-85).**
+
 ## NEXT-85 Acht-Feature-Integration abgeschlossen · 26.10.2026 · NICHT VERÖFFENTLICHT
 - [x] **NEXT-82 – Downloadhärtung:** ObjectURL-/Blob-/Click-Fehler, Dateinamen und Cleanup; QA-grün und gemeinsam integriert.
 - [x] **NEXT-76 – Turniersuche/Ergebnisfilter:** Debounce, Status, Unicode, 120 Paarungen, Reset, Import/Replay, 375px; QA-grün und gemeinsam integriert.
