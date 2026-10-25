@@ -1,3 +1,18 @@
+# VERBINDLICHE ENTWICKLUNGSREGEL – HÖCHSTE PRIORITÄT (25.10.2026)
+
+**JEDE NEXT-AUFGABE MUSS AUF EINEM EIGENEN GIT-BRANCH ENTWICKELT WERDEN.** Dies gilt ab sofort ausnahmslos für neue Aufgaben. Kein gemeinsamer Sammel-Entwicklungsbranch für mehrere NEXT-Aufgaben.
+
+1. Vor Beginn jeder NEXT-Aufgabe vom aktuellen stabilen `main` einen eigenen Branch `feature/NEXT-<Nummer>-<kurztitel>` erstellen. Unteraufgaben mit unabhängigem Veröffentlichungsbedarf erhalten ebenfalls eigene Branches (z. B. `feature/NEXT-79a-...`).
+2. Auf diesem Branch ausschließlich Code, Tests und Dokumentation dieser einen Aufgabe ändern. Fremde, unfertige Aufgaben dürfen nicht als Abhängigkeit hineingeraten; erforderliche gemeinsame Änderungen zuerst als separat geprüfte Basis integrieren.
+3. Für jede Aufgabe einen eigenen Pull Request, eigene CI-/Behavior-/E2E-Tests und eine eigene Freigabe führen. Erst nach erfolgreicher Prüfung und ausdrücklicher Nutzerfreigabe nach `main` integrieren und veröffentlichen.
+4. **Teilfreigaben müssen isoliert veröffentlichbar sein.** Niemals mehrere NEXT-Aufgaben durch einen Sammel-Merge oder eine Sammelveröffentlichung unbeabsichtigt ausliefern.
+5. Vorhandene unveröffentlichte Sammelbranches (insbesondere `automation/next-56-tournament-runner-unpublished`) nur als historische Quelle verwenden; offene Aufgaben daraus vor Veröffentlichung auf einzelne, auf `main` basierende Branches separieren, einzeln testen und einzeln freigeben. Bestehende Branches nicht unkontrolliert umschreiben oder fremde Änderungen mitnehmen.
+6. In jedem Entwicklungsbericht Branchname, PR, Teststatus und Veröffentlichungsstatus **pro NEXT-Aufgabe** angeben. Bei fehlender Branch-Isolation ist die Aufgabe **nicht veröffentlichungsfähig**; echten Hinderungsgrund benennen.
+
+**Diese Regel hat Vorrang vor älteren Arbeitsanweisungen, die mehrere NEXT-Aufgaben auf einem Branch vorsehen.**
+
+---
+
 ## Entwicklungsrunde 25.10.2026, ca. 13:00 MEZ · NEXT-79e E2E-Abschlussmatrix erweitert · KEIN PUBLISHING
 - **Aktuelle Runde (2 bearbeitete Backlog-Bereiche):** NEXT-79e (P0, Usability-Abnahme) und Regression NEXT-60 (bereits zuvor abgeschlossen, erneut abgesichert). Fehler zuerst: Ein importiertes oder lokal wiederhergestelltes Archiv mit Status `running` besitzt keinen aktiven Browser-Timer. Der Import stellt es nun auf `paused`, damit erst explizites `Fortsetzen` die Ausführung wieder erlaubt; `ready`, `cancelled` und `completed` bleiben unverändert. Kein Eingriff in Simulation, RNG, Seeds oder archivierte Match-Ergebnisse.
 - **Neue Browser-Regressionen:** 3 Tests in Desktop und Mobile (6 Ausführungen): (1) Opt-in-Autosave nach Seitenneuladen, 1/3-Kampf-Restore, explizites Resume, vollständiger Abschluss, Speicherlöschung; (2) JSON-Export/Import mit 1/3 Ergebnissen, Cancel, Restore-Pause, Resume, Abschluss; (3) 375/768/1280px, keine horizontale Dokument-Überbreite, Fokus/ARIA-Status und scrollbare Turniertabelle, 44px-Navigation. Bestehender NEXT-60-Importtest an bewusst sicheres Pause/Resume-Verhalten angepasst.
