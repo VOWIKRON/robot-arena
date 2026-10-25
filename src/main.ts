@@ -573,8 +573,11 @@ function renderTournamentParticipants(): void {
   try {
     // Validate before replacing the editor: a temporarily invalid count must not erase names.
     const count = tournamentCount();
-    host.replaceChildren();
-    for (let index = 0; index < count; index++) {
+    // A repeated native change event (or a redundant change to the same count)
+    // must not recreate the editor and erase names typed since the first event.
+    if (previous.length !== count) {
+      host.replaceChildren();
+      for (let index = 0; index < count; index++) {
       const row = document.createElement('div');
       row.className = 'tournament-participant';
       const nameLabel = document.createElement('label');
@@ -600,6 +603,7 @@ function renderTournamentParticipants(): void {
       presetLabel.append(select);
       row.append(nameLabel, presetLabel);
       host.append(row);
+      }
     }
     el('tournament-feedback').textContent = '';
   } catch (error) {
