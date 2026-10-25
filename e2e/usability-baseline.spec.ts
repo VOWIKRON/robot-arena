@@ -188,3 +188,39 @@ test('NEXT-79d: contextual guidance is readable, linked to inputs and usable on 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });
+
+test('NEXT-79c: editing a paused automatic tournament preserves explicit resume (valid and invalid drafts)', async ({ page }) => {
+  for (const seedEdit of ['-1', '12345']) {
+    await page.goto('/');
+    await page.locator('#open-tournament').click();
+    await page.locator('#tournament-count').fill('3');
+    await page.locator('#tournament-count').dispatchEvent('change');
+    await page.locator('#tournament-ticks').fill('1');
+    await page.locator('#tournament-create').click();
+    await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+
+    // Keep all actions in the same browser task so the 0ms auto timer
+    // cannot finish the tiny tournament before the user pauses it.
+    const snapshot = await page.evaluate((newSeed) => {
+      const button = (id: string) => document.getElementById(id) as HTMLButtonElement;
+      button('tournament-auto').click();
+      button('tournament-pause').click();
+      const paused = document.getElementById('tournament-progress')?.textContent ?? '';
+      (document.getElementById('tournament-seed') as HTMLInputElement).value = newSeed;
+      button('tournament-create').click();
+      const feedback = document.getElementById('tournament-feedback')?.textContent ?? '';
+      // Even rebuilding the editable participant form must not clear auto-play intent.
+      (document.getElementById('tournament-count') as HTMLInputElement)
+        .dispatchEvent(new Event('change', { bubbles: true }));
+      const afterEdit = document.getElementById('tournament-progress')?.textContent ?? '';
+      button('tournament-resume').click();
+      return { paused, feedback, afterEdit };
+    }, seedEdit);
+
+    expect(snapshot.paused).toContain('paused');
+    expect(snapshot.feedback).toContain(seedEdit === '-1' ? 'Turnier ungültig' : 'Bitte zuerst abbrechen');
+    expect(snapshot.afterEdit).toContain('0 / 3');
+    await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
+    await expect(page.locator('#tournament-table tbody tr')).toHaveCount(3);
+  }
+});
