@@ -1,3 +1,10 @@
+## Release candidate preparation · 25.10.2026 · NOT PUBLISHED
+- Isolated integration branch: `integration/NEXT-69-70-71-74-75-77-release-candidate`, based on combined NEXT-69/70/71 QA.
+- **Cumulative completed, individually tested, unpublished:** NEXT-69 (presets), NEXT-70 (match export), NEXT-71 (combined integration), NEXT-74 (input validation), NEXT-75 (archive compatibility), NEXT-77 (storage/export errors). **6 total; 0 newly completed this preparation run.**
+- **Release readiness BLOCKED:** NEXT-74/75/77 not yet reconciled into the combined branch; six-task CI has not run. See RELEASE_CANDIDATE_GATE.md.
+- **NEXT-79e:** accessibility manual acceptance remains open; excluded from candidate.
+- No merge to main, release commit, publish.php, deployment or homepage change.
+
 ## NEXT-71 · Kombinierter QA-Kandidat · 25.10.2026, 19:00 MEZ · KEIN PUBLISHING
 - **Neu in dieser Runde:** Auf isoliertem Branch `qa/NEXT-71-combined-integration` die Implementierungen NEXT-69 (versionierte Roboterpresets) und NEXT-70 (Kampfexport CSV/JSON) gemeinsam zusammengeführt; sechs getrennte `src/main.ts`-Diff-Hunks gegen main verifiziert, Quellcode zusammengeführt und per GitHub-Readback kontrolliert.
 - **Neue kombinierte Behavior-/Desktop-/Mobil-Regression:** `e2e/next-71-combined-integration.spec.ts` prüft Sandbox-Preset → Turnierkampf → CSV-/JSON-Export derselben Teilnehmer und 375px-Touchlayout. Zusätzlich NEXT-69/70-Tests und NEXT-71-Konfliktguard eingebunden.
