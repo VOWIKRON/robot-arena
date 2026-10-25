@@ -1,3 +1,8 @@
+## NEXT-79e · Automatische Kontrastregression grün, manuelle Abnahme offen · 25.10.2026
+- Isolierte QA #40224270375 SUCCESS: 383/383 Vitest, 132/132 Desktop/Mobil Playwright, Typecheck, Audit 0, reproduzierbarer Build. Turnier-Kontrollränder von 2,38:1 auf >=3:1 verbessert; neue Browserprüfung auf tatsächliche Computed-CSS-Kontraste.
+- **Nicht als NEXT-79e abgeschlossen zählen:** NVDA, VoiceOver, reale Touch-/visuelle Kontrastabnahme ausstehend.
+- **Kumulativ fertig getestet und NICHT veröffentlicht seit v0.1.56:** NEXT-69, NEXT-70, NEXT-71 (3). NEXT-74 in Arbeit. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · 25.10.2026, 15:00 MEZ · NEXT-79e Testvorbereitung (NICHT VERÖFFENTLICHT)
 - **Release-Baseline korrigiert:** v0.1.56 auf main (`3d516317`) mit GitHub-Deploymentstatus `robot-arena/deployment: success`. NEXT-63, 64, 66, 67, 68, 78 und NEXT-79a–d gehören zum bestätigten Release und sind **nicht mehr unveröffentlicht**. Frühere Angaben zu v0.1.55 und 10 unveröffentlichten Einträgen sind historische Zwischenstände, nicht die aktuelle Bilanz.
 - **Aktuelle Runde:** NEXT-79e (1 von maximal 3 Aufgaben) auf eigenem Branch `feature/NEXT-79e-accessibility-matrix` von v0.1.56; neuer Playwright-Test `e2e/next-79e-accessibility.spec.ts` für Desktop/Mobil, Tastatur/Enter/Escape, Dialog-/Feldnamen, ARIA-Live-Fortschritt, Pause/Resume/Auto, Fehlermeldungsfokus und 375/768/1280px. Commit `322f66b1` geschrieben und Testdatei per Blob-Readback geprüft. 7/7 statische Quell-/Selektorchecks grün; **keine neue Unit-/Behavior-/Regression-/Determinismus-/Desktop-/Mobil-CI ausgeführt**. Commit `[skip ci]`, da Development Tests sonst über `workflow_run` einen Publish-Workflow anstoßen würden. Keine Abnahme behauptet.

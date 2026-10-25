@@ -1,3 +1,10 @@
+## NEXT-79e · Kontrollrand-Kontrast automatisiert nachgebessert · 25.10.2026, 20:06 MEZ · MANUELLE ABNAHME OFFEN
+- **Isolierter QA-Nachweis #40224270375: SUCCESS** auf Code/Test-SHA `48284220d14d9f20a18dbe188aedd1b9794651a5`: 383/383 Vitest, 132/132 Desktop-/Mobil-Playwright, Typecheck, Audit 0, reproduzierbarer Build. Neuer Computed-CSS-Test misst mindestens 3:1 für notwendige Turnier-Kontrollränder; gezielter CSS-Fix auf `#607da5`.
+- **NEXT-79e NICHT abgeschlossen:** Echte NVDA-/VoiceOver-, physische Touch- und visuelle Kontrastprüfung laut `ACCESSIBILITY_MANUAL_QA.md` weiterhin OFFEN. Keine automatische Abnahme vortäuschen.
+- **Kumulativ seit bestätigter Live-v0.1.56: 3 fertig implementierte, getestete, NICHT veröffentlichte NEXT-Aufgaben:** NEXT-69 (391 Unit + 134 E2E), NEXT-70 (387 Unit + 130 E2E), **NEXT-71 NEU** (395 Unit + 4 Node + 144 E2E, kombinierte QA #40223947082). NEXT-74 in Arbeit, CI/Fixes offen.
+- **Refactoring:** keine Änderung der deterministischen Engine, nur CSS und isolierter Browser-Kontrasttest. Draft-PR #60 gegen QA-Branch, nicht main.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Rolling Backlog ab v0.1.56 · 25.10.2026, 15:00 MEZ
 - **Release-Baseline korrigiert:** v0.1.56 auf main (`3d516317`) mit GitHub-Deploymentstatus `robot-arena/deployment: success`. NEXT-63, 64, 66, 67, 68, 78 und NEXT-79a–d gehören zum bestätigten Release und sind **nicht mehr unveröffentlicht**. Frühere Angaben zu v0.1.55 und 10 unveröffentlichten Einträgen sind historische Zwischenstände, nicht die aktuelle Bilanz.
 - [ ] **NEXT-79e – P0 / in Arbeit / eigener Branch:** Tastatur-/ARIA-/Fokus-/Responsive-Testdatei committed; Desktop- und Mobil-CI, echte NVDA-/VoiceOver-Abnahme und visuelle 375/768/1280px-/Touch-/Kontrastprüfung noch offen. Akzeptanz: 0 Testfehler, zugängliche Dialog-/Feldnamen, Live-Status, korrekte Fehlermeldungs- und Fokusführung, Tabelle per Tastatur scrollbar, Escape/Fokusrückgabe, Import/Export/Autosave/Cancel/Resume ohne versteckte Kämpfe. Bei Rot zuerst beheben und erneut vollständig testen.

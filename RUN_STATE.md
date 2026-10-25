@@ -1,3 +1,10 @@
+## NEXT-79e · Kontrollrand-Kontrast automatisiert nachgebessert · 25.10.2026, 20:06 MEZ · MANUELLE ABNAHME OFFEN
+- **Isolierter QA-Nachweis #40224270375: SUCCESS** auf Code/Test-SHA `48284220d14d9f20a18dbe188aedd1b9794651a5`: 383/383 Vitest, 132/132 Desktop-/Mobil-Playwright, Typecheck, Audit 0, reproduzierbarer Build. Neuer Computed-CSS-Test misst mindestens 3:1 für notwendige Turnier-Kontrollränder; gezielter CSS-Fix auf `#607da5`.
+- **NEXT-79e NICHT abgeschlossen:** Echte NVDA-/VoiceOver-, physische Touch- und visuelle Kontrastprüfung laut `ACCESSIBILITY_MANUAL_QA.md` weiterhin OFFEN. Keine automatische Abnahme vortäuschen.
+- **Kumulativ seit bestätigter Live-v0.1.56: 3 fertig implementierte, getestete, NICHT veröffentlichte NEXT-Aufgaben:** NEXT-69 (391 Unit + 134 E2E), NEXT-70 (387 Unit + 130 E2E), **NEXT-71 NEU** (395 Unit + 4 Node + 144 E2E, kombinierte QA #40223947082). NEXT-74 in Arbeit, CI/Fixes offen.
+- **Refactoring:** keine Änderung der deterministischen Engine, nur CSS und isolierter Browser-Kontrasttest. Draft-PR #60 gegen QA-Branch, nicht main.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## PR-/Schreibprüfung · 25.10.2026, 15:00 MEZ
 - **Isolierter Draft-PR:** #51 (`feature/NEXT-79e-accessibility-matrix` → `main`), nur NEXT-79e-Testdatei und sieben Dokumentations-/HTML-Quellseiten geändert. Branch 8 Commits vor, 0 hinter main; Head `fece0a40`, vor dieser Statusnotiz. Commit- und Blob-Readback geprüft. Keine CI-Workflows für Head nachweisbar; `[skip ci]` aus Sicherheitsgründen. Keine Veröffentlichung.
 - **Kumulativ fertig getestet und unveröffentlicht seit v0.1.56: 0.** NEXT-79e weiterhin OFFEN. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
