@@ -872,10 +872,11 @@ el('tournament-autosave').addEventListener('change', () => {
   }
 });
 el('tournament-restore').addEventListener('click', () => {
-  stopTournamentAuto();
   try {
     const loaded = restoreTournamentSnapshot(window.localStorage);
     if (!loaded) throw new Error('Keine lokale Turniersicherung vorhanden');
+    // Invalid or absent local data must not cancel an existing automatic run.
+    stopTournamentAuto();
     applyImportedTournament(loaded);
     el('tournament-feedback').textContent = 'Lokale Turniersicherung geprüft und geladen. Der Kampf wird nicht automatisch gestartet.';
   } catch (error) {
@@ -893,12 +894,13 @@ el('tournament-clear-saved').addEventListener('click', () => {
 });
 el('tournament-import').addEventListener('click', () => el<HTMLInputElement>('tournament-file').click());
 el('tournament-file').addEventListener('change', async () => {
-  stopTournamentAuto();
   const input = el<HTMLInputElement>('tournament-file');
   try {
     const file = input.files?.[0];
     if (!file || file.size > 2 * 1024 * 1024) throw new Error('Datei fehlt oder ist zu groß');
     const loaded = importTournamentRun(await file.text());
+    // Only a successfully validated archive may replace the current run.
+    stopTournamentAuto();
     applyImportedTournament(loaded);
   } catch (error) { el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Importfehler'; }
   finally { input.value = ''; }
