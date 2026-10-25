@@ -1,3 +1,11 @@
+## Entwicklungsstand · 25.10.2026, 05:00 MEZ · NEXT-79c/d in Abnahme, NICHT VERÖFFENTLICHT
+- [x] NEXT-79c: Turnierdialog-Schrittfolge und zustandsabhängige Aktionsfreigabe implementiert; Desktop-/Mobil-/Tastaturtests committed.
+- [x] NEXT-79d: Erklärungen zu Seed/Startwert, Tick, Strategie, Energiereserve, Reststruktur und Turnierformat sowie `aria-describedby` und responsive Browser-Regressionen implementiert.
+- [ ] **CI-Gate für NEXT-79c und NEXT-79d:** vollständige Unit-/Behavior-/Regression-/Desktop-/Mobilmatrix auf aktuellem Head erfolgreich bestätigen, bei Fehlern korrigieren und erneut testen. **Beide Aufgaben bis dahin offen.**
+- [ ] NEXT-79e: Responsive/Tastatur/Screenreader-Abschlussmatrix und Refactoring-Review; anschließend vollständige CI. Danach NEXT-69–77 gemäß Rolling Backlog.
+- **Letzte bestätigte CI vor NEXT-79c/d:** #40153366228 (383 Unit/Behavior/Regression, 102 E2E). **Seit bestätigt veröffentlichtem v0.1.55 genau 6 zuvor vollständig getestete, NICHT veröffentlichte ganze NEXT-Aufgaben:** 63, 64, 66, 67, 68, 78. NEXT-79a/b getestet, 79c/d ohne aktuelle CI, 79e offen. Draft-PR #48; kein Merge/Publish.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Entwicklungsstand · 25.10.2026, 04:00 MEZ · NEXT-79c in Arbeit, NICHT VERÖFFENTLICHT
 - [x] Drei Turnierschritte „Einrichten“, „Spielen“, „Ergebnisse“ als getrennte UI-Sektionen und Tastatur-Sprungnavigation umgesetzt.
 - [x] Verfügbare Turnieraktionen aus bestehendem Runner-Status zentral abgeleitet; E2E-Tests für 375/1280px, Bedienfolge, Datenzugang und Disabled-Zustände ergänzt.
