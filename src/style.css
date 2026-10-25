@@ -144,3 +144,5 @@
 .tournament-match-filters button{min-height:44px}
 #tournament-pairings li[hidden]{display:none}
 @media(max-width:650px){.tournament-match-filters{grid-template-columns:minmax(0,1fr)}}
+
+.tournament-filter-summary{color:#9fb0ce;font-size:.9rem;margin:8px 0}
