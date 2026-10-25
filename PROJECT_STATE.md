@@ -1,3 +1,8 @@
+## NEXT-82 verifiziert · 26.10.2026 · NICHT VERÖFFENTLICHT
+- QA-only #40243348670 SUCCESS: 425 Unit-/Behavior-/Regressions-/Determinismustests und 156 Desktop-/Mobiltests; TypeScript, Produktionsbuild, reproduzierbarer Build und Audit erfolgreich. Neuer, isolierter Draft-PR #63.
+- Downloadpfad refactored, fehlende APIs und Klickfehler abgefangen, URL-Cleanup und sichere Dateinamen abgesichert. **NEXT-82 abgeschlossen, aber nicht mit sechs-Aufgaben-Releasekandidat zusammengeführt.**
+- Kumulativ fertig, getestet, unveröffentlicht: **7** (NEXT-69/70/71/74/75/77/**82**). NEXT-79e weiterhin offen. Kein Publishing.
+
 ## NEXT-82 Entwicklungsstand · 26.10.2026 · NICHT VERÖFFENTLICHT
 - Feature-Branch `feature/NEXT-82-match-download-hardening` aus dem grünen sechs-Aufgaben-Integrationskandidaten abgezweigt. Downloadfunktion in getesteten Browser-Adapter ausgelagert, unsichere Dateinamen neutralisiert, fehlende Browser-APIs und Klickausnahmen als sichtbare Fehler behandelt, Object-URLs auch bei Fehlern bereinigt.
 - Vitest-Regressionsfälle und Playwright Desktop/Mobil ergänzt; isolierte QA #40243185882 zunächst ausstehend. **NEXT-82 erst nach grüner finaler CI als fertig markieren.**
