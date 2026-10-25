@@ -60,4 +60,16 @@ describe('NEXT-74: bounded tournament import validation', () => {
     expect(() => importTournamentRun(JSON.stringify(invalid))).toThrow();
     expect(exportTournamentRun(run)).toBe(before);
   });
+  it('rejects seeded adversarial nested JSON keys across 48 deterministic cases', () => {
+    let state = 4711;
+    const forbidden = ['__proto__', 'constructor', 'prototype'];
+    for (let index = 0; index < 48; index++) {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      const key = forbidden[state % forbidden.length]!;
+      let hostile: unknown = JSON.parse('{"' + key + '":1}');
+      for (let depth = 0; depth < state % 8; depth++) hostile = { nested: hostile };
+      expect(() => assertSafeTournamentInput(hostile)).toThrow(/gefährlicher Objektschlüssel/);
+    }
+  });
+
 });
