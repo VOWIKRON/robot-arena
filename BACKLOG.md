@@ -1,3 +1,11 @@
+## Entwicklungsstand · 25.10.2026, 04:00 MEZ · NEXT-79c in Arbeit, NICHT VERÖFFENTLICHT
+- [x] Drei Turnierschritte „Einrichten“, „Spielen“, „Ergebnisse“ als getrennte UI-Sektionen und Tastatur-Sprungnavigation umgesetzt.
+- [x] Verfügbare Turnieraktionen aus bestehendem Runner-Status zentral abgeleitet; E2E-Tests für 375/1280px, Bedienfolge, Datenzugang und Disabled-Zustände ergänzt.
+- [ ] **NEXT-79c CI-Abnahme:** vollständige Unit-/Behavior-/Regression-/Desktop-/Mobile-Matrix für den aktuellen Code-Head bestätigen, gegebenenfalls reparieren; erst danach abschließen.
+- [ ] Danach NEXT-79d Hilfen/Kontrast/Touch und NEXT-79e abschließende Usability-Regression. NEXT-69–77 bleiben im Rolling Backlog.
+- **Letztes bestätigtes Live-Release v0.1.55; kumulativ 6 vollständig getestete, NICHT veröffentlichte Aufgaben: NEXT-63/64/66/67/68/78.** NEXT-79a/b getestete Teilaufgaben; NEXT-79c in Abnahme. Letzte grüne vollständige CI #40153366228 vor diesen Änderungen: 383 Unit/Behavior/Regression, 102 E2E. Kein Merge/Publish.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Entwicklungsstand · 25.10.2026, 03:00 MEZ · NEXT-78 fertig, NEXT-79a/b fertig, NEXT-79 offen (NICHT VERÖFFENTLICHT)
 - [x] NEXT-78 P0 inklusive Raptor-/Titan-HUD am Rand durch CI #40144987038 vollständig abgenommen.
 - [x] NEXT-79a Browser-Baseline für 375/768/1280px, Sandbox/Turnier und Tastatur: CI #40152929889 grün.
