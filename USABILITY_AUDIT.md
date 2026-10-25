@@ -1,3 +1,10 @@
+## Fortschritt · 25.10.2026, 05:00 MEZ · NEXT-79c/d CI-Abnahme offen
+- [x] NEXT-79c: Drei Turnierabschnitte, Tastaturnavigation und Aktionsgates implementiert; Playwright-Tests im Branch.
+- [x] NEXT-79d: Kontext-Hilfetexte zu Strategie, Energiereserve, Seed/Startwert, Ticklimit, Turnierformat und Reststruktur sowie `aria-describedby` und CSS-Stile implementiert; neue Desktop-/Mobil-Regressionen im Branch.
+- [ ] Vollständige aktuelle CI für NEXT-79c/d (Unit, Behavior, Regression, Desktop/Mobil, Typecheck, Audit, reproduzierbarer Build) nachweisen und bei Fehlern korrigieren; **bis dahin keine Abschlussmeldung**.
+- [ ] NEXT-79e: Screenreader-/Fokus-/Responsive-Abschlussmatrix, weitere Verständlichkeits- und Fehlertextprüfungen, Refactoring und vollständige Regression.
+- **Kumulativ 6 zuvor CI-bestätigte unveröffentlichte NEXT-Aufgaben:** 63, 64, 66, 67, 68, 78. NEXT-79a/b als Teilaufgaben getestet, 79c/d in Abnahme, 79e offen. Kein Publishing.
+
 ## Fortschritt · 25.10.2026, 04:00 MEZ · NEXT-79c in CI-Abnahme
 - [x] Drei Turnierabschnitte Einrichten/Spielen/Ergebnisse und zugängliche Tastatur-Sprungnavigation im Code ergänzt.
 - [x] Turnieraktionen nach Runner-Status zentralisiert; nicht verfügbare Aktionen deaktiviert. Datei-/Autosave-Bedienung bleibt für bestehende Abläufe sichtbar.
