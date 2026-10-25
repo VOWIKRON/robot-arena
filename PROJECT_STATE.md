@@ -1,3 +1,10 @@
+## 25.10.2026, 03:00 MEZ – NEXT-78 und UX-Baseline/-Steuerung erfolgreich getestet, unveröffentlicht
+- **NEU abgeschlossen:** NEXT-78 P0 Raptor-/Titan-Grenzen inkl. HUD, echte Flucht und Rand/Ecken; CI #40144987038 (383 Unit, 96 E2E) grün.
+- **NEU getestete Teilaufgaben NEXT-79a und NEXT-79b:** 375/768/1280px-Browser-Baseline; Haupt-Kampfaktionen von Werkzeugen getrennt; eindeutiger Kampfstatus bereit/läuft/pausiert. Development Tests #40153090696 auf 88a415e9: 383 Unit-/Behavior-/Regressionstests (32 Dateien), 102 Desktop-/Mobil-E2E, Typecheck, Build, npm-Audit-Gate und reproduzierbare Clean-Builds erfolgreich. NEXT-79c/d/e noch offen.
+- **Kumulativ 6 vollständig verifizierte, unveröffentlichte NEXT-Aufgaben seit Live-v0.1.55:** NEXT-63 (Zugänglichkeit/Touch), NEXT-64 (Lockfile/CI), NEXT-66 (Matchdetails), NEXT-67 (deterministisches Replay), NEXT-68 (lokale Turniersicherung), NEXT-78 (Raptor bleibt vollständig innerhalb der Arena). NEXT-79 noch offen und nicht separat zählen.
+- Entwicklungsbranch / Draft-PR #48, Commit 88a415e9; main weiterhin vier Commits voraus. Kein Merge, kein Release, kein Homepage-Update.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 25.10.2026, 02:00 MESZ – P0 NEXT-78 weiterhin in Verifikation (nicht veröffentlicht)
 - Regression gegen Scheinabdeckung verstärkt: alle acht Fluchtrichtungen müssen nun tatsächlich Bewegung und Randkontakt nachweisen, statt nur Koordinaten von untätigen Robotern zu prüfen. Commit `63a0b632`; GitHub-Schreibresultat durch erneutes Lesen geprüft.
 - **Keine vollständige aktuelle CI bestätigt:** NEXT-78 offen; NEXT-79 UX-Audit dokumentiert, Umsetzung offen. Vorherige CI #40137115159 (372 Unit/Behavior/Regression, 92 E2E) betrifft nur NEXT-63/64/66/67/68.

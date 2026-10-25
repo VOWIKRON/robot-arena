@@ -1,3 +1,9 @@
+## Unreleased · 25.10.2026, 03:00 MEZ · NEXT-78 ABGESCHLOSSEN und NEXT-79a/79b implementiert
+- **NEXT-78 P0:** Raptor/Titan samt Chassis, Waffe, Energie- und Strukturbalken bleiben am Arenarand sichtbar; reine Darstellungsbegrenzung ohne Änderungen an Seeds oder deterministischer Simulation. Acht Rand-/Eckfälle und defensive Langzeitflucht. CI #40144987038: 383 Unit-/Behavior-/Regressionstests, 96 E2E grün.
+- **NEXT-79a:** Browser-Baseline für Konfiguration, Kampf und Turnier mit Tastatur sowie 375/768/1280px, kein horizontaler Seitenscroll. CI #40152929889: 383 Unit und 100 E2E grün.
+- **NEXT-79b:** Kampf- und Werkzeugaktionen übersichtlich gruppiert, Start hervorgehoben; Status „Kampfbereit“, „Kampf läuft“ und „Kampf pausiert“. Development Tests #40153090696 auf 88a415e9: 383 Unit-/Behavior-/Regressionstests (32 Dateien), 102 Desktop-/Mobil-E2E, Typecheck, Build, npm-Audit-Gate und reproduzierbare Clean-Builds erfolgreich. NEXT-79c/d/e noch offen.
+- Kumulativ sechs unveröffentlichte, vollständig getestete NEXT-Aufgaben seit v0.1.55: NEXT-63, 64, 66, 67, 68, 78. **Kein Publish/Deployment.**
+
 ## Unreleased · 25.10.2026, 02:00 MESZ · NEXT-78 Regression verstärkt (noch nicht abgenommen)
 - P0-Fluchttests prüfen nun explizit, dass der Raptor **wirklich zurückweicht** und die Arenagrenze erreicht, bevor sie das Einhalten der Grenzen bewerten. Vorher war ein fälschlich grüner Test ohne Bewegung möglich. Alle acht Ränder/Ecken und 1000 Schritte bleiben abgedeckt.
 - **Keine aktuelle vollständige CI-Bestätigung:** NEXT-78 offen; keine neue veröffentlichungsreife Aufgabe. NEXT-79 nur Audit, keine UX-Implementierung.

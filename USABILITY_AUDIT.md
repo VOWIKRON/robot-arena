@@ -1,3 +1,11 @@
+## Verifizierter Fortschritt · 25.10.2026, 03:00 MEZ · NICHT VERÖFFENTLICHT
+- [x] **NEXT-79a:** Zwei neue Browser-Baseline-Tests (je Desktop/Mobil) für Konfiguration/Kampf, Turnier/Ergebnis, Tastatur/Fokus, 375/768/1280px und kein horizontaler Scroll. CI #40152929889 grün: 383 Unit, 100 E2E.
+- [x] **NEXT-79b:** Semantisch gruppierte Kampfsteuerung/Werkzeuge, hervorgehobener Start, Status bereit/läuft/pausiert. Ein neuer E2E-Test je Desktop/Mobil; CI #40153090696 grün: 383 Unit, 102 E2E.
+- [ ] **NEXT-79c:** Turnierdialog-Schrittfolge.
+- [ ] **NEXT-79d:** Hilfen, Texte, Kontrast/Touch.
+- [ ] **NEXT-79e:** Abschließende Usability-/Regressionstests.
+- **NEXT-79 insgesamt bleibt offen**, bis 79c/d/e verifiziert sind. Engine bleibt unverändert. Keine Veröffentlichung.
+
 # NEXT-79 – Usability-Audit (Analyse, noch keine UI-Freigabe)
 
 Stand: 25.10.2026, Entwicklungsbranch / Draft-PR #48. **Keine Veröffentlichung.**

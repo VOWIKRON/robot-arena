@@ -1,3 +1,10 @@
+## Entwicklungsstand · 25.10.2026, 03:00 MEZ · NEXT-78 fertig, NEXT-79a/b fertig, NEXT-79 offen (NICHT VERÖFFENTLICHT)
+- [x] NEXT-78 P0 inklusive Raptor-/Titan-HUD am Rand durch CI #40144987038 vollständig abgenommen.
+- [x] NEXT-79a Browser-Baseline für 375/768/1280px, Sandbox/Turnier und Tastatur: CI #40152929889 grün.
+- [x] NEXT-79b primäre Kampfsteuerung von Werkzeugen getrennt; Status bereit/läuft/pausiert: CI #40153090696 grün (383 Unit/Behavior/Regression, 102 Desktop/Mobil).
+- [ ] NEXT-79c/d/e noch offen; NEXT-69 ff. nicht vergessen.
+- **Kumulativ 6 vollständig getestete, nicht veröffentlichte NEXT-Aufgaben:** 63, 64, 66, 67, 68, **78 NEU**. Letztes bestätigtes Live-Release v0.1.55. Kein Merge/Publish. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Entwicklungsstand · 25.10.2026, 02:00 MESZ · P0 NEXT-78 Testhärtung (offen)
 - [x] Acht Rand-/Eckfälle nun gegen wirkliche Fluchtbewegung und anschließenden Kontakt mit der Arenagrenze abgesichert (Regressionen im Code ergänzt, **noch nicht CI-verifiziert**).
 - [ ] Vollständige GitHub-CI auf aktuellem Head (Unit, Behavior, Regression, deterministische Simulation, Typecheck/Build, Desktop/Mobil, Audit und Reproduzierbarkeit) erfolgreich nachweisen; bei Fehlschlag korrigieren und erneut testen.
@@ -27,20 +34,21 @@
 
 ## Neu priorisierte Nutzerbefunde · 25.10.2026 (offen, noch nicht implementiert)
 
-### NEXT-78 · P0 Bug: Raptor verlässt beim Fliehen das Spielfeld (Code-/Teständerungen vorhanden, CI offen)
-- [ ] Reproduktion mit festen Seeds, hoher Geschwindigkeit, Rand-/Eckpositionen, defensiver Flucht und längeren Simulationen; unterscheiden zwischen Engine-Koordinaten und visueller Darstellung/Interpolation.
-- [ ] Engine-Grenzen inklusive Roboterradius sowie Canvas/SVG/CSS-Skalierung, Transformationsursprung und Animation prüfen; Ursache beheben, ohne deterministische Kampfregeln unbeabsichtigt zu verändern.
-- [ ] Unit-/Behavior-/Regressionstests für alle vier Ränder, Ecken und lange Flucht sowie Desktop-/Mobil-E2E; nach Refactoring vollständige Testsuite ausführen.
-- [ ] Abnahme: Raptor bleibt während der gesamten Flucht sichtbar innerhalb des Spielfelds, auch bei Resize und Mobile; keine neuen Golden-Seed-Abweichungen ohne dokumentierte Begründung.
+### NEXT-78 · P0 Bug: Raptor verlässt beim Fliehen das Spielfeld – ABGESCHLOSSEN, UNVERÖFFENTLICHT
+- [x] Ursache getrennt: Weltkoordinaten bleiben innerhalb 0..100; bisheriges Rendering schnitt Chassis/Waffe/HUD an Rändern ab.
+- [x] Visuellen Clamp für Raptor/Titan einschließlich Waffe, Energie- und Strukturbalken ergänzt, Engine/Seeds unverändert.
+- [x] Acht Ränder/Ecken, 1000 defensive Fluchtschritte mit nachgewiesener Bewegung und Randkontakt, Seeds 1/12/4711, 375/1280px und Desktop/Mobil getestet.
+- [x] Vollständige CI #40144987038 auf a06e5c56: 383 Unit/Behavior/Regression und 96 E2E, Typecheck, Build, Audit, Reproduzierbarkeit grün.
 
-### NEXT-79 · P1 Usability-Audit und Bedienkonzept (Quellcode-Audit dokumentiert, UX-Umsetzung offen)
-- [ ] Aktuelle Spielerwege (Konfiguration, Start, Pause, Reset, Replay, Turnier) auf Desktop und Mobil systematisch prüfen; unklare Beschriftungen, Informationsüberlastung und versteckte Aktionen dokumentieren.
-- [ ] Informationshierarchie mit klarer Trennung von Arena, Kampfsteuerung, Status und erweiterten Einstellungen entwerfen; Hauptaktionen priorisieren, seltene Optionen einklappen.
-- [ ] Verständliche Status-/Fehlermeldungen, Tastaturbedienung, Touch-Ziele und 375px-Layout mit konkreten Akzeptanzkriterien bewerten.
-- [ ] Vor Umsetzung UI-Baseline/Behavior-Tests festhalten; Verbesserungen in kleinen überprüfbaren Schritten und mit Desktop-/Mobil-Regressionen umsetzen.
+### NEXT-79 · P1 Usability-Audit und Bedienkonzept – TEILWEISE UMGESETZT, GESAMTAUFGABE OFFEN
+- [x] **79a:** Quellcode-Audit und Browser-Baseline für Sandbox/Turnier, Tastatur und 375/768/1280px; CI #40152929889 (383 Unit, 100 E2E) grün.
+- [x] **79b:** Kampfsteuerung von Werkzeugen getrennt, Start optisch hervorgehoben, Status bereit/läuft/pausiert; CI #40153090696 (383 Unit, 102 E2E) grün.
+- [ ] **79c:** Turnierdialog in Einrichten/Spielen/Ergebnisse strukturieren; nur passende Aktionen hervorheben, Autosave/Import/Export erreichbar halten; Desktop/Mobil und Pause/Resume/Cancel absichern.
+- [ ] **79d:** Seed, Tick, Strategien und Turnierformate verständlich erklären; Fehlertexte mit Handlungshinweisen, Kontrast/Fokus/Touchziele testen.
+- [ ] **79e:** Abschließende responsive, Tastatur-, Screenreader- und Regressionstests, kein horizontaler Scroll; vor/nach Refactoring vollständige CI.
+- [ ] NEXT-79 erst nach 79c–79e und vollständiger CI als gesamte Aufgabe abschließen.
 
-**Priorisierung:** NEXT-78 als Bugfix vor neuen Features; danach NEXT-79. NEXT-69 ff. bleiben erhalten und werden nach Fehlerbehebung/Usability-Arbeit fortgesetzt. Keine Veröffentlichung oder Merge nach main.
-
+**Priorisierung:** NEXT-79c vor NEXT-69; anschließend 79d/e. Rolling Backlog NEXT-69–77 bleibt erhalten. Keine Veröffentlichung oder Merge nach main.
 
 Der Backlog zeigt die nächsten Entwicklungsschritte bewusst konkret und in Reihenfolge. Pro stündlichem Lauf werden bis zu drei unabhängige oder sicher sequenzierbare Schritte bearbeitet; unvollständige Schritte werden zuerst fortgesetzt. Nach jedem Lauf wird die Reihenfolge aktualisiert und der jeweils folgende Block weiter detailliert.
 
