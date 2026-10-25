@@ -1,3 +1,11 @@
+## RELEASE CANDIDATE QA SUCCESS · 25.10.2026 · NOT PUBLISHED
+- Six-task integration completed on isolated `integration/NEXT-69-70-71-74-75-77-release-candidate`; QA-only Draft PR #62 targets `qa/NEXT-71-combined-integration`, NEVER main.
+- **Combined isolated QA #40238144023 SUCCESS** on code head `e7967c636716582fe6bfeab8652ca9b24196abac`: 419/419 Vitest unit/behavior/regression/determinism tests (37 files), 152/152 Playwright desktop/mobile tests, typecheck, production build, reproducible second build (dist digest `5b29d0ecec6f717c15677b2fd9cedf9cacfe014eab8761b25365983522d8bb96`), zero known dependency advisories.
+- **Integration acceptance:** NEXT-69,70,71,74,75,77 tested together; source reconciliation includes import guard + V1 archive validation and unified match/table/archive downloads.
+- **Candidate ready for manual release review**; no merge, release, deployment or publish.php performed. Documentation-only follow-up commits require final QA recheck on updated head.
+- **NEXT-79e excluded:** manual NVDA/VoiceOver, physical touch and visual contrast acceptance remains open.
+- **Cumulative individually completed + combined-tested but unpublished: 6** (69,70,71,74,75,77). Newly completed NEXT tasks in this round: 0; three existing tasks integrated.
+
 # Release candidate integration gate — 2026-10-25
 
 STATUS: NOT READY. NOT PUBLISHED. This branch is isolated from main and must not trigger release/deploy workflows.
