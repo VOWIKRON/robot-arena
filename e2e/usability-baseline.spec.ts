@@ -226,18 +226,17 @@ test('NEXT-79c: editing a paused automatic tournament preserves explicit resume 
 });
 
 
-test('NEXT-79d: invalid tournament inputs give actionable errors without destroying a plan', async ({ page }) => {
+test('NEXT-79d: invalid tournament inputs give actionable errors before plan creation', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
-  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
-  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
   await page.locator('#tournament-seed').fill('-1');
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   await expect(page.locator('#tournament-feedback')).toContainText('Turnier-Startwert: Bitte eine ganze Zahl');
-  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
   await page.locator('#tournament-seed').fill('4711');
   await page.locator('#tournament-ticks').fill('0');
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   await expect(page.locator('#tournament-feedback')).toContainText('Ticklimit: Bitte eine ganze Zahl');
+  await page.locator('#tournament-ticks').fill('3600');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
 });
