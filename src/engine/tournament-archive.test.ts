@@ -95,10 +95,10 @@ describe('NEXT-58 tournament archive', () => {
         maxTicks: 1, participants
       });
       const base = createTournamentRun(fixture);
-      const first = advanceTournamentRun(base);
+      const partial = count === 2 ? base : advanceTournamentRun(base);
       const cases = {
-        paused: pauseTournamentRun(first),
-        cancelled: cancelTournamentRun(first),
+        paused: pauseTournamentRun(partial),
+        cancelled: cancelTournamentRun(partial),
         completed: finishTournamentRun(base)
       };
       for (const [status, run] of Object.entries(cases)) {
