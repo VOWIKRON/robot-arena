@@ -1,3 +1,9 @@
+## Unreleased · 25.10.2026, 05:00 MEZ · NEXT-79d Hilfetexte implementiert, NEXT-79c/d CI ausstehend
+- Direkt an den Eingaben: kurze verständliche Erklärungen für Strategie, Energiereserve, Turnier-Startwert, Ticklimit und Turnierformate; Reststruktur im Ergebnisbereich erklärt. `aria-describedby` für Screenreader, kontrastreiche responsive `.field-help`-Stile.
+- Neue Playwright-Regressionen prüfen Beschriftungen/ARIA-Verknüpfung, Touch-Navigation ≥44px, 375/1280px und keinen horizontalen Seitenscroll. NEXT-79c-Dreischritt-Dialog weiter in Abnahme.
+- **Kein neuer vollständiger Testabschluss:** Für neuen Head kein bestätigter GitHub-CI-Lauf abrufbar. Letzte bestätigte CI #40153366228 (383 Unit/Behavior/Regression, 102 E2E) betrifft früheren Stand. NEXT-79c/d bleiben offen.
+- Kumulativ unveröffentlicht und zuvor CI-bestätigt seit Live-v0.1.55: NEXT-63, 64, 66, 67, 68, 78 (6). Kein Merge/Release/Deployment.
+
 ## Unreleased · 25.10.2026, 04:00 MEZ · NEXT-79c in Abnahme
 - Turnierdialog in „Einrichten“, „Spielen“ und „Ergebnisse“ mit zugänglichen Sprunglinks und responsiven Gruppen umstrukturiert. Aktionen je Runner-Status zentral aktiviert/deaktiviert; Export und lokale Sicherung bleiben erreichbar. Engine und Matchdaten unverändert.
 - Neue Browser-Regressionen für 375/1280px, Tastatur, Schrittfolge und Action-Gates committed. **Noch keine vollständige CI auf dem neuen Stand bestätigt; nicht als fertig getestet zählen.**
