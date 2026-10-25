@@ -10,7 +10,6 @@ export type TournamentArchive = Readonly<{ schemaVersion: 1; run: TournamentRun 
 
 /** Validates the complete prefix against the deterministic fixture order. */
 export function validateTournamentArchive(input: unknown): TournamentArchive {
-  assertSafeTournamentInput(input);
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Turnierarchiv: Objekt erwartet');
   const archive = input as Record<string, unknown>;
   if (archive.schemaVersion !== 1 || !archive.run || typeof archive.run !== 'object') throw new Error('Turnierarchiv: ungültige Version');
@@ -41,7 +40,9 @@ export function exportTournamentRun(run: TournamentRun): string {
 }
 export function importTournamentRun(json: string): TournamentRun {
   if (new TextEncoder().encode(json).length > MAX_BYTES) throw new Error('Turnierarchiv: Datei zu groß');
-  return validateTournamentArchive(JSON.parse(json) as unknown).run;
+  const parsed = JSON.parse(json) as unknown;
+  assertSafeTournamentInput(parsed);
+  return validateTournamentArchive(parsed).run;
 }
 /** Imported paused/running tournaments resume from the next match boundary. */
 export function continueImportedTournament(run: TournamentRun): TournamentRun {
