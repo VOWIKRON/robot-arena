@@ -109,3 +109,12 @@
   --bot-half: 27px;
   --bot-hud-top: 56px;
 }
+
+/* NEXT-79b: prioritize the combat flow without hiding secondary tools. */
+.arena-actions{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px;margin-top:14px}
+.arena-action-group{display:flex;flex:1 1 250px;flex-wrap:wrap;align-content:start;gap:8px;padding:10px;border:1px solid #2d3954;border-radius:12px;background:#101a30}
+.arena-action-group .action-group-label{flex:0 0 100%;color:#b8c8e3;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.arena-action-group button{flex:1 1 auto;min-width:76px}
+.arena-action-group--combat #start{background:#145676;border-color:#53c9f4;font-weight:800}
+.arena-action-group--tools button{background:#111a2e}
+@media(max-width:760px){.arena-action-group{flex-basis:100%}}

@@ -50,3 +50,28 @@ test('NEXT-79a: tournament creation to result is operable by keyboard without ch
   await expect(open).toBeFocused();
   await expect(page.locator('#status')).toHaveText(sandboxBefore);
 });
+
+test('NEXT-79b: combat controls and tools are grouped and fight phase is explicit', async ({ page }) => {
+  await page.goto('/');
+  const combat = page.getByRole('group', { name: 'Kampfsteuerung' });
+  const tools = page.getByRole('group', { name: 'Werkzeuge' });
+  await expect(combat).toBeVisible();
+  await expect(tools).toBeVisible();
+  for (const id of ['start', 'pause', 'step', 'reset']) {
+    await expect(combat.locator('#' + id)).toBeVisible();
+  }
+  for (const id of ['open-config', 'open-replay', 'open-tournament']) {
+    await expect(tools.locator('#' + id)).toBeVisible();
+  }
+  await expect(page.locator('#status')).toHaveText('Kampfbereit');
+  await page.locator('#start').click();
+  await expect(page.locator('#status')).toHaveText('Kampf läuft');
+  await page.locator('#pause').click();
+  await expect(page.locator('#status')).toHaveText('Kampf pausiert');
+  await page.locator('#reset').click();
+  await expect(page.locator('#status')).toHaveText('Kampfbereit');
+  await page.setViewportSize({ width: 375, height: 780 });
+  await expect(combat).toBeVisible();
+  await expect(tools).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
