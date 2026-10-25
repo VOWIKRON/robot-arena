@@ -1,5 +1,11 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+
+/** Shared responsive invariant: the page must never acquire horizontal overflow. */
+async function expectNoPageOverflow(page: Page, width: number): Promise<void> {
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow, `No horizontal document scrolling at ${width}px`).toBeLessThanOrEqual(0);
+}
 
 test('NEXT-79a: first-time sandbox journey is reachable at phone, tablet and desktop widths', async ({ page }) => {
   await page.goto('/');
@@ -9,8 +15,7 @@ test('NEXT-79a: first-time sandbox journey is reachable at phone, tablet and des
     for (const label of ['Start', 'Pause', '1 Tick', 'Reset', 'Konfiguration', 'Replay', 'Turnier']) {
       await expect(page.getByRole('button', { name: label, exact: true }).first()).toBeVisible();
     }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
-      `No horizontal document scrolling at ${width}px`).toBe(true);
+    await expectNoPageOverflow(page, width);
   }
 
   const config = page.getByRole('button', { name: 'Konfiguration', exact: true });
@@ -74,7 +79,7 @@ test('NEXT-79b: combat controls and tools are grouped and fight phase is explici
   await page.setViewportSize({ width: 375, height: 780 });
   await expect(combat).toBeVisible();
   await expect(tools).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expectNoPageOverflow(page, 375);
 });
 
 
@@ -127,7 +132,7 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
     await expect(dialog.locator('.tournament-advanced')).toHaveAttribute('open', '');
     await expect(dialog.locator('#tournament-import')).toBeVisible();
     await expect(dialog.locator('#tournament-autosave')).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expectNoPageOverflow(page, 375);
     await dialog.locator('#close-tournament').click();
     completedPriorRun = true;
   }
@@ -190,7 +195,7 @@ test('NEXT-79d: contextual guidance is readable, linked to inputs and usable on 
       const size = await link.boundingBox();
       expect(size?.height ?? 0).toBeGreaterThanOrEqual(44);
     }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expectNoPageOverflow(page, 375);
   }
 });
 
@@ -518,7 +523,7 @@ test('NEXT-79e: tournament accessibility and responsive results at 375, 768 and 
       const rect = await link.boundingBox();
       expect(rect?.height ?? 0).toBeGreaterThanOrEqual(44);
     }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await expectNoPageOverflow(page, width);
     const table = page.locator('#tournament-table-scroll');
     await table.focus();
     await expect(table).toBeFocused();
@@ -528,4 +533,49 @@ test('NEXT-79e: tournament accessibility and responsive results at 375, 768 and 
   }
   await page.locator('#close-tournament').click();
   await expect(page.locator('#open-tournament')).toBeFocused();
+});
+
+
+test('NEXT-79e: keyboard-only tournament flow announces state and restores focus', async ({ page }) => {
+  await page.goto('/');
+  await page.setViewportSize({ width: 375, height: 800 });
+  const opener = page.getByRole('button', { name: 'Turnier', exact: true });
+  await opener.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: 'Turnier planen' });
+  await expect(dialog).toBeVisible();
+  await expect(page.locator('#tournament-count')).toBeFocused();
+  await expect(dialog.getByRole('spinbutton', { name: /Teilnehmerzahl/ })).toBeVisible();
+  await expect(dialog.getByRole('spinbutton', { name: /Turnier-Startwert/ })).toBeVisible();
+  await expect(dialog.getByRole('spinbutton', { name: /Ticklimit je Kampf/ })).toBeVisible();
+  await expect(dialog.getByRole('combobox', { name: /Turnierformat/ })).toBeVisible();
+
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.locator('#tournament-create').focus();
+  await page.keyboard.press('Enter');
+  const progress = page.getByRole('status', { name: 'Turnierfortschritt' });
+  await expect(progress).toContainText('0 / 3');
+  await page.locator('#tournament-pause').focus();
+  await page.keyboard.press('Enter');
+  await expect(progress).toContainText('paused');
+  await expect(page.locator('#tournament-run')).toBeDisabled();
+  await page.locator('#tournament-resume').focus();
+  await page.keyboard.press('Enter');
+  await page.locator('#tournament-auto').focus();
+  await page.keyboard.press('Enter');
+  await expect(progress).toContainText('3 / 3', { timeout: 15000 });
+
+  const table = page.getByRole('region', { name: 'Turniertabelle, horizontal scrollbar' });
+  await table.focus();
+  await expect(table).toBeFocused();
+  expect(await table.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(() => table.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+  await expectNoPageOverflow(page, 375);
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(opener).toBeFocused();
 });
