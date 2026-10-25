@@ -1,3 +1,13 @@
+# NEXT-85 · Acht-Feature-Integrationsgate · 26.10.2026 · NICHT VERÖFFENTLICHT
+
+**Neuester Stand hat Vorrang vor dem historischen Sechs-Aufgaben-Plan unten.** NEXT-76 (Turniersuche) und NEXT-82 (Downloadhärtung) wurden auf isoliertem Branch mit NEXT-69/70/71/74/75/77 kombiniert. Draft-PR #65 zielt nur auf `qa/NEXT-71-combined-integration`.
+
+- Code-SHA `5b1bada2c7262e245cda95a8adf1e647e4eb9924`: isolierte QA-only CI **#40243980520 SUCCESS**, 429/429 Unit/Behavior/Regression/Determinismus, 160/160 Desktop/Mobil, TypeScript, Build, reproduzierbarer Zweitbuild und Security-Gate erfolgreich.
+- Dokumentations-Commits nach diesem Code-SHA benötigen erneute finale QA vor Releasefreigabe.
+- Kumulativ fertig und unveröffentlicht: NEXT-69, 70, 71, 74, 75, 77, 82, 76, 85 (9 Aufgaben, davon NEXT-85 Integrationsgate).
+- NEXT-79e (echte NVDA/VoiceOver/Touch/Kontrastabnahme) bleibt offen und ist nicht Bestandteil des Kandidaten.
+- **KEIN MERGE NACH MAIN, KEIN PUBLISHING, KEIN DEPLOYMENT.** Manuelle Veröffentlichung ausschließlich nach ausdrücklicher Nutzeranweisung.
+
 ## RELEASE CANDIDATE QA SUCCESS · 25.10.2026 · NOT PUBLISHED
 - Six-task integration completed on isolated `integration/NEXT-69-70-71-74-75-77-release-candidate`; QA-only Draft PR #62 targets `qa/NEXT-71-combined-integration`, NEVER main.
 - **Combined isolated QA #40238144023 SUCCESS** on code head `e7967c636716582fe6bfeab8652ca9b24196abac`: 419/419 Vitest unit/behavior/regression/determinism tests (37 files), 152/152 Playwright desktop/mobile tests, typecheck, production build, reproducible second build (dist digest `5b29d0ecec6f717c15677b2fd9cedf9cacfe014eab8761b25365983522d8bb96`), zero known dependency advisories.
