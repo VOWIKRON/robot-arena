@@ -1,3 +1,12 @@
+## NEXT-76 abgeschlossen · 26.10.2026, 00:20 MEZ · NICHT VERÖFFENTLICHT
+- **Aktuelle Runde:** NEXT-82 (Downloadfehler/URL-Cleanup) auf eigenem Branch mit isolierter CI #40243672046 SUCCESS; **NEXT-76 NEU abgeschlossen** (Turniersuche und Ergebnisfilter) auf eigenem Branch, isolierte CI #40243725469 SUCCESS; NEXT-79e praktische Accessibility-Abnahme weiterhin blockiert/offen.
+- **NEXT-76 Tests:** 423/423 Unit-/Behavior-/Regressions-/Determinismustests (38 Dateien), 156/156 Desktop-/Mobiltests, TypeScript, Produktionsbuild, reproduzierbarer Build und Audit-Gate grün. Bestehende NEXT-79d-E2E-Regression zunächst durch neue CSS-Klasse verletzt, nach Fehleranalyse korrigiert und vollständig erneut getestet.
+- **NEXT-82 Tests:** 425/425 Unit-/Behavior-/Regression-/Determinismustests, 156/156 Desktop-/Mobiltests; abschließende QA nach Dokumentationsänderungen #40243672046 SUCCESS.
+- **Kumulativ vollständig implementiert und getestet, NICHT VERÖFFENTLICHT: 8:** NEXT-69 (Presets), NEXT-70 (Kampfexport), NEXT-71 (Integration), NEXT-74 (Importvalidierung), NEXT-75 (Archivkompatibilität), NEXT-77 (Autosave/Downloadfehler), **NEXT-82 (NEU)** Browser-Downloadhärtung, **NEXT-76 (NEU)** Turniersuche/Ergebnisfilter. Sechs-Aufgaben-Releasekandidat PR #62 separat gemeinsam getestet; NEXT-82 PR #63 und NEXT-76 PR #64 jeweils separat QA-grün, **noch nicht gemeinsam integriert/getestet**.
+- **Refactoring:** NEXT-82 Downloadadapter extrahiert; NEXT-76 reine Snapshot-Filterfunktion von UI getrennt, Debounce, Statusauswahl, Reset, Unicode- und 375px-Verhalten.
+- **Blocker:** NEXT-79e reale NVDA-/VoiceOver-/Touch-/Kontrastabnahme; NEXT-80 Cross-Tab-CAS; gemeinsame acht-Aufgaben-Integration vor späterem Publishing nötig.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** main und Homepage unverändert.
+
 ## Gemeinsame Integrations-CI erfolgreich · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **Aktuelle Runde: NEXT-74, NEXT-75, NEXT-77** in den bereits geprüften NEXT-69/70/71-Stand integriert; gemeinsamer QA-only Draft-PR #62.
 - **Ergebnis:** isolierte QA #40238144023 SUCCESS auf `e7967c636716582fe6bfeab8652ca9b24196abac`: **419/419 Unit/Behavior/Regression/Determinismus (37 Testdateien), 152/152 Desktop-/Mobiltests**, TypeScript, Produktionsbuild, reproduzierbarer Build und Security-Gate (0 bekannte Schwachstellen) erfolgreich.
