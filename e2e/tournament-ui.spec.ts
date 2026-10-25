@@ -13,6 +13,9 @@ test('NEXT-55 tournament planner shows deterministic fixtures and table without 
   await expect(page.locator('#tournament-pairings li')).toHaveCount(1);
   await expect(page.locator('#tournament-table tbody tr')).toHaveCount(2);
   await expect(page.locator('#tournament-progress')).toContainText('0 / 1 Kämpfe abgeschlossen');
+  // NEXT-79c intentionally prevents silently replacing an active plan.
+  // Explicitly cancel the earlier plan before preparing a new one.
+  await page.locator('#tournament-cancel').click();
   await page.locator('#tournament-count').fill('4');
   await page.locator('#tournament-count').press('Tab');
   await page.locator('#tournament-name-1').fill('Alpha');
@@ -42,11 +45,11 @@ test('NEXT-55 tournament validation, Escape and mobile overflow', async ({ page 
   await page.locator('#tournament-count').press('Tab');
   await page.locator('#tournament-name-1').fill('');
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
-  await expect(page.locator('#tournament-feedback')).toContainText('benötigen einen Namen');
+  await expect(page.locator('#tournament-feedback')).toContainText('Teilnehmername fehlt');
   await page.locator('#tournament-name-1').fill('Robot 1');
   await page.locator('#tournament-seed').fill('-1');
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
-  await expect(page.locator('#tournament-feedback')).toContainText('Turnier-Seed');
+  await expect(page.locator('#tournament-feedback')).toContainText('Turnier-Startwert');
   await page.locator('#tournament-seed').fill('4711');
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   await expect(page.locator('#tournament-pairings li')).toHaveCount(120);

@@ -47,6 +47,10 @@
 
 /* NEXT-55: independent, keyboard-accessible tournament planner. */
 .tournament-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.tournament-local-save{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:12px 0;padding:10px;border:1px solid #3d5270;border-radius:10px}
+.tournament-local-save label{display:flex;align-items:center;gap:10px;flex:1 1 210px}
+#tournament-dialog #tournament-autosave{width:44px;min-width:44px;height:44px;flex:none}
+.tournament-local-save button{flex:1 1 145px}
 .tournament-participants{display:grid;gap:8px;max-height:35vh;overflow:auto;padding:4px;scrollbar-gutter:stable}
 .tournament-participant{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,140px);gap:10px;border:1px solid #2d3954;padding:9px;border-radius:10px;background:#0a1428}
 .tournament-participant label{min-width:0}
@@ -58,3 +62,78 @@
 #tournament-preview[hidden]{display:none}
 #tournament-preview h3{margin:18px 0 8px}
 @media(max-width:650px){.tournament-options{grid-template-columns:1fr}.tournament-participant{grid-template-columns:minmax(0,1fr)}.tournament-participants{max-height:32vh}.tournament-table{font-size:.8rem}}
+
+/* NEXT-63: visible keyboard focus, readable table scrolling and 44px touch targets. */
+#tournament-dialog :is(button,input,select,[tabindex]):focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: 3px;
+}
+#tournament-dialog :is(button,input,select) { min-height: 44px; }
+#tournament-dialog :is(.tournament-table-scroll,.tournament-pairings) { scroll-behavior: auto; }
+#tournament-dialog .tournament-pairings:focus-visible,
+#tournament-dialog .tournament-table-scroll:focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: -3px;
+}
+@media (max-width: 375px) {
+  #tournament-dialog .controls button { flex: 1 1 100%; }
+  #tournament-dialog .config-dialog-card { padding: 12px; }
+}
+
+/* NEXT-67: accessible replay affordance, isolated from the sandbox controls. */
+.tournament-replay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  margin: 6px 0 4px 10px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tournament-replay-button:focus-visible { outline: 3px solid #f8d35a; outline-offset: 2px; }
+
+/* NEXT-78: keep the *whole* chassis, weapon and overhead energy/health HUD inside
+   the visible arena. The engine still uses unmodified 0..100 world coordinates.
+   Body: 48px (Raptor) / 54px (Titan); energy bar starts 29px above its top. */
+#arena .bot {
+  --bot-half: 24px;
+  --bot-hud-top: 53px;
+  /* Override the raw inline world coordinates without changing them. */
+  left: clamp(var(--bot-half), var(--arena-x, 50%), calc(100% - var(--bot-half))) !important;
+  top: clamp(var(--bot-hud-top), var(--arena-y, 50%), calc(100% - var(--bot-half))) !important;
+}
+#arena .bot[data-chassis="titan-chassis"] {
+  --bot-half: 27px;
+  --bot-hud-top: 56px;
+}
+
+/* NEXT-79b: prioritize the combat flow without hiding secondary tools. */
+.arena-actions{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px;margin-top:14px}
+.arena-action-group{display:flex;flex:1 1 250px;flex-wrap:wrap;align-content:start;gap:8px;padding:10px;border:1px solid #2d3954;border-radius:12px;background:#101a30}
+.arena-action-group .action-group-label{flex:0 0 100%;color:#b8c8e3;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.arena-action-group button{flex:1 1 auto;min-width:76px}
+.arena-action-group--combat #start{background:#145676;border-color:#53c9f4;font-weight:800}
+.arena-action-group--tools button{background:#111a2e}
+@media(max-width:760px){.arena-action-group{flex-basis:100%}}
+
+/* NEXT-79c: three visually distinct, keyboard-navigable tournament stages. */
+.tournament-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0}
+.tournament-steps a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:9px 6px;border:1px solid #527294;border-radius:10px;background:#172744;color:#e5f2ff;font-weight:700;text-decoration:none}
+.tournament-steps a:hover{background:#23456b}
+.tournament-steps a:focus-visible{outline:3px solid #8bdcff;outline-offset:3px}
+.tournament-step{border:1px solid #3a5271;border-radius:12px;padding:14px;margin:12px 0;background:#101a2e;scroll-margin-top:14px}
+.tournament-step>h3{margin:0 0 8px;font-size:1.1rem;color:#d7edff}
+.tournament-step>p{margin:0 0 12px;color:#bdcde6;line-height:1.5}
+.tournament-step .controls{margin-top:12px}
+.tournament-advanced{margin:12px 0;border:1px solid #3d5270;border-radius:10px;padding:8px 12px}
+.tournament-advanced summary{min-height:44px;display:list-item;align-content:center;cursor:pointer;font-weight:700;color:#d4e6ff}
+.tournament-advanced summary:focus-visible{outline:3px solid #8bdcff;outline-offset:3px}
+@media(max-width:650px){.tournament-step{padding:10px}.tournament-steps{gap:5px}.tournament-steps a{font-size:.78rem;padding:8px 4px}}
+
+#tournament-dialog button:disabled{opacity:.48;cursor:not-allowed;background:#1c2737;border-color:#384459}
+
+/* NEXT-79d: concise help stays legible on the dark controls, including mobile. */
+.field-help{display:block;margin:4px 0 7px;font-size:.86rem;line-height:1.5;font-weight:400;color:#d4e3f7;overflow-wrap:anywhere}
