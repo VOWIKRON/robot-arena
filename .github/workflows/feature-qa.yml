@@ -1,0 +1,73 @@
+name: Isolated Feature QA – no publishing
+
+on:
+  push:
+    branches:
+      - qa/NEXT-69-isolated-validation-v3
+
+  pull_request:
+    branches:
+      - qa/NEXT-69-isolated-validation-v3
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Audit dependencies (report only; security release gate remains blocked)
+        shell: bash
+        run: |
+          npm audit --json > audit-report.json || true
+          node -e 'const a=require("./audit-report.json"); console.log("Dependency audit:",JSON.stringify({counts:a.metadata?.vulnerabilities,issues:Object.entries(a.vulnerabilities||{}).map(([name,v])=>({name,severity:v.severity,via:v.via,fixAvailable:v.fixAvailable}))},null,2))'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-dependency-audit
+          path: audit-report.json
+          if-no-files-found: ignore
+      - name: Enforce zero known dependency advisories
+        run: node -e 'const a=require("./audit-report.json"); const v=a.metadata?.vulnerabilities; if(!v || v.total>0){console.error("Dependency security gate blocked:",v);process.exit(1)}'
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Verify second clean install and reproducible build on identical SHA
+        shell: bash
+        run: |
+          before="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          lock_before="$(sha256sum package-lock.json | awk '{print $1}')"
+          npm ci --no-audit --no-fund
+          npm run typecheck
+          npm run build
+          after="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          test "$before" = "$after" || (echo "Non-deterministic dist output" && exit 1)
+          test "$lock_before" = "$(sha256sum package-lock.json | awk '{print $1}')" || (echo "Lockfile changed during npm ci" && exit 1)
+          echo "Reproducible dist digest: $after"
+      - name: Cache Playwright Chromium
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('package-lock.json') }}
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Verify Chromium runtime (install missing system libraries only if needed)
+        timeout-minutes: 3
+        shell: bash
+        run: |
+          if ! node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'; then
+            npx playwright install-deps chromium
+            node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'
+          fi
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        with:
+          name: robot-arena-dist
+          path: dist/
