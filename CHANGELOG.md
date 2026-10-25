@@ -1,3 +1,10 @@
+## Publish-Reife Arbeitsstand · 25.10.2026 · KEIN PUBLISHING
+- **Auftrag:** Angefangene Pakete bis zur Veröffentlichungsreife bringen; Freigabeumfang NEXT-63/64/66/67/68/78, NEXT-79a/b bereits getestet; NEXT-79c/d/e erst nach vollständiger CI-Abnahme. Keine Veröffentlichung in diesem Arbeitsschritt.
+- **NEXT-79d heute weiterbearbeitet:** Präzise Fehlertexte für ungültigen Seed (0..MAX_SAFE_INTEGER), Ticklimit (1..3600), fehlende und doppelte Teilnehmernamen vor Planerstellung ergänzt. Neuer Playwright-Test prüft ungültige Eingaben und anschließend erfolgreiche Erstellung. Produktionscode/Test im Entwicklungsbranch committed und per GitHub-Readback verifiziert. **Noch nicht ausgeführt; keine CI-Freigabe.**
+- **Release-Gate:** Aktuellen Branch vollständig testen (Typecheck, 383+ Unit/Behavior/Regression, deterministische Engine, Desktop/Mobil Playwright, Audit, reproduzierbarer Build), danach NEXT-79c/d und NEXT-79e abschließen. Vor Release zusätzlich Divergenz zu main (zuletzt 4 Commits hinter main) auflösen und danach komplette Regression wiederholen. Keine ungeprüften Änderungen veröffentlichen.
+- **Kumulativ weiterhin 6 vollständig getestete, unveröffentlichte ganze NEXT-Aufgaben:** 63, 64, 66, 67, 68, 78; NEXT-79a/b getestete Teilaufgaben; NEXT-79c/d in Abnahme; NEXT-79e offen. Letzte bestätigte Live-Version v0.1.55.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · 25.10.2026, ca. 08:00 MEZ · NEXT-79c Auto-Play bleibt bei Formularänderungen erhalten
 - Fehlerkorrektur: Ein Klick auf „Spielplan erstellen“ oder die Änderung der Teilnehmerzahl darf einen bereits gestarteten automatischen Turnierlauf nicht stoppen, wenn die aktive Planung nicht ersetzt wird. `stopTournamentAuto()` läuft nun erst nach erfolgreicher echter Neuanlage; reines Formular-Rendering hat keine Timer-Nebenwirkung.
 - Neue Desktop-/Mobil-Playwright-Regression mit 3 Teilnehmern und Auto → Pause → geänderte gültige/ungültige Seed-Eingabe → Teilnehmer-Update → Fortsetzen → 3/3 Kämpfe. **Test implementiert, aber aktuelle CI nicht nachgewiesen; NEXT-79c/d offen.**
