@@ -1,3 +1,8 @@
+## NEXT-71 · Kombinierte Integrationsabnahme ERFOLGREICH · 25.10.2026, 20:02 MEZ · UNVERÖFFENTLICHT
+- **NEU entwicklungsseitig abgeschlossen:** NEXT-71. GitHub Isolated Feature QA #40223947082 auf getestetem Code/Test-Commit `e7a4a612df0a81f75acfc96357d45723a05c5ee1`: 395/395 Vitest, 4/4 Konfliktguard, 144/144 Playwright Desktop/Mobil, Typecheck, npm audit 0, reproduzierbarer Build grün.
+- **Kumulativ seit bestätigter Live-v0.1.56:** 3 fertig getestete, NICHT veröffentlichte NEXT-Aufgaben: 69 (Roboterpresets), 70 (Kampfexport CSV/JSON), 71 (gemeinsame Integration/Release-Readiness). NEXT-79e (echte Screenreader-/Touch-/Kontrastabnahme) und NEXT-74 (Importhärtung) offen.
+- **Kein Merge, kein Deployment, kein Release-Commit, keine Homepage-Aktualisierung. NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## NEXT-71 · Kombinierte QA-Erweiterung · 25.10.2026, 20:00 MEZ · NICHT VERÖFFENTLICHT
 - **Aktuelle Runde:** NEXT-71 priorisiert, 79e weiterhin offen (echte NVDA-/VoiceOver-/Touch-/Kontrast-Abnahme fehlt), NEXT-74 noch nicht begonnen.
 - **NEU:** Branch `feature/NEXT-71-combined-validation`, Draft-PR #59 gegen `qa/NEXT-71-combined-integration` (NICHT gegen main). Zusätzlicher Playwright-Behavior-Test `e2e/next-71-saved-preset-match-export.spec.ts`: Roboterpreset speichern → Seite neu laden → Turnier erstellen → Archiv-Roboterdaten prüfen → Kampf abschließen → Match-JSON prüfen. Läuft auf Desktop und Mobil, sofern isolierte QA erfolgreich abgeschlossen wird.
