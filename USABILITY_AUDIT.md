@@ -1,3 +1,10 @@
+## Fortschritt · 25.10.2026, ca. 08:00 MEZ · NEXT-79c Auto-Play-Absicht bei Formularänderungen
+- [x] Neue Fehlerquelle gefunden und im Code korrigiert: `stopTournamentAuto()` beim bloßen Versuch einer Neuanlage oder beim Ändern der Teilnehmerzahl verwarf die automatische Fortsetzung eines pausierten Turniers. Entwurfsänderungen bleiben jetzt ohne Timer-Nebenwirkung; ein echter neuer Plan beendet die alte Automatik erst nach erfolgreicher Validierung.
+- [x] Browser-Regression ergänzt: 3 Teilnehmer, Auto → Pause → ungültige/geänderte gültige Seed-Eingabe und Teilnehmer-Update → explizit Fortsetzen → automatisch 3/3. Code/Test per GitHub-Readback geprüft; **Tests noch nicht ausgeführt**.
+- [ ] Vollständige aktuelle CI und Desktop-/Mobil-Regression für NEXT-79c/d nachweisen, Fehler beheben und erneut testen; erst dann Teilaufgaben abnehmen. GitHub-Commit-Run-/Statusabfrage leer, lokaler Clone wegen DNS nicht möglich.
+- [ ] NEXT-79d Validierungs-/Fokus-/Kontrast-Abnahme; NEXT-79e Screenreader-/Responsive-/Import-/Export-/Autosave-Abschlussmatrix mit erneuter Voll-CI.
+- Letzte bestätigte Live-Version v0.1.55; kumulativ 6 vollständig CI-getestete, NICHT veröffentlichte NEXT-Aufgaben: NEXT-63 (Barrierefreiheit/Touch/Tastatur), NEXT-64 (reproduzierbare Builds/Audit), NEXT-66 (Turnierkampfdetails), NEXT-67 (deterministisches Replay), NEXT-68 (lokales Autosave/Restore), NEXT-78 (Raptor/HUD-Arenagrenzen). NEXT-79a/b getestete Teilaufgaben; NEXT-79c/d nicht aktuell vollständig CI-abgenommen; NEXT-79e offen. Keine neue vollständige NEXT-Aufgabe freigegeben. Kein Publishing.
+
 ## Fortschritt · 25.10.2026, 07:00 MEZ · NEXT-79c Schutz vor versehentlichem Turnier-Neustart
 - [x] Bei einem aktiven Turnier blockiert „Spielplan erstellen“ jetzt auch abweichende gültige Formulareinstellungen; vorher konnte ein aktiver Spielplan stillschweigend ersetzt werden. Erst explizit abbrechen, dann neu planen. Runner-Status bleibt die einzige Quelle.
 - [x] E2E-Regression ergänzt: ungültige Eingabe lässt aktiven Plan stehen, geänderte gültige Eingabe ersetzt ihn nicht, Cancel erlaubt Neustart und Kampf. Code und Tests auf GitHub geschrieben und zurückgelesen.
