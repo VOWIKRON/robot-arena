@@ -1,3 +1,12 @@
+## Gemeinsame Integrations-CI erfolgreich · 25.10.2026 · NICHT VERÖFFENTLICHT
+- **Aktuelle Runde: NEXT-74, NEXT-75, NEXT-77** in den bereits geprüften NEXT-69/70/71-Stand integriert; gemeinsamer QA-only Draft-PR #62.
+- **Ergebnis:** isolierte QA #40238144023 SUCCESS auf `e7967c636716582fe6bfeab8652ca9b24196abac`: **419/419 Unit/Behavior/Regression/Determinismus (37 Testdateien), 152/152 Desktop-/Mobiltests**, TypeScript, Produktionsbuild, reproduzierbarer Build und Security-Gate (0 bekannte Schwachstellen) erfolgreich.
+- **Kumulativ vollständig entwickelt, einzeln und gemeinsam getestet, NICHT VERÖFFENTLICHT: 6:** NEXT-69 (Roboterpresets), NEXT-70 (CSV-/JSON-Kampfexport), NEXT-71 (Integration Presets/Export), NEXT-74 (Importvalidierung), NEXT-75 (V1-Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler). **Neu als NEXT-Aufgabe abgeschlossen: 0**; drei bestehende NEXT-Aufgaben integriert.
+- **Refactoring:** Gemeinsamer Blob-Download für Kampf/Turniertabelle/Archiv mit URL-Aufräumen; deterministische Engine unverändert.
+- **Offen:** NEXT-79e manuelle NVDA-/VoiceOver-/Touch-/Kontrastabnahme; ausgeschlossen vom Releasekandidaten. Dokumentations-Follow-up-Commit benötigt erneut QA.
+- **Commit-/PR-Status:** Draft-PR #62 ausschließlich gegen QA-Branch; main weiterhin `3d516317` / v0.1.56.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Keine Homepage-, Release- oder Publishing-Aktion.
+
 ## Integration NEXT-74 → NEXT-75 → NEXT-77 · 25.10.2026, 23:00 MEZ · NICHT VERÖFFENTLICHT
 - **3 bearbeitete Aufgaben:** NEXT-74, NEXT-75, NEXT-77 in bestehenden NEXT-69/70/71-QA-Stand integriert. Archive/Model/Guard, Golden-Tests, Storage-Guard, Desktop/Mobile-Tests und `src/main.ts` zusammengeführt. Match-CSV/JSON-Download benutzt jetzt denselben Fehler-/Cleanup-Pfad wie Tabellen- und Archivdownload.
 - **Kumulativ vollständig implementiert und EINZELN getestet, aber UNVERÖFFENTLICHT: 6:** NEXT-69 (Presets; 391 Unit + 134 E2E), NEXT-70 (Kampfexport; 387 + 130), NEXT-71 (Presets/Export-Integration; 395 + 144 + 4 Guard), NEXT-74 (Import-Validierung; 392 + 128), NEXT-75 (Archivkompatibilität; 393 + 126), NEXT-77 (Autosave-/Exportfehler; 388 + 134). **Neu als NEXT-Aufgabe abgeschlossen: 0.**
