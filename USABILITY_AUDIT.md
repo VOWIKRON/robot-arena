@@ -1,3 +1,11 @@
+## Fortschritt · 25.10.2026, 04:00 MEZ · NEXT-79c in CI-Abnahme
+- [x] Drei Turnierabschnitte Einrichten/Spielen/Ergebnisse und zugängliche Tastatur-Sprungnavigation im Code ergänzt.
+- [x] Turnieraktionen nach Runner-Status zentralisiert; nicht verfügbare Aktionen deaktiviert. Datei-/Autosave-Bedienung bleibt für bestehende Abläufe sichtbar.
+- [x] Playwright-Fälle für Desktop/Mobil, Keyboard, Ablauf und Action-Gates ergänzt (Code vorhanden).
+- [ ] Vollständige neue CI auf dem aktuellen Head erfolgreich nachweisen und Fehler gegebenenfalls korrigieren; erst danach NEXT-79c als abgeschlossen markieren.
+- [ ] NEXT-79d Hilfetexte, Kontrast/Touch; NEXT-79e Abschlussmatrix.
+- **Kumulativ 6 CI-bestätigte, noch unveröffentlichte ganze NEXT-Aufgaben:** 63, 64, 66, 67, 68, 78. NEXT-79c zählt noch nicht. Keine Veröffentlichung.
+
 ## Verifizierter Fortschritt · 25.10.2026, 03:00 MEZ · NICHT VERÖFFENTLICHT
 - [x] **NEXT-79a:** Zwei neue Browser-Baseline-Tests (je Desktop/Mobil) für Konfiguration/Kampf, Turnier/Ergebnis, Tastatur/Fokus, 375/768/1280px und kein horizontaler Scroll. CI #40152929889 grün: 383 Unit, 100 E2E.
 - [x] **NEXT-79b:** Semantisch gruppierte Kampfsteuerung/Werkzeuge, hervorgehobener Start, Status bereit/läuft/pausiert. Ein neuer E2E-Test je Desktop/Mobil; CI #40153090696 grün: 383 Unit, 102 E2E.
