@@ -103,8 +103,15 @@ describe('NEXT-58 tournament archive', () => {
       };
       for (const [status, run] of Object.entries(cases)) {
         const digest = createHash('sha256').update(exportTournamentRun(run)).digest('hex');
-        console.log('NEXT75_GOLDEN', count, status, digest);
-        expect(digest).toMatch(/^[0-9a-f]{64}$/);
+        const golden: Record<string, string> = {
+          '2-paused': 'a913b75502410f1a4774d23db532d1d97730e7bcd54fde8af43819aa05c503d5',
+          '2-cancelled': '5b78704bc554cc0c273e4b7e52dd0618dc375a0d94bff0440b6dbf6caa0bcb46',
+          '2-completed': 'cf68b1c19d4d7b4236a7bf7d478366662414bd1fb013b526364c0770e426b10c',
+          '16-paused': '671ced6947d3f8e6a30d75a7c963eee7c545f97e5d7fd4efe5ab96fccdea51ae',
+          '16-cancelled': 'e110475df9cdcf6a466154916b2c90a29a1ef57a17cf850f07de8c3e1059d565',
+          '16-completed': 'a526850d6fd42943198def5875b8750a00ab4a04c4e44a140243206409abbd5c'
+        };
+        expect(digest).toBe(golden[`${count}-${status}`]);
       }
     }
   });
