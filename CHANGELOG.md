@@ -1,3 +1,9 @@
+## Unreleased · 26.10.2026 · NEXT-76 und NEXT-82 verifiziert
+- NEXT-76: zugängliche, debounced Turniersuche nach Namen/Match-ID, Statusfilter und Reset; Unicode- und 375px-Unterstützung, unveränderte Snapshots.
+- NEXT-82: gemeinsame sichere Downloadroutine für Turnierarchive, Tabellen und Matches, Dateinamen- und Fehlerabsicherung, URL-Cleanup.
+- QA-only NEXT-76 #40243725469: 423 Unit/Behavior/Regression und 156 Desktop/Mobil; NEXT-82 #40243672046: 425 Unit/Behavior/Regression und 156 Desktop/Mobil, Build und Security-Gate grün.
+- Acht Aufgaben einzeln abgeschlossen/getestet, nicht gemeinsam in einem Releasekandidaten integriert und NICHT VERÖFFENTLICHT. NEXT-79e offen.
+
 ## Gemeinsamer sechs-Aufgaben-QA-Erfolg · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **NEXT-74/75/77 in NEXT-69/70/71 integriert und gemeinsam verifiziert.** Isolierte QA-only CI #40238144023 auf Code-HEAD `e7967c636716582fe6bfeab8652ca9b24196abac` erfolgreich: 419/419 Unit-/Behavior-/Regressions-/Determinismustests, 152/152 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Zweitbuild, 0 bekannte Dependency-Schwachstellen.
 - **Kumulativ 6 fertig entwickelte und gemeinsam getestete, unveröffentlichte NEXT-Aufgaben:** NEXT-69 Presets; NEXT-70 Kampfexport; NEXT-71 Integration; NEXT-74 Importvalidierung; NEXT-75 V1-Archivkompatibilität; NEXT-77 Autosave-/Downloadfehler. **Neu abgeschlossen: 0; 3 bestehende Aufgaben integriert.**
