@@ -326,3 +326,22 @@ test('NEXT-79c: invalid restore and invalid import preserve paused auto-play int
   await page.getByRole('button', { name: 'Fortsetzen' }).click();
   await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
 });
+
+
+test('NEXT-79c: local restore recovers the actual robot presets, not stale editor selections', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-preset-1').selectOption('titan');
+  await page.locator('#tournament-preset-2').selectOption('raptor');
+  await page.locator('#tournament-autosave').check();
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+
+  await page.locator('#tournament-preset-1').selectOption('raptor');
+  await page.locator('#tournament-preset-2').selectOption('titan');
+  await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
+  await expect(page.locator('#tournament-feedback')).toContainText('geprüft und geladen');
+  await expect(page.locator('#tournament-preset-1')).toHaveValue('titan');
+  await expect(page.locator('#tournament-preset-2')).toHaveValue('raptor');
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+});
