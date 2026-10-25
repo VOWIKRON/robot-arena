@@ -478,8 +478,9 @@ let tournamentAutoRequested = false;
 function syncTournamentActions(): void {
   const status = tournamentRun?.status;
   const active = Boolean(status && status !== 'completed' && status !== 'cancelled');
+  // A paused tournament must be resumed explicitly; no second start button bypasses Pause.
   for (const id of ['tournament-run', 'tournament-auto']) {
-    el<HTMLButtonElement>(id).disabled = !active || status === 'paused' && id === 'tournament-run';
+    el<HTMLButtonElement>(id).disabled = !active || status === 'paused';
   }
   el<HTMLButtonElement>('tournament-pause').disabled = !active || status === 'paused';
   el<HTMLButtonElement>('tournament-resume').disabled = status !== 'paused';
