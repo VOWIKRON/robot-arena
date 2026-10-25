@@ -31,5 +31,18 @@ jobs:
           npm run build
           after="$(find dist -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
           test "$before" = "$after"
-      - run: npx playwright install --with-deps chromium
+      - name: Cache Playwright Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install chromium
+      - name: Verify Chromium runtime and install missing libraries only when needed
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          if ! node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'; then
+            npx playwright install-deps chromium
+            node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'
+          fi
       - run: npm run test:e2e
