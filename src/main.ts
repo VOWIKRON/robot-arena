@@ -16,6 +16,7 @@ import { tournamentMatchDetails } from './engine/tournament-details';
 import { replayTournamentMatch } from './engine/tournament-replay';
 import { runKnockoutBracket } from './engine/tournament-knockout';
 import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
+import { exportTournamentMatchCsv, exportTournamentMatchJson } from './engine/tournament-match-export';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
 import { isTournamentAutosaveEnabled, saveTournamentSnapshot, restoreTournamentSnapshot, setTournamentAutosaveEnabled } from './engine/tournament-local-save';
@@ -524,6 +525,16 @@ function renderTournamentMatchDetails(): void {
       button.setAttribute('aria-label', 'Replay abspielen: ' + match.robotAName + ' gegen ' + match.robotBName);
       button.dataset.replayMatchId = match.matchId;
       item.append(' ', button);
+      for (const format of ['csv', 'json'] as const) {
+        const exportButton = document.createElement('button');
+        exportButton.type = 'button';
+        exportButton.className = 'tournament-replay-button';
+        exportButton.textContent = format.toUpperCase();
+        exportButton.setAttribute('aria-label', `Kampf ${format.toUpperCase()} exportieren: ${match.robotAName} gegen ${match.robotBName}`);
+        exportButton.dataset.matchExportId = match.matchId;
+        exportButton.dataset.matchExportFormat = format;
+        item.append(' ', exportButton);
+      }
     }
   });
 }
@@ -543,6 +554,31 @@ el('tournament-pairings').addEventListener('click', event => {
     el<HTMLDialogElement>('replay-dialog').showModal();
   } catch (error) {
     el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Replay konnte nicht geladen werden';
+  }
+});
+/** NEXT-70: only completed, validated match details can be downloaded. */
+el('tournament-pairings').addEventListener('click', event => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const button = target.closest<HTMLButtonElement>('button[data-match-export-id]');
+  if (!button) return;
+  try {
+    if (!tournamentRun) throw new Error('Kein Turnier geladen');
+    const matchId = button.dataset.matchExportId ?? '';
+    const format = button.dataset.matchExportFormat;
+    if (format !== 'csv' && format !== 'json') throw new Error('Unbekanntes Exportformat');
+    const content = format === 'csv'
+      ? exportTournamentMatchCsv(tournamentRun, matchId)
+      : exportTournamentMatchJson(tournamentRun, matchId);
+    const url = URL.createObjectURL(new Blob([content], { type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json' }));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `robot-arena-${matchId.replace(/[^a-z0-9_-]/gi, '_')}.${format}`;
+    anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    el('tournament-feedback').textContent = `Kampf ${matchId} als ${format.toUpperCase()} exportiert.`;
+  } catch (error) {
+    el('tournament-feedback').textContent = 'Kampfexport fehlgeschlagen: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
   }
 });
 function tournamentStatus(): void {
