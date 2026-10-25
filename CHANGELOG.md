@@ -1,3 +1,8 @@
+## Unreleased seit v0.1.57 · Statuskorrektur 26.10.2026
+- v0.1.57 ist auf main `1ad7a64b7eaac10b6a6adc8bee6d655a8ed3405c` mit GitHub-Deploymentstatus SUCCESS bestätigt. Es enthält NEXT-69/70/71/74/75/77.
+- **Noch unveröffentlicht: NEXT-82** (sichere Browserdownloads), **NEXT-76** (Turniersuche/Filter), **NEXT-85** (gemeinsame Integration/QA). Diese drei wurden in dieser Runde neu abgeschlossen und gemeinsam erfolgreich getestet: CI #40244234652, 429 Unit/Behavior/Regression, 160 Desktop/Mobil, TypeScript/Build/reproduzierbarer Build/Security-Gate grün.
+- Vor einer späteren manuellen Veröffentlichung Rebase auf main v0.1.57 und erneute isolierte QA nötig. NEXT-79e weiterhin offen. Kein Publishing durch diesen Lauf.
+
 ## Unreleased · Acht-Feature-Integration erfolgreich · 26.10.2026
 - NEXT-76: zugängliche Turniersuche nach Match-ID/Teilnehmernamen, Statusfilter, Debounce, Reset, Unicode/375px.
 - NEXT-82: Browserdownload für Einzelkämpfe, Tabellen und Archive gehärtet, sichere Dateinamen, ObjectURL-Cleanup und Fehlerbehandlung.
