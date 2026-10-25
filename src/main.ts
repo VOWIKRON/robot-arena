@@ -570,9 +570,10 @@ function renderTournamentParticipants(): void {
   const host = el('tournament-participants');
   const previous = [...host.querySelectorAll<HTMLInputElement>('input[data-participant-name]')].map(input => input.value);
   const presets = [...host.querySelectorAll<HTMLSelectElement>('select[data-participant-preset]')].map(input => input.value);
-  host.replaceChildren();
   try {
+    // Validate before replacing the editor: a temporarily invalid count must not erase names.
     const count = tournamentCount();
+    host.replaceChildren();
     for (let index = 0; index < count; index++) {
       const row = document.createElement('div');
       row.className = 'tournament-participant';
@@ -602,7 +603,7 @@ function renderTournamentParticipants(): void {
     }
     el('tournament-feedback').textContent = '';
   } catch (error) {
-    el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Ungültige Teilnehmerzahl';
+    reportTournamentDraftError(error);
   }
   // Editing a draft must not interrupt a paused/automatically running tournament.
   if (!tournamentRun) {
@@ -741,8 +742,21 @@ el('open-tournament').addEventListener('click', () => {
   syncTournamentActions();
   el<HTMLInputElement>('tournament-count').focus();
 });
-el('close-tournament').addEventListener('click', () => { stopTournamentAuto(); el<HTMLDialogElement>('tournament-dialog').close(); });
-el('tournament-dialog').addEventListener('close', () => { stopTournamentAuto(); el<HTMLButtonElement>('open-tournament').focus(); });
+/** Closing the dialog suspends auto-play at a match boundary, not an invisible running state. */
+function suspendTournamentOnDialogClose(): void {
+  const shouldPause = tournamentAutoRequested && tournamentRun &&
+    (tournamentRun.status === 'ready' || tournamentRun.status === 'running');
+  stopTournamentAuto(false); // Preserve auto-play intent for an explicit Resume after reopening.
+  if (shouldPause) tournamentAction(pauseTournamentRun);
+}
+el('close-tournament').addEventListener('click', () => {
+  suspendTournamentOnDialogClose();
+  el<HTMLDialogElement>('tournament-dialog').close();
+});
+el('tournament-dialog').addEventListener('close', () => {
+  suspendTournamentOnDialogClose(); // Also covers Escape and native dialog close.
+  el<HTMLButtonElement>('open-tournament').focus();
+});
 el('tournament-count').addEventListener('change', renderTournamentParticipants);
 el('tournament-format').addEventListener('change', () => {
   const knockout = el<HTMLSelectElement>('tournament-format').value === 'knockout';
