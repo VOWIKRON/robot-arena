@@ -254,3 +254,45 @@ test('NEXT-79c: invalid draft never replaces a prepared tournament', async ({ pa
   await page.getByRole('button', { name: 'Nächster Kampf' }).click();
   await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
 });
+
+
+test('NEXT-79d: invalid seed, ticklimit and participant names focus their fields accessibly', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  const create = page.getByRole('button', { name: 'Spielplan erstellen' });
+  const seed = page.locator('#tournament-seed');
+  const ticks = page.locator('#tournament-ticks');
+  const first = page.locator('#tournament-name-1');
+  const second = page.locator('#tournament-name-2');
+
+  await seed.fill('-1');
+  await create.click();
+  await expect(seed).toBeFocused();
+  await expect(seed).toHaveAttribute('aria-invalid', 'true');
+  await expect(seed).toHaveAttribute('aria-describedby', /tournament-feedback/);
+  await expect(page.locator('#tournament-feedback')).toContainText('Turnier-Startwert');
+  await seed.fill('4711');
+  await expect(seed).not.toHaveAttribute('aria-invalid', 'true');
+
+  await ticks.fill('0');
+  await create.click();
+  await expect(ticks).toBeFocused();
+  await expect(ticks).toHaveAttribute('aria-invalid', 'true');
+  await ticks.fill('1');
+
+  await first.fill(' ');
+  await create.click();
+  await expect(first).toBeFocused();
+  await expect(first).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#tournament-feedback')).toContainText('Teilnehmername fehlt');
+  await first.fill('Raptor');
+  await second.fill('RAPTOR');
+  await create.click();
+  await expect(second).toBeFocused();
+  await expect(second).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#tournament-feedback')).toContainText('Teilnehmernamen doppelt');
+
+  await second.fill('Titan');
+  await create.click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+});
