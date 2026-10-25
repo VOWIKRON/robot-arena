@@ -118,3 +118,17 @@
 .arena-action-group--combat #start{background:#145676;border-color:#53c9f4;font-weight:800}
 .arena-action-group--tools button{background:#111a2e}
 @media(max-width:760px){.arena-action-group{flex-basis:100%}}
+
+/* NEXT-79c: three visually distinct, keyboard-navigable tournament stages. */
+.tournament-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0}
+.tournament-steps a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:9px 6px;border:1px solid #527294;border-radius:10px;background:#172744;color:#e5f2ff;font-weight:700;text-decoration:none}
+.tournament-steps a:hover{background:#23456b}
+.tournament-steps a:focus-visible{outline:3px solid #8bdcff;outline-offset:3px}
+.tournament-step{border:1px solid #3a5271;border-radius:12px;padding:14px;margin:12px 0;background:#101a2e;scroll-margin-top:14px}
+.tournament-step>h3{margin:0 0 8px;font-size:1.1rem;color:#d7edff}
+.tournament-step>p{margin:0 0 12px;color:#bdcde6;line-height:1.5}
+.tournament-step .controls{margin-top:12px}
+.tournament-advanced{margin:12px 0;border:1px solid #3d5270;border-radius:10px;padding:8px 12px}
+.tournament-advanced summary{min-height:44px;display:list-item;align-content:center;cursor:pointer;font-weight:700;color:#d4e6ff}
+.tournament-advanced summary:focus-visible{outline:3px solid #8bdcff;outline-offset:3px}
+@media(max-width:650px){.tournament-step{padding:10px}.tournament-steps{gap:5px}.tournament-steps a{font-size:.78rem;padding:8px 4px}}
