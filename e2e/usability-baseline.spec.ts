@@ -79,6 +79,7 @@ test('NEXT-79b: combat controls and tools are grouped and fight phase is explici
 
 test('NEXT-79c: tournament has navigable setup, play and results sections on mobile and desktop', async ({ page }) => {
   await page.goto('/');
+  let completedPriorRun = false;
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 800 });
     await page.locator('#open-tournament').click();
@@ -97,7 +98,9 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
     }
     await expect(dialog.locator('#tournament-run')).toBeDisabled();
     await expect(dialog.locator('#tournament-pause')).toBeDisabled();
-    await expect(dialog.locator('#tournament-export')).toBeDisabled();
+    // Reopening a completed tournament retains its exportable results.
+    if (completedPriorRun) await expect(dialog.locator('#tournament-export')).toBeEnabled();
+    else await expect(dialog.locator('#tournament-export')).toBeDisabled();
     await expect(dialog.locator('#tournament-count')).toBeVisible();
     await expect(dialog.locator('#tournament-run')).toBeVisible();
     await dialog.locator('#tournament-create').click();
@@ -125,6 +128,7 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
     await expect(dialog.locator('#tournament-autosave')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await dialog.locator('#close-tournament').click();
+    completedPriorRun = true;
   }
 });
 
