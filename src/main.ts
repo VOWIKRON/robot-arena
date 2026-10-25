@@ -593,7 +593,7 @@ function renderTournamentParticipants(): void {
       const select = document.createElement('select');
       select.id = `tournament-preset-${index + 1}`;
       select.dataset.participantPreset = 'true';
-      for (const [value, title] of [['raptor', 'Raptor'], ['titan', 'Titan']] as const) {
+      for (const [value, title] of [['raptor', 'Raptor'], ['titan', 'Titan'], ['sandbox-a', 'Sandbox-Roboter A (aktuelle Konfiguration)'], ['sandbox-b', 'Sandbox-Roboter B (aktuelle Konfiguration)']] as const) {
         const option = document.createElement('option');
         option.value = value;
         option.textContent = title;
@@ -671,7 +671,10 @@ function buildTournamentDefinition(): TournamentDefinition {
   const participants = Array.from({ length: count }, (_, index) => {
     const name = el<HTMLInputElement>(`tournament-name-${index + 1}`).value.trim();
     const preset = el<HTMLSelectElement>(`tournament-preset-${index + 1}`).value;
-    const robot = preset === 'titan' ? TITAN : RAPTOR;
+    // Snapshot the validated sandbox robot without changing the live sandbox state.
+    const robot = preset === 'sandbox-a' ? selectedRobotA()
+      : preset === 'sandbox-b' ? selectedRobotB()
+      : preset === 'titan' ? TITAN : RAPTOR;
     return { ...robot, id: `participant-${index + 1}`, name };
   });
   if (participants.some(participant => !participant.name)) throw new Error('Teilnehmername fehlt: Bitte für jeden Roboter einen Namen eingeben.');
