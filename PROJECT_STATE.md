@@ -1,3 +1,9 @@
+## 25.10.2026, 04:00 MEZ – NEXT-79c Entwicklungsstand, keine Testfreigabe, NICHT VERÖFFENTLICHT
+- Drei klar beschriftete Turnierschritte mit Tastatur-Sprungnavigation und gruppierten Aktionen in `src/main.ts`; responsives Layout in `src/style.css`. Button-Freigabe zentral aus dem Runner-Status abgeleitet, keine Engine-Änderung.
+- Neue Playwright-Tests für Desktop/Mobil, Keyboard, Erstellen → Kampf → Ergebnisse, Sicherung und ungültige Aktionen committed. **Aktuelle vollständige CI ausstehend; NEXT-79c bleibt offen.** Letzte bestätigte CI #40153366228: 383 Unit/Behavior/Regression, 102 E2E grün (vor NEXT-79c).
+- **Unveröffentlicht und vollständig CI-verifiziert seit Live-v0.1.55:** NEXT-63, 64, 66, 67, 68, 78 (6). NEXT-79a/b als Teilaufgaben getestet; NEXT-79c in Abnahme; 79d/e offen.
+- Entwicklungsbranch/Draft-PR #48; kein Merge, kein Release, kein Deployment. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 25.10.2026, 03:00 MEZ – NEXT-78 und UX-Baseline/-Steuerung erfolgreich getestet, unveröffentlicht
 - **NEU abgeschlossen:** NEXT-78 P0 Raptor-/Titan-Grenzen inkl. HUD, echte Flucht und Rand/Ecken; CI #40144987038 (383 Unit, 96 E2E) grün.
 - **NEU getestete Teilaufgaben NEXT-79a und NEXT-79b:** 375/768/1280px-Browser-Baseline; Haupt-Kampfaktionen von Werkzeugen getrennt; eindeutiger Kampfstatus bereit/läuft/pausiert. Development Tests #40153090696 auf 88a415e9: 383 Unit-/Behavior-/Regressionstests (32 Dateien), 102 Desktop-/Mobil-E2E, Typecheck, Build, npm-Audit-Gate und reproduzierbare Clean-Builds erfolgreich. NEXT-79c/d/e noch offen.
