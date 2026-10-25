@@ -604,7 +604,7 @@ function renderTournamentParticipants(): void {
   } catch (error) {
     el('tournament-feedback').textContent = error instanceof Error ? error.message : 'Ungültige Teilnehmerzahl';
   }
-  stopTournamentAuto();
+  // Editing a draft must not interrupt a paused/automatically running tournament.
   if (!tournamentRun) {
     tournamentDefinition = null;
     el('tournament-preview').hidden = true;
@@ -709,7 +709,7 @@ el('tournament-format').addEventListener('change', () => {
   if (knockout) sideSelect.value = 'legacy';
 });
 el('tournament-create').addEventListener('click', () => {
-  stopTournamentAuto();
+  // Draft validation must not cancel a running tournament's queued auto-play.
   // A double-click must not reset an already prepared or running identical plan.
   try {
     const candidate = buildTournamentDefinition();
@@ -723,6 +723,8 @@ el('tournament-create').addEventListener('click', () => {
     }
   } catch { /* renderTournamentPreview reports the validation error without losing an active run. */ }
   if (!renderTournamentPreview() || !tournamentDefinition) return;
+  // Only a successfully validated replacement may stop an earlier auto-run.
+  stopTournamentAuto();
   tournamentRun = tournamentDefinition.format === 'round-robin' ? createTournamentRun(tournamentDefinition) : null;
   if (tournamentRun) { tournamentStatus(); persistTournamentSnapshot(); }
   syncTournamentActions();
