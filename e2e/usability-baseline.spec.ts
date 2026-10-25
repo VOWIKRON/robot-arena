@@ -273,6 +273,8 @@ test('NEXT-79d: invalid seed, ticklimit and participant names focus their fields
   await expect(page.locator('#tournament-feedback')).toContainText('Turnier-Startwert');
   await seed.fill('4711');
   await expect(seed).not.toHaveAttribute('aria-invalid', 'true');
+  await expect(seed).toHaveAttribute('aria-describedby', 'tournament-seed-help');
+  await expect(page.locator('#tournament-feedback')).toContainText('Eingabe geändert. Bitte Spielplan erstellen');
 
   await ticks.fill('0');
   await create.click();
