@@ -95,12 +95,22 @@ test('NEXT-79c: tournament has navigable setup, play and results sections on mob
       await page.keyboard.press('Enter');
       await expect(link).toHaveAttribute('href', '#' + id);
     }
+    await expect(dialog.locator('#tournament-run')).toBeDisabled();
+    await expect(dialog.locator('#tournament-pause')).toBeDisabled();
+    await expect(dialog.locator('#tournament-export')).toBeDisabled();
     await expect(dialog.locator('#tournament-count')).toBeVisible();
     await expect(dialog.locator('#tournament-run')).toBeVisible();
     await dialog.locator('#tournament-create').click();
     await expect(dialog.locator('#tournament-progress')).toContainText('0 / 1');
+    await expect(dialog.locator('#tournament-run')).toBeEnabled();
+    await expect(dialog.locator('#tournament-pause')).toBeEnabled();
+    await expect(dialog.locator('#tournament-resume')).toBeDisabled();
+
     await dialog.locator('#tournament-run').click();
     await expect(dialog.locator('#tournament-progress')).toContainText('1 / 1');
+    await expect(dialog.locator('#tournament-run')).toBeDisabled();
+    await expect(dialog.locator('#tournament-export')).toBeEnabled();
+
     await expect(dialog.locator('#tournament-table tbody tr')).toHaveCount(2);
     await expect(dialog.locator('.tournament-advanced')).toHaveAttribute('open', '');
     await expect(dialog.locator('#tournament-import')).toBeVisible();
