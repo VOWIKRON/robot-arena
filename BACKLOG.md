@@ -1,3 +1,13 @@
+## NEXT-85 Acht-Feature-Integration abgeschlossen · 26.10.2026 · NICHT VERÖFFENTLICHT
+- [x] **NEXT-82 – Downloadhärtung:** ObjectURL-/Blob-/Click-Fehler, Dateinamen und Cleanup; QA-grün und gemeinsam integriert.
+- [x] **NEXT-76 – Turniersuche/Ergebnisfilter:** Debounce, Status, Unicode, 120 Paarungen, Reset, Import/Replay, 375px; QA-grün und gemeinsam integriert.
+- [x] **NEXT-85 – gemeinsames Acht-Feature-Gate:** NEXT-69/70/71/74/75/77/82/76 konfliktfrei kombiniert, vollständige isolierte QA-only #40243980520 SUCCESS (429 Unit/Behavior/Regression/Determinismus, 160 Desktop/Mobil, TypeScript/Build/reproduzierbarer Build/Security-Gate). Nach Dokumentationsänderungen abschließende QA erneut prüfen.
+- [ ] **NEXT-79e (P0) – manuelle Barrierefreiheitsabnahme:** NVDA/VoiceOver, echte Touchgeräte, Kontrast und Fokus/Ansagen mit Geräte-/Versionsmatrix dokumentieren; Befunde beheben und nachtesten.
+- [ ] **NEXT-80 (P1) – atomare Cross-Tab-CAS:** Race zwischen gleichzeitig schreibenden Tabs deterministisch nachstellen, Browser-Lock und Fallback prüfen, Regressionen und Speicherverlustfreiheit nachweisen.
+- [ ] **NEXT-84 (P2) – Safari/iOS-Downloadmatrix:** ObjectURL-/Blob-Fallback und Cleanup auf realen Geräten überprüfen.
+- [ ] **NEXT-86 (P1) – manuelle Release-Vorbereitung:** Nach bestätigter finaler QA PR #65 auf Konflikte, Changelog, Backlog, Sicherheitsworkflow und veröffentlichten main-Stand prüfen; KEIN Merge/Publish ohne ausdrückliche Nutzeranweisung.
+- **Kumulativ 9 fertig und getestet, NICHT VERÖFFENTLICHT:** NEXT-69 (Roboterpresets), NEXT-70 (Kampfexport), NEXT-71 (Preset-/Exportintegration), NEXT-74 (sichere Importe), NEXT-75 (Archivkompatibilität), NEXT-77 (Autosave-/Downloadfehler), NEXT-82 (Downloadhärtung), NEXT-76 (Turniersuche/Ergebnisfilter), NEXT-85 (gemeinsame Acht-Feature-Integration).
+
 ## NEXT-76 und NEXT-82 abgeschlossen · 26.10.2026 · NICHT VERÖFFENTLICHT
 - [x] **NEXT-76 – Turniersuche/Ergebnisfilter:** Debounced Suche nach Teilnehmer/Match-ID, Statusfilter, Zurücksetzen, Unicode/HTML-Namen als Text, 120 Paarungen, Desktop/Mobil/Import/Replay. QA-only #40243725469 SUCCESS (423 Unit, 156 Browser); bestehende Accessibility-Regression behoben.
 - [x] **NEXT-82 – Match-Downloadhärtung:** fehlende Browser-APIs, click()-Fehler, URL-Cleanup und sichere Dateinamen. QA-only #40243672046 SUCCESS (425 Unit, 156 Browser).
