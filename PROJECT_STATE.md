@@ -1,3 +1,8 @@
+## NEXT-76 und NEXT-82 QA-grün · 26.10.2026 · NICHT VERÖFFENTLICHT
+- NEXT-76: Debounced, zugängliche Suche über Match-ID/Teilnehmernamen plus Statusfilter und Reset, immutable Filterfunktion, 120 Paarungen, Unicode und 375px. QA-only #40243725469 SUCCESS: 423 Unit/Behavior/Regression/Determinismus und 156 Desktop/Mobil. Regression mit doppelt belegter .field-help-Klasse behoben und erneut getestet.
+- NEXT-82: Downloadadapter für Match/Tabellen/Archive, Dateinamen und Fehlerpfade gehärtet; QA-only nach Doku #40243672046 SUCCESS: 425 Unit/Behavior/Regression und 156 Desktop/Mobil.
+- **Kumulativ 8 einzeln fertig/getestet, unveröffentlicht:** NEXT-69/70/71/74/75/77/82/76. PR #62 enthält nur erste sechs integriert, PR #63 und #64 sind eigene Draft-Branches. Kein gemeinsamer acht-Aufgaben-Test, keine Veröffentlichung.
+
 ## Gemeinsamer sechs-Aufgaben-QA-Erfolg · 25.10.2026 · NICHT VERÖFFENTLICHT
 - **NEXT-74/75/77 in NEXT-69/70/71 integriert und gemeinsam verifiziert.** Isolierte QA-only CI #40238144023 auf Code-HEAD `e7967c636716582fe6bfeab8652ca9b24196abac` erfolgreich: 419/419 Unit-/Behavior-/Regressions-/Determinismustests, 152/152 Desktop-/Mobiltests, TypeScript, Build, reproduzierbarer Zweitbuild, 0 bekannte Dependency-Schwachstellen.
 - **Kumulativ 6 fertig entwickelte und gemeinsam getestete, unveröffentlichte NEXT-Aufgaben:** NEXT-69 Presets; NEXT-70 Kampfexport; NEXT-71 Integration; NEXT-74 Importvalidierung; NEXT-75 V1-Archivkompatibilität; NEXT-77 Autosave-/Downloadfehler. **Neu abgeschlossen: 0; 3 bestehende Aufgaben integriert.**
