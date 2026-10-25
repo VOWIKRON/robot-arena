@@ -429,3 +429,52 @@ test('NEXT-79c: Escape cancel event suspends queued auto-play before close', asy
   await page.locator('#tournament-resume').click();
   await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
 });
+
+async function expectNoPageOverflow(page: import('@playwright/test').Page, width: number) {
+  const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(documentWidth, `document overflow at viewport ${width}px`).toBeLessThanOrEqual(width + 1);
+}
+
+test('NEXT-79e: keyboard-only tournament flow announces state and restores focus', async ({ page }) => {
+  await page.goto('/');
+  await page.setViewportSize({ width: 375, height: 800 });
+  const opener = page.getByRole('button', { name: 'Turnier', exact: true });
+  await opener.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: 'Turnier planen' });
+  await expect(dialog).toBeVisible();
+  await expect(page.locator('#tournament-count')).toBeFocused();
+  await expect(dialog.getByRole('spinbutton', { name: /Teilnehmerzahl/ })).toBeVisible();
+  await expect(dialog.getByRole('spinbutton', { name: /Turnier-Startwert/ })).toBeVisible();
+  await expect(dialog.getByRole('spinbutton', { name: /Ticklimit je Kampf/ })).toBeVisible();
+  await expect(dialog.getByRole('combobox', { name: /Turnierformat/ })).toBeVisible();
+
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.locator('#tournament-create').focus();
+  await page.keyboard.press('Enter');
+  const progress = page.getByRole('status', { name: 'Turnierfortschritt' });
+  await expect(progress).toContainText('0 / 3');
+  await page.locator('#tournament-pause').focus();
+  await page.keyboard.press('Enter');
+  await expect(progress).toContainText('paused');
+  await expect(page.locator('#tournament-run')).toBeDisabled();
+  await page.locator('#tournament-resume').focus();
+  await page.keyboard.press('Enter');
+  await page.locator('#tournament-auto').focus();
+  await page.keyboard.press('Enter');
+  await expect(progress).toContainText('3 / 3', { timeout: 15000 });
+
+  const table = page.getByRole('region', { name: 'Turniertabelle, horizontal scrollbar' });
+  await table.focus();
+  await expect(table).toBeFocused();
+  expect(await table.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(() => table.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+  await expectNoPageOverflow(page, page.viewportSize()?.width ?? 375);
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(opener).toBeFocused();
+});
