@@ -873,8 +873,11 @@ el('tournament-export').addEventListener('click', () => {
 });
 /** A single import path is shared by file import and validated local recovery. */
 function applyImportedTournament(loaded: TournamentRun): void {
-  tournamentDefinition = loaded.definition;
-  tournamentRun = loaded;
+  // A serialized "running" state has no browser timer after import/reload.
+  // Require an explicit Resume rather than showing a misleading running state.
+  const restored = loaded.status === 'running' ? pauseTournamentRun(loaded) : loaded;
+  tournamentDefinition = restored.definition;
+  tournamentRun = restored;
   el<HTMLInputElement>('tournament-count').value = String(loaded.definition.participants.length);
   renderTournamentParticipants();
   el<HTMLSelectElement>('tournament-format').value = loaded.definition.format;
@@ -889,7 +892,7 @@ function applyImportedTournament(loaded: TournamentRun): void {
       p.maxStructure === TITAN.maxStructure && p.weaponDamage === TITAN.weaponDamage ? 'titan' : 'raptor';
   });
   if (!renderTournamentPreview(loaded.definition)) throw new Error('Geladenes Turnier konnte nicht angezeigt werden');
-  tournamentRun = loaded;
+  tournamentRun = restored;
   tournamentStatus();
   persistTournamentSnapshot();
 }
