@@ -1,3 +1,9 @@
+## Unreleased · 25.10.2026, 04:00 MEZ · NEXT-79c in Abnahme
+- Turnierdialog in „Einrichten“, „Spielen“ und „Ergebnisse“ mit zugänglichen Sprunglinks und responsiven Gruppen umstrukturiert. Aktionen je Runner-Status zentral aktiviert/deaktiviert; Export und lokale Sicherung bleiben erreichbar. Engine und Matchdaten unverändert.
+- Neue Browser-Regressionen für 375/1280px, Tastatur, Schrittfolge und Action-Gates committed. **Noch keine vollständige CI auf dem neuen Stand bestätigt; nicht als fertig getestet zählen.**
+- Letzte grüne vollständige CI vor dem Umbau: #40153366228 (383 Unit/Behavior/Regression, 102 E2E). Kumulativ weiterhin 6 vollständig getestete, NICHT veröffentlichte NEXT-Aufgaben: 63, 64, 66, 67, 68, 78. NEXT-79 bleibt offen.
+- Kein Merge, Release-Commit, Publish oder Deployment.
+
 ## Unreleased · 25.10.2026, 03:00 MEZ · NEXT-78 ABGESCHLOSSEN und NEXT-79a/79b implementiert
 - **NEXT-78 P0:** Raptor/Titan samt Chassis, Waffe, Energie- und Strukturbalken bleiben am Arenarand sichtbar; reine Darstellungsbegrenzung ohne Änderungen an Seeds oder deterministischer Simulation. Acht Rand-/Eckfälle und defensive Langzeitflucht. CI #40144987038: 383 Unit-/Behavior-/Regressionstests, 96 E2E grün.
 - **NEXT-79a:** Browser-Baseline für Konfiguration, Kampf und Turnier mit Tastatur sowie 375/768/1280px, kein horizontaler Seitenscroll. CI #40152929889: 383 Unit und 100 E2E grün.
