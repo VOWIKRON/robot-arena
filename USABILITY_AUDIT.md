@@ -1,3 +1,12 @@
+## NEXT-79c/d Prüfung · 25.10.2026, ca. 09:00 MEZ · CI OFFEN
+- [x] Fehlerhafte/fehlende lokale Sicherung sowie ungültiger Dateiimport erhalten laufendes/pausiertes Turnier und Auto-Play-Absicht; `stopTournamentAuto` erst nach erfolgreicher Archivvalidierung.
+- [x] Gültiger Restore stellt Teilnehmer-Presets aus geladenen Roboterdaten wieder her.
+- [x] Seed-/Ticklimit-/Namens-/Teilnehmerzahl-Fehler fokussieren betroffene Eingabe, markieren `aria-invalid` und referenzieren Status via `aria-describedby`; Korrektur löscht Marker.
+- [x] Drei neue Playwright-Testfälle als Code hinzugefügt, GitHub-Readback erfolgreich. **Nicht ausgeführt, keine CI-Freigabe.**
+- [ ] Aktuelle vollständige Unit-/Behavior-/Regression-/Desktop-/Mobil-CI nachweisen; bei Fehlern reparieren und wiederholen.
+- [ ] NEXT-79e Abschlussmatrix: 375/768/1280px, Tastatur/Screenreader, Touchziele, Kontrast, Import/Export/Autosave, Fehlertext-/Fokusabnahme, Refactoring und erneute Voll-CI.
+- Kumulativ 6 vollständig CI-getestete, unveröffentlichte ganze NEXT-Aufgaben 63/64/66/67/68/78. NEXT-79a/b getestet, 79c/d CI offen, 79e offen. Letzte bestätigte Live-Version v0.1.55. **KEIN PUBLISHING.**
+
 ## 25.10.2026 · NEXT-79c/d Publish-Reife-Prüfung – noch nicht freigegeben
 - **NEXT-79c Bugfix:** Bei ungültigem Formularentwurf wird jetzt unmittelbar der konkrete Validierungsfehler angezeigt, ohne `renderTournamentPreview()` aufzurufen; bestehende Spielpläne, Kampfstände und Auto-Play bleiben unberührt. Neuer Playwright-Regressionstest prüft aktiven Spielplan, ungültigen Seed, unveränderten Fortschritt und danach erfolgreichen Einzelkampf. Code und Test im Branch committed und per Blob-SHA zurückgelesen.
 - **NEXT-79d:** Präzise Validierung für Seed, Ticklimit, leere und doppelte Teilnehmernamen sowie E2E für ungültige Eingaben vor Spielplanerstellung vorhanden. Refactoring: Fehlerprüfung vor dem mutierenden Preview-Pfad; kein zweiter Runner-Zustand.
