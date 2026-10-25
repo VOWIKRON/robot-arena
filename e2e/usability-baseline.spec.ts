@@ -345,3 +345,50 @@ test('NEXT-79c: local restore recovers the actual robot presets, not stale edito
   await expect(page.locator('#tournament-preset-2')).toHaveValue('raptor');
   await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
 });
+
+
+test('NEXT-79c: closing an automatic tournament pauses it until explicit resume', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+  // Both actions happen in the same browser task, before the zero-delay auto timer.
+  await page.evaluate(() => {
+    (document.getElementById('tournament-auto') as HTMLButtonElement).click();
+    (document.getElementById('close-tournament') as HTMLButtonElement).click();
+  });
+  await expect(page.locator('#tournament-dialog')).not.toBeVisible();
+  await page.locator('#open-tournament').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+  await expect(page.locator('#tournament-progress')).toContainText('paused');
+  await expect(page.locator('#tournament-run')).toBeDisabled();
+  await expect(page.locator('#tournament-auto')).toBeDisabled();
+  await page.locator('#tournament-resume').click();
+  await expect(page.locator('#tournament-progress')).toContainText('3 / 3', { timeout: 15000 });
+});
+
+test('NEXT-79d: invalid participant count retains draft names and accessible error focus', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#open-tournament').click();
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await page.locator('#tournament-name-1').fill('Alpha');
+  await page.locator('#tournament-name-2').fill('Beta');
+  await page.locator('#tournament-name-3').fill('Gamma');
+  await page.locator('#tournament-count').fill('99');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await expect(page.locator('#tournament-count')).toBeFocused();
+  await expect(page.locator('#tournament-count')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#tournament-feedback')).toContainText('Teilnehmerzahl muss zwischen 2 und 16');
+  await expect(page.locator('#tournament-name-1')).toHaveValue('Alpha');
+  await expect(page.locator('#tournament-name-2')).toHaveValue('Beta');
+  await expect(page.locator('#tournament-name-3')).toHaveValue('Gamma');
+  await page.locator('#tournament-count').fill('3');
+  await page.locator('#tournament-count').dispatchEvent('change');
+  await expect(page.locator('#tournament-name-3')).toHaveValue('Gamma');
+  await page.locator('#tournament-create').click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 3');
+});
