@@ -7,7 +7,7 @@ test('NEXT-79e: essential tournament control boundaries meet WCAG AA 3:1 contras
 
   const results = await page.evaluate(() => {
     const luminance = (css: string): number => {
-      const channels = css.match(/\\d+(?:\\.\\d+)?/g)?.slice(0, 3).map(Number);
+      const channels = css.match(/\d+(?:\.\d+)?/g)?.slice(0, 3).map(Number);
       if (!channels || channels.length !== 3) throw new Error('Expected opaque RGB color: ' + css);
       const [red, green, blue] = channels.map(value => {
         const normalized = value / 255;
