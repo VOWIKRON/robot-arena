@@ -610,6 +610,42 @@ function renderTournamentParticipants(): void {
     el('tournament-preview').hidden = true;
   }
 }
+/** NEXT-79d: report the exact invalid draft field without touching an active runner. */
+function reportTournamentDraftError(error: unknown): void {
+  const message = error instanceof Error ? error.message : 'unbekannter Fehler';
+  el('tournament-feedback').textContent = 'Turnier ungültig: ' + message;
+  const nameInputs = [...el('tournament-participants').querySelectorAll<HTMLInputElement>('input[data-participant-name]')];
+  let target: HTMLInputElement | null = null;
+  if (message.startsWith('Teilnehmerzahl')) target = el<HTMLInputElement>('tournament-count');
+  else if (message.startsWith('Turnier-Startwert')) target = el<HTMLInputElement>('tournament-seed');
+  else if (message.startsWith('Ticklimit')) target = el<HTMLInputElement>('tournament-ticks');
+  else if (message.startsWith('Teilnehmername fehlt')) target = nameInputs.find(input => !input.value.trim()) ?? null;
+  else if (message.startsWith('Teilnehmernamen doppelt')) {
+    const seen = new Set<string>();
+    target = nameInputs.find(input => {
+      const name = input.value.trim().toLocaleLowerCase('de');
+      if (seen.has(name)) return true;
+      seen.add(name);
+      return false;
+    }) ?? null;
+  }
+  if (!target) return;
+  target.setAttribute('aria-invalid', 'true');
+  const describedBy = (target.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
+  if (!describedBy.includes('tournament-feedback')) describedBy.push('tournament-feedback');
+  target.setAttribute('aria-describedby', describedBy.join(' '));
+  target.focus();
+}
+/** Remove stale errors before the next validation attempt or after an input correction. */
+function clearTournamentDraftError(input: HTMLInputElement): void {
+  input.removeAttribute('aria-invalid');
+  const describedBy = (input.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(id => id && id !== 'tournament-feedback');
+  if (describedBy.length) input.setAttribute('aria-describedby', describedBy.join(' '));
+  else input.removeAttribute('aria-describedby');
+}
+el('tournament-dialog').addEventListener('input', event => {
+  if (event.target instanceof HTMLInputElement) clearTournamentDraftError(event.target);
+});
 function buildTournamentDefinition(): TournamentDefinition {
   const count = tournamentCount();
   const seed = el<HTMLInputElement>('tournament-seed').valueAsNumber;
@@ -728,8 +764,8 @@ el('tournament-create').addEventListener('click', () => {
       return;
     }
   } catch (error) {
-    // Report invalid draft inputs without mutating the active tournament or its auto-play.
-    el('tournament-feedback').textContent = `Turnier ungültig: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
+    // Never mutate a running plan for an invalid draft; focus the offending field.
+    reportTournamentDraftError(error);
     return;
   }
   if (!renderTournamentPreview() || !tournamentDefinition) return;
