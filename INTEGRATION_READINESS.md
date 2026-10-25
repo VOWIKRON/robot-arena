@@ -1,3 +1,12 @@
+## NEXT-71 · Kombinierte QA-Erweiterung · 25.10.2026, 20:00 MEZ · NICHT VERÖFFENTLICHT
+- **Aktuelle Runde:** NEXT-71 priorisiert, 79e weiterhin offen (echte NVDA-/VoiceOver-/Touch-/Kontrast-Abnahme fehlt), NEXT-74 noch nicht begonnen.
+- **NEU:** Branch `feature/NEXT-71-combined-validation`, Draft-PR #59 gegen `qa/NEXT-71-combined-integration` (NICHT gegen main). Zusätzlicher Playwright-Behavior-Test `e2e/next-71-saved-preset-match-export.spec.ts`: Roboterpreset speichern → Seite neu laden → Turnier erstellen → Archiv-Roboterdaten prüfen → Kampf abschließen → Match-JSON prüfen. Läuft auf Desktop und Mobil, sofern isolierte QA erfolgreich abgeschlossen wird.
+- **CI-Gate:** Workflow `Isolated Feature QA – no publishing` ist auf dem QA-Zielbranch konfiguriert; aktueller PR-Head wurde noch NICHT als vollständig grün nachgewiesen. Daher NEXT-71 weiterhin offen. Keine lokalen Node-/Browser-Tests möglich (GitHub-DNS im Container nicht erreichbar).
+- **Refactoring/Qualität:** Keine produktive Engine-Änderung in dieser Runde; gezielter integrativer Behavior-Test, Schreib-Readback verifiziert. Vor Abschluss kombinierte Typecheck-, Audit-, Unit-/Behavior-/Regression-/Determinismus-, Build- und Desktop-/Mobil-Ergebnisse prüfen.
+- **Kumulativ seit bestätigter Live-Version v0.1.56: genau 2 vollständig isoliert getestete, aber UNVERÖFFENTLICHTE NEXT-Aufgaben:** NEXT-69 (391 Unit + 134 Browser) und NEXT-70 (387 Unit + 130 Browser). **Neu abgeschlossen: 0.** NEXT-71, NEXT-79e und NEXT-74 nicht als fertig zählen.
+- **Rolling Backlog:** P0 kombinierte QA PR #59 auswerten → bei Fehlern auf demselben NEXT-71-Branch beheben und erneut testen → NEXT-79e manuelle Abnahme mit Befundprotokoll → NEXT-74 auf eigenem Branch: Größenlimits, Duplikate, Prototyp-Schlüssel, tiefe Objekte, nicht endliche Zahlen, Zustandsintegrität und Fuzz-/Property-/Browser-Tests.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Keine Änderung an main, Homepage, publish.php oder Publishing-Workflows.
+
 ## Kombinierter QA-Kandidat (25.10.2026, 19:00 MEZ)
 - Isolierter Branch `qa/NEXT-71-combined-integration` basiert auf `qa/NEXT-70-acceptance` (main-basierter NEXT-70-Code mit publishing-sicherer QA-Konfiguration).
 - NEXT-69 wurde selektiv hinzugefügt: fünf neue Quell-/Testdateien sowie sechs eindeutig passende `src/main.ts`-Hunks. Die Patch-Anwendung auf unverändertes `main` wurde bytegenau gegen den NEXT-69-Featurestand validiert; auf NEXT-70 angewendet ergaben sich eindeutige Kontexttreffer.
