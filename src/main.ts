@@ -713,9 +713,12 @@ el('tournament-create').addEventListener('click', () => {
   // A double-click must not reset an already prepared or running identical plan.
   try {
     const candidate = buildTournamentDefinition();
-    if (tournamentRun && !['completed', 'cancelled'].includes(tournamentRun.status) &&
-        JSON.stringify(candidate) === JSON.stringify(tournamentRun.definition)) {
-      el('tournament-feedback').textContent = 'Spielplan bereits aktiv. Für einen Neustart erst abbrechen.';
+    if (tournamentRun && !['completed', 'cancelled'].includes(tournamentRun.status)) {
+      // NEXT-79c: editing form fields must never silently replace an active run.
+      const unchanged = JSON.stringify(candidate) === JSON.stringify(tournamentRun.definition);
+      el('tournament-feedback').textContent = unchanged
+        ? 'Spielplan bereits aktiv. Für einen Neustart erst abbrechen.'
+        : 'Ein Turnier läuft bereits. Bitte zuerst abbrechen, bevor du einen neuen Spielplan erstellst.';
       return;
     }
   } catch { /* renderTournamentPreview reports the validation error without losing an active run. */ }
