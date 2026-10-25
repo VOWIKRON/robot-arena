@@ -19,6 +19,7 @@ import { replayTournamentMatch } from './engine/tournament-replay';
 import { runKnockoutBracket } from './engine/tournament-knockout';
 import { exportTournamentTableCsv, exportTournamentTableJson } from './engine/tournament-export';
 import { exportTournamentMatchCsv, exportTournamentMatchJson } from './engine/tournament-match-export';
+import { downloadTournamentFile } from './engine/tournament-download';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
 import { isTournamentAutosaveEnabled, restoreTournamentSnapshot } from './engine/tournament-local-save';
@@ -966,28 +967,7 @@ el('tournament-resume').addEventListener('click', () => {
   if (tournamentAutoRequested) scheduleTournamentAuto();
 });
 el('tournament-cancel').addEventListener('click', () => { stopTournamentAuto(); tournamentAction(cancelTournamentRun); });
-/** NEXT-77: one download path for archive, CSV and JSON, including browser failures. */
-function downloadTournamentFile(content: string, mime: string, filename: string): void {
-  let objectUrl: string | null = null;
-  let anchor: HTMLAnchorElement | null = null;
-  try {
-    objectUrl = URL.createObjectURL(new Blob([content], { type: mime }));
-    anchor = document.createElement('a');
-    anchor.href = objectUrl;
-    anchor.download = filename;
-    anchor.style.display = 'none';
-    document.body.appendChild(anchor);
-    anchor.click();
-  } catch (error) {
-    throw new Error('Download konnte nicht gestartet werden: ' + (error instanceof Error ? error.message : 'Browserfehler'));
-  } finally {
-    anchor?.remove();
-    if (objectUrl !== null) {
-      const urlToRevoke = objectUrl;
-      window.setTimeout(() => { try { URL.revokeObjectURL(urlToRevoke); } catch { /* best effort */ } }, 1000);
-    }
-  }
-}
+/** NEXT-85: verified NEXT-82 adapter shared by all exports; NEXT-76 filter remains independent. */
 function downloadTournamentTable(format: 'csv' | 'json'): void {
   try {
     if (!tournamentRun) throw new Error('Für den Tabellenexport ist ein Round-Robin-Turnier erforderlich');
