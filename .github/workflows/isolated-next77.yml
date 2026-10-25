@@ -3,7 +3,7 @@ name: Isolated NEXT-77 QA - no publishing
 on:
   push:
     branches:
-      - feature/NEXT-77-archive-compatibility
+      - feature/NEXT-77-storage-export-errors
 
 permissions:
   contents: read
