@@ -1,3 +1,9 @@
+## Unreleased · 25.10.2026, 07:00 MEZ · NEXT-79c aktiven Spielplan vor versehentlichem Ersetzen geschützt
+- Beim Ändern von Turniereinstellungen kann „Spielplan erstellen“ einen aktiven Lauf nicht mehr unbemerkt überschreiben. Die Oberfläche verlangt ausdrücklich „Abbrechen“; nach Abbruch oder Abschluss ist ein neuer Spielplan möglich. Status-Guard vereinheitlicht, deterministische Simulation unverändert.
+- Neue Playwright-Regression für ungültige Eingabe, geänderte gültige Konfiguration, Bestandsschutz und Cancel/Neustart im Entwicklungsbranch committed und zurückgelesen. **Vollständige aktuelle CI noch nicht nachgewiesen: NEXT-79c/d weiterhin offen.**
+- Letzte bestätigte CI vor diesen Änderungen #40153366228 (383 Unit/Behavior/Regression, 102 Desktop/Mobil-E2E). Kumulativ seit Live-v0.1.55 sechs bereits CI-getestete unveröffentlichte NEXT-Aufgaben: 63, 64, 66, 67, 68, 78; NEXT-79a/b getestete Teilaufgaben.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## Unreleased · 25.10.2026, 06:00 MEZ · NEXT-79c Pausensteuerung verbessert, CI offen
 - Ein pausiertes Turnier lässt sich nicht mehr unbeabsichtigt mit „Alle Kämpfe spielen“ fortsetzen: Beide Startaktionen sind bis zum ausdrücklichen „Fortsetzen“ deaktiviert. Vorhandene Runner-Statusableitung vereinheitlicht, Engine/RNG unverändert.
 - Neue Playwright-Regressionen für Desktop/Mobil prüfen Pause, deaktivierte Startaktionen und Wiederaufnahme. **Tests im Branch, aktuelle vollständige CI noch nicht nachgewiesen.** NEXT-79c/d bleiben offen.
