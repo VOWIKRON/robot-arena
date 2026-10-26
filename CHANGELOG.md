@@ -1,10 +1,9 @@
-## NEXT-89 Ressourcentrends · 26.10.2026, 05:00 MEZ · CI AUSSTEHEND · NICHT VERÖFFENTLICHT
-- **Aktuelle Runde (1 Aufgabe): NEXT-89 IN ARBEIT.** Wiederverwendbare deterministische Endurance-Fixture; 2/4/8/16 Teilnehmer bei 24 Ticks, strukturierte Messung von Matches/Ticks, Laufzeit, Heap-Differenz und Archivbytes. Valider JSON-Report, historische Vergleichsfunktion mit Prozentänderungen und negative/missing/duplicate-Input-Tests. CI speichert `next89-resource-trends.json` als QA-Artefakt. Keine zeit- oder speicherabhängigen Fail-Schwellen. NEXT-89 ist **erst nach vollständiger gemeinsamer CI** abgeschlossen.
-- **Letzte verifizierte CI vor dieser Runde:** #40262516764 auf NEXT-88-HEAD `088356fd5563b3543da01f210b37f5a948cae416`: 434/434 Vitest, 4/4 Konfliktprüfungen, 162/162 Desktop-/Mobil-Playwright, TypeScript, Build, reproduzierbarer Build, Audit 0; insgesamt **600/600**. NEXT-89-Tests noch nicht bestätigt.
-- **Kumulativ seit bestätigter Veröffentlichung v0.1.57: 6 fertig, getestet, unveröffentlicht:** NEXT-76 (Turniersuche/Filter), NEXT-82 (sichere Browserdownloads), NEXT-85 (gemeinsame Integration), NEXT-86 (Port auf v0.1.57), NEXT-87 (120-Kampf-Stresstest), NEXT-88 (Endurance/3600-Tick-Grenze). **In dieser Runde neu abgeschlossen: 0.** NEXT-89 zählt noch nicht.
-- **Refactoring:** NEXT-88-Endurance-Fixture für Ressourcentrends extrahiert, bestehende Tests auf Helper umgestellt. Erneute CI muss Regressionen ausschließen.
-- **Rolling Backlog (konkret):** NEXT-89 JSON-Artefakt und Vergleichsfunktion im vollständigen PR-CI-Lauf validieren; NEXT-80 atomare Multi-Tab-CAS mit Versions-Token, Race- und Quota-Tests; NEXT-79e praktische NVDA/VoiceOver/Touch-Kontrast-Abnahme; NEXT-84 Safari/iOS-Matrix (WebKit + iPhone-Touch, Storage, Downloads); NEXT-90 historische Trend-Baselines aus mindestens zwei CI-Artefakten vergleichen, dokumentieren, aber nicht auf Zeitgrenzen gate'n.
-- **GitHub:** isolierter Branch `feature/NEXT-89-resource-trends-unpublished`; keine Veröffentlichung, kein Merge nach main, keine Release-Version geändert. **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+## Unreleased · NEXT-89 QA-GREEN · 26.10.2026 · NICHT VERÖFFENTLICHT
+- **NEXT-89 NEU ABGESCHLOSSEN:** 2/4/8/16-Teilnehmer-Ressourcentrends mit 24 Ticks/Kampf, JSON-CI-Artefakt, Vergleich historischer Laufzeit-/Heap-/Archivgrößen-Messungen, robuste Validierung ohne fragile Performance-Fail-Grenzwerte.
+- **CI #40266761987 SUCCESS** auf `1f0b6076c15923dfc49a9713ed8e6c239d814f55`: 436/436 Vitest, 4/4 Konfliktprüfungen, 162/162 Desktop-/Mobiltests, TypeScript, reproduzierbarer Build, Audit 0; **602/602**. Ressourcenartefakt ID 12626795952. Dokumentations-Follow-up muss erneut CI bestehen.
+- **Kumulativ sieben fertig getestete und unveröffentlichte NEXT-Aufgaben seit v0.1.57:** 76, 82, 85, 86, 87, 88, **89 NEU**. Refactoring: Endurance-Fixture zentralisiert.
+- **Offen:** NEXT-79e manuelle Barrierefreiheit, NEXT-80 Cross-Tab-CAS, NEXT-84 Safari/iOS, NEXT-90 historische Trendbaseline.
+- **Draft-PR #69; NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
 
 ## Unreleased · NEXT-88 QA-GREEN · 26.10.2026
 - **NEU abgeschlossen:** NEXT-88 deterministische Endurance-Regression für 16 Roboter/120 Kämpfe, 5.760 Ticks und maxTicks=3.600, Archivpause/-wiederaufnahme, Ressourcen-Diagnostik ohne flüchtige Grenzwerte.
