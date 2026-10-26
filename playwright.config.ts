@@ -17,7 +17,7 @@ export default defineConfig({
   projects: [
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: ['**/webkit-compatibility.spec.ts'] },
     { name: 'mobile-chromium', use: { ...devices['Pixel 7'] }, testIgnore: ['**/webkit-compatibility.spec.ts'] },
-    { name: 'desktop-webkit', use: { ...devices['Desktop Safari'] }, testMatch: ['**/webkit-compatibility.spec.ts', '**/next96-cross-tab-stress.spec.ts'] },
-    { name: 'mobile-webkit', use: { ...devices['iPhone 13'] }, testMatch: ['**/webkit-compatibility.spec.ts', '**/next96-cross-tab-stress.spec.ts'] }
+    { name: 'desktop-webkit', use: { ...devices['Desktop Safari'] }, testMatch: ['**/webkit-compatibility.spec.ts', '**/next96-cross-tab-stress.spec.ts', '**/next98-reload-recovery.spec.ts'] },
+    { name: 'mobile-webkit', use: { ...devices['iPhone 13'] }, testMatch: ['**/webkit-compatibility.spec.ts', '**/next96-cross-tab-stress.spec.ts', '**/next98-reload-recovery.spec.ts'] }
   ]
 });
