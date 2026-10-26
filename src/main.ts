@@ -33,10 +33,10 @@ if (!app) throw new Error('App root missing');
 
 function strategyControls(side: 'a' | 'b'): string {
   const label = side.toUpperCase();
-  return `<div class="strategy-controls"><label for="strategy-${side}">Strategie ${label}</label><span class="field-help" id="strategy-help-${side}">Die Strategie bestimmt, ob der Roboter angreift, Abstand hält oder ausweicht.</span><select id="strategy-${side}" aria-describedby="strategy-help-${side}">${AVAILABLE_STRATEGIES.map(item => `<option value="${item.value}">${item.label}</option>`).join('')}</select>
+  return `<div class="strategy-controls"><label for="strategy-${side}">Strategie ${label}</label><span class="field-help" id="strategy-help-${side}">Die Strategie bestimmt, ob der Roboter angreift, Abstand hält, ausweicht oder seine Taktik an Struktur, Energie und Bedrohung anpasst.</span><select id="strategy-${side}" aria-describedby="strategy-help-${side}">${AVAILABLE_STRATEGIES.map(item => `<option value="${item.value}">${item.label}</option>`).join('')}</select>
   <label>Energiereserve ${label} (% Maximalenergie)<span class="field-help" id="reserve-help-${side}">Dieser Anteil bleibt für spätere Aktionen zurückgehalten.</span><input aria-describedby="reserve-help-${side}" id="reserve-${side}" type="number" min="0" max="100" step="any" value="0"></label>
   <label id="target-field-${side}">Zielabstand ${label} (% Waffenreichweite)<input id="target-${side}" type="number" min="0" max="100" step="any" value="80"></label>
-  <div id="defensive-fields-${side}" hidden><label>Rückzugsschwelle ${label} (% Struktur)<input id="threshold-${side}" type="number" min="0" max="100" step="any" value="70"></label><label>Sicherheitsabstand ${label} (% gegnerische Waffenreichweite)<input id="retreat-${side}" type="number" min="100" max="200" step="any" value="110"></label><p class="muted">Hält frühzeitig Abstand, maximal 95 % der eigenen Waffenreichweite. Ab der Rückzugsschwelle keine Verfolgung mehr.</p></div></div>`;
+  <div id="defensive-fields-${side}" hidden><label>Rückzugsschwelle ${label} (% Struktur)<input id="threshold-${side}" type="number" min="0" max="100" step="any" value="70"></label><label>Sicherheitsabstand ${label} (% gegnerische Waffenreichweite)<input id="retreat-${side}" type="number" min="100" max="200" step="any" value="110"></label><p class="muted">Defensiv hält frühzeitig Abstand. Adaptiv zieht sich bei Schaden, Energiemangel oder überlegener gegnerischer Reichweite zurück. Rückzug maximal bis 95 % der eigenen Waffenreichweite.</p></div></div>`;
 }
 
 app.innerHTML = `
@@ -93,7 +93,9 @@ function selectedStrategy(side: 'a' | 'b') {
   const percent = (name: string) => el<HTMLInputElement>(`${name}-${side}`).valueAsNumber / 100;
   const movementParameters = strategy === 'defensive'
     ? { retreatStructureRatio: percent('threshold'), retreatDistanceFactor: percent('retreat') }
-    : { targetDistanceRatio: percent('target') };
+    : strategy === 'adaptive'
+      ? { targetDistanceRatio: percent('target'), retreatStructureRatio: percent('threshold'), retreatDistanceFactor: percent('retreat') }
+      : { targetDistanceRatio: percent('target') };
   return { strategy, strategyParameters: { ...movementParameters, energyReserveRatio: percent('reserve') } };
 }
 
@@ -101,10 +103,10 @@ function updateStrategyFields(side: 'a' | 'b', resetDefaults = false): void {
   const { strategy } = selectedStrategy(side);
   const defensive = strategy === 'defensive';
   el(`target-field-${side}`).hidden = defensive;
-  el(`defensive-fields-${side}`).hidden = !defensive;
+  el(`defensive-fields-${side}`).hidden = !(defensive || strategy === 'adaptive');
   el<HTMLInputElement>(`target-${side}`).disabled = defensive;
-  el<HTMLInputElement>(`threshold-${side}`).disabled = !defensive;
-  el<HTMLInputElement>(`retreat-${side}`).disabled = !defensive;
+  el<HTMLInputElement>(`threshold-${side}`).disabled = !(defensive || strategy === 'adaptive');
+  el<HTMLInputElement>(`retreat-${side}`).disabled = !(defensive || strategy === 'adaptive');
   if (resetDefaults) {
     const defaults = strategyParameters(strategy);
     el<HTMLInputElement>(`reserve-${side}`).value = String(defaults.energyReserveRatio * 100);
