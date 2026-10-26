@@ -61,7 +61,7 @@ test('NEXT-77: explicit opt-out survives reload and deletes the local snapshot',
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.locator('#tournament-autosave').check();
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
-  expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).not.toBeNull();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).not.toBeNull();
   await page.locator('#tournament-autosave').uncheck();
   await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave-enabled:v1'))).toBeNull();
   await page.reload();
