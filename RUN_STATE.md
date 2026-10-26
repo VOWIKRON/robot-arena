@@ -1,5 +1,5 @@
 ## NEXT-86 PR-Status · 26.10.2026 · NICHT VERÖFFENTLICHT
-- Draft-PR #66 gegen main v0.1.57 angelegt. Acht ausschließlich neue Feature-/Test-Dateien und zwei aktualisierte Quell-Dateien (main.ts, style.css) sowie Entwicklungsdokumentation; keine Releaseversion verändert.
+- Draft-PR #66 gegen main v0.1.57 angelegt. Sechs neue Feature-/Test-Dateien und zwei aktualisierte Quell-Dateien (main.ts, style.css) sowie Entwicklungsdokumentation; keine Releaseversion verändert.
 - Teststatus auf dem NEXT-86-Branch: neue GitHub-CI bisher NICHT bestätigt; nicht als erledigt zählen. Letzte bestätigte gemeinsame CI stammt aus NEXT-85 (#40244548121), nicht aus NEXT-86.
 - Kumulativ unveröffentlicht und getestet: NEXT-76, NEXT-82, NEXT-85 = 3. NEXT-86 bleibt in Arbeit.
 - Kein Merge/Publish/Deployment.
