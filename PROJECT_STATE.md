@@ -3,7 +3,7 @@
 - **Vorherige NEXT-86-Dokumentations-CI jetzt ebenfalls SUCCESS:** #40252418309 auf `43c7531060f349c940ce288892260a650abaeb32`; quality-Job einschließlich TypeScript, Unit, Browser, Audit und reproduzierbarem Build grün. Vorherige 429 Unit + 4 Konfliktchecks + 160 Browser auf NEXT-86-Code.
 - **Kumulativ seit verifiziert veröffentlichter v0.1.57: 4 vollständig implementierte und getestete, aber NICHT veröffentlichte NEXT-Aufgaben:** NEXT-76 (Turniersuche/Ergebnisfilter), NEXT-82 (Browserdownload-Härtung), NEXT-85 (gemeinsame Integration), NEXT-86 (Port auf v0.1.57). **Neu abgeschlossen in dieser Runde: 0.** NEXT-87 ist noch offen, bis die neue vollständige CI erfolgreich ist.
 - **Refactoring:** Test-Fixture und feste Seeds bewusst zentralisiert; Produktionscode unverändert. **Offen:** NEXT-79e manuelle Screenreader-/Touch-/Kontrastabnahme, NEXT-80 atomare Multi-Tab-Speicherung, NEXT-84 Safari/iOS; NEXT-87 vollständige CI und eventuelle Fehlerbehebung.
-- **Branch/PR:** `feature/NEXT-87-tournament-stress-unpublished` / Draft-PR #67 gegen NEXT-86-Entwicklungsbranch; main bleibt v0.1.57. Kein Merge, Release-Commit, publish.php, Deployment oder Homepage-Update.
+- **Branch/PR:** `feature/NEXT-87-tournament-stress-unpublished` / Draft-PR #67 gegen main ausschließlich für die PR-CI; bleibt DRAFT, kein Merge; main bleibt v0.1.57. Kein Merge, Release-Commit, publish.php, Deployment oder Homepage-Update.
 - **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
 
 ## NEXT-86 abgeschlossen · 26.10.2026 · QA-GREEN · NICHT VERÖFFENTLICHT
