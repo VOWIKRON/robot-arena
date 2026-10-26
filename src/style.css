@@ -137,3 +137,12 @@
 
 /* NEXT-79d: concise help stays legible on the dark controls, including mobile. */
 .field-help{display:block;margin:4px 0 7px;font-size:.86rem;line-height:1.5;font-weight:400;color:#d4e3f7;overflow-wrap:anywhere}
+
+/* NEXT-76: searchable fixtures remain keyboard/touch friendly at 375px. */
+.tournament-match-filters{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:10px;align-items:end;margin:10px 0}
+.tournament-match-filters label{min-width:0}
+.tournament-match-filters button{min-height:44px}
+#tournament-pairings li[hidden]{display:none}
+@media(max-width:650px){.tournament-match-filters{grid-template-columns:minmax(0,1fr)}}
+
+.tournament-filter-summary{color:#9fb0ce;font-size:.9rem;margin:8px 0}
