@@ -163,6 +163,10 @@ test('NEXT-94: Safari WebKit rejects a stale tab after a competing locked write'
       localStorage.setItem(key, raw + ' ');
       return raw + ' ';
     });
+    // Safari may deliver cross-tab localStorage updates asynchronously. Wait
+    // until the contender actually observes the competing bytes BEFORE it can
+    // acquire the lock; otherwise this test races the browser's propagation.
+    await expect.poll(() => other.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).toBe(competingBytes);
     await releaseAutosaveLock(page);
     await expect(other.locator('#tournament-feedback')).toContainText('Andere Registerkarte');
     expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).toBe(competingBytes);
