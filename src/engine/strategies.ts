@@ -37,5 +37,7 @@ export function movementDelta(self: RobotState, enemy: RobotState, distance: num
   const stopChasing = (defensive && lowStructure) || (adaptive && (lowStructure || lowEnergy));
   const request = stopChasing ? Math.min(0, gap)
     : strategy === 'distance' || defensive || adaptiveRetreat ? gap : Math.max(0, gap);
-  return Math.max(-self.definition.speed, Math.min(self.definition.speed, request));
+  const capped = Math.max(-self.definition.speed, Math.min(self.definition.speed, request));
+  // Canonicalize negative zero for exact deterministic snapshots and boundary assertions.
+  return capped === 0 ? 0 : capped;
 }
