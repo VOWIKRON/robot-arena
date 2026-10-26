@@ -1,3 +1,9 @@
+## NEXT-86 PR-Status · 26.10.2026 · NICHT VERÖFFENTLICHT
+- Draft-PR #66 gegen main v0.1.57 angelegt. Acht ausschließlich neue Feature-/Test-Dateien und zwei aktualisierte Quell-Dateien (main.ts, style.css) sowie Entwicklungsdokumentation; keine Releaseversion verändert.
+- Teststatus auf dem NEXT-86-Branch: neue GitHub-CI bisher NICHT bestätigt; nicht als erledigt zählen. Letzte bestätigte gemeinsame CI stammt aus NEXT-85 (#40244548121), nicht aus NEXT-86.
+- Kumulativ unveröffentlicht und getestet: NEXT-76, NEXT-82, NEXT-85 = 3. NEXT-86 bleibt in Arbeit.
+- Kein Merge/Publish/Deployment.
+
 ## NEXT-86 · Rebase auf v0.1.57 · 26.10.2026 · NICHT VERÖFFENTLICHT
 - **Verifizierte Releasebasis:** main v0.1.57; NEXT-69/70/71/74/75/77 bereits in main und daher nicht mehr als unveröffentlicht zählen.
 - **Kumulativ seit v0.1.57 einzeln und gemeinsam getestet, aber unveröffentlicht:** NEXT-76 (zugängliche Turniersuche/Statusfilter; isolierte QA und NEXT-85 erfolgreich), NEXT-82 (sichere Browserdownloads; isolierte QA und NEXT-85 erfolgreich), NEXT-85 (Acht-Feature-Integration; 429 Unit/Behavior/Regression/Determinismus + 160 Desktop/Mobil in QA #40244548121). **Gesamt 3.**
