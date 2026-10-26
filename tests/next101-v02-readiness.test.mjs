@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import { evaluateV02Readiness } from '../scripts/next101-v02-readiness.mjs';
 
 const initial = JSON.parse(await readFile(new URL('../V02_ACCEPTANCE.json', import.meta.url), 'utf8'));
@@ -47,4 +48,13 @@ test('NEXT-101 does not mark blocked criteria complete even with evidence', () =
   const blocked=clone(); blocked.criteria[0].status='blocked';
   blocked.criteria[0].evidence=[evidence('automated'),evidence('manual')];
   assert.equal(evaluateV02Readiness(blocked).completed,0);
+});
+
+test('NEXT-101 CLI accepts review-only flag without mistaking it for a filename', () => {
+  const cli = new URL('../scripts/next101-v02-readiness.mjs', import.meta.url);
+  const result = spawnSync(process.execPath, [cli.pathname, '--require-review-ready'], { encoding:'utf8', cwd:new URL('..', import.meta.url).pathname });
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /"readyForManualReview": false/);
+  assert.match(result.stdout, /"releaseAuthorized": false/);
+  assert.doesNotMatch(result.stderr, /ENOENT|Usage:/);
 });
