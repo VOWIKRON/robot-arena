@@ -866,3 +866,19 @@ So bleibt jederzeit sichtbar, was beim nächsten Lauf passiert und was unmittelb
 - **NEXT-49 Statistiken:** Shot-, Damage- und Energy-Kennzahlen ausschließlich aus Events ableiten; negative/überzählige Schäden ausschließen; Sieger/Unentschieden getrennt anzeigen.
 - **NEXT-50 Roundtrip:** Alle 16 Strategiepaarungen × Seeds 1/12/4711 mit Export→Import→Player gegen Zustands-/Event-Digests prüfen; Speichergrenzen und Browser-E2E aufnehmen.
 - **NEXT-51 Refactoring/Turnierplanung:** Recorder/Player-Schnittstellen nach Charakterisierung entkoppeln; bestehende Referenzen unverändert halten; 5–10 konkrete Turnieraufgaben mit Abnahmetests planen.
+
+
+## Meilenstein v0.2.0 – strategisch spielbare Robot Arena (beschlossen 26.10.2026)
+
+**Versionsregel:** Kein automatischer Wechsel nach Anzahl NEXT-Tasks oder bei v0.1.70/0.1.79. Auf v0.2.0 wechseln, sobald ein funktional überprüfter Meilenstein erreicht ist: vom technisch stabilen Prototyp zum strategisch interessanten Spiel. Vorherige v0.1.x-Zwischenversionen sind nur Orientierung.
+
+**Abnahmekriterien (alle nachweisbar):**
+1. **Roboter-KI:** mindestens drei klar unterscheidbare, nachvollziehbare Strategien (aggressiv, defensiv, taktisch/adaptiv) mit dokumentierten Entscheidungsregeln.
+2. **Kampfsystem:** nachvollziehbare taktische Entscheidungen, sinnvolles Ausweichen und Positionswechsel, nicht nur Rückwärtsfahrt; interessante und reproduzierbare Begegnungen.
+3. **Turniere:** mehrere Roboter vergleichen, Ranglisten/Ergebnisse auswerten, wiederholbare Seeds und aussagekräftige Statistiken.
+4. **Bedienung:** Roboter konfigurieren, Kämpfe beobachten, Turniere starten und Ergebnisse verstehen, Desktop und Mobil nutzbar.
+5. **Qualität:** robuste Speicherung, deterministische Simulation, Regression/Behavior/Browser-Tests grün; bekannte kritische Fehler behoben. Manuelle Accessibility-/Geräteabnahme transparent ausweisen.
+
+**Expliziter v0.2.0-Abnahmetest:** Aggressiver Roboter sucht aktiv Angriffe; defensiver Roboter weicht intelligent aus und nutzt Raum/Deckung; taktischer Roboter passt Verhalten an Energie, Panzerung und Gegner an. Wiederholte Turniere mit mehreren Seeds müssen sichtbar unterschiedliche Verhaltensmuster belegen; nicht allein unterschiedliche Siegraten.
+
+**Erinnerung/Gate:** Bei jeder Release-Planung und nach jeder größeren Strategie-/Kampfmechanik-Änderung diese Kriterien prüfen und Nutzer ausdrücklich informieren, sobald v0.2.0 sinnvoll erscheint. Keine automatische Versionsanhebung oder Veröffentlichung ohne Freigabe.
