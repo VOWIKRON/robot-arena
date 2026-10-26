@@ -1,5 +1,6 @@
 /** NEXT-101: deterministic, fail-closed evidence inventory; NEVER releases/deploys. */
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 const IDS = Object.freeze(['aggressive','defensive','adaptive','combat','tournament','usability','quality']);
 const MANUAL = new Set(['aggressive','defensive','adaptive','usability','quality']);
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -43,9 +44,14 @@ export function evaluateV02Readiness(manifest) {
   };
 }
 
-if (process.argv[1] && import.meta.url === new URL('file://' + process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const path = process.argv[2] || 'V02_ACCEPTANCE.json';
+    const args = process.argv.slice(2);
+    const paths = args.filter(arg => arg !== '--require-review-ready');
+    if (paths.length > 1 || paths.some(arg => arg.startsWith('--'))) {
+      throw new Error('Usage: next101-v02-readiness.mjs [manifest.json] [--require-review-ready]');
+    }
+    const path = paths[0] || 'V02_ACCEPTANCE.json';
     const manifest = JSON.parse(await readFile(path, 'utf8'));
     const result = evaluateV02Readiness(manifest);
     console.log(JSON.stringify(result, null, 2));
