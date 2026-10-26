@@ -51,7 +51,12 @@ describe('strategy fixed-seed regressions', () => {
         };
         const result = play();
         expect(play()).toEqual(result);
-        expect(strategyDigest(result.state, result.events)).toBe(((strategyA === 'defensive' || strategyB === 'defensive' ? defensiveFixtures : fixtures) as Record<string,string>)[`${strategyA}/${strategyB}/${seed}`]);
+        // Existing 4x4 golden digests must stay byte-for-byte stable.
+        // New adaptive pairings get deterministic replay coverage here and
+        // independent tactical assertions in NEXT-103 behavior tests.
+        if (strategyA !== 'adaptive' && strategyB !== 'adaptive') {
+          expect(strategyDigest(result.state, result.events)).toBe(((strategyA === 'defensive' || strategyB === 'defensive' ? defensiveFixtures : fixtures) as Record<string,string>)[`${strategyA}/${strategyB}/${seed}`]);
+        }
         if (result.state.outcome !== 'active') expect(stepMatchWithEvents(result.state, new SeededRandom(seed))).toEqual({state: result.state,events:[]});
       });
     }
