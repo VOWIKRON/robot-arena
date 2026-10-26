@@ -87,7 +87,21 @@ jobs:
           fi
       - name: Install WebKit browser and Linux runtime dependencies
         run: npx playwright install --with-deps webkit
-      - run: npm run test:e2e
+      - name: Browser matrix (Chromium/WebKit desktop/mobile; release gate)
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: next97-browser-matrix.json
+        run: npx playwright test --reporter=json
+      - name: Enforce browser compatibility release gate (no deployment)
+        run: node scripts/next97-browser-release-gate.mjs next97-browser-matrix.json next97-browser-gate.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-browser-compatibility
+          path: |
+            next97-browser-matrix.json
+            next97-browser-gate.json
+          if-no-files-found: ignore
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         with:
           name: robot-arena-dist
