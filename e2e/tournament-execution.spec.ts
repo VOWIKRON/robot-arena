@@ -232,6 +232,13 @@ test('NEXT-68: opt-in autosave restores paused progress after reload without tou
   await page.getByRole('button', { name: 'Nächster Kampf' }).click();
   await page.getByRole('button', { name: 'Pause', exact: true }).last().click();
   await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  // NEXT-80: Web Locks persist asynchronously; wait for the committed snapshot.
+  await expect.poll(() => page.evaluate(() => {
+    const saved = localStorage.getItem('robot-arena:tournament:autosave:v1');
+    if (!saved) return null;
+    const run = JSON.parse(saved).run;
+    return run.status + ':' + run.results.length;
+  })).toBe('paused:1');
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await expect(page.locator('#tournament-autosave')).toBeChecked();
@@ -243,6 +250,7 @@ test('NEXT-68: opt-in autosave restores paused progress after reload without tou
   await expect(page.locator('#tournament-progress')).toContainText('2 / 6');
   await page.getByRole('button', { name: 'Lokale Sicherung löschen' }).click();
   await expect(page.locator('#tournament-autosave')).not.toBeChecked();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).toBeNull();
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
@@ -274,6 +282,10 @@ test('NEXT-68: cancelled autosave stays cancelled after reload; disabling opt-in
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   await page.locator('#tournament-autosave').check();
   await page.getByRole('button', { name: 'Abbrechen' }).click();
+  await expect.poll(() => page.evaluate(() => {
+    const saved = localStorage.getItem('robot-arena:tournament:autosave:v1');
+    return saved ? JSON.parse(saved).run.status : null;
+  })).toBe('cancelled');
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
@@ -283,6 +295,7 @@ test('NEXT-68: cancelled autosave stays cancelled after reload; disabling opt-in
   await expect(page.getByRole('button', { name: 'Nächster Kampf' })).toBeDisabled();
   await expect(page.locator('#tournament-progress')).toContainText('cancelled');
   await page.locator('#tournament-autosave').uncheck();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave-enabled:v1'))).toBeNull();
   const saved = await page.evaluate(() => ({
     archive: localStorage.getItem('robot-arena:tournament:autosave:v1'),
     optIn: localStorage.getItem('robot-arena:tournament:autosave-enabled:v1')
