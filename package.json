@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty false",
-    "test": "vitest run && node --test tests/check-integration-conflicts.check.mjs tests/next91-resource-artifact-inventory.test.mjs tests/next97-browser-release-gate.test.mjs",
+    "test": "vitest run && node --test tests/check-integration-conflicts.check.mjs tests/next91-resource-artifact-inventory.test.mjs tests/next97-browser-release-gate.test.mjs tests/next101-v02-readiness.test.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "quality": "npm run typecheck && npm run test && npm run build"
