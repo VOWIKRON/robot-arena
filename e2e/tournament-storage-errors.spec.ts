@@ -68,3 +68,19 @@ test('NEXT-77: explicit opt-out survives reload and deletes the local snapshot',
   await expect(page.locator('#tournament-autosave')).not.toBeChecked();
   expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).toBeNull();
 });
+
+test('NEXT-80: browsers without Web Locks cannot silently write an unsafe autosave', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'locks', { configurable: true, value: undefined });
+  });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-autosave').check();
+  await expect(page.locator('#tournament-feedback')).toContainText('Atomare lokale Sicherung');
+  await expect(page.locator('#tournament-autosave')).not.toBeChecked();
+  expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave-enabled:v1'))).toBeNull();
+  expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).toBeNull();
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+});
