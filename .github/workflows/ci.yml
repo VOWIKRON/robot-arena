@@ -31,6 +31,14 @@ jobs:
         run: node -e 'const a=require("./audit-report.json"); const v=a.metadata?.vulnerabilities; if(!v || v.total>0){console.error("Dependency security gate blocked:",v);process.exit(1)}'
       - run: npm run typecheck
       - run: npm test
+        env:
+          NEXT89_RESOURCE_REPORT_PATH: next89-resource-trends.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-resource-trends
+          path: next89-resource-trends.json
+          if-no-files-found: ignore
       - run: npm run build
       - name: Verify second clean install and reproducible build on identical SHA
         shell: bash
