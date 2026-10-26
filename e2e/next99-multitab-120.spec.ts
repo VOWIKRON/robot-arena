@@ -24,6 +24,9 @@ async function completed(page: Page): Promise<number | null> {
 }
 
 test('NEXT-99: two tabs cannot lose or overwrite a completed 16-robot / 120-match autosave', async ({ page, context }, testInfo) => {
+  // A 120-match browser stress run can exceed the standard 60s test budget on shared CI.
+  // Use an explicit bounded stress budget, without retries or resource thresholds.
+  test.setTimeout(120_000);
   const start = Date.now();
   await page.goto('/');
   const originalSandbox = await page.locator('#bot-a').getAttribute('style');
