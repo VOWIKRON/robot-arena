@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createTournamentDefinition } from './tournament-model';
+import { createEnduranceFixture } from './tournament-endurance-fixture';
 import { advanceTournamentRun, createTournamentRun, finishTournamentRun, pauseTournamentRun, resumeTournamentRun } from './tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './tournament-archive';
 import { computeRoundRobinStandings } from './tournament-standings';
@@ -7,22 +7,9 @@ import { computeRoundRobinStandings } from './tournament-standings';
 /** NEXT-88: deterministic long-running simulation and bounded archive/resource diagnostics.
  * The robot configuration cannot attack or move, so every fixture reaches maxTicks.
  * Timing and heap measurements are diagnostics, never CI pass/fail thresholds. */
-function fixture(participants: number, maxTicks: number) {
-  return createTournamentDefinition({
-    schemaVersion: 1, id: `long-run-${participants}-${maxTicks}`, format: 'round-robin',
-    baseSeed: 20261026, maxTicks,
-    participants: Array.from({ length: participants }, (_, i) => ({
-      id: `endurance-${i + 1}`, name: `Endurance ${i + 1}`,
-      strategy: 'aggressive', maxStructure: 100, maxEnergy: 100,
-      energyRegen: 0, speed: 0, sensorRange: 0, weaponRange: 0,
-      weaponDamage: 0, weaponEnergy: 0, cooldownTicks: 1
-    }))
-  });
-}
-
 describe('NEXT-88 deterministic high-tick endurance and resource diagnostics', () => {
   it('replays a 16-robot, 120-match, 48-tick tournament exactly across archive pause/resume', () => {
-    const definition = fixture(16, 48);
+    const definition = createEnduranceFixture(16, 48);
     const startHeap = process.memoryUsage().heapUsed;
     const started = performance.now();
     const baseline = finishTournamentRun(createTournamentRun(definition));
@@ -54,14 +41,14 @@ describe('NEXT-88 deterministic high-tick endurance and resource diagnostics', (
   });
 
   it('honors the validated maximum 3600-tick budget without a timeout-based CI assertion', () => {
-    const definition = fixture(2, 3600);
+    const definition = createEnduranceFixture(2, 3600);
     const started = performance.now();
     const completed = finishTournamentRun(createTournamentRun(definition));
     expect(completed.results).toHaveLength(1);
     expect(completed.results[0]?.ticks).toBe(3600);
     expect(completed.results[0]?.winnerId).toBeNull();
     expect(importTournamentRun(exportTournamentRun(completed))).toEqual(completed);
-    expect(() => fixture(2, 3601)).toThrow(/Turnier-maxTicks/);
+    expect(() => createEnduranceFixture(2, 3601)).toThrow(/Turnier-maxTicks/);
     console.info('[NEXT-88 maxTicks diagnostics]', JSON.stringify({
       ticks: 3600, elapsedMs: Math.round(performance.now() - started)
     }));
