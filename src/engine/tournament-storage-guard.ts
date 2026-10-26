@@ -1,9 +1,14 @@
 import type { TournamentRun } from './tournament-runner';
 import {
   TOURNAMENT_AUTOSAVE_KEY, TOURNAMENT_AUTOSAVE_ENABLED_KEY,
-  isTournamentAutosaveEnabled, saveTournamentSnapshot, setTournamentAutosaveEnabled,
+  isTournamentAutosaveEnabled, saveTournamentSnapshot, setTournamentAutosaveEnabled, restoreTournamentSnapshot,
   type TournamentSnapshotStorage
 } from './tournament-local-save';
+
+/** The browser's origin-scoped Web Lock serializes compare-and-write across tabs. */
+export const TOURNAMENT_AUTOSAVE_LOCK = 'robot-arena:tournament:autosave:write:v1';
+export const AUTOSAVE_LOCK_UNAVAILABLE =
+  'Atomare lokale Sicherung wird von diesem Browser nicht unterstützt. Bitte das Turnier als JSON exportieren.';
 
 export const AUTOSAVE_CONFLICT_NOTICE =
   'Andere Registerkarte hat die lokale Turniersicherung geändert. Bitte die Sicherung erneut laden oder die Seite neu öffnen. Es wurde nichts überschrieben.';
@@ -63,6 +68,35 @@ export class TournamentAutosaveGuard {
     setTournamentAutosaveEnabled(this.storage, enabled);
     this.expectedArchive = this.storage.getItem(TOURNAMENT_AUTOSAVE_KEY);
     this.expectedOptIn = isTournamentAutosaveEnabled(this.storage);
+  }
+
+  /**
+   * NEXT-80: the comparison and write MUST execute inside one origin-wide
+   * exclusive Web Lock. localStorage by itself has no compare-and-swap API.
+   * Missing Web Locks fail closed rather than claiming cross-tab safety.
+   */
+  private withExclusiveLock<T>(locks: LockManager | undefined, action: () => T): Promise<T> {
+    if (!locks || typeof locks.request !== 'function') {
+      return Promise.reject(new Error(AUTOSAVE_LOCK_UNAVAILABLE));
+    }
+    return locks.request(TOURNAMENT_AUTOSAVE_LOCK, { mode: 'exclusive' }, () => action());
+  }
+
+  saveLocked(run: TournamentRun, locks: LockManager | undefined): Promise<void> {
+    return this.withExclusiveLock(locks, () => this.save(run));
+  }
+
+  setEnabledLocked(enabled: boolean, locks: LockManager | undefined): Promise<void> {
+    return this.withExclusiveLock(locks, () => this.setEnabled(enabled));
+  }
+
+  /** Validation and revision acceptance happen within the same lock. */
+  restoreLocked(locks: LockManager | undefined): Promise<TournamentRun | null> {
+    return this.withExclusiveLock(locks, () => {
+      const restored = restoreTournamentSnapshot(this.storage);
+      if (restored !== null) this.acceptVerifiedRestore();
+      return restored;
+    });
   }
 
   /** Call only after the archive has passed full validation. */
