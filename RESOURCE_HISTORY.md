@@ -28,7 +28,7 @@ The original `next89-resource-trends.json` from each artifact is preserved under
 
 ## Next steps
 
-- NEXT-90 historical comparison implementation requires combined GitHub CI confirmation on this branch before marking complete.
+- NEXT-90 is **complete and QA-green**: full PR-CI [#40271841058](https://github.com/VOWIKRON/robot-arena/actions/runs/40271841058) SUCCESS on commit `cc26536e9818e18f7680502beb314d66de407fbc` (440 Vitest + 4 conflict guards + 162 desktop/mobile = 606). The final documentation-only follow-up commit requires fresh CI.
 - NEXT-80 P1: atomic cross-tab compare-and-swap and deterministic race regression.
 - NEXT-79e P0: actual NVDA, VoiceOver, physical touch and contrast acceptance; manual sign-off outstanding.
 - NEXT-84 P2: WebKit/iOS touch and storage matrix.
