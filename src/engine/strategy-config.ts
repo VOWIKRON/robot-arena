@@ -1,4 +1,4 @@
-export const STRATEGY_TYPES = ['aggressive', 'defensive', 'distance', 'melee'] as const;
+export const STRATEGY_TYPES = ['aggressive', 'defensive', 'distance', 'melee', 'adaptive'] as const;
 export type StrategyType = typeof STRATEGY_TYPES[number];
 export const DEFAULT_STRATEGY: StrategyType = 'aggressive';
 export type StrategyParameters = Readonly<{
@@ -13,7 +13,8 @@ export const STRATEGY_CATALOG = [
   { value: 'aggressive', label: 'Aggressiv', targetDistanceRatio: 0.8 },
   { value: 'distance', label: 'Distanz', targetDistanceRatio: 0.9 },
   { value: 'defensive', label: 'Defensiv', targetDistanceRatio: 0.8 },
-  { value: 'melee', label: 'Nahkampf', targetDistanceRatio: 0.2 }
+  { value: 'melee', label: 'Nahkampf', targetDistanceRatio: 0.2 },
+  { value: 'adaptive', label: 'Adaptiv', targetDistanceRatio: 0.8 }
 ] as const;
 
 export function strategyLabel(strategy: StrategyType): string {
