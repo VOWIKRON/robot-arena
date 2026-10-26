@@ -1,3 +1,5 @@
+> CI-Gate: Draft-PR #86 wird für die automatische vollständige GitHub-Actions-QA vorübergehend gegen `main` geprüft; **kein Merge, kein Deployment**. Nach grüner QA wieder auf NEXT-99 als PR-Basis zurückstellen.
+
 ## 26.10.2026 · 22:19 Uhr · NEXT-103 IMPLEMENTIERT, FINALE QA OFFEN · KEIN PUBLISHING
 - **Letzte bestätigte Live-Version: v0.1.60**, Deploymentstatus `robot-arena/deployment=success` auf Release-Commit `c302ceed9bb5bb6646145297142b60c6bf61f40c`. NEXT-97/101/102/92/93/98 sind veröffentlicht.
 - **KUMULATIV FERTIG, GETESTET, NICHT VERÖFFENTLICHT: 1 TASK – NEXT-99.** FINAL CI **#40393733293 SUCCESS** auf `4d6663679a4006e2852e30a2286c002264aab363`: **676/676** (446 Vitest + 26 Node + 204 Chromium/WebKit Desktop/Mobil), Typecheck, Audit, reproduzierbarer Build und Browser-Gate PASS. Draft-PR #84 auf isoliertem Branch, kein main-Merge.
