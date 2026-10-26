@@ -63,6 +63,7 @@ test('NEXT-77: explicit opt-out survives reload and deletes the local snapshot',
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).not.toBeNull();
   await page.locator('#tournament-autosave').uncheck();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave-enabled:v1'))).toBeNull();
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await expect(page.locator('#tournament-autosave')).not.toBeChecked();
@@ -75,7 +76,8 @@ test('NEXT-80: browsers without Web Locks cannot silently write an unsafe autosa
   });
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
-  await page.locator('#tournament-autosave').check();
+  // click(), not check(): the UI correctly rolls the checkbox back immediately.
+  await page.locator('#tournament-autosave').click();
   await expect(page.locator('#tournament-feedback')).toContainText('Atomare lokale Sicherung');
   await expect(page.locator('#tournament-autosave')).not.toBeChecked();
   expect(await page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave-enabled:v1'))).toBeNull();
