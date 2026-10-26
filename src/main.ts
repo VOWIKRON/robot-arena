@@ -22,7 +22,7 @@ import { exportTournamentMatchCsv, exportTournamentMatchJson } from './engine/to
 import { downloadTournamentFile } from './engine/tournament-download';
 import { createTournamentRun, advanceTournamentRun, pauseTournamentRun, resumeTournamentRun, cancelTournamentRun, type TournamentRun } from './engine/tournament-runner';
 import { exportTournamentRun, importTournamentRun } from './engine/tournament-archive';
-import { isTournamentAutosaveEnabled, restoreTournamentSnapshot } from './engine/tournament-local-save';
+import { isTournamentAutosaveEnabled } from './engine/tournament-local-save';
 import { TournamentAutosaveGuard, formatTournamentStorageError, AUTOSAVE_CONFLICT_NOTICE } from './engine/tournament-storage-guard';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
@@ -481,6 +481,13 @@ let tournamentAutoTimer: number | null = null;
 let tournamentAutoRequested = false;
 /** NEXT-77: capture the local storage revision at page load, before another tab changes it. */
 let tournamentAutosaveGuard: TournamentAutosaveGuard | null = null;
+/** Serialize operations within this tab; Web Locks serialize across tabs. */
+let tournamentStorageQueue: Promise<void> = Promise.resolve();
+function queueTournamentStorage<T>(action: () => Promise<T>): Promise<T> {
+  const next = tournamentStorageQueue.then(action, action);
+  tournamentStorageQueue = next.then(() => undefined, () => undefined);
+  return next;
+}
 function autosaveGuard(): TournamentAutosaveGuard {
   if (!tournamentAutosaveGuard) tournamentAutosaveGuard = new TournamentAutosaveGuard(window.localStorage);
   return tournamentAutosaveGuard;
@@ -503,11 +510,11 @@ function syncTournamentActions(): void {
 /** Only explicit opt-in writes a validated archive at match/status boundaries. */
 function persistTournamentSnapshot(): void {
   if (!tournamentRun || !el<HTMLInputElement>('tournament-autosave').checked) return;
-  try {
-    autosaveGuard().save(tournamentRun);
-  } catch (error) {
-    el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + formatTournamentStorageError(error);
-  }
+  const snapshot = tournamentRun; // Preserve match-boundary order even during rapid auto-play.
+  void queueTournamentStorage(() => autosaveGuard().saveLocked(snapshot, navigator.locks))
+    .catch(error => {
+      el('tournament-feedback').textContent = 'Lokale Sicherung fehlgeschlagen: ' + formatTournamentStorageError(error);
+    });
 }
 function stopTournamentAuto(clearIntent = true): void {
   if (tournamentAutoTimer !== null) window.clearTimeout(tournamentAutoTimer);
@@ -1007,37 +1014,35 @@ function applyImportedTournament(loaded: TournamentRun): void {
 }
 el('tournament-autosave').addEventListener('change', () => {
   const checkbox = el<HTMLInputElement>('tournament-autosave');
-  try {
-    autosaveGuard().setEnabled(checkbox.checked);
-    el('tournament-feedback').textContent = checkbox.checked ? 'Lokale Sicherung aktiviert (nur dieses Gerät).' : 'Lokale Sicherung deaktiviert und gelöscht.';
-    persistTournamentSnapshot();
-  } catch (error) {
+  const enabled = checkbox.checked;
+  void queueTournamentStorage(async () => {
+    await autosaveGuard().setEnabledLocked(enabled, navigator.locks);
+    if (enabled && tournamentRun) await autosaveGuard().saveLocked(tournamentRun, navigator.locks);
+  }).then(() => {
+    el('tournament-feedback').textContent = enabled ? 'Lokale Sicherung aktiviert (nur dieses Gerät).' : 'Lokale Sicherung deaktiviert und gelöscht.';
+  }).catch(error => {
     try { checkbox.checked = isTournamentAutosaveEnabled(window.localStorage); } catch { checkbox.checked = false; }
     el('tournament-feedback').textContent = 'Lokaler Speicher nicht verfügbar: ' + formatTournamentStorageError(error);
-  }
+  });
 });
 el('tournament-restore').addEventListener('click', () => {
-  try {
-    const loaded = restoreTournamentSnapshot(window.localStorage);
+  void queueTournamentStorage(() => autosaveGuard().restoreLocked(navigator.locks)).then(loaded => {
     if (!loaded) throw new Error('Keine lokale Turniersicherung vorhanden');
-    // A verified restore explicitly accepts the other tab's saved revision.
-    autosaveGuard().acceptVerifiedRestore();
     // Invalid or absent local data must not cancel an existing automatic run.
     stopTournamentAuto();
     applyImportedTournament(loaded);
     el('tournament-feedback').textContent = 'Lokale Turniersicherung geprüft und geladen. Der Kampf wird nicht automatisch gestartet.';
-  } catch (error) {
+  }).catch(error => {
     el('tournament-feedback').textContent = 'Lokale Wiederherstellung fehlgeschlagen: ' + (error instanceof Error ? error.message : 'unbekannter Fehler');
-  }
+  });
 });
 el('tournament-clear-saved').addEventListener('click', () => {
-  try {
-    autosaveGuard().setEnabled(false);
+  void queueTournamentStorage(() => autosaveGuard().setEnabledLocked(false, navigator.locks)).then(() => {
     el<HTMLInputElement>('tournament-autosave').checked = false;
     el('tournament-feedback').textContent = 'Lokale Turniersicherung und automatische Speicherung gelöscht.';
-  } catch (error) {
+  }).catch(error => {
     el('tournament-feedback').textContent = 'Lokale Sicherung konnte nicht gelöscht werden: ' + formatTournamentStorageError(error);
-  }
+  });
 });
 /** Another tab's changes must be visible; do not silently overwrite its saved snapshot. */
 window.addEventListener('storage', event => {
