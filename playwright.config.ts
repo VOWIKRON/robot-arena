@@ -9,7 +9,9 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI
   },
   projects: [
-    { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-chromium', use: { ...devices['Pixel 7'] } }
+    { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: '**/webkit-compatibility.spec.ts' },
+    { name: 'mobile-chromium', use: { ...devices['Pixel 7'] }, testIgnore: '**/webkit-compatibility.spec.ts' },
+    { name: 'desktop-webkit', use: { ...devices['Desktop Safari'] }, testMatch: '**/webkit-compatibility.spec.ts' },
+    { name: 'mobile-webkit', use: { ...devices['iPhone 13'] }, testMatch: '**/webkit-compatibility.spec.ts' }
   ]
 });

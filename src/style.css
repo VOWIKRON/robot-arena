@@ -146,3 +146,10 @@
 @media(max-width:650px){.tournament-match-filters{grid-template-columns:minmax(0,1fr)}}
 
 .tournament-filter-summary{color:#9fb0ce;font-size:.9rem;margin:8px 0}
+
+/* NEXT-95: visible, accessible autosave lifecycle without hiding match feedback. */
+.tournament-save-status{min-height:1.5em;margin:8px 0;font-size:.92rem;font-weight:650;line-height:1.5;color:#d6e7ff}
+.tournament-save-status:empty{display:none}
+.tournament-save-status[data-state="busy"]{color:#ffdf93}
+.tournament-save-status[data-state="saved"]{color:#a6f2c4}
+.tournament-save-status[data-state="error"]{color:#ffb4b4}
