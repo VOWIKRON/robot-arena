@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import baseline from '../../tests/fixtures/next90-ci-40266761987.json';
 import followup from '../../tests/fixtures/next90-ci-40267008446.json';
+import thirdReport from '../../tests/fixtures/next92-ci-40355252200.json';
 import { createResourceHistory, type HistoricalResourceRun } from './tournament-resource-history';
-import type { ResourceReport } from './tournament-resource-trends';
+import { compareResourceReports, type ResourceReport } from './tournament-resource-trends';
 
 const first: HistoricalResourceRun = {
   runId: 40266761987, artifactId: 12626795952,
@@ -13,6 +14,12 @@ const second: HistoricalResourceRun = {
   runId: 40267008446, artifactId: 12626417753,
   commit: '3c840ba2f7a687a4339806d3a402294bc15573f9',
   report: followup as ResourceReport
+};
+
+const third: HistoricalResourceRun = {
+  runId: 40355252200, artifactId: 12665647754,
+  commit: '4ed7d1c5c123e478b3cb587dd13c55b05f1455ff',
+  report: thirdReport as ResourceReport
 };
 
 describe('NEXT-90 actual GitHub Actions historical resource artifacts', () => {
@@ -53,12 +60,33 @@ describe('NEXT-90 actual GitHub Actions historical resource artifacts', () => {
     }])).toThrow(/nicht vergleichbar/);
   });
 
-  it('supports a third run without skipping intermediate comparisons', () => {
-    const third = { ...second, runId: second.runId + 1, artifactId: second.artifactId + 1 };
+  it('NEXT-93 compares THREE real successful CI reports and BOTH adjacent deltas', () => {
     const history = createResourceHistory([first, second, third]);
+    expect(history.runs.map(run => run.runId)).toEqual([40266761987, 40267008446, 40355252200]);
+    expect(history.runs.map(run => run.artifactId)).toEqual([12626795952, 12626417753, 12665647754]);
     expect(history.deltas.map(delta => [delta.fromRunId, delta.toRunId])).toEqual([
       [first.runId, second.runId], [second.runId, third.runId]
     ]);
-    expect(history.deltas[1]?.differences.every(delta => delta.archiveBytesDelta === 0)).toBe(true);
+    expect(history.deltas).toHaveLength(2);
+    expect(history.deltas.every(delta => delta.differences.length === 4 &&
+      delta.differences.every(row => row.archiveBytesDelta === 0 && row.archiveBytesPercent === 0))).toBe(true);
+    expect(history.runs.every(run =>
+      run.report.samples.map(s => s.archiveBytes).join(',') === '815,2082,6646,24004')).toBe(true);
+    const firstToLast = compareResourceReports(first.report, third.report);
+    expect(firstToLast.map(row => row.participants)).toEqual([2, 4, 8, 16]);
+    expect(firstToLast.every(row => row.archiveBytesDelta === 0 &&
+      Number.isFinite(row.elapsedMsPercent) && Number.isFinite(row.heapDeltaBytes))).toBe(true);
+    // Runtime and heap values are informational only; never apply performance thresholds.
+  });
+
+  it('NEXT-93 rejects missing sizes, changed scenarios, reordered and duplicated third-run provenance', () => {
+    expect(() => createResourceHistory([first, third, second])).toThrow(/chronologisch/);
+    expect(() => createResourceHistory([first, second, { ...third, artifactId: second.artifactId }])).toThrow(/eindeutig/);
+    expect(() => createResourceHistory([first, second, {
+      ...third, report: { ...third.report, scenario: 'different-scenario' }
+    }])).toThrow(/nicht vergleichbar/);
+    expect(() => createResourceHistory([first, second, {
+      ...third, report: { ...third.report, samples: third.report.samples.slice(1) }
+    }])).toThrow(/Testgrößen/);
   });
 });
