@@ -77,7 +77,7 @@ describe('NEXT-104 integrated unpublished release candidate acceptance', () => {
     const run = pauseTournamentRun(advanceTo(createTournamentRun(definition(12)), 3));
     const raw = JSON.parse(exportTournamentRun(run)) as { run: { results: Array<{ matchId: string }> } };
     raw.run.results[0]!.matchId = 'match-999';
-    expect(() => importTournamentRun(JSON.stringify(raw))).toThrow(/Spielplanreihenfolge/);
+    expect(() => importTournamentRun(JSON.stringify(raw))).toThrow(/unbekannte Match-ID/);
     expect(run.results[0]!.matchId).toBe('match-001');
   });
 });
