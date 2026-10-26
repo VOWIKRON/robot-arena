@@ -13,18 +13,29 @@ export function defensiveCombatDistance(self: RobotDefinition, enemy: RobotDefin
   return Math.min(enemy.weaponRange * retreatDistanceFactor, self.weaponRange * 0.95);
 }
 
-/** Signed movement request, capped once for every strategy. No RNG or state mutation. */
+/** Signed movement request, capped once for every strategy. No RNG or state mutation.
+ * Adaptive robots advance while healthy, but preserve energy and retreat when wounded,
+ * unable to fire, or threatened by a ready longer-range weapon.
+ * All decisions depend solely on the current immutable input state.
+ */
 export function movementDelta(self: RobotState, enemy: RobotState, distance: number): number {
-  const parameters = strategyParameters(self.definition.strategy, self.definition.strategyParameters);
-  const wounded = self.definition.strategy === 'defensive'
-    && self.structure <= self.definition.maxStructure * parameters.retreatStructureRatio;
-  const defensive = self.definition.strategy === 'defensive';
-  const target = defensive
+  const strategy = self.definition.strategy;
+  const parameters = strategyParameters(strategy, self.definition.strategyParameters);
+  const lowStructure = self.structure <= self.definition.maxStructure * parameters.retreatStructureRatio;
+  const lowEnergy = self.energy < self.definition.weaponEnergy
+    + self.definition.maxEnergy * parameters.energyReserveRatio;
+  const outRangedUnderThreat = enemy.definition.weaponRange > self.definition.weaponRange
+    && enemy.cooldown === 0 && distance <= enemy.definition.weaponRange;
+  const adaptive = strategy === 'adaptive';
+  const defensive = strategy === 'defensive';
+  const adaptiveRetreat = adaptive && (lowStructure || lowEnergy || outRangedUnderThreat);
+  const target = defensive || adaptiveRetreat
     ? defensiveCombatDistance(self.definition, enemy.definition)
     : desiredCombatDistance(self.definition);
   const gap = distance - target;
-  // Defenders maintain safety immediately; wounded defenders additionally stop chasing.
-  const request = wounded ? Math.min(0, gap)
-    : self.definition.strategy === 'distance' || defensive ? gap : Math.max(0, gap);
+  // Damaged defenders and depleted adaptive robots disengage instead of pursuing.
+  const stopChasing = (defensive && lowStructure) || (adaptive && (lowStructure || lowEnergy));
+  const request = stopChasing ? Math.min(0, gap)
+    : strategy === 'distance' || defensive || adaptiveRetreat ? gap : Math.max(0, gap);
   return Math.max(-self.definition.speed, Math.min(self.definition.speed, request));
 }
