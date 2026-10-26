@@ -196,9 +196,13 @@ test('NEXT-67: verified tournament replay is isolated, keyboard-accessible and s
   const archive = await saved;
   await page.locator('#tournament-file').setInputFiles(await archive.path());
   await expect(first.getByRole('button', { name: /Replay abspielen/ })).toBeVisible();
-  await first.getByRole('button', { name: /Replay abspielen/ }).focus();
-  await page.keyboard.press('Enter');
-  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  // NEXT-102: keep focus and keyboard activation in one locator action. On mobile,
+  // asynchronous archive UI updates may replace the button between focus() and
+  // page.keyboard.press('Enter'), silently sending Enter to a stale target.
+  const replayButton = first.getByRole('button', { name: /Replay abspielen/ });
+  await expect(replayButton).toBeEnabled();
+  await replayButton.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible({ timeout: 10_000 });
   await expect(page.locator('#replay-feedback')).toContainText('Turnierkampf verifiziert');
   await expect(page.locator('#replay-progress')).toContainText('0 / 1');
   await page.getByRole('button', { name: 'Replay-Schritt' }).click();
