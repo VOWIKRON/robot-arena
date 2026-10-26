@@ -8,6 +8,9 @@ on:
 
 jobs:
   quality:
+    permissions:
+      contents: read
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +34,28 @@ jobs:
         run: node -e 'const a=require("./audit-report.json"); const v=a.metadata?.vulnerabilities; if(!v || v.total>0){console.error("Dependency security gate blocked:",v);process.exit(1)}'
       - run: npm run typecheck
       - run: npm test
+        env:
+          NEXT89_RESOURCE_REPORT_PATH: next89-resource-trends.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-resource-trends
+          path: next89-resource-trends.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Inventory previous resource artifacts (read-only diagnostic)
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NEXT91_INVENTORY_PATH: next91-resource-inventory.json
+        run: node scripts/next91-resource-artifact-inventory.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-resource-inventory
+          path: next91-resource-inventory.json
+          if-no-files-found: ignore
+          retention-days: 30
       - run: npm run build
       - name: Verify second clean install and reproducible build on identical SHA
         shell: bash
