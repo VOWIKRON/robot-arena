@@ -15,13 +15,13 @@ export function validateTournamentArchive(input: unknown): TournamentArchive {
   // Archive schema and combat ruleset are independent but must be explicitly paired.
   if (!Object.hasOwn(archive, 'schemaVersion')) throw new Error('Turnierarchiv: Versionsfeld fehlt');
   if (archive.schemaVersion !== 1 && archive.schemaVersion !== 2) {
-    throw new Error('Turnierarchiv: ungültige oder nicht unterstützte Version');
+    throw new Error('Turnierarchiv: ungültige Version (nicht unterstützt; nur v1/v2)');
   }
   if (!archive.run || typeof archive.run !== 'object' || Array.isArray(archive.run)) throw new Error('Turnierarchiv: Laufdaten fehlen');
   const raw = archive.run as Record<string, unknown>;
   const definition = createTournamentDefinition(raw.definition);
   if (definition.schemaVersion !== archive.schemaVersion) {
-    throw new Error('Turnierarchiv: Schema und Regelversion widersprechen sich');
+    throw new Error('Turnierarchiv: ungültige Version (Schema und Regelversion widersprechen sich)');
   }
   if (definition.format !== 'round-robin') throw new Error('Turnierarchiv: derzeit nur Round Robin unterstützt');
   const fixtures = createRoundRobinSchedule(definition);
