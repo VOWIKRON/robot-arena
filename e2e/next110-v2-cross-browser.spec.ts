@@ -1,0 +1,63 @@
+import { readFile } from 'node:fs/promises';
+import { test, expect } from '@playwright/test';
+
+// NEXT-110: explicitly included in desktop/iPhone WebKit as well as Chromium.
+// Exercise the real UI, replay, archive validation and sandbox isolation.
+test('NEXT-110: v2 archive and replay roundtrip is safe on desktop and mobile browsers', async ({ page }) => {
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await page.locator('#tournament-ruleset').selectOption('simultaneous-v2');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-autosave')).toBeDisabled();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const download = await downloadPromise;
+  const archive = JSON.parse(await readFile(await download.path(), 'utf8'));
+  expect(archive.schemaVersion).toBe(2);
+  expect(archive.run.definition.rulesetVersion).toBe('simultaneous-v2');
+
+  await page.locator('#tournament-pairings li').first()
+    .getByRole('button', { name: /Replay abspielen/ }).click();
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await expect(page.locator('#replay-stats')).toContainText('Ergebnis:');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+
+  await page.locator('#tournament-file').setInputFiles(await download.path());
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});
+
+test('NEXT-110: invalid v2 ruleset archive cannot replace an active browser tournament', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-ruleset').selectOption('simultaneous-v2');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const archive = JSON.parse(await readFile(await (await downloadPromise).path(), 'utf8'));
+  const before = await page.locator('#tournament-progress').innerText();
+
+  archive.run.definition.rulesetVersion = 'sequential-v1';
+  await page.locator('#tournament-file').setInputFiles({
+    name: 'tampered-v2.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(archive))
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await expect(page.locator('#tournament-feedback')).toContainText(/ungültig|version|regel|ruleset/i);
+  await expect(page.locator('#tournament-progress')).toHaveText(before);
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+});
