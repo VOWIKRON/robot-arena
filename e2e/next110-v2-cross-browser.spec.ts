@@ -135,3 +135,39 @@ test('NEXT-110-E11: v2 replay statistics and controls remain keyboard-accessible
   await page.getByRole('button', { name: 'Schließen', exact: true }).click();
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 });
+
+test('NEXT-110-E14: Double-KO replay timeline supports Home/End and arrow keys without sandbox changes', async ({ page }) => {
+  const { RAPTOR, TITAN } = await import('../src/engine/presets');
+  const { recordMatchV2, serializeReplayV2 } = await import('../src/engine/replay-v2');
+  const a = { ...RAPTOR, id: 'e14-a', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const b = { ...TITAN, id: 'e14-b', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const replay = serializeReplayV2(recordMatchV2(a, b, 5, 10));
+
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  await page.locator('#replay-file').setInputFiles({
+    name: 'next110-e14-slider.json', mimeType: 'application/json',
+    buffer: Buffer.from(replay)
+  });
+  await expect(page.locator('#replay-feedback')).toContainText('Replay geprüft:');
+  const slider = page.getByRole('slider', { name: 'Replay-Zeitleiste' });
+  await expect(slider).toBeEnabled();
+  await expect(slider).toHaveValue('0');
+  await slider.focus();
+  await page.keyboard.press('End');
+  await expect(slider).toHaveValue('1');
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await expect(page.locator('#replay-result')).toHaveText('Ergebnis: Unentschieden (Double-KO)');
+  await expect(page.locator('#replay-stat-a')).toContainText('Schüsse 1');
+  await expect(page.locator('#replay-stat-b')).toContainText('Schüsse 1');
+  await page.keyboard.press('Home');
+  await expect(slider).toHaveValue('0');
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.keyboard.press('ArrowRight');
+  await expect(slider).toHaveValue('1');
+  await page.keyboard.press('ArrowLeft');
+  await expect(slider).toHaveValue('0');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});
