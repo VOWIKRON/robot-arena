@@ -215,3 +215,60 @@ test('NEXT-110-E18: rejected v2 replay import preserves the loaded replay, curso
   expect(await page.locator('#status').innerText()).toBe(statusBefore);
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 });
+
+test('NEXT-110-E21: repeated invalid imports preserve the active replay and a subsequent valid import recovers', async ({ page }) => {
+  const { RAPTOR, TITAN } = await import('../src/engine/presets');
+  const { recordMatchV2, serializeReplayV2 } = await import('../src/engine/replay-v2');
+  const a = { ...RAPTOR, id: 'e21-a', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const b = { ...TITAN, id: 'e21-b', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const original = recordMatchV2(a, b, 5, 10);
+  const replacement = recordMatchV2({ ...a, id: 'e21-replacement-a' }, { ...b, id: 'e21-replacement-b' }, 11, 10);
+  expect(original.frames).toHaveLength(1);
+  expect(replacement.frames).toHaveLength(1);
+
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  const statusBefore = await page.locator('#status').innerText();
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  const input = page.locator('#replay-file');
+  const feedback = page.locator('#replay-feedback');
+  await input.setInputFiles({
+    name: 'e21-original.json', mimeType: 'application/json',
+    buffer: Buffer.from(serializeReplayV2(original))
+  });
+  await expect(feedback).toContainText('Replay geprüft:');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  const progressBefore = await page.locator('#replay-progress').innerText();
+  const resultBefore = await page.locator('#replay-result').innerText();
+  const statsBefore = await page.locator('#replay-stats').innerText();
+  const sliderBefore = await page.getByRole('slider', { name: 'Replay-Zeitleiste' }).inputValue();
+  expect(sliderBefore).toBe('1');
+
+  const forged = JSON.parse(serializeReplayV2(original));
+  forged.finalState.winner = 'forged-e21-winner';
+  for (const [name, buffer] of [
+    ['e21-invalid-json.json', Buffer.from('{invalid-json')],
+    ['e21-forged-winner.json', Buffer.from(JSON.stringify(forged))]
+  ] as const) {
+    await input.setInputFiles({ name, mimeType: 'application/json', buffer });
+    await expect.poll(() => input.inputValue()).toBe('');
+    await expect(feedback).toContainText('Replay-Import abgelehnt:');
+    await expect(page.locator('#replay-progress')).toHaveText(progressBefore);
+    await expect(page.locator('#replay-result')).toHaveText(resultBefore);
+    await expect(page.locator('#replay-stats')).toHaveText(statsBefore);
+    await expect(page.getByRole('slider', { name: 'Replay-Zeitleiste' })).toHaveValue(sliderBefore);
+  }
+
+  await input.setInputFiles({
+    name: 'e21-replacement.json', mimeType: 'application/json',
+    buffer: Buffer.from(serializeReplayV2(replacement))
+  });
+  await expect(feedback).toContainText('Replay geprüft:');
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await expect(page.locator('#replay-result')).toHaveText('Ergebnis: Unentschieden (Double-KO)');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  expect(await page.locator('#status').innerText()).toBe(statusBefore);
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});
