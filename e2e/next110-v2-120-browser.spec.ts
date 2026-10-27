@@ -63,7 +63,9 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   const progressBeforeTamper = await page.locator('#tournament-progress').innerText();
   const tamperCases: Array<(archive: any) => void> = [
     archive => { archive.run.nextMatchIndex = 119; },
-    archive => { archive.run.results[119].matchId = archive.run.results[0].matchId; }
+    archive => { archive.run.results[119].matchId = archive.run.results[0].matchId; },
+    // NEXT-110-E16: a valid match ID with a forged seed must fail independently.
+    archive => { archive.run.results[119].seed += 1; }
   ];
   for (const [index, tamper] of tamperCases.entries()) {
     const candidate = structuredClone(original.archive);
