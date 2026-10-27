@@ -90,4 +90,24 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(() => parseReplayV2(mutate(json, d => { d.robotA.strategyParameters.energyReserveRatio = 5; })))
       .toThrow(/Strategieparameter/);
   });
+
+  it('NEXT-110-E9 rejects forged Double-KO terminal events without affecting canonical replay', () => {
+    const a = { ...alpha, speed: 0, weaponRange: 100, weaponDamage: 1000 };
+    const b = { ...beta, speed: 0, weaponRange: 100, weaponDamage: 1000 };
+    const canonical = serializeReplayV2(recordMatchV2(a, b, 5, 10));
+    const baseline = parseReplayV2(canonical);
+    expect(baseline.frames[0]!.events.at(-1)).toEqual({
+      type: 'draw', tick: 1, reason: 'destroyed'
+    });
+    const rejects = (change: (doc: any) => void) =>
+      expect(() => parseReplayV2(mutate(canonical, change))).toThrow(/v2-Replay/);
+    rejects(d => { d.frames[0].events.pop(); });
+    rejects(d => { d.frames[0].events.at(-1).reason = 'timeout'; });
+    rejects(d => { d.frames[0].events.at(-1).tick = 2; });
+    rejects(d => { d.frames[0].events.splice(d.frames[0].events.findIndex((e: any) => e.type === 'damage'), 1); });
+    rejects(d => { d.finalState.winner = a.id; });
+    rejects(d => { d.finalState.endReason = 'timeout'; });
+    expect(serializeReplayV2(baseline)).toBe(canonical);
+    expect(reconstructReplayStatesV2(baseline).at(-1)).toEqual(baseline.finalState);
+  });
 });
