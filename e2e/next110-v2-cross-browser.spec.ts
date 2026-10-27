@@ -204,7 +204,7 @@ test('NEXT-110-E18: rejected v2 replay import preserves the loaded replay, curso
     buffer: Buffer.from(JSON.stringify(forged))
   });
   await expect.poll(() => input.inputValue()).toBe('');
-  await expect(page.locator('#replay-feedback')).toContainText(/ungültig|fehler|v2-Replay|Replay/i);
+  await expect(page.locator('#replay-feedback')).toContainText('Replay-Import abgelehnt:');
   await expect(page.locator('#replay-progress')).toHaveText(progressBefore);
   await expect(page.locator('#replay-result')).toHaveText(resultBefore);
   await expect(page.locator('#replay-stats')).toHaveText(statsBefore);
