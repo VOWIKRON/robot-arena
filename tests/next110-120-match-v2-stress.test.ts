@@ -30,6 +30,13 @@ function pauseAfter60() {
   return pauseTournamentRun(run);
 }
 
+/** Shared immutable tamper assertion; never modifies the canonical archive. */
+function assertTamperRejected(original: string, edit: (value: any) => void) {
+  const candidate = JSON.parse(original);
+  edit(candidate);
+  expect(() => importTournamentRun(JSON.stringify(candidate))).toThrow();
+}
+
 describe('NEXT-110 stage D: 16 robots / 120 simultaneous-v2 matches', () => {
   it('preserves all 120 deterministic results across match 60 pause, export, import and resume', () => {
     const model = definition();
@@ -64,12 +71,7 @@ describe('NEXT-110 stage D: 16 robots / 120 simultaneous-v2 matches', () => {
 
   it('rejects tampered mid-tournament progress, fixture identity and ruleset without losing the original archive', () => {
     const original = exportTournamentRun(pauseAfter60());
-    const valid = JSON.parse(original);
-    const mutate = (edit: (value: any) => void) => {
-      const candidate = structuredClone(valid);
-      edit(candidate);
-      expect(() => importTournamentRun(JSON.stringify(candidate))).toThrow();
-    };
+    const mutate = (edit: (value: any) => void) => assertTamperRejected(original, edit);
     mutate(value => { value.run.nextMatchIndex = 59; });
     mutate(value => { value.run.results[59].seed += 1; });
     mutate(value => { value.run.results[59].matchId = 'match-120'; });
@@ -98,6 +100,30 @@ describe('NEXT-110 stage D: 16 robots / 120 simultaneous-v2 matches', () => {
       expect(player.tick).toBe(0);
     }
     expect(exportTournamentRun(resumed)).toBe(archive);
+  });
+
+  it('NEXT-110-E10 rejects malformed 60/120-match v2 archives without corrupting valid snapshots', () => {
+    const paused = exportTournamentRun(pauseAfter60());
+    const completed = exportTournamentRun(finishTournamentRun(createTournamentRun(definition())));
+    const cases: Array<[string, string, (value: any) => void]> = [
+      ['partial', paused, a => { a.run.nextMatchIndex = 61; }],
+      ['partial', paused, a => { a.run.results[59].matchId = a.run.results[0].matchId; }],
+      ['partial', paused, a => { a.run.results[59].winnerId = 'forged-winner'; }],
+      ['partial', paused, a => { a.run.results[59].ticks = 49; }],
+      ['partial', paused, a => { a.run.results[59].remainingStructureB = -1; }],
+      ['complete', completed, a => { a.run.status = 'paused'; }],
+      ['complete', completed, a => { a.run.results.reverse(); }],
+      ['complete', completed, a => { a.run.results.pop(); }],
+      ['complete', completed, a => { a.run.totalMatches = 119; }],
+      ['complete', completed, a => { a.run.results[119].robotAId = 'forged-robot'; }],
+      ['complete', completed, a => { a.run.results[119].remainingStructureA = 999999; }]
+    ];
+    for (const [phase, archive, edit] of cases) {
+      assertTamperRejected(archive, edit);
+      expect(importTournamentRun(archive).results).toHaveLength(phase === 'partial' ? 60 : 120);
+    }
+    expect(exportTournamentRun(importTournamentRun(paused))).toBe(paused);
+    expect(exportTournamentRun(importTournamentRun(completed))).toBe(completed);
   });
 
 });
