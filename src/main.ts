@@ -70,6 +70,7 @@ let recorder: EventRecorder;
 let timer: number | null = null;
 let replayPlayer: ReplayPlayer | null = null;
 let replayStats: ReplayStatistics | null = null;
+let replayDrawReason: 'destroyed' | 'timeout' | null = null;
 let replayTimer: number | null = null;
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -370,7 +371,9 @@ function renderReplay(): void {
     }
     el('replay-result').textContent = replayStats.outcome === 'victory'
       ? `Sieger: ${replayStats.winner === replayStats.robotA.id ? replayStats.robotA.name : replayStats.robotB.name}`
-      : replayStats.outcome === 'draw' ? 'Ergebnis: Unentschieden' : 'Ergebnis: Kampf läuft';
+      : replayStats.outcome === 'draw'
+        ? `Ergebnis: Unentschieden${replayDrawReason === 'destroyed' ? ' (Double-KO)' : replayDrawReason === 'timeout' ? ' (Ticklimit)' : ''}`
+        : 'Ergebnis: Kampf läuft';
   } else {
     el('replay-result').textContent = '';
   }
@@ -422,8 +425,10 @@ function renderReplay(): void {
 function loadReplay(recording: ReplayDocument | ReplayDocumentV2): void {
   stopReplayTimer();
   replayPlayer = new ReplayPlayer(recording);
-  // The historical statistics analyzer understands only v1 event semantics.
-  replayStats = recording.schemaVersion === 1 ? analyzeReplay(recording) : null;
+  // Both versioned formats share the shot/hit/damage event contract; draw markers are ignored by the pure analyzer.
+  replayStats = analyzeReplay(recording);
+  replayDrawReason = recording.schemaVersion === 2 && recording.finalState.outcome === 'draw'
+    ? recording.finalState.endReason : null;
   renderReplay();
 }
 el('open-replay').addEventListener('click', () => el<HTMLDialogElement>('replay-dialog').showModal());
