@@ -25,7 +25,8 @@ test('NEXT-110: v2 browser opt-in plays, replays and imports an archived match w
   await expect(page.locator('#replay-progress')).toContainText('0 / 1');
   await page.getByRole('button', { name: 'Replay-Schritt' }).click();
   await expect(page.locator('#replay-progress')).toContainText('1 / 1');
-  await expect(page.locator('#replay-stats')).toContainText('Ergebnis:');
+  await expect(page.locator('#replay-stats')).toContainText('A: Position');
+  await expect(page.locator('#replay-result')).toContainText('Ergebnis: Unentschieden (Ticklimit)');
   await page.getByRole('button', { name: 'Schließen', exact: true }).click();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.locator('#tournament-file').setInputFiles(await archive.path());
