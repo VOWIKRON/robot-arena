@@ -1,6 +1,60 @@
 import { readFile } from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
 
+test('NEXT-110: v2 browser opt-in plays, replays and imports an archived match without touching the sandbox', async ({ page }) => {
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await page.locator('#tournament-ruleset').selectOption('simultaneous-v2');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+  await expect(page.locator('#tournament-autosave')).toBeDisabled();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+  const archivePromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const archive = await archivePromise;
+  const payload = JSON.parse(await (await import('node:fs/promises')).readFile(await archive.path(), 'utf8'));
+  expect(payload.schemaVersion).toBe(2);
+  expect(payload.run.definition.rulesetVersion).toBe('simultaneous-v2');
+  const replayButton = page.locator('#tournament-pairings li').first().getByRole('button', { name: /Replay abspielen/ });
+  await replayButton.click();
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await expect(page.locator('#replay-stats')).toContainText('Ergebnis:');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-file').setInputFiles(await archive.path());
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});
+
+test('NEXT-110: legacy knockout never enables simultaneous-v2 and v1 remains default', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-ruleset').selectOption('simultaneous-v2');
+  await page.locator('#tournament-format').selectOption('knockout');
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await expect(page.locator('#tournament-ruleset')).toBeDisabled();
+  await page.locator('#tournament-format').selectOption('round-robin');
+  await expect(page.locator('#tournament-ruleset')).toBeEnabled();
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  const archivePromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const archive = await archivePromise;
+  const payload = JSON.parse(await (await import('node:fs/promises')).readFile(await archive.path(), 'utf8'));
+  expect(payload.schemaVersion).toBe(1);
+  expect(payload.run.definition.rulesetVersion).toBeUndefined();
+});
+
 test('NEXT-59: tournament execution, pause, resume and archive roundtrip', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -46,7 +100,7 @@ test('NEXT-58: custom participant IDs survive import and invalid JSON preserves 
     name: 'broken.json', mimeType: 'application/json',
     buffer: Buffer.from('{"schemaVersion":2}')
   });
-  await expect(page.locator('#tournament-feedback')).toContainText(/ungültige Version/);
+  await expect(page.locator('#tournament-feedback')).toContainText(/ungültige Version|Laufdaten fehlen/);
   await expect(page.locator('#tournament-progress')).toHaveText(before);
   await expect(page.locator('#tournament-table tbody')).toContainText('Alpha Import');
 });
