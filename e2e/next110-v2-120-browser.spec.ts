@@ -14,7 +14,11 @@ async function exportArchive(page: Page): Promise<{ archive: any; file: string }
 }
 
 test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, reload, import and replay', async ({ page }, testInfo) => {
-  // WebKit on constrained CI runners needs a larger budget for 120 UI updates.\n  test.setTimeout(testInfo.project.name.includes('webkit') ? 180_000 : 120_000);
+  // NEXT-110-E22: enforce the WebKit 120-match budget (the previous literal \\n was inside a comment).
+  // On constrained CI runners, 120 UI updates may need up to three minutes.
+  const isWebKit = testInfo.project.name.includes('webkit');
+  test.setTimeout(isWebKit ? 180_000 : 120_000);
+  testInfo.annotations.push({ type: 'timeout-budget', description: `${testInfo.project.name}: ${isWebKit ? 180_000 : 120_000}ms` });
   const start = Date.now();
   await page.goto('/');
   const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
