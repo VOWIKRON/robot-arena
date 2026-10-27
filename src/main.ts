@@ -1088,7 +1088,7 @@ el('tournament-file').addEventListener('change', async () => {
   try {
     const file = input.files?.[0];
     if (!file || file.size > 2 * 1024 * 1024) throw new Error('Datei fehlt oder ist zu groß');
-    const loaded = importTournamentRun(await file.text());
+    const loaded = importTournamentRun(await file.text(), 1);
     // Only a successfully validated archive may replace the current run.
     stopTournamentAuto();
     applyImportedTournament(loaded);
