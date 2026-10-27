@@ -171,3 +171,47 @@ test('NEXT-110-E14: Double-KO replay timeline supports Home/End and arrow keys w
   await page.getByRole('button', { name: 'Schließen', exact: true }).click();
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 });
+
+test('NEXT-110-E18: rejected v2 replay import preserves the loaded replay, cursor and sandbox', async ({ page }) => {
+  const { RAPTOR, TITAN } = await import('../src/engine/presets');
+  const { recordMatchV2, serializeReplayV2 } = await import('../src/engine/replay-v2');
+  const a = { ...RAPTOR, id: 'e18-a', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const b = { ...TITAN, id: 'e18-b', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const valid = recordMatchV2(a, b, 5, 10);
+  expect(valid.finalState).toMatchObject({ outcome: 'draw', winner: null, endReason: 'destroyed' });
+
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  const statusBefore = await page.locator('#status').innerText();
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  const input = page.locator('#replay-file');
+  await input.setInputFiles({
+    name: 'next110-e18-valid.json', mimeType: 'application/json',
+    buffer: Buffer.from(serializeReplayV2(valid))
+  });
+  await expect(page.locator('#replay-feedback')).toContainText('Replay geprüft:');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  const progressBefore = await page.locator('#replay-progress').innerText();
+  const resultBefore = await page.locator('#replay-result').innerText();
+  const statsBefore = await page.locator('#replay-stats').innerText();
+  const sliderBefore = await page.getByRole('slider', { name: 'Replay-Zeitleiste' }).inputValue();
+
+  const forged = JSON.parse(serializeReplayV2(valid));
+  forged.finalState.winner = 'forged-winner';
+  await input.setInputFiles({
+    name: 'next110-e18-invalid.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(forged))
+  });
+  await expect.poll(() => input.inputValue()).toBe('');
+  await expect(page.locator('#replay-feedback')).toContainText(/ungültig|fehler|v2-Replay|Replay/i);
+  await expect(page.locator('#replay-progress')).toHaveText(progressBefore);
+  await expect(page.locator('#replay-result')).toHaveText(resultBefore);
+  await expect(page.locator('#replay-stats')).toHaveText(statsBefore);
+  await expect(page.getByRole('slider', { name: 'Replay-Zeitleiste' })).toHaveValue(sliderBefore);
+  await page.getByRole('button', { name: 'Replay-Anfang' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  expect(await page.locator('#status').innerText()).toBe(statusBefore);
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});

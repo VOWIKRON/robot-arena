@@ -8,6 +8,12 @@ import { parseReplayV2, recordMatchV2, reconstructReplayStatesV2, serializeRepla
 
 const alpha = { ...RAPTOR, id: 'alpha', name: 'Alpha' };
 const beta = { ...TITAN, id: 'beta', name: 'Beta' };
+// NEXT-110-E20: shared deterministic Double-KO fixture used by tamper regressions.
+const doubleKoReplayJson = (): string => {
+  const a = { ...alpha, speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const b = { ...beta, speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  return serializeReplayV2(recordMatchV2(a, b, 5, 10));
+};
 const mutate = (json: string, fn: (doc: any) => void): string => {
   const doc = JSON.parse(json);
   fn(doc);
@@ -117,9 +123,7 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
   });
 
   it('NEXT-110-E9 rejects forged Double-KO terminal events without affecting canonical replay', () => {
-    const a = { ...alpha, speed: 0, weaponRange: 100, weaponDamage: 1000 };
-    const b = { ...beta, speed: 0, weaponRange: 100, weaponDamage: 1000 };
-    const canonical = serializeReplayV2(recordMatchV2(a, b, 5, 10));
+    const canonical = doubleKoReplayJson();
     const baseline = parseReplayV2(canonical);
     expect(baseline.frames[0]!.events.at(-1)).toEqual({
       type: 'draw', tick: 1, reason: 'destroyed'
@@ -130,15 +134,13 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     rejects(d => { d.frames[0].events.at(-1).reason = 'timeout'; });
     rejects(d => { d.frames[0].events.at(-1).tick = 2; });
     rejects(d => { d.frames[0].events.splice(d.frames[0].events.findIndex((e: any) => e.type === 'damage'), 1); });
-    rejects(d => { d.finalState.winner = a.id; });
+    rejects(d => { d.finalState.winner = alpha.id; });
     rejects(d => { d.finalState.endReason = 'timeout'; });
     expect(serializeReplayV2(baseline)).toBe(canonical);
     expect(reconstructReplayStatesV2(baseline).at(-1)).toEqual(baseline.finalState);
   });
   it('NEXT-110-E15 rejects nested Double-KO replay tampering and preserves deterministic immutable playback', () => {
-    const a = { ...alpha, speed: 0, weaponRange: 100, weaponDamage: 1000 };
-    const b = { ...beta, speed: 0, weaponRange: 100, weaponDamage: 1000 };
-    const canonical = serializeReplayV2(recordMatchV2(a, b, 5, 10));
+    const canonical = doubleKoReplayJson();
     const baseline = parseReplayV2(canonical);
     expect(baseline.finalState).toMatchObject({
       outcome: 'draw', winner: null, endReason: 'destroyed', tick: 1
@@ -163,6 +165,17 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(serializeReplayV2(baseline)).toBe(canonical);
     const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, 5, 1));
     expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
+  });
+
+  it('NEXT-110-E20 shared Double-KO fixture stays byte-stable and v1 parser remains isolated', () => {
+    const canonical = doubleKoReplayJson();
+    expect(doubleKoReplayJson()).toBe(canonical);
+    const parsed = parseReplayV2(canonical);
+    expect(parsed.frames).toHaveLength(1);
+    expect(parsed.finalState).toMatchObject({ outcome: 'draw', winner: null, endReason: 'destroyed' });
+    expect(reconstructReplayStatesV2(parsed).at(-1)).toEqual(parsed.finalState);
+    expect(serializeReplayV2(parsed)).toBe(canonical);
+    expect(() => parseReplay(canonical)).toThrow(/schemaVersion/);
   });
 
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
