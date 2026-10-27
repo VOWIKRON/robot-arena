@@ -46,7 +46,7 @@ export function validateTournamentArchive(input: unknown): TournamentArchive {
 export function exportTournamentRun(run: TournamentRun): string {
   return JSON.stringify(validateTournamentArchive({ schemaVersion: run.definition.schemaVersion, run }));
 }
-export function importTournamentRun(json: string): TournamentRun {
+export function importTournamentRun(json: string, uiSchemaVersion: 1 | null = null): TournamentRun {
   if (new TextEncoder().encode(json).length > MAX_BYTES) throw new Error('Turnierarchiv: Datei zu groß');
   let parsed: unknown;
   try {
@@ -55,6 +55,13 @@ export function importTournamentRun(json: string): TournamentRun {
     throw new Error('Turnierarchiv: beschädigtes JSON');
   }
   assertSafeTournamentInput(parsed);
+  // Browser v1 replay and autosave cannot safely consume v2 event streams yet.
+  // Engine-level import supports both versions; UI explicitly opts into v1 only.
+  if (uiSchemaVersion === 1 &&
+      (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) ||
+       (parsed as Record<string, unknown>).schemaVersion !== 1)) {
+    throw new Error('Turnierarchiv: ungültige Version (Browser unterstützt derzeit nur v1)');
+  }
   return validateTournamentArchive(parsed).run;
 }
 /** Imported paused/running tournaments resume from the next match boundary. */
