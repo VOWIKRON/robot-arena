@@ -65,3 +65,36 @@ test('NEXT-110: invalid v2 ruleset archive cannot replace an active browser tour
   await expect(page.locator('#tournament-progress')).toHaveText(before);
   await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
 });
+
+
+test('NEXT-110-E8: v2 Double-KO replay shows an explicit draw on desktop and mobile', async ({ page }) => {
+  // Generate a deterministic v2 fixture without changing the sandbox or tournament.
+  const { RAPTOR, TITAN } = await import('../src/engine/presets');
+  const { recordMatchV2, serializeReplayV2 } = await import('../src/engine/replay-v2');
+  const alpha = { ...RAPTOR, id: 'e8-alpha', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const beta = { ...TITAN, id: 'e8-beta', speed: 0, weaponRange: 100, weaponDamage: 1000 };
+  const replay = recordMatchV2(alpha, beta, 5, 10);
+  expect(replay.finalState).toMatchObject({ outcome: 'draw', winner: null, endReason: 'destroyed' });
+  expect(replay.frames).toHaveLength(1);
+
+  await page.goto('/');
+  const before = await page.locator('#status').innerText();
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  await page.locator('#replay-file').setInputFiles({
+    name: 'next110-e8-double-ko.json', mimeType: 'application/json',
+    buffer: Buffer.from(serializeReplayV2(replay))
+  });
+  await expect(page.locator('#replay-feedback')).toContainText('Replay geprüft:');
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await expect(page.locator('#replay-result')).toHaveText('Ergebnis: Unentschieden (Double-KO)');
+  await expect(page.locator('#replay-stat-a')).toContainText('Schüsse 1');
+  await expect(page.locator('#replay-stat-b')).toContainText('Schüsse 1');
+  await page.getByRole('button', { name: 'Replay-Anfang' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  expect(await page.locator('#status').innerText()).toBe(before);
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});
