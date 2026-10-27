@@ -52,6 +52,30 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(reconstructReplayStatesV2(timed).at(-1)).toEqual(timed.finalState);
   });
 
+  it('NEXT-110-E13 rejects forged zero-tick terminal states while preserving canonical v2/v1 replay', () => {
+    const zero = serializeReplayV2(recordMatchV2(alpha, beta, 2, 0));
+    const parsed = parseReplayV2(zero);
+    expect(parsed.frames).toHaveLength(0);
+    expect(parsed.finalState).toMatchObject({
+      tick: 0, outcome: 'draw', winner: null, endReason: 'timeout'
+    });
+    const invalidChanges: Array<(doc: any) => void> = [
+      doc => { doc.finalState.tick = 1; },
+      doc => { doc.finalState.endReason = 'destroyed'; },
+      doc => { doc.finalState.winner = alpha.id; },
+      doc => { doc.finalState.robotA.energy -= 1; },
+      doc => { doc.frames.push({ tick: 1, events: [] }); },
+      doc => { doc.initialState.robotB.structure = -1; }
+    ];
+    for (const change of invalidChanges) {
+      expect(() => parseReplayV2(mutate(zero, change))).toThrow(/v2-Replay/);
+    }
+    expect(serializeReplayV2(parsed)).toBe(zero);
+    expect(reconstructReplayStatesV2(parsed)).toEqual([parsed.finalState]);
+    const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, 2, 0));
+    expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
+  });
+
   it('rejects wrong versions, changed events, missing terminal markers and forged results', () => {
     const doc = serializeReplayV2(recordMatchV2(alpha, beta, 7, 3));
     const rejects = (fn: (doc: any) => void) =>
