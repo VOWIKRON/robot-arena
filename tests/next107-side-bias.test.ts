@@ -41,7 +41,7 @@ function observe(state: MatchState, side: Side, seed: number): Observation {
   const opponent = side === 'A' ? state.robotB : state.robotA;
   expect(adaptive.definition.id).toBe('adaptive');
   expect(opponent.definition.id).toBe('opponent');
-  expect(state.winner).toBe(state.outcome === 'draw' ? null : state.winner);
+  if (state.outcome === 'draw') expect(state.winner).toBeNull();
   if (state.outcome === 'victory') {
     expect([adaptive.definition.id, opponent.definition.id]).toContain(state.winner);
   }
@@ -127,7 +127,6 @@ describe('NEXT-107 multiseed side-bias diagnostics', () => {
       observations.push(...pair);
     }
     expect(observations).toHaveLength(opponents.length * seeds.length * 2);
-    expect(new Set(observations.map(item => `${item.seed}/${item.side}/${item.outcome}`)).size)
-      .toBeGreaterThan(0);
+    expect(observations.every(item => seeds.includes(item.seed as typeof seeds[number]))).toBe(true);
   });
 });
