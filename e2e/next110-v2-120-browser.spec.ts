@@ -88,6 +88,27 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
 
+  // NEXT-110-E24: repeated invalid imports must not corrupt the current 120-match
+  // archive; a subsequent valid import must recover without touching sandbox.
+  for (const [index, payload] of ['{broken-json', JSON.stringify({ schemaVersion: 2, run: null })].entries()) {
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e24-rejected-${index}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(payload)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+    expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
+  await page.locator('#tournament-file').setInputFiles(original.file);
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+  expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
