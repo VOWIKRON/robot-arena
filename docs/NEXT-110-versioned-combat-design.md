@@ -1,8 +1,6 @@
 # NEXT-110 — versioned, fair simultaneous combat resolution (isolated experimental v2 engine)
 
-Status: **IN PROGRESS / stage C versioned tournament and archive routing implemented; final CI pending**. New opt-in experimental module `src/engine/simulation-v2.ts` is not connected to UI, tournaments, archives or replays. The published engine remains sequential-v1.
-
-## Verified defect and objective
+Status: **IN PROGRESS / E1–E11 source QA GREEN 798/798, parent NEXT-110 not finished.** Experimental v2 engine, versioned archive/replay and opt-in browser tournament/replay UI are implemented on development PR #93 only; legacy sequential-v1 remains default and live v0.1.61 unchanged. Latest source CI #40546834016 SUCCESS on accc1264. No publishing.\n\n## Verified defect and objective
 
 NEXT-109 shows the current `stepMatchWithEvents` processes A's movement/fire before B's, so the side changes first-shot opportunities: identical Raptor hardware at the standard starting distance fires B on tick 14 and A on tick 15, whereas at close range A shoots first. A fair resolution must evaluate both decisions from one shared pre-action snapshot, not after the other actor has moved or dealt damage.
 
@@ -48,3 +46,7 @@ The eight-seed Raptor/Titan mirrored test initially found a one-tick difference 
 - Full CI initially found 7 legacy test failures caused by archive error wording; preserved the historical `ungültige Version` error contract while retaining schema v2 rejection for mismatches. Unit/Node checks then passed (517 Vitest + 32 Node), but four Chromium desktop/mobile E2E tests exposed that the legacy browser importer expected to reject schema v2 *before* validating missing run data.
 - Explicit v1-only browser gates now call `importTournamentRun(json, 1)` from the UI file import and local autosave restore. Engine-level `importTournamentRun(json)` still validates deliberate schema v2 archives for isolated tests. This prevents the legacy UI/replay renderer from silently interpreting v2 combat archives before replay v2 is implemented.
 - Added a regression verifying the v1 browser gate rejects even valid v2 archives, while engine-level v2 import and v1 browser import remain functional. **New full CI is required; do not mark stage C or NEXT-110 complete before it passes.**
+
+## 27.10.2026 · 18:09 verification update
+- E1–E6 integrated opt-in v2 simulation, versioned tournament/replay, browser UI, stats and 120-match browser stress passed 787/787 on earlier source HEAD.
+- E7–E9 hostile archive and Double-KO replay/browser tests, E10 11 full 60/120-match archive mutations, E11 keyboard/ARIA/statistics browser regression passed GitHub Actions #40546834016 798/798 (536 Vitest, 32 Node, 230 browser) on accc1264. NEXT-110 still open for E12/E13 and final acceptance. No release or deployment.
