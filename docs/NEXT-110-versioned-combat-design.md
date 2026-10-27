@@ -42,3 +42,9 @@ The eight-seed Raptor/Titan mirrored test initially found a one-tick difference 
 - Archive schema 1/2 must match definition schema exactly; missing/unknown versions, ruleset stripping, mismatched schema, malformed fixture seeds and progress are rejected. Import/export/continue preserve the versioned definition across pause/resume.
 - Added deterministic v1/v2 fixture and paused archive round-trip tests. Updated the former `schemaVersion=2` future-version rejection fixture to 3, because schema 2 is now deliberate and supported.
 - **Not completed:** UI and replay schema v2, 120-match regression, real browser matrix on this HEAD, and provenance; no production rollout or publication. CI must verify exact final HEAD before claiming this stage green.
+
+### Stage C browser compatibility gate (08:59)
+
+- Full CI initially found 7 legacy test failures caused by archive error wording; preserved the historical `ungültige Version` error contract while retaining schema v2 rejection for mismatches. Unit/Node checks then passed (517 Vitest + 32 Node), but four Chromium desktop/mobile E2E tests exposed that the legacy browser importer expected to reject schema v2 *before* validating missing run data.
+- Explicit v1-only browser gates now call `importTournamentRun(json, 1)` from the UI file import and local autosave restore. Engine-level `importTournamentRun(json)` still validates deliberate schema v2 archives for isolated tests. This prevents the legacy UI/replay renderer from silently interpreting v2 combat archives before replay v2 is implemented.
+- Added a regression verifying the v1 browser gate rejects even valid v2 archives, while engine-level v2 import and v1 browser import remain functional. **New full CI is required; do not mark stage C or NEXT-110 complete before it passes.**
