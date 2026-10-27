@@ -14,7 +14,7 @@ async function exportArchive(page: Page): Promise<{ archive: any; file: string }
 }
 
 test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, reload, import and replay', async ({ page }, testInfo) => {
-  test.setTimeout(120_000);
+  // WebKit on constrained CI runners needs a larger budget for 120 UI updates.\n  test.setTimeout(testInfo.project.name.includes('webkit') ? 180_000 : 120_000);
   const start = Date.now();
   await page.goto('/');
   const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
@@ -31,7 +31,7 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   await expect(page.locator('#tournament-autosave')).toBeDisabled();
 
   await page.getByRole('button', { name: 'Alle Kämpfe spielen' }).click();
-  await expect(page.locator('#tournament-progress')).toContainText('120 / 120', { timeout: 60_000 });
+  await expect(page.locator('#tournament-progress')).toContainText('120 / 120', { timeout: testInfo.project.name.includes('webkit') ? 120_000 : 60_000 });
   await expect(page.locator('#tournament-progress')).toContainText('completed');
   const original = await exportArchive(page);
   expect(original.archive).toMatchObject({
