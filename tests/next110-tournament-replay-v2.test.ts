@@ -52,7 +52,8 @@ describe('NEXT-110 stage E2: version-safe tournament replay and event-only playe
   it('rejects a forged tournament result and keeps historical v1 replay byte-compatible', () => {
     const v2 = advanceTournamentRun(createTournamentRun(definition(2)));
     const tampered = structuredClone(v2);
-    (tampered.results[0] as { remainingStructureA: number }).remainingStructureA += 1;
+    const result = tampered.results[0] as { remainingStructureA: number };
+    result.remainingStructureA = result.remainingStructureA === 0 ? 1 : result.remainingStructureA - 1;
     expect(() => replayTournamentMatch(tampered, tampered.results[0]!.matchId))
       .toThrow(/Ergebnisabweichung/);
 
