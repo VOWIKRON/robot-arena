@@ -59,7 +59,10 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     rejects(d => { d.schemaVersion = 1; });
     rejects(d => { d.rulesetVersion = 'simultaneous-v3'; });
     rejects(d => { delete d.rulesetVersion; });
-    rejects(d => { d.seed += 1; });
+    // A seed cannot be inferred before any RNG-consuming shot; test a trace with shots.
+    const withShots = serializeReplayV2(recordMatchV2(alpha, beta, 7, 60));
+    expect(() => parseReplayV2(mutate(withShots, d => { d.seed += 1; })))
+      .toThrow(/Eventfolge/);
     rejects(d => { d.robotB.id = d.robotA.id; });
     rejects(d => { d.frames[0].tick = 2; });
     rejects(d => { d.frames[0].events[0].tick = 99; });
