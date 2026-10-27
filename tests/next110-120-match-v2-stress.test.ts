@@ -3,6 +3,8 @@ import { RAPTOR, TITAN } from '../src/engine/presets';
 import { createTournamentDefinition } from '../src/engine/tournament-model';
 import { createRoundRobinSchedule } from '../src/engine/tournament-schedule';
 import { advanceTournamentRun, createTournamentRun, finishTournamentRun, pauseTournamentRun, resumeTournamentRun } from '../src/engine/tournament-runner';
+import { ReplayPlayer } from '../src/engine/replay-player';
+import { replayTournamentMatch } from '../src/engine/tournament-replay';
 import { continueImportedTournament, exportTournamentRun, importTournamentRun } from '../src/engine/tournament-archive';
 
 const participants = Array.from({ length: 16 }, (_, index) => ({
@@ -76,4 +78,26 @@ describe('NEXT-110 stage D: 16 robots / 120 simultaneous-v2 matches', () => {
     expect(importTournamentRun(original)).toEqual(pauseAfter60());
     expect(() => importTournamentRun(original, 1)).toThrow(/ungültige Version/);
   });
+  it('replays all 120 imported v2 fixtures event-only, preserving archive and result digests', () => {
+    const resumed = finishTournamentRun(resumeTournamentRun(
+      importTournamentRun(exportTournamentRun(pauseAfter60()))));
+    const archive = exportTournamentRun(resumed);
+    expect(resumed.results).toHaveLength(120);
+    for (const result of resumed.results) {
+      const recording = replayTournamentMatch(resumed, result.matchId);
+      expect(recording.schemaVersion).toBe(2);
+      const player = new ReplayPlayer(recording);
+      expect(player.length).toBe(result.ticks);
+      player.seek(player.length);
+      expect(player.state).toEqual(recording.finalState);
+      expect(player.state.winner).toBe(result.winnerId);
+      expect(player.state.robotA.structure).toBe(result.remainingStructureA);
+      expect(player.state.robotB.structure).toBe(result.remainingStructureB);
+      expect(player.outcome).not.toBe('active');
+      player.reset();
+      expect(player.tick).toBe(0);
+    }
+    expect(exportTournamentRun(resumed)).toBe(archive);
+  });
+
 });
