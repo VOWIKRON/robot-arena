@@ -3,7 +3,7 @@ import { deepFreeze } from './immutable';
 import { SeededRandom } from './random';
 import { createMatch } from './simulation';
 import { SIMULTANEOUS_RULESET, stepMatchV2WithEvents } from './simulation-v2';
-import { STRATEGY_TYPES, validateStrategyParameters } from './strategy-config';
+import { STRATEGY_TYPES, validateStrategyParameters, type StrategyParameters } from './strategy-config';
 import type { MatchState, RobotDefinition, RobotState } from './types';
 
 /** NEXT-110 stage E: separate, opt-in v2 wire format. The v1 replay parser stays untouched. */
@@ -60,7 +60,7 @@ function assertRobot(value: unknown, label: string): asserts value is RobotDefin
         Object.keys(value.strategyParameters).some(key => ![
           'energyReserveRatio', 'targetDistanceRatio', 'retreatStructureRatio',
           'retreatDistanceFactor'].includes(key)) ||
-        validateStrategyParameters(value.strategyParameters).length > 0) {
+        validateStrategyParameters(value.strategyParameters as StrategyParameters).length > 0) {
       throw new Error(label + ': ungültige Strategieparameter');
     }
   }
