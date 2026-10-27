@@ -134,4 +134,34 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(serializeReplayV2(baseline)).toBe(canonical);
     expect(reconstructReplayStatesV2(baseline).at(-1)).toEqual(baseline.finalState);
   });
+  it('NEXT-110-E15 rejects nested Double-KO replay tampering and preserves deterministic immutable playback', () => {
+    const a = { ...alpha, speed: 0, weaponRange: 100, weaponDamage: 1000 };
+    const b = { ...beta, speed: 0, weaponRange: 100, weaponDamage: 1000 };
+    const canonical = serializeReplayV2(recordMatchV2(a, b, 5, 10));
+    const baseline = parseReplayV2(canonical);
+    expect(baseline.finalState).toMatchObject({
+      outcome: 'draw', winner: null, endReason: 'destroyed', tick: 1
+    });
+    expect(Object.isFrozen(baseline.frames)).toBe(true);
+    expect(Object.isFrozen(baseline.frames[0]!.events)).toBe(true);
+    const invalid: Array<(doc: any) => void> = [
+      d => { d.arena.width = 99; },
+      d => { d.robotB.id = d.robotA.id; },
+      d => { d.initialState.tick = 1; },
+      d => { d.frames[0].events.reverse(); },
+      d => { d.frames[0].events.push({ type: 'draw', tick: 1, reason: 'destroyed' }); },
+      d => { d.finalState.robotA.structure = 1; }
+    ];
+    for (const edit of invalid) {
+      expect(() => parseReplayV2(mutate(canonical, edit))).toThrow();
+    }
+    const first = reconstructReplayStatesV2(baseline);
+    const second = reconstructReplayStatesV2(parseReplayV2(canonical));
+    expect(first).toEqual(second);
+    expect(first.at(-1)).toEqual(baseline.finalState);
+    expect(serializeReplayV2(baseline)).toBe(canonical);
+    const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, 5, 1));
+    expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
+  });
+
 });
