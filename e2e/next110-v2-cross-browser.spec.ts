@@ -29,6 +29,9 @@ test('NEXT-110: v2 archive and replay roundtrip is safe on desktop and mobile br
   await page.getByRole('button', { name: 'Replay-Schritt' }).click();
   await expect(page.locator('#replay-progress')).toContainText('1 / 1');
   await expect(page.locator('#replay-stats')).toContainText('Ergebnis:');
+  await expect(page.locator('#replay-analysis')).toBeVisible();
+  await expect(page.locator('#replay-stat-a')).toContainText('Schüsse');
+  await expect(page.locator('#replay-stat-b')).toContainText('Schüsse');
   await page.getByRole('button', { name: 'Schließen', exact: true }).click();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
 
