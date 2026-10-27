@@ -47,7 +47,7 @@ describe('NEXT-110 legacy-v1 compatibility lock', () => {
 
   it('rejects future archive schema instead of silently interpreting as legacy', () => {
     const archived = JSON.parse(exportTournamentRun(createTournamentRun(tournament())));
-    archived.schemaVersion = 2;
+    archived.schemaVersion = 3;
     expect(() => importTournamentRun(JSON.stringify(archived))).toThrow(/Version/);
   });
 });
