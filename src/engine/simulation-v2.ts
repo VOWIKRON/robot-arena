@@ -16,7 +16,7 @@ export const LEGACY_RULESET: CombatRuleset = 'sequential-v1';
 export const SIMULTANEOUS_RULESET: CombatRuleset = 'simultaneous-v2';
 
 export function parseCombatRuleset(value: unknown): CombatRuleset {
-  if (value === LEGACY_RULESET || value === SIMULTANEOUS_RULESET) return value;
+  if (value === LEGACY_RULESET || value === SIMULTANEOUS_RULESET) return value as CombatRuleset;
   throw new Error('Kampfregeln: unbekannte oder fehlende Regelversion');
 }
 
