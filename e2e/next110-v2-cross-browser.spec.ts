@@ -28,7 +28,8 @@ test('NEXT-110: v2 archive and replay roundtrip is safe on desktop and mobile br
   await expect(page.locator('#replay-progress')).toContainText('0 / 1');
   await page.getByRole('button', { name: 'Replay-Schritt' }).click();
   await expect(page.locator('#replay-progress')).toContainText('1 / 1');
-  await expect(page.locator('#replay-stats')).toContainText('Ergebnis:');
+  await expect(page.locator('#replay-stats')).toContainText('A: Position');
+  await expect(page.locator('#replay-result')).toContainText('Ergebnis: Unentschieden (Ticklimit)');
   await expect(page.locator('#replay-analysis')).toBeVisible();
   await expect(page.locator('#replay-stat-a')).toContainText('Schüsse');
   await expect(page.locator('#replay-stat-b')).toContainText('Schüsse');
