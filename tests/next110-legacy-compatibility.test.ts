@@ -10,7 +10,7 @@ import { exportTournamentRun, importTournamentRun } from '../src/engine/tourname
 describe('NEXT-110 legacy-v1 compatibility lock', () => {
   const tournament = () => createTournamentDefinition({
     schemaVersion: 1, id: 'next110-legacy', format: 'round-robin',
-    baseSeed: 4711, maxTicks: 180, participants: [RAPTOR, TITAN]
+    baseSeed: 4711, maxTicks: 180, participants: [RAPTOR, TITAN, { ...TITAN, id: 'titan-two', name: 'Titan Two' }]
   });
 
   it('preserves exact historical Raptor/Titan seeded outcomes and no implicit ruleset', () => {
