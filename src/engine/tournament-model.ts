@@ -5,7 +5,9 @@ import type { RobotDefinition } from './types';
 
 export type TournamentFormat = 'round-robin' | 'knockout';
 export type TournamentDefinition = Readonly<{
-  schemaVersion: 1;
+  schemaVersion: 1 | 2;
+  /** Schema v2 requires explicit simultaneous-v2; v1 forbids this field. */
+  rulesetVersion?: 'simultaneous-v2';
   id: string;
   format: TournamentFormat;
   /** Omitted means the historical fixture orientation, preserving old archives. */
@@ -61,7 +63,13 @@ function robot(value: unknown, index: number): RobotDefinition {
 /** Validate, clone and freeze tournament input. Does not run any simulation or consume RNG. */
 export function createTournamentDefinition(input: unknown): TournamentDefinition {
   const t = record(input, 'Turnier');
-  if (t.schemaVersion !== 1) throw new Error('Turnier: schemaVersion 1 erwartet');
+  if (t.schemaVersion !== 1 && t.schemaVersion !== 2) throw new Error('Turnier: schemaVersion 1 oder 2 erwartet');
+  if (t.schemaVersion === 1 && Object.hasOwn(t, 'rulesetVersion')) {
+    throw new Error('Turnier: Regelversion in historischem Schema v1 unzulässig');
+  }
+  if (t.schemaVersion === 2 && t.rulesetVersion !== 'simultaneous-v2') {
+    throw new Error('Turnier: schemaVersion 2 benötigt explizite Regelversion simultaneous-v2');
+  }
   nonempty(t.id, 'Turnier-ID');
   if (t.format !== 'round-robin' && t.format !== 'knockout') throw new Error('Turnierformat ungültig');
   if (t.sideAssignment !== undefined && t.sideAssignment !== 'balanced') throw new Error('Turnier: ungültige Seitenzuordnung');
@@ -75,7 +83,9 @@ export function createTournamentDefinition(input: unknown): TournamentDefinition
   const ids = participants.map(participant => participant.id);
   if (new Set(ids).size !== ids.length) throw new Error('Turnier: doppelte Teilnehmer-ID');
   const result: TournamentDefinition = {
-    schemaVersion: 1, id: t.id as string, format: t.format,
+    schemaVersion: t.schemaVersion as 1 | 2,
+    ...(t.schemaVersion === 2 ? { rulesetVersion: 'simultaneous-v2' as const } : {}),
+    id: t.id as string, format: t.format,
     baseSeed: t.baseSeed as number, maxTicks: t.maxTicks as number,
     ...(t.sideAssignment === 'balanced' ? { sideAssignment: 'balanced' as const } : {}),
     participants: structuredClone(participants)
