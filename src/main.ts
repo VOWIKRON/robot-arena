@@ -472,7 +472,7 @@ el<HTMLInputElement>('replay-file').addEventListener('change', async (event) => 
   try {
     // Keep the existing v1 file reader and add strict, opt-in v2 parsing.
     const replay = file.size > 2_000_000
-      ? (() => { throw new Error('Replay-Datei zu groß'); })()
+      ? (() => { throw new Error('Replay-Datei zu groß (2 MB)'); })()
       : (await file.text());
     const version = JSON.parse(replay) as { schemaVersion?: unknown };
     const recording = version.schemaVersion === 2 ? parseReplayV2(replay) : await readReplayFile(file);
