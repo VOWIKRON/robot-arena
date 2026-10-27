@@ -392,9 +392,7 @@ function renderReplay(): void {
     }
     el('replay-stats').textContent = robots.map((robot, index) =>
       `${index === 0 ? 'A' : 'B'}: Position ${robot.position.x.toFixed(1)}/${robot.position.y.toFixed(1)} · Struktur ${robot.structure.toFixed(1)} · Energie ${robot.energy.toFixed(1)}`
-    ).join(' | ') + (player.atEnd && replayStats === null
-      ? ` | Ergebnis: ${replayState.outcome === 'draw' ? 'Unentschieden (' + (replayState.endReason === 'destroyed' ? 'Double-KO' : 'Ticklimit') + ')' : replayState.outcome === 'victory' ? 'Sieger ' + (robots.find(robot => robot.definition.id === replayState.winner)?.definition.name ?? 'unbekannt') : 'Kampf läuft'}`
-      : '');
+    ).join(' | '); // Result lives in #replay-result; keep #replay-stats for live positions only.
     const findRobot = (id: string) => robots.find(robot => robot.definition.id === id);
     for (const event of player.events) {
       if (event.type === 'shot') {
