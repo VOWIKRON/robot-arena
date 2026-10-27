@@ -3,6 +3,7 @@ import { RAPTOR, TITAN } from '../src/engine/presets';
 import { recordMatch } from '../src/engine/recorder';
 import { parseReplay, serializeReplay } from '../src/engine/replay-format';
 import { runMatchV2 } from '../src/engine/simulation-v2';
+import { ReplayPlayer } from '../src/engine/replay-player';
 import { parseReplayV2, recordMatchV2, reconstructReplayStatesV2, serializeReplayV2 } from '../src/engine/replay-v2';
 
 const alpha = { ...RAPTOR, id: 'alpha', name: 'Alpha' };
@@ -162,6 +163,39 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(serializeReplayV2(baseline)).toBe(canonical);
     const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, 5, 1));
     expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
+  });
+
+  it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
+    const zero = parseReplayV2(serializeReplayV2(recordMatchV2(alpha, beta, 2, 0)));
+    const player = new ReplayPlayer(zero);
+    const original = player.state;
+    expect(player.length).toBe(0);
+    expect(player.tick).toBe(0);
+    expect(player.atEnd).toBe(true);
+    expect(player.outcome).toBe('draw');
+    expect(player.state).toEqual(zero.finalState);
+    expect(Object.isFrozen(player.state)).toBe(true);
+    expect(player.play()).toBe(false);
+    expect(player.step()).toBe(false);
+    expect(player.advance()).toBe(false);
+    for (const invalid of [-1, 1, Number.NaN, Number.POSITIVE_INFINITY, 0.5]) {
+      expect(() => player.seek(invalid)).toThrow(RangeError);
+      expect(player.tick).toBe(0);
+      expect(player.state).toBe(original);
+    }
+    player.reset();
+    expect(player.state).toBe(original);
+    const one = new ReplayPlayer(recordMatchV2(alpha, beta, 2, 1));
+    expect(one.length).toBe(1);
+    expect(one.outcome).toBeNull();
+    expect(one.play()).toBe(true);
+    expect(one.advance()).toBe(true);
+    expect(one.atEnd).toBe(true);
+    expect(one.outcome).toBe('draw');
+    expect(one.play()).toBe(false);
+    one.reset();
+    expect(one.tick).toBe(0);
+    expect(one.outcome).toBeNull();
   });
 
 });
