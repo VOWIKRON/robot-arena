@@ -81,6 +81,15 @@ describe('NEXT-110 stage C: versioned tournament execution and archive boundary'
     reject(value => { value.run.results[0].seed += 1; });
   });
 
+  it('blocks v2 archives in the legacy browser importer until v2 replay support exists', () => {
+    const v2 = exportTournamentRun(createTournamentRun(simultaneous()));
+    expect(importTournamentRun(v2).definition.schemaVersion).toBe(2);
+    expect(() => importTournamentRun(v2, 1)).toThrow(/ungültige Version/);
+    const v1 = exportTournamentRun(createTournamentRun(legacy()));
+    expect(importTournamentRun(v1, 1).definition.schemaVersion).toBe(1);
+    expect(() => importTournamentRun('{"schemaVersion":2}', 1)).toThrow(/ungültige Version/);
+  });
+
   it('rejects v1 archives disguised as v2 and preserves v1 archive compatibility', () => {
     const v1 = JSON.parse(exportTournamentRun(createTournamentRun(legacy())));
     expect(v1.schemaVersion).toBe(1);
