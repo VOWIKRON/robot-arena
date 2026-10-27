@@ -75,7 +75,7 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
     await expect(page.locator('#tournament-feedback'))
-      .toContainText(/ungültig|Reihenfolge|Turnierarchiv/i);
+      .toContainText(/ungültig|Reihenfolge|Turnierarchiv|Teilnehmer oder Seed passen nicht zum Spielplan/i);
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
     await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
     expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
