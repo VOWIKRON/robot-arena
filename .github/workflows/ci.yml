@@ -93,6 +93,19 @@ jobs:
         run: npx playwright test --reporter=json
       - name: Enforce browser compatibility release gate (no deployment)
         run: node scripts/next97-browser-release-gate.mjs next97-browser-matrix.json next97-browser-gate.json
+      - name: Collect NEXT-106 focused Vitest evidence (read-only)
+        run: npx vitest run tests/adaptive-strategy.test.ts tests/next104-integration.test.ts tests/next105-adaptive-balance.test.ts --reporter=json --outputFile=next106-vitest-evidence.json
+      - name: NEXT-106 integrated evidence gate (NO DEPLOYMENT)
+        run: node scripts/next106-integrated-release-gate.mjs next106-vitest-evidence.json next97-browser-matrix.json next106-gate-result.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-integrated-evidence
+          path: |
+            next106-vitest-evidence.json
+            next106-gate-result.json
+          if-no-files-found: ignore
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         if: always()
         with:

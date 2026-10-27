@@ -195,6 +195,11 @@ test('NEXT-67: verified tournament replay is isolated, keyboard-accessible and s
   await page.getByRole('button', { name: 'Speichern' }).click();
   const archive = await saved;
   await page.locator('#tournament-file').setInputFiles(await archive.path());
+  // File.text() and the archive import run asynchronously after setInputFiles resolves.
+  // A replay button from the previous run is already visible; wait for the file
+  // handler's finally block (which clears the input) before pressing Enter.
+  // Otherwise a late import re-renders the button between keydown and click.
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
   await expect(first.getByRole('button', { name: /Replay abspielen/ })).toBeVisible();
   // NEXT-102: keep focus and keyboard activation in one locator action. On mobile,
   // asynchronous archive UI updates may replace the button between focus() and
