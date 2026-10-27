@@ -1,6 +1,6 @@
-# NEXT-110 — versioned, fair simultaneous combat resolution (development design, NOT IMPLEMENTED)
+# NEXT-110 — versioned, fair simultaneous combat resolution (isolated experimental v2 engine)
 
-Status: **IN PROGRESS / architecture and compatibility baseline only**. No gameplay rule change is authorized by this document. The published engine remains sequential-v1.
+Status: **IN PROGRESS / stage B isolated engine implemented, CI pending**. New opt-in experimental module `src/engine/simulation-v2.ts` is not connected to UI, tournaments, archives or replays. The published engine remains sequential-v1.
 
 ## Verified defect and objective
 
@@ -18,10 +18,17 @@ NEXT-109 shows the current `stepMatchWithEvents` processes A's movement/fire bef
 ## Implementation stages / acceptance
 
 - **A — Compatibility lock (this branch):** add focused historical simulation + v1 archive regressions, including missing/future ruleset rejection policy as design constraints. Run full TypeScript, unit, behavior, regression, determinism, desktop/mobile Chromium/WebKit, security and reproducible-build CI. Do not mark NEXT-110 done after this stage.
-- **B — Isolated v2 engine:** implement simultaneous step/run API and deterministic fixed-seed mirrored tests; preserve old entry points. Verify movement symmetry, shot eligibility, double KO, energy, cooldown, RNG and event stream. Refactor shared geometry without touching legacy event/RNG order.
-- **C — Explicit persistence:** add validated ruleset to tournament definition and runner, archive import/export, and UI match/replay entry points. Add hostile-import tests (unknown version, version stripping, tampered run) and old v1 archive round trips. Never migrate in place.
+- **B — Isolated v2 engine (implemented, verification pending):** `stepMatchV2WithEvents`, `runMatchV2`, `parseCombatRuleset` in an independent module. Snapshot-based simultaneous movement, same-snapshot fire eligibility, stable robot-ID RNG draw order, atomic damage and double-KO draw; seven focused tests in `tests/next110-simultaneous-v2.test.ts`. Legacy entry points untouched. This is not production-enabled and must not be marked complete until CI is green.
+- **C — Explicit persistence (OPEN):** add validated ruleset to tournament definition and runner, archive import/export, and UI match/replay entry points. Add hostile-import tests (unknown version, version stripping, tampered run) and old v1 archive round trips. Never migrate in place.
 - **D — Integration gate:** compare full v1 event digests and tournament archive fixtures against unchanged baselines; run v2 mirrored seed matrix, 120-match pause/export/import/resume, browser replay on desktop/mobile and WebKit. Verify exact final branch SHA in CI and document evidence. Only then mark NEXT-110 finished; **no merge/publish without manual user request**.
 
 ## Risk and stop conditions
 
 Historical fixture mismatch, altered v1 RNG/event order, silent archive reinterpretation, unversioned replay, nondeterministic v2 mirrored results, or failed browser/CI gate blocks completion. Keep the task active and diagnose before implementing further features.
+
+## 27.10.2026 · 08:04 development notes
+
+- Simultaneous movement collision policy is currently **allow overlap and crossing**; further fairness and symmetry tests required before enabling. A deterministic ID-based escape rule for exact overlap already exists in the shared movement module.
+- RNG jitter draws are ordered by robot ID (not A/B slot), while emitted move/shot/hit/damage events remain A then B for predictable rendering. No victory event is emitted for double KO.
+- Replay schema v1 explicitly rejects `draw/destroyed`; the experimental v2 resolver **must not be used for v1 recordings**. Stage C must introduce a validated replay schema/ruleset boundary and a v2 draw representation before UI integration.
+- Remaining blockers: schema/ruleset persistence, tournament resume/archives, replay recording/parser/player, browser integration, full CI and deterministic 120-match regression. No publishing or deployment.
