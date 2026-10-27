@@ -97,4 +97,27 @@ describe('NEXT-110 stage C: versioned tournament execution and archive boundary'
     v1.schemaVersion = 2;
     expect(() => importTournamentRun(JSON.stringify(v1))).toThrow(/Schema/);
   });
+
+  it('NEXT-110-E7 rejects malformed v2 archive progress, ordering and impossible result values', () => {
+    const partial = JSON.parse(exportTournamentRun(
+      pauseTournamentRun(advanceTournamentRun(createTournamentRun(simultaneous())))
+    ));
+    const complete = JSON.parse(exportTournamentRun(finishTournamentRun(createTournamentRun(simultaneous()))));
+    const rejects = (source: any, edit: (archive: any) => void) => {
+      const candidate = structuredClone(source);
+      edit(candidate);
+      expect(() => importTournamentRun(JSON.stringify(candidate))).toThrow();
+      // A failed import must never modify the original, immutable snapshot.
+      expect(importTournamentRun(JSON.stringify(source)).results).toEqual(source.run.results);
+    };
+    rejects(partial, a => { a.run.status = 'completed'; });
+    rejects(partial, a => { a.run.status = 'ready'; });
+    rejects(partial, a => { a.run.nextMatchIndex = 0; });
+    rejects(partial, a => { a.run.results[0].ticks = base.maxTicks + 1; });
+    rejects(partial, a => { a.run.results[0].remainingStructureA = -1; });
+    rejects(partial, a => { a.run.results[0].matchId = 'forged-match'; });
+    rejects(complete, a => { a.run.results.reverse(); });
+    rejects(complete, a => { a.run.results[1] = structuredClone(a.run.results[0]); });
+    rejects(complete, a => { a.run.results.pop(); });
+  });
 });
