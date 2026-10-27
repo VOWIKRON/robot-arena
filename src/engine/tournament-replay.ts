@@ -35,7 +35,7 @@ export function replayTournamentMatch(run: TournamentRun, matchId: string): Repl
     throw new Error('Replay: Ergebnisabweichung zwischen Archiv und Simulation');
   }
   // The existing player accepts validated, immutable replay documents.
-  return run.definition.schemaVersion === 2
+  return 'schemaVersion' in recording
     ? recording as ReplayDocumentV2
     : parseReplay(serializeReplay(recording));
 }
