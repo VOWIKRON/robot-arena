@@ -29,7 +29,8 @@ function eligible(self: RobotState, enemy: RobotState): boolean {
     strategyParameters(self.definition.strategy, self.definition.strategyParameters).energyReserveRatio;
   return self.structure > 0 && self.cooldown === 0 &&
     self.energy >= self.definition.weaponEnergy + reserve &&
-    distance(self, enemy) <= self.definition.weaponRange;
+    // Mirror-equivalent positions may differ by a few ulps after subtraction.
+    distance(self, enemy) <= self.definition.weaponRange + 1e-9;
 }
 
 /**
