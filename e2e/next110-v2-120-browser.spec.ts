@@ -58,6 +58,30 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
   expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
 
+  // NEXT-110-E12: a malicious full 120-match archive must be rejected
+  // without replacing the active completed tournament or touching sandbox.
+  const progressBeforeTamper = await page.locator('#tournament-progress').innerText();
+  const tamperCases: Array<(archive: any) => void> = [
+    archive => { archive.run.nextMatchIndex = 119; },
+    archive => { archive.run.results[119].matchId = archive.run.results[0].matchId; }
+  ];
+  for (const [index, tamper] of tamperCases.entries()) {
+    const candidate = structuredClone(original.archive);
+    tamper(candidate);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e12-tampered-${index}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(candidate))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-feedback'))
+      .toContainText(/ungültig|Reihenfolge|Turnierarchiv/i);
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+    expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
