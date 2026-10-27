@@ -19,6 +19,23 @@ const mutate = (json: string, fn: (doc: any) => void): string => {
   fn(doc);
   return JSON.stringify(doc);
 };
+/** NEXT-110-E23: tamper cases must fail without changing canonical v2 bytes. */
+const expectRejectedMutations = (
+  canonical: string,
+  edits: ReadonlyArray<(doc: any) => void>,
+  errorPattern?: RegExp
+): void => {
+  for (const edit of edits) {
+    const tampered = mutate(canonical, edit);
+    expect(tampered).not.toBe(canonical);
+    if (errorPattern) {
+      expect(() => parseReplayV2(tampered)).toThrow(errorPattern);
+    } else {
+      expect(() => parseReplayV2(tampered)).toThrow();
+    }
+  }
+  expect(serializeReplayV2(parseReplayV2(canonical))).toBe(canonical);
+};
 
 describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () => {
   it('records and reconstructs 4 seeds without simulation or RNG during playback', () => {
@@ -74,9 +91,7 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
       doc => { doc.frames.push({ tick: 1, events: [] }); },
       doc => { doc.initialState.robotB.structure = -1; }
     ];
-    for (const change of invalidChanges) {
-      expect(() => parseReplayV2(mutate(zero, change))).toThrow(/v2-Replay/);
-    }
+    expectRejectedMutations(zero, invalidChanges, /v2-Replay/);
     expect(serializeReplayV2(parsed)).toBe(zero);
     expect(reconstructReplayStatesV2(parsed)).toEqual([parsed.finalState]);
     const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, 2, 0));
@@ -155,9 +170,7 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
       d => { d.frames[0].events.push({ type: 'draw', tick: 1, reason: 'destroyed' }); },
       d => { d.finalState.robotA.structure = 1; }
     ];
-    for (const edit of invalid) {
-      expect(() => parseReplayV2(mutate(canonical, edit))).toThrow();
-    }
+    expectRejectedMutations(canonical, invalid);
     const first = reconstructReplayStatesV2(baseline);
     const second = reconstructReplayStatesV2(parseReplayV2(canonical));
     expect(first).toEqual(second);
