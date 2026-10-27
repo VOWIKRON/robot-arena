@@ -143,14 +143,15 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(baseline.frames[0]!.events.at(-1)).toEqual({
       type: 'draw', tick: 1, reason: 'destroyed'
     });
-    const rejects = (change: (doc: any) => void) =>
-      expect(() => parseReplayV2(mutate(canonical, change))).toThrow(/v2-Replay/);
-    rejects(d => { d.frames[0].events.pop(); });
-    rejects(d => { d.frames[0].events.at(-1).reason = 'timeout'; });
-    rejects(d => { d.frames[0].events.at(-1).tick = 2; });
-    rejects(d => { d.frames[0].events.splice(d.frames[0].events.findIndex((e: any) => e.type === 'damage'), 1); });
-    rejects(d => { d.finalState.winner = alpha.id; });
-    rejects(d => { d.finalState.endReason = 'timeout'; });
+    // NEXT-110-E26: reuse the same tamper fixture/byte-stability guard as E13/E15.
+    expectRejectedMutations(canonical, [
+      d => { d.frames[0].events.pop(); },
+      d => { d.frames[0].events.at(-1).reason = 'timeout'; },
+      d => { d.frames[0].events.at(-1).tick = 2; },
+      d => { d.frames[0].events.splice(d.frames[0].events.findIndex((e: any) => e.type === 'damage'), 1); },
+      d => { d.finalState.winner = alpha.id; },
+      d => { d.finalState.endReason = 'timeout'; }
+    ], /v2-Replay/);
     expect(serializeReplayV2(baseline)).toBe(canonical);
     expect(reconstructReplayStatesV2(baseline).at(-1)).toEqual(baseline.finalState);
   });
@@ -189,6 +190,19 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     expect(reconstructReplayStatesV2(parsed).at(-1)).toEqual(parsed.finalState);
     expect(serializeReplayV2(parsed)).toBe(canonical);
     expect(() => parseReplay(canonical)).toThrow(/schemaVersion/);
+  });
+
+  it('NEXT-110-E26 keeps v1/v2 fixture serialization deterministic across seeds and independent parsers', () => {
+    for (const seed of [0, 1, 42, 4711]) {
+      const v1 = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 3));
+      const v2 = serializeReplayV2(recordMatchV2(alpha, beta, seed, 3));
+      expect(serializeReplay(recordMatch(RAPTOR, TITAN, seed, 3))).toBe(v1);
+      expect(serializeReplayV2(recordMatchV2(alpha, beta, seed, 3))).toBe(v2);
+      expect(serializeReplay(parseReplay(v1))).toBe(v1);
+      expect(serializeReplayV2(parseReplayV2(v2))).toBe(v2);
+      expect(() => parseReplay(v2)).toThrow(/schemaVersion/);
+      expect(() => parseReplayV2(v1)).toThrow();
+    }
   });
 
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
