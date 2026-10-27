@@ -86,6 +86,22 @@ describe('NEXT-110 stage B isolated simultaneous-v2 resolver', () => {
     }
   });
 
+  it('is slot-symmetric for mirrored Raptor/Titan across eight seeds', () => {
+    for (const seed of [1, 2, 3, 4, 5, 42, 4711, 65535]) {
+      const left = runMatchV2(RAPTOR, TITAN, seed, 360);
+      const right = runMatchV2(TITAN, RAPTOR, seed, 360);
+      expect(left.outcome).toBe(right.outcome);
+      expect(left.winner).toBe(right.winner);
+      expect(left.tick).toBe(right.tick);
+      expect(left.robotA.structure).toBeCloseTo(right.robotB.structure, 10);
+      expect(left.robotB.structure).toBeCloseTo(right.robotA.structure, 10);
+      expect(left.robotA.energy).toBeCloseTo(right.robotB.energy, 10);
+      expect(left.robotB.energy).toBeCloseTo(right.robotA.energy, 10);
+      expect(left.robotA.position.x).toBeCloseTo(100 - right.robotB.position.x, 10);
+      expect(left.robotB.position.x).toBeCloseTo(100 - right.robotA.position.x, 10);
+    }
+  });
+
   it('preserves a terminal state and consumes no RNG after match end', () => {
     const initial = createMatch(a, b);
     initial.outcome = 'draw';
