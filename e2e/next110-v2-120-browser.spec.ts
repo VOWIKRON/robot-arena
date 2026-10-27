@@ -37,6 +37,7 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   await page.getByRole('button', { name: 'Alle Kämpfe spielen' }).click();
   await expect(page.locator('#tournament-progress')).toContainText('120 / 120', { timeout: testInfo.project.name.includes('webkit') ? 120_000 : 60_000 });
   await expect(page.locator('#tournament-progress')).toContainText('completed');
+  const tournamentElapsedMs = Date.now() - start;
   const original = await exportArchive(page);
   expect(original.archive).toMatchObject({
     schemaVersion: 2,
@@ -55,8 +56,10 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   // downloaded JSON instead, using the actual browser import path.
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  const importStartedAt = Date.now();
   await page.locator('#tournament-file').setInputFiles(original.file);
   await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  const archiveImportElapsedMs = Date.now() - importStartedAt;
   await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
   await expect(page.locator('#tournament-progress')).toContainText('120 / 120');
   await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
@@ -88,6 +91,7 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
 
+  const recoveryStartedAt = Date.now();
   // NEXT-110-E24: repeated invalid imports must not corrupt the current 120-match
   // archive; a subsequent valid import must recover without touching sandbox.
   for (const [index, payload] of ['{broken-json', JSON.stringify({ schemaVersion: 2, run: null })].entries()) {
@@ -109,6 +113,8 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
+  const invalidImportRecoveryElapsedMs = Date.now() - recoveryStartedAt;
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
@@ -127,7 +133,9 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     body: Buffer.from(JSON.stringify({
       ruleset: 'simultaneous-v2', participants: 16, matches: 120,
       maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
-      elapsedMs: Date.now() - start, importedArchiveIdentical: true
+      elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
+      invalidImportRecoveryElapsedMs, timeoutBudgetMs: isWebKit ? 180_000 : 120_000,
+      browserProject: testInfo.project.name, importedArchiveIdentical: true
     }, null, 2)),
     contentType: 'application/json'
   });
