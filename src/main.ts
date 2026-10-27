@@ -628,6 +628,8 @@ el('tournament-pairings').addEventListener('click', event => {
   try {
     if (!tournamentRun) throw new Error('Kein Turnier geladen');
     const recording = replayTournamentMatch(tournamentRun, button.dataset.replayMatchId ?? '');
+    // The browser's imported tournament UI remains v1-only until explicit v2 acceptance QA.
+    if (recording.schemaVersion === 2) throw new Error('v2-Replay im Browser noch nicht freigegeben');
     stopTournamentAuto();
     loadReplay(recording);
     el('replay-feedback').textContent = 'Turnierkampf verifiziert und isoliert geladen.';
