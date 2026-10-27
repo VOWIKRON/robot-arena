@@ -48,5 +48,5 @@ The eight-seed Raptor/Titan mirrored test initially found a one-tick difference 
 - Added a regression verifying the v1 browser gate rejects even valid v2 archives, while engine-level v2 import and v1 browser import remain functional. **New full CI is required; do not mark stage C or NEXT-110 complete before it passes.**
 
 ## 27.10.2026 · 18:09 verification update
-- E1–E6 integrated opt-in v2 simulation, versioned tournament/replay, browser UI, stats and 120-match browser stress passed 787/787 on earlier source HEAD.
+- Earlier explicitly named E1/E2 and E5/E6 plus other unnumbered integration stages: opt-in v2 simulation, versioned tournament/replay, browser UI, stats and 120-match browser stress passed 787/787 on earlier source HEAD.
 - E7–E9 hostile archive and Double-KO replay/browser tests, E10 11 full 60/120-match archive mutations, E11 keyboard/ARIA/statistics browser regression passed GitHub Actions #40546834016 798/798 (536 Vitest, 32 Node, 230 browser) on accc1264. NEXT-110 still open for E12/E13 and final acceptance. No release or deployment.
