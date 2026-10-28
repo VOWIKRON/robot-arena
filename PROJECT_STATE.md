@@ -1,3 +1,16 @@
+## 28.10.2026 · 10:16 Uhr · NEXT-110 E54/E55/E56 ISOLIERT CI-BESTÄTIGT 854/854 · NICHT VERÖFFENTLICHT
+
+**P0 – echte CI-Korrektur:** Erste isolierte QA #40661754137 **FAILED** (TypeScript TS2345 in E56: Union-Typ vor v1/v2-Serialisierung nicht verengt). Auf eigenem E56-Fixbranch korrigiert, Commit `7bbccb44d883`, aus GitHub zurückgelesen und in Entwicklungsbranch integriert. Wiederholte **isolierte QA #40661868967 SUCCESS**: **554 Vitest + 32 Node + 268 Chromium/WebKit Desktop/Mobil = 854/854**; TypeScript, Audit ohne bekannte Advisories, reproduzierbarer Build und vollständige Browsermatrix grün. QA-PR #123 Draft, NIEMALS MERGEN; separater Release-/Publish-Workflow nicht ausgelöst.
+
+**3/3 NEU vollständig implementiert, seriell integriert, refaktoriert und CI-getestet:**
+- **NEXT-110-E54:** verzögert abgebrochener Download-Trigger mit leerem UI-Feedback; Ursache identisch, Diagnose `keines`, 250-ms-Budget, <5s, nach 300ms keine Page-Errors. Commit `5991ef6360a3`, Playwright vier Browserprojekte.
+- **NEXT-110-E55:** 120-Match-Archiv mit vertauschter Ergebnisreihenfolge oder ungültiger Teilnehmer-ID atomar abgewiesen; Fortschritt, Paarungen, Autosave, Replay und Sandbox unverändert; gültiger Recovery-Import danach erfolgreich. Commit `5def70d6f33e`, Playwright vier Browserprojekte.
+- **NEXT-110-E56:** gemeinsame v1/v2-Seek-Play/Pause/Reset-Testhilfe, Seeds 0/7/42, Ticks 0/1/5 und Double-KO; ungültige Cursorpositionen ändern weder Playing-Flag noch Zustand/Ereignisse, kanonische Bytes unverändert. Commit `f16a0d92254f`, Typ-Fix `7bbccb44d883`, Vitest + gesamte Browsermatrix. Produktionsengine, RNG und historische v1-Regeln unverändert.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 57 vollständig getestete, nicht live bestätigte Einheiten.** NEXT-106/107/109 auf main: **Veröffentlichungsstatus ungeklärt** (technisch releasefähig nach separater Freigabe/Versionserhöhung). 54 NEXT-110-Unterpakete E1/E2/E5–E56 auf Entwicklungsbranch: **technisch getestet, nicht live und nicht release-freigegeben**. E3/E4 nicht separat belegt; Parent NEXT-110 OPEN. NEXT-79e reale NVDA/VoiceOver/Touch/Kontrast-Abnahme und NEXT-108 externe Provenienz offen. **Sofort aus dieser Automation veröffentlichbar: keine**, denn Publishing ist ausdrücklich verboten. Nächste E57–E59 wie unten detailliert spezifiziert.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** main zuletzt `753b1a3953b4`; kein Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 10:04 Uhr · NEXT-110 E54/E55/E56 IMPLEMENTIERT – ISOLIERTE QA AUSSTEHEND – NICHT VERÖFFENTLICHT
 
 **Vorprüfung:** main `753b1a3953b4`, bestätigte Live-Version **v0.1.61**; letzter erfolgreich getesteter Entwicklungsstand E1/E2/E5–E53: **849/849** (553 Vitest, 32 Node, 264 Chromium/WebKit Desktop/Mobil), isolierte QA #40654390941 SUCCESS. Entwicklungs-PR #93 Draft; QA-PR #122 Draft und NIEMALS MERGEN. Separates Release-/Evidence-/Publish-Gate nicht ausgelöst.
