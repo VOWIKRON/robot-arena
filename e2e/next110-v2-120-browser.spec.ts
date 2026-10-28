@@ -64,6 +64,31 @@ test('NEXT-110-E45: missing download with empty feedback reports keines', async 
   expect(pageErrors).toEqual([]);
 });
 
+
+/** NEXT-110-E48: a rejected download trigger must retain its cause and
+ * never leave a page-level unhandled error or wait for the 30-second default. */
+test('NEXT-110-E48: rejected download trigger preserves cause without page errors', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-feedback').evaluate(node => {
+    node.textContent = 'E48 Trigger abgebrochen';
+  });
+  const triggerFailure = new Error('E48 absichtlicher Trigger-Abbruch');
+  const startedAt = Date.now();
+  const caught: unknown = await exportArchive(page, {
+    timeoutMs: 250,
+    trigger: async () => { throw triggerFailure; }
+  }).then(() => null, (error: unknown) => error);
+  expect(caught).toBeInstanceOf(Error);
+  expect((caught as Error).message).toMatch(/Download fehlgeschlagen.*250ms.*E48 Trigger abgebrochen/);
+  expect((caught as Error).cause).toBe(triggerFailure);
+  expect(Date.now() - startedAt).toBeLessThan(5_000);
+  await page.waitForTimeout(300);
+  expect(pageErrors).toEqual([]);
+});
+
 test.describe.serial('NEXT-110 120-match archive isolation phases', () => {
 let canonicalArchive = '';
 
