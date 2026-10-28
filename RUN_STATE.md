@@ -1,3 +1,18 @@
+## 28.10.2026 · 09:06 Uhr · NEXT-110 E51/E52/E53 VOLLSTÄNDIG ISOLIERT CI-BESTÄTIGT · NICHT VERÖFFENTLICHT
+
+**P0 – Isolierte QA #40653691141 SUCCESS**, exakter Code- und Dokumentations-Git-Tree des Entwicklungsstands, QA-PR #122 Draft und NIEMALS MERGEN: **553 Vitest + 32 Node + 264 Chromium/WebKit Desktop/Mobil = 849/849**. TypeScript, Sicherheits-Audit (null bekannte Advisories), reproduzierbarer Build und Browsermatrix grün. Separates Release-Evidence-/Publish-Gate wurde nicht ausgelöst.
+
+**3/3 NEU vollständig implementiert, zurückgelesen, refaktoriert und CI-getestet:**
+- **NEXT-110-E51:** abgebrochener Download-Trigger ohne UI-Feedback, identische Fehlerursache, Diagnose `keines`, keine Page-Errors, 250 ms / <5 s. Commit `25405889089e`.
+- **NEXT-110-E52:** falsche Ruleset-Version und vertauschte Match-Seeds nach gültigem 120-Kampf-Recovery werden atomar abgewiesen; Paarungen, Fortschritt, Replay, Autosave und Sandbox unverändert; erneuter gültiger Import erfolgreich. Commit `cfa85496f84e`.
+- **NEXT-110-E53:** gemeinsame v1/v2-Seek-Grenz-Testhilfe, E50-Refactoring und zusätzliche 0/1/3/5-Tick-Fixtures für Seeds 0/7/42; Determinismus, immutable Zustände, RangeError ohne Mutation und bytegleiche Serialisierung. Commit `caef48af9ce8`.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 54 vollständig getestete, nicht live bestätigte Einheiten.** NEXT-106/107/109 auf main: **Veröffentlichungsstatus ungeklärt**. 51 NEXT-110-Unterpakete E1/E2/E5–E53 auf Entwicklungsbranch: **nicht live**. E3/E4 nicht separat belegt; Parent NEXT-110 offen. NEXT-79e praktische NVDA-/VoiceOver-/Touch-/Kontrastabnahme und NEXT-108 externe Provenienz offen.
+
+**Rolling Backlog:** E54 verzögerte Trigger-Ablehnung ohne UI-Feedback (E2E; Cause, Timeout, keine Page-Errors; Playwright vier Projekte; abhängig E51); E55 vertauschte Ergebnisreihenfolge und ungültige Teilnehmer-ID nach Recovery (E2E; atomare Ablehnung, gültiger Recovery-Import, unveränderte Sandbox/Replay; Playwright vier Projekte; abhängig E52); E56 Replay-Seek-Testhilfe für Pause/Play/Reset nach ungültigem Cursor (Unit; Determinismus, Bytegleichheit; Vitest und vollständige Browsermatrix; abhängig E53). Ziele, Dateien, Akzeptanzkriterien und Testkommandos sind im vorhergehenden Eintrag ausführlich festgehalten.
+
+**NICHT VERÖFFENTLICHT.** main `753b1a3953b4` unverändert. Kein Merge nach main, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 09:00 Uhr · NEXT-110 E51/E52/E53 IMPLEMENTIERT · QA AUSSTEHEND · NICHT VERÖFFENTLICHT
 
 **Vorprüfung:** main unverändert `753b1a3953b4`; letzte bestätigte Live-Version v0.1.61. Letzte vollständige isolierte QA #40648365457 SUCCESS auf E1/E2/E5–E50: **844/844** (552 Vitest, 32 Node, 260 Chromium/WebKit Desktop/Mobil). Separate Release-Evidence-Gates nicht erneut ausgelöst. PR #93 Draft. **51 bereits vollständig getestete, noch nicht live bestätigte Einheiten:** NEXT-106/107/109 auf main (Veröffentlichungsstatus ungeklärt), NEXT-110-E1/E2/E5–E50 (48 Unteraufgaben) auf Entwicklungsbranch, nicht live. E3/E4 nicht separat belegt.
