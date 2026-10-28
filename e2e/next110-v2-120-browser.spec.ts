@@ -165,11 +165,11 @@ async function assertRejectedRunning119VariantThenRestore<T extends RunningArchi
   snapshot: ArchiveRecoverySnapshot,
   canonicalBytes: string,
   expectedMutatedTotal = 120,
-  expectedMutatedCursor: unknown = 119
+  expectedMutatedCursor: { value: unknown } = { value: 119 }
 ): Promise<void> {
   const corrupted = makeRunning119Archive(completed);
   mutate(corrupted);
-  expect(corrupted.run.nextMatchIndex).toBe(expectedMutatedCursor);
+  expect(corrupted.run.nextMatchIndex).toBe(expectedMutatedCursor.value);
   expect(corrupted.run.totalMatches).toBe(expectedMutatedTotal);
   verify(corrupted);
   await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
@@ -989,7 +989,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
         expect(archive.run.totalMatches).toBe(120);
         expect(archive.run.status).toBe('running');
       },
-      recoverySnapshot, canonicalArchive, 120, expectedCursor
+      recoverySnapshot, canonicalArchive, 120, { value: expectedCursor }
     );
   }
 
