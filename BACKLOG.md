@@ -1,3 +1,120 @@
+## 28.10.2026 · 16:12 Uhr · NEXT-110 E72/E73/E74 VOLLSTÄNDIG ISOLIERT GETESTET 858/858 · NICHT VERÖFFENTLICHT
+
+**3/3 NEU fertig, auf getrennten Task-Branches seriell implementiert, Code aus GitHub zurückgelesen:** E72 leere/Whitespace-`matchId` im vollständigen 120er-Archiv atomar abweisen (Commit c49e3f22b2ad); E73 inkonsistentes laufendes 119/120-Ergebnispräfix (vertauschte Ergebnisse, vorgezogenes letztes Ergebnis) abweisen (19b384d655d1); E74 E69/E70-Import-/Ablehnungs-/Recovery-Assertions auf typisierte `assertRejectedJsonThenRestore`-Hilfe refaktoriert, alle Prüfungen erhalten (5f47c3a7d335). Datei `e2e/next110-v2-120-browser.spec.ts`, keine Produktionsengine-/RNG-/v1-Regeländerung. Vollständige Recovery-Invarianten: Fortschritt, 120 Paarungen, Replay, Autosave, Sandbox und gültiger Reimport.
+
+**CI:** Isolierte vollständige QA **#40712243550 SUCCESS** auf QA-PR #141 Draft (**NIEMALS MERGEN**), Code-SHA 7e793a950c01c959695a17c54b8e13a4b3b8884e. **858/858:** 554 Vitest (Unit/Behavior/Regression/Determinismus), 32 Node, 272 Chromium/WebKit Desktop/Mobil; TypeScript, Security-Audit ohne bekannte Advisories, reproduzierbarer Build PASS. Nach E74-Refactoring vollständig erneut getestet. Entwicklungs-PR #140 ausschließlich gegen NEXT-110-Entwicklungsbranch, nicht main. Die reine Statusdokumentation wird im QA-Snapshot ebenfalls nachgeprüft.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 75 vollständig getestete, NICHT als live bestätigte Einheiten.** NEXT-106/107/109 bereits auf main (**Veröffentlichungsstatus ungeklärt**, separater v0.1.62-Release-PR #124 offen, UNBERÜHRT). **72 NEXT-110-Unterpakete E1/E2/E5–E74** auf Entwicklungszweig (**NICHT LIVE, NICHT RELEASE-FREIGEGEBEN**). E3/E4 nicht separat belegt; Parent NEXT-110 offen. NEXT-79e manuelle Barrierefreiheitsabnahme, NEXT-108 Provenienzprüfung offen. **Aus dieser Automation veröffentlichbar: keine.**
+
+**Nächste 3 Pakete mit Ziel, Dateien, Abnahme, Tests, Abhängigkeiten:**
+- **NEXT-110-E75 (P1):** Bei laufendem 119/120-Präfix doppelte Match-ID trotz konsistentem Cursor/Status atomar abweisen; `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: Fehlerfeedback, unveränderter 120er-Recovery-Zustand, Replay, Autosave, Sandbox, gültiger Reimport; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` in Chromium Desktop/Mobil und WebKit Desktop/iPhone plus volle isolierte QA; abhängig E73.
+- **NEXT-110-E76 (P1):** Fehlende letzte Match-ID im laufenden 119/120-Ergebnispräfix atomar abweisen; gleiche Datei, gleiche Recovery-Invarianten und Tests; abhängig E73.
+- **NEXT-110-E77 (P2):** E72/E73-Reject-/Recovery-Schleifen auf typisierte Testhilfe refaktorieren, alle Assertions erhalten; gleiche Datei; Test `npm run typecheck && npm test && npm run test:e2e && npm run build` plus isolierte QA; abhängig E74.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, Release-Commit, Release-Workflow, Deployment, publish.php, Homepage oder Änderung anderer Automationen.
+
+### Kumulative vollständig getestete, nicht live bestätigte NEXT-Einheiten seit v0.1.61 (Stand 16:12)
+
+| ID | Funktion | Testnachweis | Veröffentlichungsstatus |
+|---|---|---|---|
+| NEXT-106 | Release-Evidence-Gate | 733/733 | Veröffentlichungstatus ungeklärt; in main |
+| NEXT-107 | Balance und Replay-Import | 736/736 | Veröffentlichungsstatus ungeklärt; in main |
+| NEXT-109 | Erstschussdiagnose | 739/739 | Veröffentlichungsstatus ungeklärt; in main |
+| NEXT-110-E1 | Versioniertes v2-Replayformat | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E2 | Replay-Player | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E5 | Replay-Statistiken | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E6 | 120-Kampf-Stresstest | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E7 | Archiv-Manipulationsschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E8 | Double-KO-Browserprüfung | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E9 | Double-KO-Manipulationsschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E10 | Archiv-Grenzfälle | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E11 | Tastatur-/ARIA-Regression | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E12 | 120-Kampf-Archivschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E13 | Null-Tick-Manipulationsschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E14 | Replay-Tastatursteuerung | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E15 | Double-KO-Regression | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E16 | Seed-Manipulationsschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E17 | Replay-Grenzfälle | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E18 | Replay-Importschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E19 | WebKit-Archivtest | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E20 | Double-KO-Fixture-Refactoring | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E21 | Wiederholte Replay-Importe | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E22 | WebKit-Timeout-Korrektur | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E23 | Manipulations-Testhilfe | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E24 | Archiv-Recovery | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E25 | WebKit-Laufzeitdiagnostik | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E26 | v1/v2-Determinismus | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E27 | Ungültige Archivformate | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E28 | Zeitdatenvalidierung | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E29 | Mehr-Tick-Determinismus | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E30 | Archivmanipulation nach Recovery | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E31 | Zeitdaten-Schema-Refactoring | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E32 | Bidirektionale Replay-Regression | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E33 | Browser-Timeout-Korrektur | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E34 | Negative Zeitdaten-Tests | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E35 | Seek-/Pause-/Play-Regression | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E36 | Getrennte Browserphasen | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E37 | Browser-Zeitbudget-Vertrag | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E38 | Replay-Ereignisfolgen | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E39 | Download-Fehlerdiagnostik | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E40 | Recovery-Invarianten | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E41 | Terminal-/Null-Tick-Fixtures | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E42 | Negativer Downloadtest | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E43 | Doppelter gültiger Archivimport | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E44 | Terminal-Seek-Refactoring | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E45 | Leeres UI-Feedback | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E46 | Wechselnde Archivimporte | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E47 | Seeded Terminal-Seek | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E48 | Abgebrochener Download-Trigger | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E49 | Gemischte Archiv-Manipulationen | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E50 | Double-KO-/v1-Seek-Grenzen | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E51 | Download-Abbruch ohne UI-Feedback | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E52 | Ruleset-/Seed-Manipulationsschutz | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E53 | Gemeinsame v1/v2-Seek-Fixture | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E54 | Verzögerter Download-Abbruch | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E55 | Ergebnisreihenfolge-/Teilnehmer-Manipulation | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E56 | Replay-Steuerung nach ungültigem Seek | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E57 | Download-Timeout nach Trigger | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E58 | Widersprüchliche Archivfortschritte | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E59 | Gemeinsame Archiv-Recovery-Testhilfe | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E60 | Falsche Gesamtzahl/fehlende Ergebnisse | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E61 | Beschädigtes JSON nach Recovery | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E62 | Gemeinsame Reject-/Recovery-Assertions | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E63 | Doppelte Match-ID bei konsistentem Cursor | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E64 | Leeres/Whitespace-JSON | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E65 | Gemeinsame E55/E58-Recovery-Assertions | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E66 | Ungültige einzelne Ergebnisobjekte | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E67 | Nicht-Array-Ergebnisliste | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E68 | Recovery-Snapshot-Refactoring | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E69 | Ungültige Match-ID-Typen | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E70 | Zusätzliches 121. Ergebnis | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E71 | Gemeinsame Reject-/Recovery-Testhilfe | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben |
+| NEXT-110-E72 | Leere/Whitespace-Match-IDs | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben – NEU |
+| NEXT-110-E73 | Inkonsistentes laufendes Ergebnispräfix | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben – NEU |
+| NEXT-110-E74 | E69/E70-Recovery-Refactoring | gemeinsame CI 858/858 | Nicht live, nicht release-freigegeben – NEU |
+
+NEXT-110-E3/E4 sind nicht separat belegt und nicht mitgezählt.
+
+## 28.10.2026 · 16:07 Uhr · NEXT-110 E72/E73/E74 IMPLEMENTIERT – VOLLSTÄNDIGE QA LÄUFT · NICHT VERÖFFENTLICHT
+
+**Vorprüfung:** Letzte bestätigte Live-Version v0.1.61 (Deploymentstatus success); main 753b1a3953b4c5f6bfd7537b2213cf02961d50e5. NEXT-106/107/109 auf main, **Veröffentlichungsstatus ungeklärt**, separater v0.1.62-Release-PR #124 offen und UNBERÜHRT. Entwicklungs-PR #93 Draft; letzte erfolgreiche vollständige QA #40704250424: 858/858 (554 Vitest, 32 Node, 272 Chromium/WebKit Desktop/Mobil), TypeScript, Audit, reproduzierbarer Build PASS. E3/E4 nicht eigenständig belegt.
+
+**3 geplant / 3 seriell implementiert / 0 neu CI-bestätigt (bis QA grün):**
+- **NEXT-110-E72 (P1):** Leere und Whitespace-`matchId` nach vollständig gültiger 120er-Recovery atomar abweisen; `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: zwei negative JSON-Importe, unveränderter Fortschritt, 120 Paarungen, Replay, Autosave, Sandbox und gültiger Reimport; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` in Chromium Desktop/Mobil und WebKit Desktop/iPhone + volle QA; abhängig E69. Parser `src/engine/tournament-archive.ts` prüft Match-ID gegen deterministische Fixture-ID. Commit c49e3f22b2ad.
+- **NEXT-110-E73 (P1):** Inkonsistentes 119/120-Ergebnispräfix bei laufendem Turnier (vertauschte letzte Ergebnisse oder vorgezogenes Ergebnis aus Match 120) atomar abweisen; gleiche Datei, alle Recovery-Invarianten, eindeutige IDs und gültiger Reimport; gleiche Browsermatrix + volle QA; abhängig E70. Commit 19b384d655d1.
+- **NEXT-110-E74 (P2):** E69/E70-Import-/Reject-/Recovery-Prüfungen auf typisierte `assertRejectedJsonThenRestore`-Hilfe refaktoriert, sämtliche Assertions und Input-Clear-Wartebedingung erhalten; gleiche Datei, `npm run typecheck && npm test && npm run test:e2e && npm run build` plus isolierte QA; abhängig E71. Commit 5f47c3a7d335. Produktionsengine/RNG/v1-Regeln unverändert.
+
+**GitHub:** drei eigene serielle Task-Branches; Entwicklungs-PR #140 Draft ausschließlich gegen NEXT-110-Branch; isolierter QA-PR #141 Draft gegen `qa/NEXT-71-combined-integration`, **NIEMALS MERGEN**. Vollständige isolierte QA #40712243550 gestartet, noch kein SUCCESS belegt. Keine ungetesteten Änderungen als fertig zählen.
+
+**Kumulativ SICHER getestet seit v0.1.61: 72 Einheiten:** NEXT-106/107/109 auf main (Live-Status ungeklärt) und 69 NEXT-110-Unterpakete E1/E2/E5–E71 im Entwicklungsbranch (nicht live, nicht release-freigegeben). E72–E74 erst nach grüner QA zusätzlich zählen. NEXT-110 Parent offen, NEXT-79e manuelle Abnahme, NEXT-108 Provenienz offen. **Aus dieser Automation veröffentlichbar: keine.**
+
+**Rolling Backlog, nächste Pakete:**
+- **NEXT-110-E75 (P1):** bei laufendem 119/120-Präfix einen doppelten Match-ID-Eintrag atomar abweisen, sonst valide Cursor/Status; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: negative Importprüfung + 120er-Recovery-Invarianten + gültiger Reimport; Test vier Playwright-Browserprojekte + QA; abhängig E73.
+- **NEXT-110-E76 (P1):** fehlende letzte Ergebnis-ID im 119/120-Präfix abweisen; gleiche Datei; Akzeptanz: keine Zustandsmutation, gültiger Reimport; gleiche Tests; abhängig E73.
+- **NEXT-110-E77 (P2):** E72/E73-Reject-/Recovery-Schleifen auf gemeinsame typisierte Testhilfe prüfen/refaktorieren, alle Assertions erhalten; gleiche Datei; Test `npm run typecheck && npm test && npm run test:e2e && npm run build` + QA; abhängig E74.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, Release-Commit, Release-Workflow, Deployment, publish.php, Homepage oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 15:16 Uhr · NEXT-110 E69/E70/E71 VOLLSTÄNDIG ISOLIERT GETESTET 858/858 · NICHT VERÖFFENTLICHT
 
 **3/3 NEU fertig, seriell entwickelt und nach Refactoring vollständig CI-bestätigt:** E69 ungültige `matchId`-Typen (null, Zahl, Array, Objekt) atomar abweisen, Commit `e203a763ab8a`; E70 121. Ergebnis bei 120er-Cursor/120er-Gesamtzahl abweisen, Commit `1f99594380be`; E71 E66/E67-Import-/Reject-/Recovery-Schleifen in typisierte Testhilfe `assertRejectedJsonThenRestore` zusammenführen, alle Assertions und Input-Clear-Synchronisation erhalten, Commit `e28f574fbba6`. Jeweils gültiger Reimport und unveränderte 120 Paarungen, Fortschritt, Replay, Autosave, Sandbox. Nur `e2e/next110-v2-120-browser.spec.ts` produktiv unveränderte Testentwicklung. Drei eigene Task-Branches; Entwicklungs-PR #137 nach QA ausschließlich in NEXT-110-Entwicklungsbranch gemergt, Merge `db8113b4e6b3`.

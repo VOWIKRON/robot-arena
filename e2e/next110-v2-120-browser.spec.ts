@@ -680,15 +680,27 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(corrupted.run.nextMatchIndex).toBe(120);
     expect(corrupted.run.status).toBe('completed');
     expect(JSON.stringify(corrupted)).not.toBe(before);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e69-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify(corrupted))
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-    await importCanonicalArchive(page, `next110-e69-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e69-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
+  }
+
+  // NEXT-110-E72: fixture-order validation rejects empty and whitespace
+  // match IDs even when the completed 120-result prefix is otherwise intact.
+  const blankMatchIds = [
+    { name: 'empty', value: '' },
+    { name: 'whitespace', value: '   ' }
+  ];
+  for (const { name, value } of blankMatchIds) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results[119].matchId = value;
+    expect(corrupted.run.results).toHaveLength(120);
+    expect(corrupted.run.nextMatchIndex).toBe(120);
+    expect(corrupted.run.status).toBe('completed');
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e72-${name}-match-id.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
   }
 
   // NEXT-110-E70: reject a 121st result despite a consistent completed
@@ -702,15 +714,38 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   expect(extraResultArchive.run.nextMatchIndex).toBe(120);
   expect(extraResultArchive.run.totalMatches).toBe(120);
   expect(extraResultArchive.run.status).toBe('completed');
-  await page.locator('#tournament-file').setInputFiles({
-    name: 'next110-e70-extra-result.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(JSON.stringify(extraResultArchive))
-  });
-  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-  await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-  await importCanonicalArchive(page, 'next110-e70-valid-after-extra-result.json', canonicalArchive);
-  await assertCanonicalArchiveRestored(page, recoverySnapshot);
+  // NEXT-110-E74: reuse the typed reject/recover helper for E69 and E70;
+  // the same input-clear wait and all immutable-state assertions still run.
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e70-extra-result.json', extraResultArchive, recoverySnapshot, canonicalArchive
+  );
+
+  // NEXT-110-E73: a running 119/120 archive must contain the exact
+  // deterministic result prefix, not just the right count and cursor.
+  const invalidRunningPrefixes: Array<{ name: string; change: (archive: any) => void }> = [
+    { name: 'swapped-tail', change: archive => {
+      [archive.run.results[117], archive.run.results[118]] =
+        [archive.run.results[118], archive.run.results[117]];
+    } },
+    { name: 'future-result-in-prefix', change: archive => {
+      archive.run.results[118] = structuredClone(original.archive.run.results[119]);
+    } }
+  ];
+  for (const { name, change } of invalidRunningPrefixes) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results = corrupted.run.results.slice(0, 119);
+    corrupted.run.nextMatchIndex = 119;
+    corrupted.run.status = 'running';
+    change(corrupted);
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    expect(corrupted.run.status).toBe('running');
+    expect(new Set(corrupted.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e73-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
+  }
 
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
