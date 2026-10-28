@@ -329,11 +329,20 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
 
   // NEXT-110-E46: alternate invalid/valid imports in the fresh recovery
   // context without triggering more downloads. Each rejection must be atomic.
-  for (let attempt = 0; attempt < 2; attempt++) {
+  // NEXT-110-E49: alternate two *different* tamper types across repeated
+  // invalid/valid recovery cycles, without additional browser downloads.
+  const mixedTamperCases = [
+    { name: 'missing-match-id', change: (archive: any) => { delete archive.run.results[118].matchId; } },
+    { name: 'duplicate-result', change: (archive: any) => {
+      archive.run.results[118] = structuredClone(archive.run.results[117]);
+    } }
+  ];
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const tamper = mixedTamperCases[attempt % mixedTamperCases.length]!;
     const corrupted = structuredClone(original.archive);
-    corrupted.run.results[118] = structuredClone(corrupted.run.results[117]);
+    tamper.change(corrupted);
     await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e46-invalid-${attempt}.json`,
+      name: `next110-e49-${tamper.name}-${attempt}.json`,
       mimeType: 'application/json',
       buffer: Buffer.from(JSON.stringify(corrupted))
     });
@@ -341,6 +350,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
     expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
+    await expect(page.locator('#tournament-autosave')).toBeDisabled();
+    await expect(page.locator('#tournament-pairings li').last()
+      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
     await page.locator('#tournament-file').setInputFiles({
