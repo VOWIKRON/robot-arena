@@ -1,3 +1,23 @@
+## 28.10.2026 · 14:16 Uhr · NEXT-110 E66/E67/E68 ISOLIERT CI-BESTÄTIGT 858/858 · NICHT VERÖFFENTLICHT
+
+**P0 – CI:** Vollständige isolierte **Code+Dokumentations-QA #40693826715 SUCCESS** auf QA-PR #135 Draft (**NIEMALS MERGEN**): **554 Vitest + 32 Node + 272 Chromium/WebKit Desktop/Mobil = 858/858**, TypeScript, Audit ohne bekannte Advisories und reproduzierbarer Build PASS. GitHub-Job 122835200172 bestätigt alle Schritte einschließlich Browsermatrix; der QA-Snapshot enthält die acht geänderten Entwicklungsdateien und ist von dem zuvor grünen QA-Stand abgeleitet. Diese zusätzliche Statusnotiz ist eine reine Dokumentationsänderung; abschließende Nachprüfung bei Bedarf separat.
+
+**3/3 NEU vollständig implementiert, seriell integriert, aus GitHub zurückgelesen und erfolgreich getestet:**
+- **NEXT-110-E66:** `run.results[119]` null, String oder Array trotz korrektem 120er-Cursor atomar abgewiesen; gültiger Reimport und alle Replay-/Autosave-/Sandbox-Invarianten erfolgreich. Commit `b1351d6f22d0`.
+- **NEXT-110-E67:** `run.results` als null, Objekt oder String atomar abgewiesen; gültiger Reimport, 120 Paarungen und UI unverändert. Commit `18c34a89949e`.
+- **NEXT-110-E68:** Acht redundante E60/E61/E63/E64-Snapshot-Literale durch typisierte `recoverySnapshot`-Referenzen ersetzt, keine Assertions entfernt, vollständige Browserregression grün. Commit `1d4c972e523a`. Produktionsengine, RNG und historische v1-Regeln unverändert.
+
+**Integration:** Entwicklungs-PR #132 wurde nach erfolgreicher isolierter QA **ausschließlich in den NEXT-110-Entwicklungsbranch** gemergt, Merge-Commit `8e36887fae6410148b17133cfbf5eaebdefb805e`. Entwicklungs-PR #93 bleibt Draft, main unverändert. QA-PRs #133/#134/#135 bleiben ungemergt.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 69 vollständig getestete, nicht live bestätigte Einheiten.** NEXT-106/107/109 auf main (**Veröffentlichungsstatus ungeklärt**, separater v0.1.62-Release-PR #124 offen). **66 NEXT-110-Unterpakete E1/E2/E5–E68** auf Entwicklungsbranch (**NICHT LIVE, NICHT RELEASE-FREIGEGEBEN**). E3/E4 nicht separat belegt; NEXT-110 Parent offen. NEXT-79e manuelle NVDA-/VoiceOver-/Touch-/Kontrastabnahme und NEXT-108 Provenienz offen. **Aus dieser Automation veröffentlichbar: keine**.
+
+**Rolling Backlog:**
+- **NEXT-110-E69 (P1):** Ergebnisobjekt mit fehlendem oder ungültigem `matchId`-Typ nach Recovery atomar abweisen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: unveränderter 120er-Fortschritt, Replay, Autosave, Sandbox, gültiger Reimport; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` in Chromium/WebKit Desktop/Mobil plus vollständige isolierte QA; abhängig E66.
+- **NEXT-110-E70 (P1):** 121. Ergebnis bei abgeschlossenem Cursor und 120 Paarungen atomar abweisen; gleiche Datei, gleiche Invarianten und Testkommandos; abhängig E67.
+- **NEXT-110-E71 (P2):** E66/E67-Import-/Reject-/Recovery-Schleifen in typisierte Testhilfe refaktorieren, alle Assertions erhalten; gleiche Datei; Test `npm run typecheck && npm test && npm run test:e2e && npm run build` plus isolierte QA; abhängig E68.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 14:05 Uhr · NEXT-110 E66/E67/E68 IMPLEMENTIERT – ISOLIERTE QA AUSSTEHEND · NICHT VERÖFFENTLICHT
 
 **Vorprüfung:** Entwicklungs-PR #93 Draft, HEAD db9f916012407a5dbd62e1bebb2a2493197c9e25; letzte bestätigte QA #40685366925 SUCCESS, 858/858 (554 Vitest, 32 Node, 272 Chromium/WebKit Desktop/Mobil), TypeScript, Audit, reproduzierbarer Build grün. Letzte bestätigte Live-Version v0.1.61. NEXT-106/107/109 in main: **Veröffentlichungsstatus ungeklärt**, separater Release-PR #124 v0.1.62 offen und UNBERÜHRT. E3/E4 nicht separat belegt; NEXT-110 Parent offen.
