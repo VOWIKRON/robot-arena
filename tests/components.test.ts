@@ -59,7 +59,7 @@ describe('robot components', () => {
   });
 
   it('stores every supported strategy and remains JSON serializable', () => {
-    for (const strategy of ['aggressive', 'defensive', 'distance', 'melee'] as const) {
+    for (const strategy of ['aggressive', 'defensive', 'distance', 'melee', 'adaptive'] as const) {
       const robot = buildRobotDefinition({ id: strategy, name: strategy, chassis: RAPTOR_CHASSIS, motor: BALANCED_MOTOR, armor: STANDARD_ARMOR, energySupply: STANDARD_ENERGY, sensor: STANDARD_SENSOR, weapon: RAPTOR_WEAPON, strategy });
       expect(robot.strategy).toBe(strategy);
       expect(JSON.parse(JSON.stringify(robot))).toEqual(robot);
