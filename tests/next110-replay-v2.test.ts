@@ -59,6 +59,39 @@ const expectTerminalSeekImmutable = (bytes: string, positions: number[]): void =
   expect(serializeReplayV2(recording)).toBe(bytes);
 };
 
+/** NEXT-110-E53: one characterization for v1 and v2 cursor boundaries.
+ * Keep identity, immutable snapshots and canonical bytes across invalid seeks. */
+const expectSeededSeekBoundsImmutable = (bytes: string, schemaVersion: 1 | 2): void => {
+  const recording = schemaVersion === 2 ? parseReplayV2(bytes) : parseReplay(bytes);
+  const player = new ReplayPlayer(recording);
+  const end = player.length;
+  const positions = [end, 0, end, Math.floor(end / 2), 0, end];
+  for (const position of positions) {
+    player.seek(position);
+    const reference = new ReplayPlayer(recording);
+    for (let tick = 0; tick < position; tick++) expect(reference.step()).toBe(true);
+    expect(player.tick).toBe(position);
+    expect(player.state).toEqual(reference.state);
+    expect(player.events).toEqual(reference.events);
+    expect(Object.isFrozen(player.state)).toBe(true);
+    const unchangedState = player.state;
+    const unchangedEvents = player.events;
+    for (const invalid of [-1, end + 1, Number.NaN, Number.POSITIVE_INFINITY,
+      Number.NEGATIVE_INFINITY, 0.5]) {
+      expect(() => player.seek(invalid)).toThrow(RangeError);
+      expect(player.tick).toBe(position);
+      expect(player.state).toBe(unchangedState);
+      expect(player.events).toEqual(unchangedEvents);
+    }
+  }
+  player.reset();
+  expect(player.tick).toBe(0);
+  expect(player.events).toEqual([]);
+  const bytesAfter = recording.schemaVersion === 2
+    ? serializeReplayV2(recording) : serializeReplay(recording);
+  expect(bytesAfter).toBe(bytes);
+};
+
 describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () => {
   it('records and reconstructs 4 seeds without simulation or RNG during playback', () => {
     for (const seed of [1, 42, 4711, 65535]) {
@@ -454,40 +487,23 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     for (const seed of [0, 1, 7, 42, 4711]) {
       const v2Bytes = doubleKoReplayJson(seed);
       const v1Bytes = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 5));
-      const recordings = [parseReplayV2(v2Bytes), parseReplay(v1Bytes)];
-      for (const recording of recordings) {
-        const player = new ReplayPlayer(recording);
-        const canonical = recording.schemaVersion === 2 ? v2Bytes : v1Bytes;
-        const end = player.length;
-        expect(end).toBeGreaterThan(0);
-        const positions = [end, 0, end, Math.floor(end / 2), 0, end];
-        for (const position of positions) {
-          player.seek(position);
-          const reference = new ReplayPlayer(recording);
-          for (let tick = 0; tick < position; tick++) expect(reference.step()).toBe(true);
-          expect(player.tick).toBe(position);
-          expect(player.state).toEqual(reference.state);
-          expect(player.events).toEqual(reference.events);
-          expect(Object.isFrozen(player.state)).toBe(true);
-          const unchangedState = player.state;
-          const unchangedEvents = player.events;
-          for (const invalid of [-1, end + 1, Number.NaN, Number.POSITIVE_INFINITY,
-            Number.NEGATIVE_INFINITY, 0.5]) {
-            expect(() => player.seek(invalid)).toThrow(RangeError);
-            expect(player.tick).toBe(position);
-            expect(player.state).toBe(unchangedState);
-            expect(player.events).toEqual(unchangedEvents);
-          }
-        }
-        player.reset();
-        expect(player.tick).toBe(0);
-        expect(player.events).toEqual([]);
-        const bytesAfter = recording.schemaVersion === 2
-          ? serializeReplayV2(recording) : serializeReplay(recording);
-        expect(bytesAfter).toBe(canonical);
-      }
+      expectSeededSeekBoundsImmutable(v2Bytes, 2);
+      expectSeededSeekBoundsImmutable(v1Bytes, 1);
       expect(doubleKoReplayJson(seed)).toBe(v2Bytes);
       expect(serializeReplay(parseReplay(v1Bytes))).toBe(v1Bytes);
+    }
+  });
+
+  it('NEXT-110-E53: shared v1/v2 seek characterization stays deterministic at short tick boundaries', () => {
+    for (const seed of [0, 7, 42]) {
+      for (const maxTicks of [0, 1, 3, 5]) {
+        const v2Bytes = serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks));
+        const v1Bytes = serializeReplay(recordMatch(RAPTOR, TITAN, seed, maxTicks));
+        expectSeededSeekBoundsImmutable(v2Bytes, 2);
+        expectSeededSeekBoundsImmutable(v1Bytes, 1);
+        expect(serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks))).toBe(v2Bytes);
+        expect(serializeReplay(recordMatch(RAPTOR, TITAN, seed, maxTicks))).toBe(v1Bytes);
+      }
     }
   });
 
