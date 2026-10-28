@@ -32,6 +32,17 @@ async function exportArchive(
   return { archive: JSON.parse(await readFile(file, 'utf8')), file };
 }
 
+/** NEXT-110-E59: one typed recovery path for canonical archive reimports.
+ * The input-clear synchronization remains mandatory after every import. */
+async function importCanonicalArchive(page: Page, filename: string, canonicalBytes: string): Promise<void> {
+  await page.locator('#tournament-file').setInputFiles({
+    name: filename,
+    mimeType: 'application/json',
+    buffer: Buffer.from(canonicalBytes)
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -379,12 +390,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   const pairingsBeforeReimports = await page.locator('#tournament-pairings').innerText();
   const progressBeforeReimports = await page.locator('#tournament-progress').innerText();
   for (let attempt = 0; attempt < 2; attempt++) {
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e43-valid-${attempt}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(canonicalArchive)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await importCanonicalArchive(page, `next110-e43-valid-${attempt}.json`, canonicalArchive);
     await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
     await expect(page.locator('#tournament-progress')).toContainText('120 / 120');
@@ -425,12 +431,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e46-valid-${attempt}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(canonicalArchive)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await importCanonicalArchive(page, `next110-e46-valid-${attempt}.json`, canonicalArchive);
     await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
     await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
@@ -471,12 +472,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await expect(page.locator('#tournament-pairings li').last()
       .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e52-valid-after-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(canonicalArchive)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await importCanonicalArchive(page, `next110-e52-valid-after-${name}.json`, canonicalArchive);
     await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
     expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
@@ -512,12 +508,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await expect(page.locator('#tournament-pairings li').last()
       .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e55-valid-after-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(canonicalArchive)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await importCanonicalArchive(page, `next110-e55-valid-after-${name}.json`, canonicalArchive);
     await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
     expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
@@ -550,12 +541,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await expect(page.locator('#tournament-pairings li').last()
       .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e58-valid-after-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(canonicalArchive)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await importCanonicalArchive(page, `next110-e58-valid-after-${name}.json`, canonicalArchive);
     await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
     await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
