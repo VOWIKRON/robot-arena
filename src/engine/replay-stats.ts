@@ -1,4 +1,5 @@
 import type { ReplayDocument } from './replay-format';
+import type { ReplayDocumentV2 } from './replay-v2';
 
 export type RobotReplayStatistics = Readonly<{
   id: string;
@@ -18,7 +19,7 @@ export type ReplayStatistics = Readonly<{
 
 /** Pure event analysis. Deduplicates same-type actor/target events per tick and
  * clamps effective damage to the victim's remaining recorded structure. */
-export function analyzeReplay(recording: ReplayDocument): ReplayStatistics {
+export function analyzeReplay(recording: ReplayDocument | ReplayDocumentV2): ReplayStatistics {
   const mutable = [recording.robotA, recording.robotB].map(def => ({
     id: def.id, name: def.name, shots: 0, hits: 0, effectiveDamage: 0, energySpent: 0
   }));
