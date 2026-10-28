@@ -871,6 +871,23 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E84: a running 119/120 archive cannot contain a non-array
+  // results collection even when its cursor, total and status are coherent.
+  for (const { name, value } of [
+    { name: 'null-results', value: null },
+    { name: 'object-results', value: { 0: original.archive.run.results[0], length: 119 } },
+    { name: 'string-results', value: '119 match results' }
+  ] as Array<{ name: string; value: unknown }>) {
+    const corrupted = makeRunning119Archive(original.archive);
+    (corrupted.run as { results: unknown }).results = value;
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    expect(corrupted.run.status).toBe('running');
+    await assertRejectedJsonThenRestore(
+      page, `next110-e84-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
