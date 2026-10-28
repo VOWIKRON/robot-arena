@@ -1,3 +1,18 @@
+## 28.10.2026 · 12:07 Uhr · NEXT-110 E60/E61/E62 ISOLIERT QA-BESTÄTIGT 858/858 · NICHT VERÖFFENTLICHT
+
+**P0 – CI:** Isolierte nicht veröffentlichende QA **#40676668507 SUCCESS** auf QA-PR #127 Draft (NIEMALS MERGEN): **554 Vitest + 32 Node + 272 Chromium/WebKit Desktop/Mobil = 858/858**. TypeScript, Audit ohne bekannte Advisories, reproduzierbarer Build und vier Browserprojekte erfolgreich. E60/E61/E62-Code und vorherige Dokumentation exakt im QA-Snapshot; finaler Dokumentationsstand erhält eigene Nachprüfung. Release-/Publish-Workflows nicht ausgelöst.
+
+**3/3 NEU vollständig implementiert, seriell integriert, aus GitHub zurückgelesen und erfolgreich CI-getestet:**
+- **NEXT-110-E60:** totalMatches 119/121 und fehlendes letztes Ergebnis bei completed 120-Match-Archiv atomar abgewiesen; gültiger Reimport nach jedem Fehler, 120 Paarungen/Replay/Autosave/Sandbox stabil. Commit `b639088c1b1f`.
+- **NEXT-110-E61:** abgeschnittenes und syntaktisch ungültiges JSON nach Recovery atomar abgewiesen, unveränderter Turnierstand und gültiger Reimport. Commit `0b1be4d697d7`.
+- **NEXT-110-E62:** gemeinsame typisierte `ArchiveRecoverySnapshot`-Assertions für E60/E61, ohne Assertionsverlust; vollständige Browser-Regression grün. Commit `72a3b0149b32`. Produktionsengine, RNG und historische v1-Regeln unverändert.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 63 vollständig getestete, nicht live bestätigte Einheiten.** NEXT-106/107/109 auf main: **Veröffentlichungsstatus ungeklärt**, separater v0.1.62-Release-PR #124 offen. **60 NEXT-110-Unterpakete E1/E2/E5–E62** auf Entwicklungsbranch: technisch getestet, NICHT LIVE und NICHT release-freigegeben. E3/E4 nicht separat belegt; NEXT-110 Parent offen. NEXT-79e reale NVDA-/VoiceOver-/Touch-/Kontrastabnahme und NEXT-108 externe Provenienz offen. **Aus dieser Automation sofort veröffentlichbar: keine** (Publishing verboten).
+
+**Rolling Backlog:** E63 (P1: doppelte Match-ID bei konsistentem Cursor atomar abweisen; `e2e/next110-v2-120-browser.spec.ts`; 120 Paarungen/Replay/Sandbox stabil und gültiger Reimport; Playwright vier Projekte; abhängig E60); E64 (P1: leeres/Whitespace-JSON nach Recovery atomar abweisen; gleiche Datei, sichtbares Feedback, unveränderter Stand und gültiger Reimport; Playwright vier Projekte; abhängig E61); E65 (P2: E55/E58-Recovery-Assertions auf E62-Hilfen refaktorieren, Assertions nicht entfernen; gleiche Datei; `npm run typecheck && npm test && npm run test:e2e` und vollständige isolierte QA; abhängig E62).
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 12:00 Uhr · NEXT-110 E60/E61/E62 IMPLEMENTIERT · ISOLIERTE QA NOCH NICHT BESTÄTIGT · NICHT VERÖFFENTLICHT
 
 **Vorprüfung:** Entwicklungs-PR #93 Draft; letzter bestätigter isolierter QA-Lauf #40669861326 SUCCESS mit 858/858 (554 Vitest, 32 Node, 272 Chromium/WebKit Desktop/Mobil). Letzte bestätigte Live-Version v0.1.61. NEXT-106/107/109 bereits auf main, **Veröffentlichungsstatus ungeklärt**; separater Release-Kandidat v0.1.62 PR #124 offen, nicht bearbeitet. main bleibt unangetastet.
