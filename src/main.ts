@@ -6,6 +6,7 @@ import { SeededRandom } from './engine/random';
 import { EventRecorder } from './engine/recorder';
 import { downloadReplay, readReplayFile } from './engine/replay-io';
 import { parseReplay, serializeReplay, type ReplayDocument } from './engine/replay-format';
+import { parseReplayV2, type ReplayDocumentV2 } from './engine/replay-v2';
 import { ReplayPlayer } from './engine/replay-player';
 import { analyzeReplay, type ReplayStatistics } from './engine/replay-stats';
 import { RAPTOR, TITAN } from './engine/presets';
@@ -46,7 +47,7 @@ app.innerHTML = `
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
 <div class="arena-actions" aria-label="Aktionen"><div class="arena-action-group arena-action-group--combat" role="group" aria-label="Kampfsteuerung"><span class="action-group-label" aria-hidden="true">Kampf</span><button id="start">Start</button><button id="pause">Pause</button><button id="step">1 Tick</button><button id="reset">Reset</button></div><div class="arena-action-group arena-action-group--tools" role="group" aria-label="Werkzeuge"><span class="action-group-label" aria-hidden="true">Werkzeuge</span><button id="open-config">Konfiguration</button><button id="open-replay">Replay</button><button id="open-tournament">Turnier</button></div></div>
-<dialog id="tournament-dialog" aria-labelledby="tournament-title" aria-describedby="tournament-description"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="tournament-title">Turnier planen</h2><button id="close-tournament" aria-label="Turnier schließen">×</button></div><p id="tournament-description">Turniere für 2 bis 16 Roboter: Round Robin mit einzelnem oder automatischem Kampfablauf und optional ausgeglichener Seitenzuordnung, oder K.-o.-Bracket. Der Sandbox-Kampf bleibt unverändert.</p><nav class="tournament-steps" aria-label="Turnierschritte"><a href="#tournament-setup">1 · Einrichten</a><a href="#tournament-play">2 · Spielen</a><a href="#tournament-results">3 · Ergebnisse</a></nav><section id="tournament-setup" class="tournament-step" aria-labelledby="tournament-setup-heading"><h3 id="tournament-setup-heading">1 · Einrichten</h3><p>Wähle Format und Teilnehmer. Erstelle anschließend einen Spielplan.</p><div class="tournament-options"><label>Teilnehmerzahl<input id="tournament-count" type="number" min="2" max="16" step="1" value="2"></label><label>Turnier-Startwert<span class="field-help" id="tournament-seed-help">Gleicher Startwert und gleiche Roboter erzeugen dieselben Kampfergebnisse.</span><input aria-describedby="tournament-seed-help" id="tournament-seed" type="number" min="0" max="9007199254740991" step="1" value="4711"></label><label>Ticklimit je Kampf<span class="field-help" id="tournament-ticks-help">Ein Tick ist ein Simulationsschritt. Das Limit beendet zu lange Kämpfe.</span><input aria-describedby="tournament-ticks-help" id="tournament-ticks" type="number" min="1" max="3600" step="1" value="3600"></label></div><h3>Teilnehmer</h3><div id="tournament-participants" class="tournament-participants"></div><label>Turnierformat<span class="field-help" id="tournament-format-help">Jeder gegen jeden: alle Paarungen. K.-o.: Verlierer scheiden aus.</span><select aria-describedby="tournament-format-help" id="tournament-format"><option value="round-robin">Jeder gegen jeden</option><option value="knockout">K.-o.-Turnier</option></select></label><label>Seitenzuordnung (Round Robin)<select id="tournament-side-assignment"><option value="legacy">Klassisch (bisheriges Verhalten)</option><option value="balanced">Ausgeglichen (A/B-Differenz höchstens 1)</option></select></label><div class="controls"><button id="tournament-create">Spielplan erstellen</button></div></section><section id="tournament-play" class="tournament-step" aria-labelledby="tournament-play-heading"><h3 id="tournament-play-heading">2 · Spielen</h3><p>Starte einzelne Kämpfe oder den gesamten Spielplan. Du kannst jederzeit pausieren und fortsetzen.</p><div class="controls"><button id="tournament-run">Nächster Kampf</button><button id="tournament-auto">Alle Kämpfe spielen</button><button id="tournament-pause">Pause</button><button id="tournament-resume">Fortsetzen</button><button id="tournament-cancel">Abbrechen</button></div></section><section id="tournament-results" class="tournament-step" aria-labelledby="tournament-results-heading"><h3 id="tournament-results-heading">3 · Ergebnisse</h3><p>Fortschritt, Paarungen und Tabelle werden nach dem Erstellen des Spielplans angezeigt.</p><div class="controls"><button id="tournament-export">Speichern</button><button id="tournament-table-csv">Tabelle CSV</button><button id="tournament-table-json">Tabelle JSON</button></div><details class="tournament-advanced" open><summary>Turnierdateien und lokale Sicherung</summary><div class="controls"><button id="tournament-import">Laden</button></div><div class="tournament-local-save"><label><input id="tournament-autosave" type="checkbox"> Automatisch nur in diesem Browser sichern</label><button id="tournament-restore" type="button">Lokale Sicherung laden</button><button id="tournament-clear-saved" type="button">Lokale Sicherung löschen</button></div></details><input id="tournament-file" type="file" accept=".json,application/json" hidden aria-label="Turnierdatei"><p id="tournament-save-status" role="status" aria-live="polite" aria-atomic="true" class="tournament-save-status" data-state="idle"></p><p id="tournament-feedback" role="status" aria-live="polite" class="status"></p><section id="tournament-preview" hidden aria-label="Turniervorschau"><h3>Fortschritt</h3><p id="tournament-progress" role="status" aria-live="polite" aria-label="Turnierfortschritt"></p><h3>Paarungen</h3><div class="tournament-match-filters" role="group" aria-label="Paarungen filtern"><label for="tournament-match-search">Teilnehmer oder Match-ID<input id="tournament-match-search" type="search" autocomplete="off" placeholder="Name oder match-001"></label><label for="tournament-match-status">Ergebnisstatus<select id="tournament-match-status"><option value="all">Alle</option><option value="pending">Ausstehend</option><option value="completed">Abgeschlossen</option></select></label><button id="tournament-match-reset" type="button">Suche zurücksetzen</button></div><p id="tournament-match-count" role="status" aria-live="polite" class="tournament-filter-summary"></p><ol id="tournament-pairings" class="tournament-pairings" tabindex="0" aria-label="Spielplan, mit Pfeiltasten scrollbar"></ol><h3>Tabelle</h3><p class="field-help">Reststruktur bezeichnet die verbleibenden Lebenspunkte nach einem Kampf.</p><div id="tournament-table-scroll" class="tournament-table-scroll" tabindex="0" role="region" aria-label="Turniertabelle, horizontal scrollbar"></div></section></section></div></dialog>
+<dialog id="tournament-dialog" aria-labelledby="tournament-title" aria-describedby="tournament-description"><div class="config-dialog-card"><div class="config-dialog-header"><h2 id="tournament-title">Turnier planen</h2><button id="close-tournament" aria-label="Turnier schließen">×</button></div><p id="tournament-description">Turniere für 2 bis 16 Roboter: Round Robin mit einzelnem oder automatischem Kampfablauf und optional ausgeglichener Seitenzuordnung, oder K.-o.-Bracket. Der Sandbox-Kampf bleibt unverändert.</p><nav class="tournament-steps" aria-label="Turnierschritte"><a href="#tournament-setup">1 · Einrichten</a><a href="#tournament-play">2 · Spielen</a><a href="#tournament-results">3 · Ergebnisse</a></nav><section id="tournament-setup" class="tournament-step" aria-labelledby="tournament-setup-heading"><h3 id="tournament-setup-heading">1 · Einrichten</h3><p>Wähle Format und Teilnehmer. Erstelle anschließend einen Spielplan.</p><div class="tournament-options"><label>Teilnehmerzahl<input id="tournament-count" type="number" min="2" max="16" step="1" value="2"></label><label>Turnier-Startwert<span class="field-help" id="tournament-seed-help">Gleicher Startwert und gleiche Roboter erzeugen dieselben Kampfergebnisse.</span><input aria-describedby="tournament-seed-help" id="tournament-seed" type="number" min="0" max="9007199254740991" step="1" value="4711"></label><label>Ticklimit je Kampf<span class="field-help" id="tournament-ticks-help">Ein Tick ist ein Simulationsschritt. Das Limit beendet zu lange Kämpfe.</span><input aria-describedby="tournament-ticks-help" id="tournament-ticks" type="number" min="1" max="3600" step="1" value="3600"></label></div><h3>Teilnehmer</h3><div id="tournament-participants" class="tournament-participants"></div><label>Turnierformat<span class="field-help" id="tournament-format-help">Jeder gegen jeden: alle Paarungen. K.-o.: Verlierer scheiden aus.</span><select aria-describedby="tournament-format-help" id="tournament-format"><option value="round-robin">Jeder gegen jeden</option><option value="knockout">K.-o.-Turnier</option></select></label><label>Kampfregeln (Round Robin)<select id="tournament-ruleset"><option value="sequential-v1">Klassisch (v1, kompatibel mit bisherigen Archiven)</option><option value="simultaneous-v2">Gleichzeitig (v2, experimentell)</option></select></label><label>Seitenzuordnung (Round Robin)<select id="tournament-side-assignment"><option value="legacy">Klassisch (bisheriges Verhalten)</option><option value="balanced">Ausgeglichen (A/B-Differenz höchstens 1)</option></select></label><div class="controls"><button id="tournament-create">Spielplan erstellen</button></div></section><section id="tournament-play" class="tournament-step" aria-labelledby="tournament-play-heading"><h3 id="tournament-play-heading">2 · Spielen</h3><p>Starte einzelne Kämpfe oder den gesamten Spielplan. Du kannst jederzeit pausieren und fortsetzen.</p><div class="controls"><button id="tournament-run">Nächster Kampf</button><button id="tournament-auto">Alle Kämpfe spielen</button><button id="tournament-pause">Pause</button><button id="tournament-resume">Fortsetzen</button><button id="tournament-cancel">Abbrechen</button></div></section><section id="tournament-results" class="tournament-step" aria-labelledby="tournament-results-heading"><h3 id="tournament-results-heading">3 · Ergebnisse</h3><p>Fortschritt, Paarungen und Tabelle werden nach dem Erstellen des Spielplans angezeigt.</p><div class="controls"><button id="tournament-export">Speichern</button><button id="tournament-table-csv">Tabelle CSV</button><button id="tournament-table-json">Tabelle JSON</button></div><details class="tournament-advanced" open><summary>Turnierdateien und lokale Sicherung</summary><div class="controls"><button id="tournament-import">Laden</button></div><div class="tournament-local-save"><label><input id="tournament-autosave" type="checkbox"> Automatisch nur in diesem Browser sichern</label><button id="tournament-restore" type="button">Lokale Sicherung laden</button><button id="tournament-clear-saved" type="button">Lokale Sicherung löschen</button></div></details><input id="tournament-file" type="file" accept=".json,application/json" hidden aria-label="Turnierdatei"><p id="tournament-save-status" role="status" aria-live="polite" aria-atomic="true" class="tournament-save-status" data-state="idle"></p><p id="tournament-feedback" role="status" aria-live="polite" class="status"></p><section id="tournament-preview" hidden aria-label="Turniervorschau"><h3>Fortschritt</h3><p id="tournament-progress" role="status" aria-live="polite" aria-label="Turnierfortschritt"></p><h3>Paarungen</h3><div class="tournament-match-filters" role="group" aria-label="Paarungen filtern"><label for="tournament-match-search">Teilnehmer oder Match-ID<input id="tournament-match-search" type="search" autocomplete="off" placeholder="Name oder match-001"></label><label for="tournament-match-status">Ergebnisstatus<select id="tournament-match-status"><option value="all">Alle</option><option value="pending">Ausstehend</option><option value="completed">Abgeschlossen</option></select></label><button id="tournament-match-reset" type="button">Suche zurücksetzen</button></div><p id="tournament-match-count" role="status" aria-live="polite" class="tournament-filter-summary"></p><ol id="tournament-pairings" class="tournament-pairings" tabindex="0" aria-label="Spielplan, mit Pfeiltasten scrollbar"></ol><h3>Tabelle</h3><p class="field-help">Reststruktur bezeichnet die verbleibenden Lebenspunkte nach einem Kampf.</p><div id="tournament-table-scroll" class="tournament-table-scroll" tabindex="0" role="region" aria-label="Turniertabelle, horizontal scrollbar"></div></section></section></div></dialog>
 <dialog id="replay-dialog" aria-labelledby="replay-title"><div class="config-dialog-card"><h2 id="replay-title">Replay-Dateien</h2><p>Aktuellen Kampf als JSON exportieren oder eine Replay-Datei prüfen. Die Wiedergabe zeigt aufgezeichnete Ereignisse ohne erneute Simulation; ein Import verändert den laufenden Kampf nicht.</p><div class="controls"><button id="replay-export">Replay exportieren</button><button id="replay-import">Replay importieren</button><button id="replay-load-current">Aktuellen Kampf laden</button><button id="close-replay">Schließen</button></div><input id="replay-file" type="file" accept=".json,application/json" hidden aria-label="Replay-Datei auswählen"><p id="replay-feedback" class="status" role="status" aria-live="polite"></p><div class="controls" aria-label="Replay-Steuerung"><button id="replay-play" disabled>Abspielen</button><button id="replay-pause" disabled>Pausieren</button><button id="replay-step" disabled>Replay-Schritt</button><button id="replay-reset" disabled>Replay-Anfang</button></div><p id="replay-progress" role="status" aria-live="polite">Kein Replay geladen</p><label for="replay-seek">Replay-Zeitleiste (Tick)<input id="replay-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Replay-Zeitleiste"></label><div id="replay-arena" class="replay-arena" role="img" aria-label="Rekonstruierte Roboterpositionen im Replay" hidden><svg id="replay-effects" class="replay-effects" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><span id="replay-bot-a" class="replay-marker replay-marker-a">A</span><span id="replay-bot-b" class="replay-marker replay-marker-b">B</span></div><p id="replay-stats" class="replay-stats" role="status" aria-live="polite"></p><p id="replay-events" aria-label="Ereignisse im aktuellen Replay-Tick"></p><section id="replay-analysis" class="replay-analysis" aria-label="Replay-Kampfstatistik" hidden><h3>Kampfstatistik (gesamte Aufzeichnung)</h3><div class="replay-stat-grid"><div id="replay-stat-a" class="replay-stat-side"></div><div id="replay-stat-b" class="replay-stat-side"></div></div><p id="replay-result"></p></section></div></dialog>
 <div class="status" id="status"></div>
 </section>
@@ -69,6 +70,7 @@ let recorder: EventRecorder;
 let timer: number | null = null;
 let replayPlayer: ReplayPlayer | null = null;
 let replayStats: ReplayStatistics | null = null;
+let replayDrawReason: 'destroyed' | 'timeout' | null = null;
 let replayTimer: number | null = null;
 
 const el = <T extends HTMLElement>(id: string): T => {
@@ -369,7 +371,9 @@ function renderReplay(): void {
     }
     el('replay-result').textContent = replayStats.outcome === 'victory'
       ? `Sieger: ${replayStats.winner === replayStats.robotA.id ? replayStats.robotA.name : replayStats.robotB.name}`
-      : replayStats.outcome === 'draw' ? 'Ergebnis: Unentschieden' : 'Ergebnis: Kampf läuft';
+      : replayStats.outcome === 'draw'
+        ? `Ergebnis: Unentschieden${replayDrawReason === 'destroyed' ? ' (Double-KO)' : replayDrawReason === 'timeout' ? ' (Ticklimit)' : ''}`
+        : 'Ergebnis: Kampf läuft';
   } else {
     el('replay-result').textContent = '';
   }
@@ -388,7 +392,7 @@ function renderReplay(): void {
     }
     el('replay-stats').textContent = robots.map((robot, index) =>
       `${index === 0 ? 'A' : 'B'}: Position ${robot.position.x.toFixed(1)}/${robot.position.y.toFixed(1)} · Struktur ${robot.structure.toFixed(1)} · Energie ${robot.energy.toFixed(1)}`
-    ).join(' | ');
+    ).join(' | '); // Result lives in #replay-result; keep #replay-stats for live positions only.
     const findRobot = (id: string) => robots.find(robot => robot.definition.id === id);
     for (const event of player.events) {
       if (event.type === 'shot') {
@@ -416,10 +420,13 @@ function renderReplay(): void {
     el('replay-stats').textContent = '';
   }
 }
-function loadReplay(recording: ReplayDocument): void {
+function loadReplay(recording: ReplayDocument | ReplayDocumentV2): void {
   stopReplayTimer();
   replayPlayer = new ReplayPlayer(recording);
+  // Both versioned formats share the shot/hit/damage event contract; draw markers are ignored by the pure analyzer.
   replayStats = analyzeReplay(recording);
+  replayDrawReason = recording.schemaVersion === 2 && recording.finalState.outcome === 'draw'
+    ? recording.finalState.endReason : null;
   renderReplay();
 }
 el('open-replay').addEventListener('click', () => el<HTMLDialogElement>('replay-dialog').showModal());
@@ -466,9 +473,14 @@ el<HTMLInputElement>('replay-file').addEventListener('change', async (event) => 
   const file = input.files?.[0];
   if (!file) return;
   try {
-    const replay = await readReplayFile(file);
-    loadReplay(replay);
-    el('replay-feedback').textContent = `Replay geprüft: Seed ${replay.seed}, ${replay.frames.length} Ticks, ${replay.robotA.name} gegen ${replay.robotB.name}. Wiedergabe bereit.`;
+    // Keep the existing v1 file reader and add strict, opt-in v2 parsing.
+    const replay = file.size > 2_000_000
+      ? (() => { throw new Error('Replay-Datei zu groß (2 MB)'); })()
+      : (await file.text());
+    const version = JSON.parse(replay) as { schemaVersion?: unknown };
+    const recording = version.schemaVersion === 2 ? parseReplayV2(replay) : await readReplayFile(file);
+    loadReplay(recording);
+    el('replay-feedback').textContent = `Replay geprüft: Seed ${recording.seed}, ${recording.frames.length} Ticks, ${recording.robotA.name} gegen ${recording.robotB.name}. Wiedergabe bereit.`;
   } catch (error) {
     el('replay-feedback').textContent = `Replay-Import abgelehnt: ${error instanceof Error ? error.message : 'unbekannter Fehler'}`;
   } finally {
@@ -532,13 +544,18 @@ function syncTournamentActions(): void {
   el<HTMLButtonElement>('tournament-pause').disabled = !active || status === 'paused';
   el<HTMLButtonElement>('tournament-resume').disabled = status !== 'paused';
   el<HTMLButtonElement>('tournament-cancel').disabled = !active;
+  const v2 = tournamentRun?.definition.schemaVersion === 2;
+  const autosave = el<HTMLInputElement>('tournament-autosave');
+  autosave.disabled = v2;
+  if (v2) autosave.checked = false;
   for (const id of ['tournament-export', 'tournament-table-csv', 'tournament-table-json']) {
     el<HTMLButtonElement>(id).disabled = !tournamentRun;
   }
 }
 /** Only explicit opt-in writes a validated archive at match/status boundaries. */
 function persistTournamentSnapshot(): void {
-  if (!tournamentRun || !el<HTMLInputElement>('tournament-autosave').checked) return;
+  // Local autosave uses a v1-only storage key and must never overwrite it with v2.
+  if (!tournamentRun || tournamentRun.definition.schemaVersion === 2 || !el<HTMLInputElement>('tournament-autosave').checked) return;
   const snapshot = tournamentRun; // Preserve match-boundary order even during rapid auto-play.
   void queueTournamentStorage(() => autosaveGuard().saveLocked(snapshot, navigator.locks))
     .catch(error => {
@@ -829,8 +846,11 @@ function buildTournamentDefinition(): TournamentDefinition {
   if (new Set(participants.map(participant => participant.name.toLocaleLowerCase('de'))).size !== count) {
     throw new Error('Teilnehmernamen doppelt: Bitte jedem Roboter einen unterschiedlichen Namen geben.');
   }
+  const format = el<HTMLSelectElement>('tournament-format').value as 'round-robin' | 'knockout';
+  const v2 = el<HTMLSelectElement>('tournament-ruleset').value === 'simultaneous-v2';
+  if (v2 && format !== 'round-robin') throw new Error('Gleichzeitige Regeln sind derzeit nur für Round Robin verfügbar.');
   return createTournamentDefinition({
-    schemaVersion: 1, id: 'sandbox-tournament', format: el<HTMLSelectElement>('tournament-format').value as 'round-robin' | 'knockout',
+    schemaVersion: v2 ? 2 : 1, ...(v2 ? { rulesetVersion: 'simultaneous-v2' as const } : {}), id: 'sandbox-tournament', format,
     baseSeed: seed, maxTicks: ticks, participants,
     ...(el<HTMLSelectElement>('tournament-side-assignment').value === 'balanced' ? {sideAssignment: 'balanced' as const} : {})
   });
@@ -925,6 +945,9 @@ el('tournament-dialog').addEventListener('close', () => {
 el('tournament-count').addEventListener('change', renderTournamentParticipants);
 el('tournament-format').addEventListener('change', () => {
   const knockout = el<HTMLSelectElement>('tournament-format').value === 'knockout';
+  const rulesetSelect = el<HTMLSelectElement>('tournament-ruleset');
+  rulesetSelect.disabled = knockout;
+  if (knockout) rulesetSelect.value = 'sequential-v1';
   const sideSelect = el<HTMLSelectElement>('tournament-side-assignment');
   sideSelect.disabled = knockout;
   if (knockout) sideSelect.value = 'legacy';
@@ -1026,6 +1049,8 @@ function applyImportedTournament(loaded: TournamentRun): void {
   el<HTMLInputElement>('tournament-count').value = String(loaded.definition.participants.length);
   renderTournamentParticipants();
   el<HTMLSelectElement>('tournament-format').value = loaded.definition.format;
+  el<HTMLSelectElement>('tournament-ruleset').value = loaded.definition.schemaVersion === 2 ? 'simultaneous-v2' : 'sequential-v1';
+  el<HTMLSelectElement>('tournament-ruleset').disabled = loaded.definition.format === 'knockout';
   el<HTMLSelectElement>('tournament-side-assignment').value = loaded.definition.sideAssignment === 'balanced' ? 'balanced' : 'legacy';
   el<HTMLSelectElement>('tournament-side-assignment').disabled = loaded.definition.format === 'knockout';
   el<HTMLInputElement>('tournament-seed').value = String(loaded.definition.baseSeed);
@@ -1043,6 +1068,11 @@ function applyImportedTournament(loaded: TournamentRun): void {
 }
 el('tournament-autosave').addEventListener('change', () => {
   const checkbox = el<HTMLInputElement>('tournament-autosave');
+  if (tournamentRun?.definition.schemaVersion === 2) {
+    checkbox.checked = false;
+    el('tournament-feedback').textContent = 'v2-Turniere können nur als JSON-Datei gespeichert werden; lokale Sicherung bleibt v1 vorbehalten.';
+    return;
+  }
   const enabled = checkbox.checked;
   void queueTournamentStorage(async () => {
     await autosaveGuard().setEnabledLocked(enabled, navigator.locks);
