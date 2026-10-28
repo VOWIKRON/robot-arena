@@ -131,6 +131,27 @@ function makeRunning119Archive<T extends RunningArchiveFixture>(completed: T): T
   return running;
 }
 
+/** NEXT-110-E83: reuse typed running-prefix rejection and recovery across
+ * E75/E76/E78/E79. The caller retains its case-specific invariants. */
+async function assertRejectedRunning119ThenRestore<T extends RunningArchiveFixture>(
+  page: Page,
+  filename: string,
+  completed: T,
+  mutate: (archive: T) => void,
+  verify: (archive: T) => void,
+  snapshot: ArchiveRecoverySnapshot,
+  canonicalBytes: string
+): Promise<void> {
+  const corrupted = makeRunning119Archive(completed);
+  mutate(corrupted);
+  expect(corrupted.run.results).toHaveLength(119);
+  expect(corrupted.run.nextMatchIndex).toBe(119);
+  expect(corrupted.run.totalMatches).toBe(120);
+  expect(corrupted.run.status).toBe('running');
+  verify(corrupted);
+  await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -779,46 +800,43 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E75: a running 119/120 prefix with a duplicate match ID must
-  // be rejected even though the cursor, status and result count remain valid.
-  const duplicateRunningArchive = makeRunning119Archive(original.archive);
-  duplicateRunningArchive.run.results[118].matchId = duplicateRunningArchive.run.results[117].matchId;
-  expect(new Set(duplicateRunningArchive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(118);
-  await assertRejectedJsonThenRestore(
-    page, 'next110-e75-duplicate-running-match-id.json', duplicateRunningArchive, recoverySnapshot, canonicalArchive
+  // NEXT-110-E75: duplicate ID in an otherwise consistent running prefix.
+  await assertRejectedRunning119ThenRestore(
+    page, 'next110-e75-duplicate-running-match-id.json', original.archive,
+    archive => { archive.run.results[118].matchId = archive.run.results[117].matchId; },
+    archive => expect(new Set(archive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(118),
+    recoverySnapshot, canonicalArchive
   );
 
-  // NEXT-110-E76: missing matchId on the last result of a running
-  // 119/120 prefix must fail atomically; the result itself still exists.
-  const missingRunningIdArchive = makeRunning119Archive(original.archive);
-  delete missingRunningIdArchive.run.results[118].matchId;
-  expect('matchId' in missingRunningIdArchive.run.results[118]).toBe(false);
-  await assertRejectedJsonThenRestore(
-    page, 'next110-e76-missing-running-match-id.json', missingRunningIdArchive, recoverySnapshot, canonicalArchive
+  // NEXT-110-E76: missing final matchId in a running 119/120 prefix.
+  await assertRejectedRunning119ThenRestore(
+    page, 'next110-e76-missing-running-match-id.json', original.archive,
+    archive => { delete archive.run.results[118].matchId; },
+    archive => expect('matchId' in archive.run.results[118]).toBe(false),
+    recoverySnapshot, canonicalArchive
   );
 
-  // NEXT-110-E78: a unique but wrong final matchId in a running 119/120
-  // prefix must fail despite consistent cursor, status and result count.
-  const wrongRunningIdArchive = makeRunning119Archive(original.archive);
-  const expectedRunningId = wrongRunningIdArchive.run.results[118].matchId;
-  wrongRunningIdArchive.run.results[118].matchId = 'next110-e78-unique-but-wrong-running-id';
-  expect(wrongRunningIdArchive.run.results[118].matchId).not.toBe(expectedRunningId);
-  expect(new Set(wrongRunningIdArchive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
-  await assertRejectedJsonThenRestore(
-    page, 'next110-e78-wrong-running-match-id.json', wrongRunningIdArchive, recoverySnapshot, canonicalArchive
+  // NEXT-110-E78: unique, incorrect final matchId with valid cursor/status.
+  await assertRejectedRunning119ThenRestore(
+    page, 'next110-e78-wrong-running-match-id.json', original.archive,
+    archive => { archive.run.results[118].matchId = 'next110-e78-unique-but-wrong-running-id'; },
+    archive => {
+      expect(archive.run.results[118].matchId).not.toBe(original.archive.run.results[118].matchId);
+      expect(new Set(archive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
+    },
+    recoverySnapshot, canonicalArchive
   );
 
-  // NEXT-110-E79: blank IDs in running 119/120 prefixes must fail
-  // atomically and allow a valid canonical archive to be reimported.
+  // NEXT-110-E79: empty and whitespace-only final match IDs in running prefix.
   for (const { name, value } of [
     { name: 'empty', value: '' },
     { name: 'whitespace', value: '   ' }
   ]) {
-    const blankRunningIdArchive = makeRunning119Archive(original.archive);
-    blankRunningIdArchive.run.results[118].matchId = value;
-    expect(blankRunningIdArchive.run.results[118].matchId).toBe(value);
-    await assertRejectedJsonThenRestore(
-      page, `next110-e79-${name}-running-match-id.json`, blankRunningIdArchive, recoverySnapshot, canonicalArchive
+    await assertRejectedRunning119ThenRestore(
+      page, `next110-e79-${name}-running-match-id.json`, original.archive,
+      archive => { archive.run.results[118].matchId = value; },
+      archive => expect(archive.run.results[118].matchId).toBe(value),
+      recoverySnapshot, canonicalArchive
     );
   }
 
