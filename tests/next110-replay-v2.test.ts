@@ -205,6 +205,33 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     }
   });
 
+  it('NEXT-110-E29 preserves multi-tick v1/v2 replay bytes and cursor states across seeds', () => {
+    for (const seed of [0, 1, 42, 4711]) {
+      const maxTicks = 8;
+      const canonicalV2 = serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks));
+      const parsed = parseReplayV2(canonicalV2);
+      const snapshots = reconstructReplayStatesV2(parsed);
+      expect(parsed.frames.length).toBeGreaterThan(1);
+      expect(snapshots).toHaveLength(parsed.frames.length + 1);
+      expect(snapshots.at(-1)).toEqual(runMatchV2(alpha, beta, seed, maxTicks));
+      expect(serializeReplayV2(parseReplayV2(canonicalV2))).toBe(canonicalV2);
+      expect(serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks))).toBe(canonicalV2);
+      const player = new ReplayPlayer(parsed);
+      for (let cursor = 0; cursor <= parsed.frames.length; cursor++) {
+        player.seek(cursor);
+        expect(player.tick).toBe(cursor);
+        expect(player.state).toEqual(snapshots[cursor]);
+      }
+      player.reset();
+      expect(player.tick).toBe(0);
+      expect(player.state).toEqual(snapshots[0]);
+      const canonicalV1 = serializeReplay(recordMatch(RAPTOR, TITAN, seed, maxTicks));
+      expect(serializeReplay(parseReplay(canonicalV1))).toBe(canonicalV1);
+      expect(() => parseReplay(canonicalV2)).toThrow(/schemaVersion/);
+      expect(() => parseReplayV2(canonicalV1)).toThrow();
+    }
+  });
+
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
     const zero = parseReplayV2(serializeReplayV2(recordMatchV2(alpha, beta, 2, 0)));
     const player = new ReplayPlayer(zero);
