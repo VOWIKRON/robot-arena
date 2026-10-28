@@ -1,3 +1,27 @@
+## 28.10.2026 · 07:56 Uhr · NEXT-110 E48/E49/E50 IMPLEMENTIERT · ISOLIERTE QA AUSSTEHEND · NICHT VERÖFFENTLICHT
+
+**P0 Vorprüfung:** main unverändert `753b1a3953b4`, letzter bestätigter Live-Stand v0.1.61. Letzte vollständig erfolgreiche QA #40642049078: **839/839** (551 Vitest, 32 Node, 256 Chromium/WebKit Desktop/Mobil), TypeScript, Audit, reproduzierbarer Build und Gates grün. Diese CI bestätigt **E1/E2/E5–E47**, nicht die neuen E48–E50. Entwicklungs-PR #93 Draft; kein Merge/Release/Deployment.
+
+**Drei geplante und tatsächlich implementierte Pakete: 3/3 geschrieben, getrennte Branches, seriell auf Entwicklungsbranch integriert und aus GitHub zurückgelesen; 0/3 auf neuem Stand vollständig CI-bestätigt.**
+- **NEXT-110-E48 (P1)**: Abgebrochener Archiv-Download-Trigger muss eine begrenzte Fehlermeldung mit unverändertem `cause` und UI-Diagnose liefern; kein Page-Error oder unbehandelter asynchroner Fehler. Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: `cause` identisch, 250-ms-Budget, <5 s, Page-Errors leer. Test: `npx playwright test e2e/next110-v2-120-browser.spec.ts` in Chromium/WebKit Desktop/Mobil und volle QA. Abhängigkeit E45. Branch `feature/NEXT-110-E48-trigger-abort-20261028`, Commit `ae7d6be164c8`.
+- **NEXT-110-E49 (P1)**: Vier abwechselnde ungültige/gültige 120-Kampf-Importe mit zwei unabhängigen Manipulationen (fehlende Match-ID und doppelte Ergebniszeile), ohne zusätzliche Download-Schleife. Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: Feedback, Fortschritt, Paarungen, Autosave, Replay und Sandbox stabil nach jeder Ablehnung und Wiederherstellung. Test: `npx playwright test e2e/next110-v2-120-browser.spec.ts` in vier Projekten und volle QA. Abhängigkeit E46. Branch `feature/NEXT-110-E49-mixed-archive-tamper-20261028`, Commit `6b0a8fa5cb7f`.
+- **NEXT-110-E50 (P2)**: Deterministische Double-KO- und v1-Seek-Regression mit nichtmonotonen Positionen, fünf Seeds und sechs ungültigen Cursorwerten; Refactoring/Regression nach E47. Datei `tests/next110-replay-v2.test.ts`; Akzeptanz: RangeError ohne Tick-/State-/Event-Mutation, gefrorene Zustände, v1/v2-Bytegleichheit nach Reset. Test: `npx vitest run tests/next110-replay-v2.test.ts` sowie komplette Unit-/Behavior-/Regression-/Determinismus- und Browser-QA. Abhängigkeit E47. Branch `feature/NEXT-110-E50-invalid-seek-boundaries-20261028`, Commit `a5d1f8eb0697`.
+
+**Kumulativ seit bestätigter Live-Version v0.1.61: 48 vollständig testbestätigte Einheiten, deren Live-Veröffentlichung nicht bestätigt ist.** NEXT-106/107/109 sind auf main, **Veröffentlichungsstatus ungeklärt**. NEXT-110-E1/E2/E5–E47 (45 Einheiten) liegen auf Entwicklungsbranch, **nicht live**. E3/E4 nicht separat belegt. **E48–E50 neu implementiert, Tests noch offen, NICHT in 48 eingerechnet.** NEXT-110 insgesamt offen; NEXT-79e praktische NVDA-/VoiceOver-/Touch-/Kontrastabnahme offen.
+
+| Neu implementiert | Funktion | Tests | Veröffentlichungsstatus |
+| --- | --- | --- | --- |
+| NEXT-110-E48 | Abgebrochener Download-Trigger | QA ausstehend | Entwicklungsbranch, nicht live |
+| NEXT-110-E49 | Gemischte Archiv-Manipulationen mit Recovery | QA ausstehend | Entwicklungsbranch, nicht live |
+| NEXT-110-E50 | Seeded Double-KO/v1 ungültige Seek-Grenzen | QA ausstehend | Entwicklungsbranch, nicht live |
+
+**Rolling Backlog – nächste drei unabhängige kleine Pakete:**
+1. NEXT-110-E51 (P1): Trigger-Abbruch bei fehlendem UI-Feedback; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: `keines`-Diagnose, `cause`-Identität, keine Page-Errors; Test Playwright vier Projekte; Abhängigkeit E48 und erfolgreiche QA.
+2. NEXT-110-E52 (P1): Gemischte Archiv-Manipulationen mit ungültiger Ruleset-Version und falscher Match-Seed-Reihenfolge; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: unveränderter Fortschritt/Replay/Sandbox und gültiger Recovery-Import; Test Playwright vier Projekte; Abhängigkeit E49 und erfolgreiche QA.
+3. NEXT-110-E53 (P2): Seek-Grenzprüfungen in gemeinsame v1/v2-Fixture konsolidieren; Datei `tests/next110-replay-v2.test.ts`; Akzeptanz: identische Snapshots, deterministische Serialisierung, alle bestehenden Tests grün nach Refactoring; Test `npx vitest run tests/next110-replay-v2.test.ts` und vollständige QA; Abhängigkeit E50 und erfolgreiche QA.
+
+**NICHT VERÖFFENTLICHT.** Keine Änderungen an main, publish.php, Homepage, Release-Workflows, Deployment, Release-Commit oder anderen Automationen.
+
 ## 28.10.2026 · 07:10 Uhr · NEXT-110 E45/E46/E47 VOLLSTÄNDIG CI-BESTÄTIGT · NICHT VERÖFFENTLICHT
 **P0 – Zwei vollständige CI-Läufe SUCCESS:** Quellcode-QA #40641361835 und abschließende Code-/Dokumentations-QA #40641459359 auf main-basiertem exaktem Git-Tree des Entwicklungsstands: **551 Vitest + 32 Node + 256 Chromium/WebKit Desktop/Mobil = 839/839**. Chromium Desktop/Mobil je 105, WebKit Desktop/iPhone je 23, 0 flaky/unerwartete Browserprüfungen. TypeScript, npm Audit, reproduzierbarer Build, Browser-/Evidence-Gates erfolgreich. QA-PR #119 Draft, **NIEMALS MERGEN**.
 
