@@ -7,25 +7,45 @@ import { validateTimingEvidence, type TimingEvidence } from '../tests/helpers/ne
  * 120-match simulation. WebKit v2 import/replay remains covered by the
  * dedicated next110-v2-cross-browser suite.
  */
-async function exportArchive(page: Page): Promise<{ archive: any; file: string }> {
-  // NEXT-110-E39: diagnose a missing browser download promptly rather than
-  // consuming the entire 120-match scenario timeout without useful context.
+async function exportArchive(
+  page: Page,
+  options: { timeoutMs?: number; trigger?: () => Promise<unknown> } = {}
+): Promise<{ archive: any; file: string }> {
+  // NEXT-110-E42: injectable trigger/timeout make the missing-download error
+  // testable without a 30-second wait or a real failing browser download.
+  const timeoutMs = options.timeoutMs ?? 30_000;
+  const trigger = options.trigger ?? (() => page.getByRole('button', { name: 'Speichern', exact: true }).click());
   let download;
   try {
     [download] = await Promise.all([
-      page.waitForEvent('download', { timeout: 30_000 }),
-      page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      page.waitForEvent('download', { timeout: timeoutMs }),
+      trigger()
     ]);
   } catch (cause) {
     const feedback = await page.locator('#tournament-feedback').textContent().catch(() => null);
     throw new Error(
-      `NEXT-110-E39: Turnierarchiv-Download fehlgeschlagen (30s); UI-Feedback: ${feedback?.trim() || 'keines'}`,
+      `NEXT-110-E39/E42: Turnierarchiv-Download fehlgeschlagen (${timeoutMs}ms); UI-Feedback: ${feedback?.trim() || 'keines'}`,
       { cause }
     );
   }
   const file = await download.path();
   return { archive: JSON.parse(await readFile(file, 'utf8')), file };
 }
+
+test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  // Inject a harmless diagnostic message and deliberately never trigger Save.
+  await page.locator('#tournament-feedback').evaluate(node => {
+    node.textContent = 'E42 absichtlich kein Download';
+  });
+  const startedAt = Date.now();
+  await expect(exportArchive(page, {
+    timeoutMs: 250,
+    trigger: async () => { await page.locator('#tournament-feedback').isVisible(); }
+  })).rejects.toThrow(/NEXT-110-E39\/E42:.*250ms.*E42 absichtlich kein Download/);
+  expect(Date.now() - startedAt).toBeLessThan(5_000);
+});
 
 test.describe.serial('NEXT-110 120-match archive isolation phases', () => {
 let canonicalArchive = '';
