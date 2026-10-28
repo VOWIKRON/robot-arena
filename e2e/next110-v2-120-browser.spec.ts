@@ -164,11 +164,12 @@ async function assertRejectedRunning119VariantThenRestore<T extends RunningArchi
   verify: (archive: T) => void,
   snapshot: ArchiveRecoverySnapshot,
   canonicalBytes: string,
-  expectedMutatedTotal = 120
+  expectedMutatedTotal = 120,
+  expectedMutatedCursor: unknown = 119
 ): Promise<void> {
   const corrupted = makeRunning119Archive(completed);
   mutate(corrupted);
-  expect(corrupted.run.nextMatchIndex).toBe(119);
+  expect(corrupted.run.nextMatchIndex).toBe(expectedMutatedCursor);
   expect(corrupted.run.totalMatches).toBe(expectedMutatedTotal);
   verify(corrupted);
   await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
@@ -964,24 +965,31 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E91: missing, null or string-valued nextMatchIndex is invalid
-  // even when the 119 completed results and remaining metadata are correct.
+  // NEXT-110-E91/E95: use the typed running variant helper for invalid
+  // cursor types while preserving every case-specific schema assertion.
   for (const invalidCursor of ['missing', 'null', 'string'] as const) {
-    const corrupted = makeRunning119Archive(original.archive);
-    if (invalidCursor === 'missing') {
-      delete (corrupted.run as { nextMatchIndex?: unknown }).nextMatchIndex;
-      expect('nextMatchIndex' in corrupted.run).toBe(false);
-    } else {
-      (corrupted.run as { nextMatchIndex: unknown }).nextMatchIndex =
-        invalidCursor === 'null' ? null : '119';
-      expect(corrupted.run.nextMatchIndex).toBe(invalidCursor === 'null' ? null : '119');
-    }
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.totalMatches).toBe(120);
-    expect(corrupted.run.status).toBe('running');
-    await assertRejectedJsonThenRestore(
-      page, `next110-e91-running-cursor-${invalidCursor}.json`, corrupted,
-      recoverySnapshot, canonicalArchive
+    const expectedCursor: unknown = invalidCursor === 'missing' ? undefined
+      : invalidCursor === 'null' ? null : '119';
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e91-running-cursor-${invalidCursor}.json`, original.archive,
+      archive => {
+        if (invalidCursor === 'missing') {
+          delete (archive.run as { nextMatchIndex?: unknown }).nextMatchIndex;
+        } else {
+          (archive.run as { nextMatchIndex: unknown }).nextMatchIndex = expectedCursor;
+        }
+      },
+      archive => {
+        if (invalidCursor === 'missing') {
+          expect('nextMatchIndex' in archive.run).toBe(false);
+        } else {
+          expect(archive.run.nextMatchIndex).toBe(expectedCursor);
+        }
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe('running');
+      },
+      recoverySnapshot, canonicalArchive, 120, expectedCursor
     );
   }
 
@@ -1000,7 +1008,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E90: non-string status types must not be coerced to 'running'.
+  // NEXT-110-E90/E95: typed variant recovery rejects non-string status types.
   // The remaining 119/120 prefix is valid and recovery must remain atomic.
   for (const { name, value } of [
     { name: 'numeric', value: 1 },
