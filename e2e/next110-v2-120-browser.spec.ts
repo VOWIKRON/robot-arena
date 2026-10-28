@@ -8,9 +8,22 @@ import { validateTimingEvidence, type TimingEvidence } from '../tests/helpers/ne
  * dedicated next110-v2-cross-browser suite.
  */
 async function exportArchive(page: Page): Promise<{ archive: any; file: string }> {
-  const pending = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
-  const file = await (await pending).path();
+  // NEXT-110-E39: diagnose a missing browser download promptly rather than
+  // consuming the entire 120-match scenario timeout without useful context.
+  let download;
+  try {
+    [download] = await Promise.all([
+      page.waitForEvent('download', { timeout: 30_000 }),
+      page.getByRole('button', { name: 'Speichern', exact: true }).click()
+    ]);
+  } catch (cause) {
+    const feedback = await page.locator('#tournament-feedback').textContent().catch(() => null);
+    throw new Error(
+      `NEXT-110-E39: Turnierarchiv-Download fehlgeschlagen (30s); UI-Feedback: ${feedback?.trim() || 'keines'}`,
+      { cause }
+    );
+  }
+  const file = await download.path();
   return { archive: JSON.parse(await readFile(file, 'utf8')), file };
 }
 
