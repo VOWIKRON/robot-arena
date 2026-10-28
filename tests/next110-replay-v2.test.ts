@@ -359,6 +359,40 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     }
   });
 
+  it('NEXT-110-E41 keeps destroyed and zero-tick terminal draw replay events immutable', () => {
+    for (const seed of [0, 7, 42]) {
+      const destroyedBytes = doubleKoReplayJson();
+      const destroyed = parseReplayV2(destroyedBytes);
+      const player = new ReplayPlayer(destroyed);
+      expect(player.length).toBe(1);
+      expect(player.outcome).toBeNull();
+      expect(player.step()).toBe(true);
+      expect(player.atEnd).toBe(true);
+      expect(player.outcome).toBe('draw');
+      expect(player.events).toEqual(destroyed.frames[0]!.events.filter(event => event.type !== 'draw'));
+      player.reset();
+      expect(player.tick).toBe(0);
+      expect(player.outcome).toBeNull();
+      expect(player.events).toEqual([]);
+      expect(player.step()).toBe(true);
+      expect(player.outcome).toBe('draw');
+      expect(serializeReplayV2(destroyed)).toBe(destroyedBytes);
+
+      const zeroBytes = serializeReplayV2(recordMatchV2(alpha, beta, seed, 0));
+      const zero = new ReplayPlayer(parseReplayV2(zeroBytes));
+      expect(zero.length).toBe(0);
+      expect(zero.atEnd).toBe(true);
+      expect(zero.outcome).toBe('draw');
+      expect(zero.events).toEqual([]);
+      expect(zero.step()).toBe(false);
+      zero.reset();
+      expect(zero.events).toEqual([]);
+      expect(serializeReplayV2(parseReplayV2(zeroBytes))).toBe(zeroBytes);
+      const legacyBytes = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 0));
+      expect(serializeReplay(parseReplay(legacyBytes))).toBe(legacyBytes);
+    }
+  });
+
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
     const zero = parseReplayV2(serializeReplayV2(recordMatchV2(alpha, beta, 2, 0)));
     const player = new ReplayPlayer(zero);
