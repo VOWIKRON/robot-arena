@@ -42,7 +42,7 @@ describe('NEXT-110-E34 fail-closed timing evidence', () => {
       v => { v.tournamentElapsedMs = '100'; }
     ];
     for (const mutate of mutations) {
-      const value: Record<string, unknown> = structuredClone(baseline);
+      const value: Record<string, unknown> = { ...baseline };
       mutate(value);
       expect(() => validateTimingEvidence(value, project)).toThrow();
     }
