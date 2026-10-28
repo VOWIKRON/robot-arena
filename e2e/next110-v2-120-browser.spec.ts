@@ -148,14 +148,28 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   await expect(page.locator('#replay-stat-b')).toContainText('Schüsse');
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
+  // NEXT-110-E28: fail closed on missing/invalid timing evidence before
+  // attaching it. JSON.stringify silently turns NaN/Infinity into null.
+  const timingEvidence = {
+    ruleset: 'simultaneous-v2', participants: 16, matches: 120,
+    maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
+    elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
+    invalidImportRecoveryElapsedMs, timeoutBudgetMs: isWebKit ? 180_000 : 120_000,
+    browserProject: testInfo.project.name, importedArchiveIdentical: true
+  };
+  const timingFields = [
+    'elapsedMs', 'tournamentElapsedMs', 'archiveImportElapsedMs',
+    'invalidImportRecoveryElapsedMs', 'timeoutBudgetMs'
+  ] as const;
+  for (const field of timingFields) {
+    expect(Number.isFinite(timingEvidence[field]), `${field} must be finite`).toBe(true);
+    expect(timingEvidence[field], `${field} must be nonnegative`).toBeGreaterThanOrEqual(0);
+  }
+  expect(timingEvidence.archiveBytes).toBeGreaterThan(0);
+  expect(timingEvidence.browserProject).toBe(testInfo.project.name);
+  expect(timingEvidence.elapsedMs).toBeGreaterThanOrEqual(timingEvidence.tournamentElapsedMs);
   await testInfo.attach('next110-v2-120-browser.json', {
-    body: Buffer.from(JSON.stringify({
-      ruleset: 'simultaneous-v2', participants: 16, matches: 120,
-      maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
-      elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
-      invalidImportRecoveryElapsedMs, timeoutBudgetMs: isWebKit ? 180_000 : 120_000,
-      browserProject: testInfo.project.name, importedArchiveIdentical: true
-    }, null, 2)),
+    body: Buffer.from(JSON.stringify(timingEvidence, null, 2)),
     contentType: 'application/json'
   });
 });
