@@ -9,10 +9,10 @@ import { parseReplayV2, recordMatchV2, reconstructReplayStatesV2, serializeRepla
 const alpha = { ...RAPTOR, id: 'alpha', name: 'Alpha' };
 const beta = { ...TITAN, id: 'beta', name: 'Beta' };
 // NEXT-110-E20: shared deterministic Double-KO fixture used by tamper regressions.
-const doubleKoReplayJson = (): string => {
+const doubleKoReplayJson = (seed = 5): string => {
   const a = { ...alpha, speed: 0, weaponRange: 100, weaponDamage: 1000 };
   const b = { ...beta, speed: 0, weaponRange: 100, weaponDamage: 1000 };
-  return serializeReplayV2(recordMatchV2(a, b, 5, 10));
+  return serializeReplayV2(recordMatchV2(a, b, seed, 10));
 };
 const mutate = (json: string, fn: (doc: any) => void): string => {
   const doc = JSON.parse(json);
@@ -383,7 +383,7 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
 
   it('NEXT-110-E41 keeps destroyed and zero-tick terminal draw replay events immutable', () => {
     for (const seed of [0, 7, 42]) {
-      const destroyedBytes = doubleKoReplayJson();
+      const destroyedBytes = doubleKoReplayJson(seed);
       const destroyed = parseReplayV2(destroyedBytes);
       const player = new ReplayPlayer(destroyed);
       expect(player.length).toBe(1);
@@ -427,6 +427,26 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
       ]);
       const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 3));
       expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
+    }
+  });
+
+  it('NEXT-110-E47 covers terminal seek boundaries and seeded double-KO without changing v1/v2 bytes', () => {
+    for (const seed of [0, 1, 7, 42, 4711]) {
+      const destroyedBytes = doubleKoReplayJson(seed);
+      const destroyed = parseReplayV2(destroyedBytes);
+      expect(destroyed.finalState).toMatchObject({ outcome: 'draw', endReason: 'destroyed' });
+      expectTerminalSeekImmutable(destroyedBytes, [1, 0, 1, 0, 1]);
+      expect(doubleKoReplayJson(seed)).toBe(destroyedBytes);
+      for (const maxTicks of [0, 1, 2, 3, 5]) {
+        const bytes = serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks));
+        const recording = parseReplayV2(bytes);
+        const end = recording.frames.length;
+        expectTerminalSeekImmutable(bytes, [end, 0, Math.floor(end / 2), end]);
+        expect(serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks))).toBe(bytes);
+        const legacyBytes = serializeReplay(recordMatch(RAPTOR, TITAN, seed, maxTicks));
+        expect(serializeReplay(parseReplay(legacyBytes))).toBe(legacyBytes);
+        expect(() => parseReplay(bytes)).toThrow(/schemaVersion/);
+      }
     }
   });
 
