@@ -140,12 +140,13 @@ async function assertRejectedRunning119ThenRestore<T extends RunningArchiveFixtu
   mutate: (archive: T) => void,
   verify: (archive: T) => void,
   snapshot: ArchiveRecoverySnapshot,
-  canonicalBytes: string
+  canonicalBytes: string,
+  expectedMutatedCursor = 119
 ): Promise<void> {
   const corrupted = makeRunning119Archive(completed);
   mutate(corrupted);
   expect(corrupted.run.results).toHaveLength(119);
-  expect(corrupted.run.nextMatchIndex).toBe(119);
+  expect(corrupted.run.nextMatchIndex).toBe(expectedMutatedCursor);
   expect(corrupted.run.totalMatches).toBe(120);
   expect(corrupted.run.status).toBe('running');
   verify(corrupted);
@@ -840,34 +841,31 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E81: reject a null, scalar or array result at the tail of a
-  // running 119/120 prefix without mutating the recovered completed run.
+  // NEXT-110-E86: E81/E82 share E83's typed running reject/recovery
+  // path. Baseline 119/120 invariants are checked before mutation; E82
+  // explicitly asserts the intentionally invalid cursor after mutation.
   for (const { name, value } of [
     { name: 'null-result', value: null },
     { name: 'string-result', value: 'not-a-match-result' },
     { name: 'array-result', value: [] }
   ] as Array<{ name: string; value: unknown }>) {
-    const corrupted = makeRunning119Archive(original.archive);
-    (corrupted.run.results as unknown[])[118] = value;
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.nextMatchIndex).toBe(119);
-    expect(corrupted.run.status).toBe('running');
-    await assertRejectedJsonThenRestore(
-      page, `next110-e81-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    await assertRejectedRunning119ThenRestore(
+      page, `next110-e81-${name}.json`, original.archive,
+      archive => { (archive.run.results as unknown[])[118] = value; },
+      archive => expect(archive.run.results).toHaveLength(119),
+      recoverySnapshot, canonicalArchive
     );
   }
 
-  // NEXT-110-E82: a running 119-result prefix must reject both a stale
-  // cursor (118) and a premature terminal cursor (120) atomically.
   for (const invalidCursor of [118, 120]) {
-    const corrupted = makeRunning119Archive(original.archive);
-    corrupted.run.nextMatchIndex = invalidCursor;
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.totalMatches).toBe(120);
-    expect(corrupted.run.status).toBe('running');
-    await assertRejectedJsonThenRestore(
-      page, `next110-e82-running-cursor-${invalidCursor}.json`, corrupted,
-      recoverySnapshot, canonicalArchive
+    await assertRejectedRunning119ThenRestore(
+      page, `next110-e82-running-cursor-${invalidCursor}.json`, original.archive,
+      archive => { archive.run.nextMatchIndex = invalidCursor; },
+      archive => {
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.nextMatchIndex).toBe(invalidCursor);
+      },
+      recoverySnapshot, canonicalArchive, invalidCursor
     );
   }
 
