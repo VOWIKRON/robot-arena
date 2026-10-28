@@ -107,6 +107,25 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
+  // NEXT-110-E27: reject alternate archive shapes and unsupported schema versions
+  // after a valid 120-match import. Every rejection must preserve the exact export.
+  const extraInvalidArchives = [
+    { name: 'array-root', payload: JSON.stringify([original.archive]) },
+    { name: 'unsupported-schema', payload: JSON.stringify({ ...original.archive, schemaVersion: 999 }) }
+  ];
+  for (const { name, payload } of extraInvalidArchives) {
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e27-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(payload)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+    expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
   await page.locator('#tournament-file').setInputFiles(original.file);
   await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
   await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
