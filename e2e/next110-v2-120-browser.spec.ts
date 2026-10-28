@@ -564,6 +564,8 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
+  // NEXT-110-E68: E60/E61/E63/E64 reuse the typed snapshot from E65;
+  // progress, pairing, autosave, replay and sandbox assertions are unchanged.
   // NEXT-110-E60: a completed archive may neither lie about its schedule
   // length nor omit a completed result. Reject atomically after recovery.
   const cardinalityTamperCases: Array<{ name: string; change: (archive: any) => void }> = [
@@ -583,9 +585,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(JSON.stringify(corrupted))
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e60-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // NEXT-110-E63: a duplicate match ID must be rejected even when the
@@ -602,13 +604,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     buffer: Buffer.from(JSON.stringify(duplicateMatchId))
   });
   await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-  await assertArchiveRejectedWithoutMutation(page, {
-    progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-  });
+  await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
   await importCanonicalArchive(page, 'next110-e63-valid-after-duplicate.json', canonicalArchive);
-  await assertCanonicalArchiveRestored(page, {
-    progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-  });
+  await assertCanonicalArchiveRestored(page, recoverySnapshot);
 
   // NEXT-110-E66: an individual result must be a valid object. A null,
   // scalar or array at the last result slot must not partially restore state.
@@ -671,9 +669,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(bytes)
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e61-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // NEXT-110-E64: an empty or whitespace-only JSON file must never erase
@@ -689,13 +687,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(bytes)
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, {
-      progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-    });
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e64-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, {
-      progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-    });
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // The imported terminal match must still have an event-only replay and
