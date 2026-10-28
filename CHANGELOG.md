@@ -1,3 +1,18 @@
+## 28.10.2026 · 11:08 Uhr · NEXT-110 E57/E58/E59 ISOLIERT QA-BESTÄTIGT 858/858 · NICHT VERÖFFENTLICHT
+
+**P0 – CI:** Isolierte nicht veröffentlichende QA **#40668838853 SUCCESS** auf Test-only-PR #125 (Draft, NIEMALS MERGEN): **554 Vitest + 32 Node + 272 Chromium/WebKit Desktop/Mobil = 858/858**. TypeScript, Audit ohne bekannte Advisories, reproduzierbarer Build und vier Browserprojekte grün. Separates Release-Evidence-/Publish-Gate nicht ausgelöst. Code-Snapshot Git-Tree `161fd1e16a5fb3af14a16d3741168e1db5528252` entspricht Entwicklungsstand E57–E59 vor reinen Dokumentationsänderungen.
+
+**3/3 NEU implementiert, seriell auf eigenen Branches integriert, aus GitHub zurückgelesen, refaktoriert und CI-bestätigt:**
+- **NEXT-110-E57:** erfolgreich aufgelöster Download-Trigger ohne Download und ohne Feedback, 250-ms-Timeout mit Playwright-TimeoutError als Originalursache, Diagnose `keines`, <5s und keine Page-Errors. Commit `43ae133da999`; Chromium/WebKit Desktop/Mobil.
+- **NEXT-110-E58:** vier inkonsistente Archivzustände nach gültiger 120-Kampf-Recovery (Cursor 119/121, Status running/ready bei 120 Ergebnissen) atomar abgewiesen; Fortschritt, 120 Paarungen, Replay, Autosave und Sandbox unverändert; jeweils gültiger Reimport. Commit `ecfa583dea6b`; Chromium/WebKit Desktop/Mobil.
+- **NEXT-110-E59:** typisierte `importCanonicalArchive`-Hilfe für fünf bisher doppelte Recovery-Importe; Input-Clear-Warteprüfung erhalten, keine Assertion entfernt und keine zusätzlichen Downloads. Commit `53e9153d28c9`; vollständige Browser-Regression erneut grün. Produktionsengine, RNG und historische v1-Regeln unverändert.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 60 vollständig getestete, nicht live bestätigte Einheiten.** NEXT-106/107/109 auf main: **Veröffentlichungsstatus ungeklärt**; separater v0.1.62-Release-Kandidat PR #124 offen, nicht von dieser Automation bearbeitet. **57 NEXT-110-Unterpakete E1/E2/E5–E59** auf Entwicklungsbranch: **technisch getestet, NICHT LIVE und NICHT release-freigegeben**. E3/E4 nicht separat belegt; Parent NEXT-110 OPEN. **Sofort aus dieser Automation veröffentlichbar: keine** (Publishing verboten). NEXT-79e reale NVDA-/VoiceOver-/Touch-/Kontrastabnahme und NEXT-108 externe Provenienz offen.
+
+**Rolling Backlog:** E60 (P1: 120-Match-Archiv mit falschem `totalMatches`/fehlenden Ergebnissen nach Recovery; `e2e/next110-v2-120-browser.spec.ts`; atomare Ablehnung, 120 Paarungen/Replay/Sandbox stabil, gültiger Reimport; Playwright vier Projekte; abhängig E58); E61 (P1: abgeschnittene/ungültige Archiv-JSON-Datei nach Recovery; gleiche Datei; sichtbares Feedback, Zustand unverändert, gültiger Reimport; Playwright vier Projekte; abhängig E58); E62 (P2: Reject-/Recovery-Assertions typisiert konsolidieren, keine Assertion entfernen, keine weiteren Downloads, deterministische Browsermatrix und volle CI; gleiche Datei; abhängig E59/E60/E61).
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 11:00 Uhr · NEXT-110 E57/E58/E59 IMPLEMENTIERT · ISOLIERTE QA #40668838853 LÄUFT · NICHT VERÖFFENTLICHT
 
 **Vorprüfung:** Entwicklungs-PR #93 Draft, letzter bestätigter QA-Stand E1/E2/E5–E56: #40662995794 SUCCESS, 554 Vitest + 32 Node + 268 Chromium/WebKit Desktop/Mobil = **854/854**. Letzte bestätigte Live-Version **v0.1.61**; NEXT-106/107/109 auf main, **Veröffentlichungsstatus ungeklärt**; separater Release-Kandidat v0.1.62 PR #124 offen, nicht von dieser Automation bearbeitet. NEXT-110-Entwicklung bleibt von main getrennt.
