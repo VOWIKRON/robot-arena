@@ -640,6 +640,28 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
   }
 
+  // NEXT-110-E64: an empty or whitespace-only JSON file must never erase
+  // a successfully restored tournament. A valid import must still recover.
+  const blankJsonCases = [
+    { name: 'empty', bytes: '' },
+    { name: 'whitespace-only', bytes: ' \\n\\t  ' }
+  ];
+  for (const { name, bytes } of blankJsonCases) {
+    expect(() => JSON.parse(bytes)).toThrow();
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e64-${name}.json`, mimeType: 'application/json',
+      buffer: Buffer.from(bytes)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await assertArchiveRejectedWithoutMutation(page, {
+      progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
+    });
+    await importCanonicalArchive(page, `next110-e64-valid-after-${name}.json`, canonicalArchive);
+    await assertCanonicalArchiveRestored(page, {
+      progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
+    });
+  }
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
