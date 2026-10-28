@@ -37,6 +37,28 @@ const expectRejectedMutations = (
   expect(serializeReplayV2(parseReplayV2(canonical))).toBe(canonical);
 };
 
+
+/** NEXT-110-E44: shared terminal seek characterization without mutating bytes. */
+const expectTerminalSeekImmutable = (bytes: string, positions: number[]): void => {
+  const recording = parseReplayV2(bytes);
+  const immutableSnapshot = JSON.stringify(recording);
+  const player = new ReplayPlayer(recording);
+  for (const position of positions) {
+    const reference = new ReplayPlayer(recording);
+    for (let tick = 0; tick < position; tick++) expect(reference.step()).toBe(true);
+    player.seek(position);
+    expect(player.tick).toBe(position);
+    expect(player.state).toEqual(reference.state);
+    expect(player.events).toEqual(reference.events);
+    expect(Object.isFrozen(player.state)).toBe(true);
+  }
+  player.reset();
+  expect(player.tick).toBe(0);
+  expect(player.events).toEqual([]);
+  expect(JSON.stringify(recording)).toBe(immutableSnapshot);
+  expect(serializeReplayV2(recording)).toBe(bytes);
+};
+
 describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () => {
   it('records and reconstructs 4 seeds without simulation or RNG during playback', () => {
     for (const seed of [1, 42, 4711, 65535]) {
@@ -376,7 +398,7 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
       expect(player.events).toEqual([]);
       expect(player.step()).toBe(true);
       expect(player.outcome).toBe('draw');
-      expect(serializeReplayV2(destroyed)).toBe(destroyedBytes);
+      expectTerminalSeekImmutable(destroyedBytes, [1, 0, 1]);
 
       const zeroBytes = serializeReplayV2(recordMatchV2(alpha, beta, seed, 0));
       const zero = new ReplayPlayer(parseReplayV2(zeroBytes));
@@ -387,9 +409,24 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
       expect(zero.step()).toBe(false);
       zero.reset();
       expect(zero.events).toEqual([]);
-      expect(serializeReplayV2(parseReplayV2(zeroBytes))).toBe(zeroBytes);
+      expectTerminalSeekImmutable(zeroBytes, [0, 0]);
       const legacyBytes = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 0));
       expect(serializeReplay(parseReplay(legacyBytes))).toBe(legacyBytes);
+    }
+  });
+
+  it('NEXT-110-E44 preserves terminal timeout seek snapshots and canonical bytes across seeds', () => {
+    for (const seed of [0, 7, 42]) {
+      const bytes = serializeReplayV2(recordMatchV2(alpha, beta, seed, 3));
+      const recording = parseReplayV2(bytes);
+      expect(recording.finalState.outcome).toBe('draw');
+      expect(recording.finalState.endReason).toBe('timeout');
+      expect(recording.frames.length).toBeGreaterThan(1);
+      expectTerminalSeekImmutable(bytes, [
+        recording.frames.length, 1, 0, recording.frames.length - 1, recording.frames.length
+      ]);
+      const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 3));
+      expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
     }
   });
 
