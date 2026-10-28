@@ -610,6 +610,30 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
   });
 
+  // NEXT-110-E66: an individual result must be a valid object. A null,
+  // scalar or array at the last result slot must not partially restore state.
+  const invalidResultRecords: Array<{ name: string; value: unknown }> = [
+    { name: 'null-record', value: null },
+    { name: 'string-record', value: 'not-a-match-result' },
+    { name: 'array-record', value: [] }
+  ];
+  for (const { name, value } of invalidResultRecords) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results[119] = value;
+    expect(corrupted.run.results).toHaveLength(120);
+    expect(corrupted.run.nextMatchIndex).toBe(120);
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e66-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(corrupted))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
+    await importCanonicalArchive(page, `next110-e66-valid-after-${name}.json`, canonicalArchive);
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
