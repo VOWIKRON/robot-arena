@@ -680,15 +680,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(corrupted.run.nextMatchIndex).toBe(120);
     expect(corrupted.run.status).toBe('completed');
     expect(JSON.stringify(corrupted)).not.toBe(before);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e69-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify(corrupted))
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-    await importCanonicalArchive(page, `next110-e69-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e69-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
   }
 
   // NEXT-110-E72: fixture-order validation rejects empty and whitespace
@@ -720,15 +714,11 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   expect(extraResultArchive.run.nextMatchIndex).toBe(120);
   expect(extraResultArchive.run.totalMatches).toBe(120);
   expect(extraResultArchive.run.status).toBe('completed');
-  await page.locator('#tournament-file').setInputFiles({
-    name: 'next110-e70-extra-result.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(JSON.stringify(extraResultArchive))
-  });
-  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-  await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-  await importCanonicalArchive(page, 'next110-e70-valid-after-extra-result.json', canonicalArchive);
-  await assertCanonicalArchiveRestored(page, recoverySnapshot);
+  // NEXT-110-E74: reuse the typed reject/recover helper for E69 and E70;
+  // the same input-clear wait and all immutable-state assertions still run.
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e70-extra-result.json', extraResultArchive, recoverySnapshot, canonicalArchive
+  );
 
   // NEXT-110-E73: a running 119/120 archive must contain the exact
   // deterministic result prefix, not just the right count and cursor.
