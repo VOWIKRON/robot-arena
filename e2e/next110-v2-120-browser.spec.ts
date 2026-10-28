@@ -644,7 +644,7 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   // a successfully restored tournament. A valid import must still recover.
   const blankJsonCases = [
     { name: 'empty', bytes: '' },
-    { name: 'whitespace-only', bytes: ' \\n\\t  ' }
+    { name: 'whitespace-only', bytes: ' \n\t  ' }
   ];
   for (const { name, bytes } of blankJsonCases) {
     expect(() => JSON.parse(bytes)).toThrow();
