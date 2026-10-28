@@ -272,6 +272,58 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     }
   });
 
+  it('NEXT-110-E35 keeps alternating seek/pause/play/step deterministic for v1 and v2', () => {
+    for (const seed of [0, 7, 42]) {
+      const v1 = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 8));
+      const v2 = serializeReplayV2(recordMatchV2(alpha, beta, seed, 8));
+      const recordings = [parseReplay(v1), parseReplayV2(v2)];
+      for (const recording of recordings) {
+        const player = new ReplayPlayer(recording);
+        const reference = new ReplayPlayer(recording);
+        expect(player.length).toBeGreaterThan(3);
+        const originalBytes = recording.schemaVersion === 1 ? v1 : v2;
+        for (const cursor of [0, 2, 1, 3, player.length, 0]) {
+          player.seek(cursor);
+          reference.seek(cursor);
+          expect(player.tick).toBe(cursor);
+          expect(player.state).toEqual(reference.state);
+          expect(player.events).toEqual(reference.events);
+          expect(player.isPlaying).toBe(false);
+          expect(player.outcome).toBe(cursor === player.length ? recording.finalState.outcome : null);
+        }
+        expect(player.play()).toBe(true);
+        expect(player.advance()).toBe(true);
+        expect(player.tick).toBe(1);
+        player.pause();
+        expect(player.advance()).toBe(false);
+        expect(player.tick).toBe(1);
+        expect(player.step()).toBe(true);
+        expect(player.tick).toBe(2);
+        reference.seek(2);
+        expect(player.state).toEqual(reference.state);
+        for (const invalid of [-1, player.length + 1, Number.NaN, 1.5]) {
+          const stateBefore = player.state;
+          expect(() => player.seek(invalid)).toThrow(RangeError);
+          expect(player.tick).toBe(2);
+          expect(player.state).toBe(stateBefore);
+        }
+        player.seek(player.length);
+        expect(player.atEnd).toBe(true);
+        expect(player.play()).toBe(false);
+        expect(player.advance()).toBe(false);
+        player.reset();
+        expect(player.tick).toBe(0);
+        expect(player.state).toEqual(new ReplayPlayer(recording).state);
+        const after = recording.schemaVersion === 1
+          ? serializeReplay(recording)
+          : serializeReplayV2(recording);
+        expect(after).toBe(originalBytes);
+      }
+      expect(serializeReplay(parseReplay(v1))).toBe(v1);
+      expect(serializeReplayV2(parseReplayV2(v2))).toBe(v2);
+    }
+  });
+
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
     const zero = parseReplayV2(serializeReplayV2(recordMatchV2(alpha, beta, 2, 0)));
     const player = new ReplayPlayer(zero);
