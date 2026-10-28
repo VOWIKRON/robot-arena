@@ -564,6 +564,8 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
+  // NEXT-110-E68: E60/E61/E63/E64 reuse the typed snapshot from E65;
+  // progress, pairing, autosave, replay and sandbox assertions are unchanged.
   // NEXT-110-E60: a completed archive may neither lie about its schedule
   // length nor omit a completed result. Reject atomically after recovery.
   const cardinalityTamperCases: Array<{ name: string; change: (archive: any) => void }> = [
@@ -583,9 +585,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(JSON.stringify(corrupted))
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e60-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // NEXT-110-E63: a duplicate match ID must be rejected even when the
@@ -602,13 +604,57 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     buffer: Buffer.from(JSON.stringify(duplicateMatchId))
   });
   await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-  await assertArchiveRejectedWithoutMutation(page, {
-    progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-  });
+  await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
   await importCanonicalArchive(page, 'next110-e63-valid-after-duplicate.json', canonicalArchive);
-  await assertCanonicalArchiveRestored(page, {
-    progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-  });
+  await assertCanonicalArchiveRestored(page, recoverySnapshot);
+
+  // NEXT-110-E66: an individual result must be a valid object. A null,
+  // scalar or array at the last result slot must not partially restore state.
+  const invalidResultRecords: Array<{ name: string; value: unknown }> = [
+    { name: 'null-record', value: null },
+    { name: 'string-record', value: 'not-a-match-result' },
+    { name: 'array-record', value: [] }
+  ];
+  for (const { name, value } of invalidResultRecords) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results[119] = value;
+    expect(corrupted.run.results).toHaveLength(120);
+    expect(corrupted.run.nextMatchIndex).toBe(120);
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e66-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(corrupted))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
+    await importCanonicalArchive(page, `next110-e66-valid-after-${name}.json`, canonicalArchive);
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+  }
+
+  // NEXT-110-E67: the results collection itself must remain an array.
+  // Reject non-array JSON values without changing an already restored run.
+  const invalidResultsCollections: Array<{ name: string; value: unknown }> = [
+    { name: 'null-collection', value: null },
+    { name: 'object-collection', value: { 0: original.archive.run.results[0], length: 120 } },
+    { name: 'string-collection', value: '120 matches' }
+  ];
+  for (const { name, value } of invalidResultsCollections) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results = value;
+    expect(corrupted.run.nextMatchIndex).toBe(120);
+    expect(corrupted.run.status).toBe('completed');
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e67-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(corrupted))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
+    await importCanonicalArchive(page, `next110-e67-valid-after-${name}.json`, canonicalArchive);
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+  }
 
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
@@ -623,9 +669,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(bytes)
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e61-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // NEXT-110-E64: an empty or whitespace-only JSON file must never erase
@@ -641,13 +687,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(bytes)
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, {
-      progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-    });
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e64-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, {
-      progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
-    });
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // The imported terminal match must still have an event-only replay and
