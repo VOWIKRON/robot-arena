@@ -904,6 +904,23 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     recoverySnapshot, canonicalArchive
   );
 
+  // NEXT-110-E97: do not coerce null or string totalMatches to 120.
+  for (const { name, value } of [
+    { name: 'null', value: null },
+    { name: 'string', value: '120' }
+  ] as Array<{ name: string; value: unknown }>) {
+    const invalidTotalArchive = makeRunning119Archive(original.archive);
+    (invalidTotalArchive.run as { totalMatches: unknown }).totalMatches = value;
+    expect(invalidTotalArchive.run.results).toHaveLength(119);
+    expect(invalidTotalArchive.run.nextMatchIndex).toBe(119);
+    expect(invalidTotalArchive.run.status).toBe('running');
+    expect(invalidTotalArchive.run.totalMatches).toBe(value);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e97-running-total-${name}.json`, invalidTotalArchive,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E87/E92: invalid totalMatches must reject atomically;
   // share typed recovery without weakening the intentional total mismatch.
   for (const invalidTotal of [119, 121]) {
