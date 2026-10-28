@@ -985,6 +985,21 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E94: negative and fractional running cursors must not
+  // be rounded, clamped or coerced into a valid 119/120 progress state.
+  for (const invalidCursor of [-1, 119.5]) {
+    const corrupted = makeRunning119Archive(original.archive);
+    corrupted.run.nextMatchIndex = invalidCursor;
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(invalidCursor);
+    expect(corrupted.run.totalMatches).toBe(120);
+    expect(corrupted.run.status).toBe('running');
+    await assertRejectedJsonThenRestore(
+      page, `next110-e94-running-cursor-${invalidCursor}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E90: non-string status types must not be coerced to 'running'.
   // The remaining 119/120 prefix is valid and recovery must remain atomic.
   for (const { name, value } of [
