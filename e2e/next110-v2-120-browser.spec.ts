@@ -888,6 +888,20 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E85: 119 results with cursor 119 cannot claim a terminal
+  // or unstarted status; both inconsistent states must reject atomically.
+  for (const invalidStatus of ['completed', 'ready']) {
+    const corrupted = makeRunning119Archive(original.archive);
+    corrupted.run.status = invalidStatus;
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e85-running-status-${invalidStatus}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
