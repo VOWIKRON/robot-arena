@@ -944,6 +944,24 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E90: non-string status types must not be coerced to 'running'.
+  // The remaining 119/120 prefix is valid and recovery must remain atomic.
+  for (const { name, value } of [
+    { name: 'numeric', value: 1 },
+    { name: 'array', value: ['running'] },
+    { name: 'object', value: { status: 'running' } }
+  ] as Array<{ name: string; value: unknown }>) {
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e90-running-status-${name}.json`, original.archive,
+      archive => { (archive.run as { status: unknown }).status = value; },
+      archive => {
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.status).toEqual(value);
+      },
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E85/E89: terminal/ready status is invalid at 119 results.
   for (const invalidStatus of ['completed', 'ready']) {
     await assertRejectedRunning119VariantThenRestore(
