@@ -92,6 +92,25 @@ async function assertRejectedJsonThenRestore(
   await assertCanonicalArchiveRestored(page, snapshot);
 }
 
+/** NEXT-110-E80: shared invalid-byte import/recovery path for E61/E64.
+ * Keep parse rejection, input clearing, state isolation and valid reimport. */
+async function assertRejectedBytesThenRestore(
+  page: Page,
+  filename: string,
+  bytes: string,
+  snapshot: ArchiveRecoverySnapshot,
+  canonicalBytes: string
+): Promise<void> {
+  expect(() => JSON.parse(bytes)).toThrow();
+  await page.locator('#tournament-file').setInputFiles({
+    name: filename, mimeType: 'application/json', buffer: Buffer.from(bytes)
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await assertArchiveRejectedWithoutMutation(page, snapshot);
+  await importCanonicalArchive(page, `next110-e80-valid-after-${filename}`, canonicalBytes);
+  await assertCanonicalArchiveRestored(page, snapshot);
+}
+
 /** NEXT-110-E77: deterministic running-prefix fixture shared by E73/E75/E76.
  * Preserve the explicit 119/120 cursor, status and result-count assertions. */
 type RunningArchiveFixture = { run: {
@@ -810,15 +829,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     { name: 'invalid-syntax', bytes: '{"schemaVersion":2,"run":invalid-json}' }
   ];
   for (const { name, bytes } of invalidJsonCases) {
-    expect(() => JSON.parse(bytes)).toThrow();
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e61-${name}.json`, mimeType: 'application/json',
-      buffer: Buffer.from(bytes)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-    await importCanonicalArchive(page, `next110-e61-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+    await assertRejectedBytesThenRestore(
+      page, `next110-e61-${name}.json`, bytes, recoverySnapshot, canonicalArchive
+    );
   }
 
   // NEXT-110-E64: an empty or whitespace-only JSON file must never erase
@@ -828,15 +841,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     { name: 'whitespace-only', bytes: ' \n\t  ' }
   ];
   for (const { name, bytes } of blankJsonCases) {
-    expect(() => JSON.parse(bytes)).toThrow();
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e64-${name}.json`, mimeType: 'application/json',
-      buffer: Buffer.from(bytes)
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-    await importCanonicalArchive(page, `next110-e64-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+    await assertRejectedBytesThenRestore(
+      page, `next110-e64-${name}.json`, bytes, recoverySnapshot, canonicalArchive
+    );
   }
 
   // The imported terminal match must still have an event-only replay and
