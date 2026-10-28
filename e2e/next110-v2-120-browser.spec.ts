@@ -92,6 +92,26 @@ async function assertRejectedJsonThenRestore(
   await assertCanonicalArchiveRestored(page, snapshot);
 }
 
+/** NEXT-110-E77: deterministic running-prefix fixture shared by E73/E75/E76.
+ * Preserve the explicit 119/120 cursor, status and result-count assertions. */
+type RunningArchiveFixture = { run: {
+  results: Array<{ matchId?: unknown }>;
+  nextMatchIndex: number;
+  totalMatches: number;
+  status: string;
+} };
+function makeRunning119Archive<T extends RunningArchiveFixture>(completed: T): T {
+  const running = structuredClone(completed);
+  running.run.results = running.run.results.slice(0, 119);
+  running.run.nextMatchIndex = 119;
+  running.run.status = 'running';
+  expect(running.run.results).toHaveLength(119);
+  expect(running.run.nextMatchIndex).toBe(119);
+  expect(running.run.totalMatches).toBe(120);
+  expect(running.run.status).toBe('running');
+  return running;
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -732,20 +752,31 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     } }
   ];
   for (const { name, change } of invalidRunningPrefixes) {
-    const corrupted = structuredClone(original.archive);
-    corrupted.run.results = corrupted.run.results.slice(0, 119);
-    corrupted.run.nextMatchIndex = 119;
-    corrupted.run.status = 'running';
+    const corrupted = makeRunning119Archive(original.archive);
     change(corrupted);
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.nextMatchIndex).toBe(119);
-    expect(corrupted.run.totalMatches).toBe(120);
-    expect(corrupted.run.status).toBe('running');
     expect(new Set(corrupted.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
     await assertRejectedJsonThenRestore(
       page, `next110-e73-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
     );
   }
+
+  // NEXT-110-E75: a running 119/120 prefix with a duplicate match ID must
+  // be rejected even though the cursor, status and result count remain valid.
+  const duplicateRunningArchive = makeRunning119Archive(original.archive);
+  duplicateRunningArchive.run.results[118].matchId = duplicateRunningArchive.run.results[117].matchId;
+  expect(new Set(duplicateRunningArchive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(118);
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e75-duplicate-running-match-id.json', duplicateRunningArchive, recoverySnapshot, canonicalArchive
+  );
+
+  // NEXT-110-E76: missing matchId on the last result of a running
+  // 119/120 prefix must fail atomically; the result itself still exists.
+  const missingRunningIdArchive = makeRunning119Archive(original.archive);
+  delete missingRunningIdArchive.run.results[118].matchId;
+  expect('matchId' in missingRunningIdArchive.run.results[118]).toBe(false);
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e76-missing-running-match-id.json', missingRunningIdArchive, recoverySnapshot, canonicalArchive
+  );
 
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
