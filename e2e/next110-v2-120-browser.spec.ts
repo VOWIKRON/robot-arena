@@ -462,6 +462,47 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
 
+  // NEXT-110-E55: reject a valid-looking but reordered result prefix and a
+  // forged participant ID. Recovery must remain atomic without extra downloads.
+  const structuralTamperCases: Array<{ name: string; change: (archive: any) => void }> = [
+    { name: 'swapped-results', change: archive => {
+      [archive.run.results[118], archive.run.results[119]] =
+        [archive.run.results[119], archive.run.results[118]];
+    } },
+    { name: 'forged-participant-id', change: archive => {
+      archive.run.definition.participants[0].id = 'next110-e55-forged-participant';
+    } }
+  ];
+  for (const { name, change } of structuralTamperCases) {
+    const corrupted = structuredClone(original.archive);
+    change(corrupted);
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e55-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(corrupted))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
+    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
+    await expect(page.locator('#tournament-autosave')).toBeDisabled();
+    await expect(page.locator('#tournament-pairings li').last()
+      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e55-valid-after-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(canonicalArchive)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
+    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
+    await expect(page.locator('#tournament-autosave')).toBeDisabled();
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
