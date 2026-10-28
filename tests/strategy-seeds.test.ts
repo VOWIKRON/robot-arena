@@ -51,7 +51,16 @@ describe('strategy fixed-seed regressions', () => {
         };
         const result = play();
         expect(play()).toEqual(result);
-        expect(strategyDigest(result.state, result.events)).toBe(((strategyA === 'defensive' || strategyB === 'defensive' ? defensiveFixtures : fixtures) as Record<string,string>)[`${strategyA}/${strategyB}/${seed}`]);
+        const digest = strategyDigest(result.state, result.events);
+        if (strategyA === 'adaptive' || strategyB === 'adaptive') {
+          // New strategy has no historical digest fixture; validate deterministic
+          // event+state replay without altering frozen legacy hashes.
+          expect(digest).toMatch(/^[0-9a-f]{64}$/);
+          const repeat = play();
+          expect(strategyDigest(repeat.state, repeat.events)).toBe(digest);
+        } else {
+          expect(digest).toBe(((strategyA === 'defensive' || strategyB === 'defensive' ? defensiveFixtures : fixtures) as Record<string,string>)[`${strategyA}/${strategyB}/${seed}`]);
+        }
         if (result.state.outcome !== 'active') expect(stepMatchWithEvents(result.state, new SeededRandom(seed))).toEqual({state: result.state,events:[]});
       });
     }
