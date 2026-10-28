@@ -925,6 +925,20 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E93: a running archive with the results property omitted must
+  // be rejected without modifying the recovered tournament or sandbox.
+  await assertRejectedRunning119VariantThenRestore(
+    page, 'next110-e93-running-missing-results.json', original.archive,
+    archive => { delete (archive.run as { results?: unknown }).results; },
+    archive => {
+      expect('results' in archive.run).toBe(false);
+      expect(archive.run.nextMatchIndex).toBe(119);
+      expect(archive.run.totalMatches).toBe(120);
+      expect(archive.run.status).toBe('running');
+    },
+    recoverySnapshot, canonicalArchive
+  );
+
   // NEXT-110-E88/E92: absent and null statuses share typed recovery.
   for (const invalidStatus of ['missing', 'null'] as const) {
     await assertRejectedRunning119VariantThenRestore(
