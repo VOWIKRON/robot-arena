@@ -50,10 +50,14 @@ function validateTimingEvidence(evidence: TimingEvidence, projectName: string): 
 
 test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, reload, import and replay', async ({ page }, testInfo) => {
   // NEXT-110-E22: enforce the WebKit 120-match budget (the previous literal \\n was inside a comment).
-  // On constrained CI runners, 120 UI updates may need up to three minutes.
+  // NEXT-110-E33: E30 adds several download/export integrity checks to the
+  // same 120-match browser scenario. CI #40612282132/#40612441553 timed out
+  // during exportArchive (line 194) on both Chromium projects, not in simulation.
+  // Bound the complete scenario (including I/O) without relaxing assertions.
   const isWebKit = testInfo.project.name.includes('webkit');
-  test.setTimeout(isWebKit ? 180_000 : 120_000);
-  testInfo.annotations.push({ type: 'timeout-budget', description: `${testInfo.project.name}: ${isWebKit ? 180_000 : 120_000}ms` });
+  const timeoutBudgetMs = isWebKit ? 300_000 : 240_000;
+  test.setTimeout(timeoutBudgetMs);
+  testInfo.annotations.push({ type: 'timeout-budget', description: `${testInfo.project.name}: ${timeoutBudgetMs}ms` });
   const start = Date.now();
   await page.goto('/');
   const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
@@ -217,7 +221,7 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     ruleset: 'simultaneous-v2', participants: 16, matches: 120,
     maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
     elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
-    invalidImportRecoveryElapsedMs, timeoutBudgetMs: isWebKit ? 180_000 : 120_000,
+    invalidImportRecoveryElapsedMs, timeoutBudgetMs,
     browserProject: testInfo.project.name, importedArchiveIdentical: true
   };
   validateTimingEvidence(timingEvidence, testInfo.project.name);
