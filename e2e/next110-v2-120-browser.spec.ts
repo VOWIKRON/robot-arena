@@ -302,6 +302,38 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
 
+  // NEXT-110-E46: alternate invalid/valid imports in the fresh recovery
+  // context without triggering more downloads. Each rejection must be atomic.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results[118] = structuredClone(corrupted.run.results[117]);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e46-invalid-${attempt}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(corrupted))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
+    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e46-valid-${attempt}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(canonicalArchive)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
+    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
+    await expect(page.locator('#tournament-autosave')).toBeDisabled();
+    await expect(page.locator('#tournament-pairings li').last()
+      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
