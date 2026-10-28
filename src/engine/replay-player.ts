@@ -1,5 +1,7 @@
 import type { CombatEvent } from './events';
 import type { ReplayDocument } from './replay-format';
+import type { ReplayDocumentV2 } from './replay-v2';
+import { reconstructReplayStatesV2 } from './replay-v2';
 import { reconstructReplayStates } from './replay-state';
 import type { MatchState } from './types';
 
@@ -10,8 +12,10 @@ export class ReplayPlayer {
 
   private readonly snapshots: readonly MatchState[];
 
-  constructor(private readonly recording: ReplayDocument) {
-    this.snapshots = reconstructReplayStates(recording);
+  constructor(private readonly recording: ReplayDocument | ReplayDocumentV2) {
+    this.snapshots = recording.schemaVersion === 2
+      ? reconstructReplayStatesV2(recording)
+      : reconstructReplayStates(recording);
   }
 
   get tick(): number { return this.cursor; }
@@ -20,7 +24,11 @@ export class ReplayPlayer {
   get atEnd(): boolean { return this.cursor >= this.length; }
   get isPlaying(): boolean { return this.playing; }
   get events(): readonly CombatEvent[] {
-    return this.cursor === 0 ? [] : this.recording.frames[this.cursor - 1]!.events;
+    if (this.cursor === 0) return [];
+    if (this.recording.schemaVersion === 1) return this.recording.frames[this.cursor - 1]!.events;
+    // v2 terminal draw is reflected in state/outcome; legacy event renderers remain v1-safe.
+    return this.recording.frames[this.cursor - 1]!.events.filter(
+      (event): event is CombatEvent => event.type !== 'draw');
   }
 
   /** Returns false for an empty or finished recording. */
