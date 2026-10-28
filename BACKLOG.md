@@ -1,3 +1,23 @@
+## 28.10.2026 · 12:57 Uhr · NEXT-110 E63/E64/E65 IMPLEMENTIERT – QA #40684168754 LÄUFT · NICHT VERÖFFENTLICHT
+
+**Vorprüfung:** Entwicklungs-PR #93 Draft; zuletzt vollständig bestätigt: isolierte QA #40677604260 SUCCESS mit 858/858 (554 Vitest, 32 Node, 272 Chromium/WebKit Desktop/Mobil). Letzte bestätigte Live-Version v0.1.61; NEXT-106/107/109 bereits in main, **Veröffentlichungsstatus ungeklärt**; separater Release-PR #124 v0.1.62 offen, unangetastet. E3/E4 nicht separat belegt, NEXT-110 Parent offen.
+
+**3 geplant / 3 seriell implementiert / 0 NEU CI-bestätigt, solange QA #40684168754 läuft:**
+- **NEXT-110-E63 (P1):** Doppelte Match-ID bei weiterhin korrektem completed-Cursor 120, 120 Ergebnissen und Status completed über realen Browserimport atomar ablehnen. Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: 119 eindeutige IDs erkannt, sichtbare Ablehnung, 120 Paarungen, Fortschritt, Replay, Autosave und Sandbox unverändert, gültiger Reimport danach. Test: `npx playwright test e2e/next110-v2-120-browser.spec.ts` auf Chromium Desktop/Mobil und WebKit Desktop/iPhone plus vollständige isolierte QA; Abhängigkeit E60. Branch `feature/NEXT-110-E63-duplicate-matchid-20261028`, Commit `3972ccf05270`.
+- **NEXT-110-E64 (P1):** Leere und nur Whitespace enthaltende JSON-Datei nach erfolgreicher Recovery atomar abweisen. Gleiche E2E-Datei; Akzeptanz: beide JSON.parse-Negativfälle, sichtbares Feedback, 120 Ergebnisse, Replay, Sandbox, Autosave und Fortschritt unverändert, anschließend gültiger Reimport. Test: gleicher Playwright-Befehl in vier Browserprojekten plus QA; Abhängigkeit E61. Branch `feature/NEXT-110-E64-empty-json-recovery-20261028`, Commits `f37db3bc6c45` und Fixture-Fix `b55dc8075d1f` (Whitespace-Escapes korrigiert).
+- **NEXT-110-E65 (P2):** Wiederholte E55/E58 Reject-/Recovery-Assertions durch gemeinsame typisierte `ArchiveRecoverySnapshot`-Hilfen ersetzen, inklusive Replay-Button-Prüfung nach gültigem Reimport. Gleiche Datei; Akzeptanz: keine Invariante entfernt, weniger Duplikate, vollständige Browsermatrix, TypeScript, Unit-/Behavior-/Regression-/Determinismus-Tests und Build grün. Test: `npm run typecheck && npm test && npm run test:e2e && npm run build` in isolierter QA; Abhängigkeit E62. Branch `feature/NEXT-110-E65-recovery-assertions-refactor-20261028`, Commit `b7e750033102`.
+
+**QA:** Test-only PR #129 Draft, NIEMALS MERGEN. QA-Commit `8c844b546754438238d0cfa830542426a6b739db` mit exakt identischem Git-Tree `22ac410bec04a04f96e8850ea8a9b7b6c475c0d8` zum Entwicklungsstand nach E65. QA #40684168754 läuft; E63–E65 erst nach SUCCESS zählen. Produktionsengine/RNG/v1-Regeln unverändert.
+
+**Kumulativ sicher CI-bestätigt seit v0.1.61: 63 Einheiten**, davon NEXT-106/107/109 in main (**Veröffentlichungsstatus ungeklärt**) und **60 NEXT-110-Unterpakete E1/E2/E5–E62** auf Entwicklungsbranch (**NICHT LIVE, NICHT RELEASE-FREIGEGEBEN**). E63–E65 implementiert, aber bis zur grünen CI **nicht** als getestet zählen. **Sofort aus der Automation veröffentlichbar: keine** (Publishing verboten). NEXT-79e manuelle Hardware-Abnahme und NEXT-108 Provenienz offen.
+
+**Rolling Backlog, nächste drei kleine unabhängige Schritte:**
+- **E66 (P1):** Null-/Nichtobjekt-Eintrag in `run.results[119]` nach gültiger Recovery atomar ablehnen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: keine UI-Mutation, 120 Paarungen/Replay/Sandbox stabil, gültiger Reimport; Test Playwright vier Projekte; abhängig E63 und grüner QA.
+- **E67 (P1):** Nicht-Array `run.results` nach Recovery atomar ablehnen; gleiche Datei; Akzeptanz: Fehlerfeedback, unveränderte UI/Replay/Autosave/Sandbox, gültiger Reimport; Test Playwright vier Projekte; abhängig E64 und grüner QA.
+- **E68 (P2):** E63/E64-Import-/Recovery-Wiederholungen in E62/E65-Hilfen konsolidieren, alle Assertions beibehalten; gleiche Datei; Test `npm run typecheck && npm test && npm run test:e2e && npm run build`, vier Browserprojekte; abhängig E65 und grüner QA.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 12:07 Uhr · NEXT-110 E60/E61/E62 ISOLIERT QA-BESTÄTIGT 858/858 · NICHT VERÖFFENTLICHT
 
 **P0 – CI:** Isolierte nicht veröffentlichende QA **#40676668507 SUCCESS** auf QA-PR #127 Draft (NIEMALS MERGEN): **554 Vitest + 32 Node + 272 Chromium/WebKit Desktop/Mobil = 858/858**. TypeScript, Audit ohne bekannte Advisories, reproduzierbarer Build und vier Browserprojekte erfolgreich. E60/E61/E62-Code und vorherige Dokumentation exakt im QA-Snapshot; finaler Dokumentationsstand erhält eigene Nachprüfung. Release-/Publish-Workflows nicht ausgelöst.
