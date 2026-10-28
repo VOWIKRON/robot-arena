@@ -869,6 +869,22 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E87: the running prefix contains 119 of exactly 120 fixtures.
+  // Altering only totalMatches must reject atomically, even with valid
+  // cursor, result count, status and all existing match IDs unchanged.
+  for (const invalidTotal of [119, 121]) {
+    const corrupted = makeRunning119Archive(original.archive);
+    corrupted.run.totalMatches = invalidTotal;
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.status).toBe('running');
+    expect(corrupted.run.totalMatches).toBe(invalidTotal);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e87-running-total-${invalidTotal}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E84: a running 119/120 archive cannot contain a non-array
   // results collection even when its cursor, total and status are coherent.
   for (const { name, value } of [
