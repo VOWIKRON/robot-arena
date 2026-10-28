@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
+import { validateTimingEvidence, type TimingEvidence } from '../tests/helpers/next110-timing-evidence';
 
 /**
  * NEXT-110 E6: real Chromium desktop/mobile integration, not a unit-only
@@ -11,41 +12,6 @@ async function exportArchive(page: Page): Promise<{ archive: any; file: string }
   await page.getByRole('button', { name: 'Speichern', exact: true }).click();
   const file = await (await pending).path();
   return { archive: JSON.parse(await readFile(file, 'utf8')), file };
-}
-
-/** NEXT-110-E31: reusable, fail-closed timing evidence contract before JSON attachment. */
-type TimingEvidence = {
-  ruleset: string;
-  participants: number;
-  matches: number;
-  maxTicks: number;
-  seed: number;
-  archiveBytes: number;
-  elapsedMs: number;
-  tournamentElapsedMs: number;
-  archiveImportElapsedMs: number;
-  invalidImportRecoveryElapsedMs: number;
-  timeoutBudgetMs: number;
-  browserProject: string;
-  importedArchiveIdentical: boolean;
-};
-
-function validateTimingEvidence(evidence: TimingEvidence, projectName: string): void {
-  const fields = [
-    'elapsedMs', 'tournamentElapsedMs', 'archiveImportElapsedMs',
-    'invalidImportRecoveryElapsedMs', 'timeoutBudgetMs'
-  ] as const;
-  for (const field of fields) {
-    expect(Number.isFinite(evidence[field]), `${field} must be finite`).toBe(true);
-    expect(evidence[field], `${field} must be nonnegative`).toBeGreaterThanOrEqual(0);
-  }
-  expect(evidence.archiveBytes).toBeGreaterThan(0);
-  expect(evidence.browserProject).toBe(projectName);
-  expect(evidence.ruleset).toBe('simultaneous-v2');
-  expect(evidence.participants).toBe(16);
-  expect(evidence.matches).toBe(120);
-  expect(evidence.importedArchiveIdentical).toBe(true);
-  expect(evidence.elapsedMs).toBeGreaterThanOrEqual(evidence.tournamentElapsedMs);
 }
 
 test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, reload, import and replay', async ({ page }, testInfo) => {
