@@ -730,6 +730,33 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   await importCanonicalArchive(page, 'next110-e70-valid-after-extra-result.json', canonicalArchive);
   await assertCanonicalArchiveRestored(page, recoverySnapshot);
 
+  // NEXT-110-E73: a running 119/120 archive must contain the exact
+  // deterministic result prefix, not just the right count and cursor.
+  const invalidRunningPrefixes: Array<{ name: string; change: (archive: any) => void }> = [
+    { name: 'swapped-tail', change: archive => {
+      [archive.run.results[117], archive.run.results[118]] =
+        [archive.run.results[118], archive.run.results[117]];
+    } },
+    { name: 'future-result-in-prefix', change: archive => {
+      archive.run.results[118] = structuredClone(original.archive.run.results[119]);
+    } }
+  ];
+  for (const { name, change } of invalidRunningPrefixes) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results = corrupted.run.results.slice(0, 119);
+    corrupted.run.nextMatchIndex = 119;
+    corrupted.run.status = 'running';
+    change(corrupted);
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    expect(corrupted.run.status).toBe('running');
+    expect(new Set(corrupted.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e73-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
