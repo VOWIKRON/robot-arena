@@ -230,6 +230,13 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
     await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+    // NEXT-110-E40: verify that the recovered tournament is still complete,
+    // versioned v2, replayable and does not enable legacy v1 autosave.
+    await expect(page.locator('#tournament-progress')).toContainText('completed');
+    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+    await expect(page.locator('#tournament-autosave')).toBeDisabled();
+    await expect(page.locator('#tournament-pairings li').last()
+      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
     expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
