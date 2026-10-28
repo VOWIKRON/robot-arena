@@ -1,3 +1,20 @@
+## 28.10.2026 · 21:13 Uhr · NEXT-110 E87/E88/E89 VOLLSTÄNDIG QA GRÜN · 858/858 · NICHT VERÖFFENTLICHT
+
+**3/3 NEU vollständig implementiert und isoliert getestet:** E87 `run.totalMatches` 119/121 bei laufendem 119/120-Archiv atomar zurückweisen (Commit `8169b73ad514025814af31e7a4c9c44bc98a1216`); E88 fehlenden/null-Status bei laufendem Präfix zurückweisen (`e978536c2f469c057a8b0e6be7de514ffad94429`); E89 E84/E85 auf gemeinsame typisierte Recovery-Hilfe umstellen, ursprüngliche E88-Assertions ausdrücklich erhalten (`caa5aff4a7569c1e919381448d24dbd9c6c3ab2d`, Korrektur `79bd0e0dba1541af80bd0ec6cbff43567966fbdb`). Alle Änderungen ausschließlich in der E2E-Datei `e2e/next110-v2-120-browser.spec.ts`; Engine/RNG/v1 unverändert. Jeder ungültige Import wird atomar abgewiesen, Fortschritt/120 Paarungen/Replay/Autosave/Sandbox bleiben unverändert, gültiger Reimport gelingt.
+
+**QA:** Isolierter Draft-QA-PR #153 **NICHT MERGEN**, GitHub Actions **#40759986095 SUCCESS**: 554 Vitest Unit/Behavior/Regression/Determinismus, 32 Node, 272 Playwright Chromium/WebKit Desktop/Mobil, **858/858**. TypeScript, Audit ohne bekannte Dependency-Advisories, Build und reproduzierbarer zweiter Build PASS. Vollständige QA nach E89-Refactoring. Der Git-Blob der QA-Spec `d23bba1fa23061dcde5ce042ee2b7ac9032f5b11` stimmt exakt mit dem in den Entwicklungsbranch integrierten Programmcode überein.
+
+**Integration:** Entwicklungs-PR #151 ausschließlich in `feature/NEXT-110-versioned-simultaneous-rules-unpublished` gemergt, Merge-Commit `35245be64ee70ace4402b2940a0189e32dafc57c`. Übergeordneter PR #93 bleibt Draft. Vorheriger überflüssiger QA-PR #152 geschlossen; QA-PR #153 bleibt Draft. Dokumentation nach erfolgreicher QA aktualisiert; getesteter Programmcode unverändert.
+
+**Letzte bestätigte Live-Version v0.1.62** (NEXT-106/107/109, Publish #40738430019 SUCCESS). **Kumulativ seit v0.1.62: 87 vollständig CI-verifizierte, NICHT live veröffentlichte NEXT-110-Unterpakete E1/E2/E5–E89**. E3/E4 nicht separat nachgewiesen; NEXT-110 Parent OPEN; NEXT-79e praktische Accessibility-Abnahme und NEXT-108 Provenienz offen. **Neue E87/E88/E89 technisch fertig, aber NICHT release-freigegeben.**
+
+**Rolling Backlog:**
+- **NEXT-110-E90 (P1):** Falsche `run.status`-Typen Zahl/Array/Objekt im laufenden 119/120-Präfix atomar zurückweisen. Datei `e2e/next110-v2-120-browser.spec.ts`; Abnahme: Cursor 119, 119 Ergebnisse, total 120, Ablehnung ohne Mutation von Fortschritt/120 Paarungen/Replay/Autosave/Sandbox, gültiger Reimport. Tests `npm run typecheck && npm test && npm run test:e2e && npm run build` plus Audit/reproduzierbarer Build. Abhängigkeit E85/E88.
+- **NEXT-110-E91 (P1):** Fehlenden, null- oder stringförmigen `run.nextMatchIndex` bei 119 Ergebnissen atomar zurückweisen. Gleiche Datei, Abnahme, Testmatrix; Abhängigkeit E82.
+- **NEXT-110-E92 (P2):** E87/E88-Reject-/Recovery-Fälle auf gemeinsame typisierte E89-Hilfe umstellen, alle spezifischen Assertions erhalten; gleiche Datei, volle Regression nach Refactoring; Abhängigkeit E87–E89.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, Release-Workflow, Release-Commit, publish.php, Homepage, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 21:01 Uhr · NEXT-110 E87/E88/E89 IMPLEMENTIERT · NEUE QA AUSSTEHEND · NICHT VERÖFFENTLICHT
 
 **Geplant 3 / seriell implementiert 3 / neu CI-bestätigt 0:** E87 `run.totalMatches` 119/121 bei laufendem 119/120-Archiv ablehnen (Commit `8169b73ad514025814af31e7a4c9c44bc98a1216`); E88 fehlenden bzw. null-Status bei laufendem 119/120-Archiv ablehnen (`e978536c2f469c057a8b0e6be7de514ffad94429`); E89 E84/E85-Recovery-Prüfungen in gemeinsame typisierte Testhilfe überführen, inklusive Erhaltung der E88-Fälle (`caa5aff4a7569c1e919381448d24dbd9c6c3ab2d`, Fix `79bd0e0dba1541af80bd0ec6cbff43567966fbdb`). Drei eigene aufeinander aufbauende Task-Branches; ausschließlich `e2e/next110-v2-120-browser.spec.ts` geändert. Engine, RNG, historische v1-Regeln unverändert. **E87–E89 NICHT als fertig zählen, bevor vollständige isolierte CI erfolgreich ist.**
