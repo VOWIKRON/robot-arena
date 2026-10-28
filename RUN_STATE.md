@@ -2,6 +2,8 @@
 
 **Geplant 3 / seriell implementiert 3 / neu CI-bestätigt 0:** E96 fehlendes `run.totalMatches` bei 119/120 running atomar zurückweisen (Commit `658fe262e5e7`); E97 `run.totalMatches` als `null` oder String `"120"` zurückweisen (`bb3c11d7a8a5`); E98 E93/E94-Recovery in typisierte E95-Hilfe konsolidieren, absichtlich fehlendes `run.results` und negative/gebrochene Cursor weiterhin explizit prüfen (`9033b8e4225a`). Drei serielle eigene Entwicklungsbranches, ausschließlich `e2e/next110-v2-120-browser.spec.ts` als Programmcode verändert; Engine, RNG und historische v1-Regeln unverändert.
 
+**Isolierte QA:** Draft-PR #159 gegen qa/NEXT-71-combined-integration offen. Dieser QA-PR darf NIEMALS gemergt werden. Entwicklungs-PR #158 bleibt Draft bis vollständige CI grün ist.
+
 **Abnahme ausstehend:** Isolierte vollständige CI erforderlich: `npm run typecheck && npm test && npm run test:e2e && npm run build`, `npm audit --audit-level=moderate`, reproduzierbarer zweiter Build, Unit/Behavior/Regression/Determinismus, Chromium/WebKit Desktop/Mobil **nach** E98-Refactoring. Ungültige Importe müssen ohne Mutation von Fortschritt, 120 Paarungen, Replay, Autosave, Sandbox abgewiesen werden; gültiger Reimport muss gelingen. Code-Blob vor QA `d88d1d1b839c49015e61cff17635e1aadcd91818`. **Noch keine Erfolgsmeldung für E96–E98 ohne grüne CI.**
 
 **Kumulativ seit letzter bestätigter Live-Version v0.1.62:** weiterhin **93 CI-verifizierte, nicht live veröffentlichte NEXT-110-Unterpakete E1/E2/E5–E95**; E96–E98 neu implementiert, Test- und Veröffentlichungsstatus ausstehend/nicht live. E3/E4 separat unbewiesen, NEXT-110 Parent offen, NEXT-79e praktische Accessibility-Abnahme und NEXT-108 Provenienz offen.
