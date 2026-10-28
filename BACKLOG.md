@@ -1,3 +1,74 @@
+## 28.10.2026 · 06:57 Uhr · NEXT-110 E45/E46/E47 IMPLEMENTIERT · CI AUSSTEHEND · NICHT VERÖFFENTLICHT
+**P0 – Vorprüfung:** Entwicklungs-PR #93 und QA-PR #116 Draft, nicht mergen. Abschließende Dokumentations-CI #40636353785 SUCCESS für E42–E44: **550 Vitest + 32 Node + 252 Chromium/WebKit Desktop/Mobil = 834/834**, TypeScript, Audit, reproduzierbarer Build und Gates erfolgreich. Letzte bestätigte Live-Version **v0.1.61**; main `753b1a3953b4`; NEXT-106/107/109 auf main, **Veröffentlichungsstatus ungeklärt**.
+
+**Drei geplante und tatsächlich implementierte Arbeitspakete: 3/3 geschrieben und zurückgelesen, 0/3 auf neuem Code-HEAD vollständig CI-bestätigt.**
+- **NEXT-110-E45 (P1):** Fehlender Download bei leerem UI-Feedback; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: Fehlermeldung `UI-Feedback: keines` binnen 5 s bei 250-ms-Testbudget, keine Page-Errors, regulärer Downloadpfad bleibt erhalten. Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` auf Chromium/WebKit Desktop/Mobil und vollständige CI. Abhängigkeit E42. Branch `feature/NEXT-110-E45-empty-feedback-20261028`, Commit `3cb0c2f2d37d`.
+- **NEXT-110-E46 (P1):** Zweimal ungültigen und gültigen 120-Kampf-Archivimport abwechseln, ohne weitere Downloads; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: Ablehnung atomar, Fortschritt, Paarungen, v2-Regeln, Replay, Autosave und Sandbox stabil. Test gleiche Playwright-Matrix und volle CI. Abhängigkeit E43. Branch `feature/NEXT-110-E46-alternating-recovery-20261028`, Commit `713bbaf39213`.
+- **NEXT-110-E47 (P2):** Terminal-Seek-Fixture refaktorieren und Seeds 0/1/7/42/4711 sowie Tickgrenzen 0/1/2/3/5 prüfen; Datei `tests/next110-replay-v2.test.ts`; Akzeptanz: deterministische Zustände, unveränderte v1/v2-Bytes, unabhängige Parser, seeded Double-KO, immutable Snapshots. Test `npx vitest run tests/next110-replay-v2.test.ts` und volle CI nach Refactoring. Abhängigkeit E44. Branch `feature/NEXT-110-E47-terminal-boundaries-20261028`, Commit `74bf4d16cf3d`.
+
+**Refactoring:** Double-KO-Fixture akzeptiert jetzt Seed statt mehrfach denselben Seed zu testen; keine Änderungen an produktiver Engine, RNG oder v1-Regeln. Quellcode-QA PR #117 Draft, niemals mergen; vollständige CI noch nicht bestätigt. Neue E45–E47 NICHT als abgeschlossen zählen.
+
+**Kumulativ seit bestätigter LIVE v0.1.61: 45 vollständig getestete, aber nicht live bestätigte Einheiten (3 auf main mit Veröffentlichungsstatus ungeklärt, 42 NEXT-110-Unterpakete E1/E2/E5–E44 auf Entwicklungsbranch, nicht live).**
+| ID | Funktion | Tests | Veröffentlichungsstatus |
+| --- | --- | --- | --- |
+| NEXT-106 | Release-Evidence-Gate | 733/733 | main, Veröffentlichungsstatus ungeklärt |
+| NEXT-107 | Balance/Replay-Import | 736/736 | main, Veröffentlichungsstatus ungeklärt |
+| NEXT-109 | Erstschussdiagnose | 739/739 | main, Veröffentlichungsstatus ungeklärt |
+| NEXT-110-E1 | Versioniertes v2-Replayformat | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E2 | Replay-Player | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E5 | Replay-Statistiken | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E6 | 120-Kampf-Stresstest | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E7 | Archiv-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E8 | Double-KO-Browserprüfung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E9 | Double-KO-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E10 | Archiv-Grenzfälle | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E11 | Tastatur-/ARIA-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E12 | 120-Kampf-Archivschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E13 | Null-Tick-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E14 | Replay-Tastatursteuerung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E15 | Double-KO-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E16 | Seed-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E17 | Replay-Grenzfälle | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E18 | Replay-Importschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E19 | WebKit-Archivtest | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E20 | Double-KO-Fixture | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E21 | Wiederholte Replay-Importe | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E22 | WebKit-Timeout-Korrektur | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E23 | Manipulations-Testhilfe | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E24 | Archiv-Recovery | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E25 | WebKit-Zeitdiagnostik | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E26 | v1/v2-Determinismus | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E27 | Ungültige Archivformate | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E28 | Zeitdatenvalidierung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E29 | Mehr-Tick-Determinismus | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E30 | Archivmanipulation nach Wiederherstellung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E31 | Zeitdaten-Schema-Refactoring | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E32 | Bidirektionale Replay-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E33 | Browser-Timeout-Korrektur | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E34 | Negative Zeitdaten-Tests | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E35 | Seek-/Pause-/Play-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E36 | Getrennte 120-Kampf-Browserphasen | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E37 | Browser-Zeitbudget-Vertrag | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E38 | Deterministische Replay-Ereignisfolgen | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E39 | Download-Fehlerdiagnostik | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E40 | Recovery-Invarianten | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E41 | Terminal- und Null-Tick-Fixtures | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E42 – NEU | Negativer Archiv-Download mit UI-Diagnose | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E43 – NEU | Zwei gültige 120-Kampf-Reimporte ohne zusätzliche Downloads | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E44 – NEU | Terminal-Seek-Fixture, v1/v2- und Seed-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E45 – NEU | Leeres UI-Feedback bei Downloadfehler | CI ausstehend | Entwicklungsbranch, nicht live |
+| NEXT-110-E46 – NEU | Abwechselnd ungültiger/gültiger 120-Kampf-Import | CI ausstehend | Entwicklungsbranch, nicht live |
+| NEXT-110-E47 – NEU | Seeded Terminal-Seek- und Tickgrenzen | CI ausstehend | Entwicklungsbranch, nicht live |
+
+**Rolling Backlog (nächste Runde, nach CI-Prüfung):**
+- **P0:** QA-PR #117 auf exaktem Code-HEAD vollständig prüfen (Typecheck, Unit, Behavior, Regression, deterministische Simulation, Node, Chromium/WebKit Desktop/Mobil, Audit, reproduzierbarer Build, Browser-/Evidence-Gates). Bei Fehler eigenständiger Fixbranch und vollständige Wiederholung; E45–E47 erst nach grüner CI zählen.
+- **NEXT-110-E48 (P1):** Download-Fehlerpfad bei abgebrochenem Trigger statt ausbleibendem Ereignis prüfen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: strukturierte Fehlermeldung mit Ursache und ohne unhandled rejection; Test Playwright vier Projekte; Abhängigkeit E45.
+- **NEXT-110-E49 (P1):** Wechselimporte mit unterschiedlichen Manipulationstypen (fehlende ID, duplizierte Ergebniszeile) prüfen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz unveränderte Paarungen/Replay/Sandbox nach jeder Ablehnung; Test Playwright vier Projekte; Abhängigkeit E46.
+- **NEXT-110-E50 (P2):** Terminal-Seek-Regression mit nichtmonotoner Sequenz und Grenzverletzungen für seeded Double-KO refaktorieren; Datei `tests/next110-replay-v2.test.ts`; Akzeptanz immutable Snapshots und identische v1/v2-Serialisierung; Test Vitest + volle CI; Abhängigkeit E47.
+- **P0 NEXT-79e:** Reale NVDA-/VoiceOver-, Touch- und Kontrastabnahme offen; **NEXT-108:** externe Commit-/CI-Provenienzprüfung offen. NEXT-110 Gesamtaufgabe offen; E3/E4 nicht eigenständig belegt.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung nur manuell.** Kein publish.php, Homepage, Release-Workflow, Release-Commit, Deployment, main-Merge oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 06:10 Uhr · NEXT-110 E42/E43/E44 VOLLSTÄNDIG CI-BESTÄTIGT · NICHT VERÖFFENTLICHT
 **P0 – Vollständige CI #40635683373 SUCCESS** auf isoliertem, main-basiertem QA-Snapshot mit exakt demselben Git-Dateibaum wie Entwicklungs-HEAD `c5f3c74bb61b3a93b82b38eb1573e2c85b1902c7`: **550 Vitest + 32 Node + 252 Chromium/WebKit Desktop/Mobil = 834/834**. Chromium Desktop/Mobil je 104, WebKit Desktop/iPhone je 22; keine Browser-Flakes/unerwarteten Tests. TypeScript, npm Audit, reproduzierbarer Build, Browser-/Evidence-Gates erfolgreich. QA-PR #115 bleibt Draft und darf **NIEMALS** gemergt werden.
 
