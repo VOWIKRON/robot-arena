@@ -153,6 +153,26 @@ async function assertRejectedRunning119ThenRestore<T extends RunningArchiveFixtu
   await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
 }
 
+/** NEXT-110-E89: shared running-prefix rejection/recovery for cases that
+ * intentionally invalidate status or results type. Unlike E83's helper,
+ * post-mutation status/results must NOT be assumed valid. */
+async function assertRejectedRunning119VariantThenRestore<T extends RunningArchiveFixture>(
+  page: Page,
+  filename: string,
+  completed: T,
+  mutate: (archive: T) => void,
+  verify: (archive: T) => void,
+  snapshot: ArchiveRecoverySnapshot,
+  canonicalBytes: string
+): Promise<void> {
+  const corrupted = makeRunning119Archive(completed);
+  mutate(corrupted);
+  expect(corrupted.run.nextMatchIndex).toBe(119);
+  expect(corrupted.run.totalMatches).toBe(120);
+  verify(corrupted);
+  await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -869,33 +889,72 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E84: a running 119/120 archive cannot contain a non-array
-  // results collection even when its cursor, total and status are coherent.
+  // NEXT-110-E87: the running prefix contains 119 of exactly 120 fixtures.
+  // Altering only totalMatches must reject atomically, even with valid
+  // cursor, result count, status and all existing match IDs unchanged.
+  for (const invalidTotal of [119, 121]) {
+    const corrupted = makeRunning119Archive(original.archive);
+    corrupted.run.totalMatches = invalidTotal;
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.status).toBe('running');
+    expect(corrupted.run.totalMatches).toBe(invalidTotal);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e87-running-total-${invalidTotal}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
+  // NEXT-110-E84/E89: non-array running results, shared typed recovery.
   for (const { name, value } of [
     { name: 'null-results', value: null },
     { name: 'object-results', value: { 0: original.archive.run.results[0], length: 119 } },
     { name: 'string-results', value: '119 match results' }
   ] as Array<{ name: string; value: unknown }>) {
-    const corrupted = makeRunning119Archive(original.archive);
-    (corrupted.run as { results: unknown }).results = value;
-    expect(corrupted.run.nextMatchIndex).toBe(119);
-    expect(corrupted.run.totalMatches).toBe(120);
-    expect(corrupted.run.status).toBe('running');
-    await assertRejectedJsonThenRestore(
-      page, `next110-e84-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e84-${name}.json`, original.archive,
+      archive => { (archive.run as { results: unknown }).results = value; },
+      archive => {
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe('running');
+        expect(archive.run.results).toBe(value);
+      },
+      recoverySnapshot, canonicalArchive
     );
   }
 
-  // NEXT-110-E85: 119 results with cursor 119 cannot claim a terminal
-  // or unstarted status; both inconsistent states must reject atomically.
-  for (const invalidStatus of ['completed', 'ready']) {
+  // NEXT-110-E88: missing or explicit null status must not be silently
+  // interpreted as a running tournament. Preserve all other 119/120 data.
+  for (const invalidStatus of ['missing', 'null'] as const) {
     const corrupted = makeRunning119Archive(original.archive);
-    corrupted.run.status = invalidStatus;
+    if (invalidStatus === 'missing') {
+      delete (corrupted.run as { status?: unknown }).status;
+      expect('status' in corrupted.run).toBe(false);
+    } else {
+      (corrupted.run as { status: unknown }).status = null;
+      expect(corrupted.run.status).toBeNull();
+    }
     expect(corrupted.run.results).toHaveLength(119);
     expect(corrupted.run.nextMatchIndex).toBe(119);
     expect(corrupted.run.totalMatches).toBe(120);
     await assertRejectedJsonThenRestore(
-      page, `next110-e85-running-status-${invalidStatus}.json`, corrupted,
+      page, `next110-e88-running-status-${invalidStatus}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
+  // NEXT-110-E85/E89: terminal/ready status is invalid at 119 results.
+  for (const invalidStatus of ['completed', 'ready']) {
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e85-running-status-${invalidStatus}.json`, original.archive,
+      archive => { archive.run.status = invalidStatus; },
+      archive => {
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe(invalidStatus);
+      },
       recoverySnapshot, canonicalArchive
     );
   }
