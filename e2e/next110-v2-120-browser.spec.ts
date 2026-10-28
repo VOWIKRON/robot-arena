@@ -137,6 +137,28 @@ test('NEXT-110-E54: delayed trigger rejection preserves cause without page error
   expect(pageErrors).toEqual([]);
 });
 
+/** NEXT-110-E57: an already resolved trigger must still time out when the
+ * browser never emits a download, without manufacturing an unhandled error. */
+test('NEXT-110-E57: resolved trigger without download fails bounded and preserves timeout cause', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-feedback').evaluate(node => { node.textContent = '  '; });
+  const startedAt = Date.now();
+  const caught: unknown = await exportArchive(page, {
+    timeoutMs: 250,
+    trigger: () => Promise.resolve(undefined)
+  }).then(() => null, (error: unknown) => error);
+  expect(caught).toBeInstanceOf(Error);
+  expect((caught as Error).message).toMatch(/Download fehlgeschlagen.*250ms.*UI-Feedback: keines/);
+  expect((caught as Error).cause).toBeInstanceOf(Error);
+  expect(((caught as Error).cause as Error).name).toBe('TimeoutError');
+  expect(Date.now() - startedAt).toBeLessThan(5_000);
+  await page.waitForTimeout(300);
+  expect(pageErrors).toEqual([]);
+});
+
 test.describe.serial('NEXT-110 120-match archive isolation phases', () => {
 let canonicalArchive = '';
 
