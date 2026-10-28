@@ -1,3 +1,65 @@
+## 28.10.2026 · 07:10 Uhr · NEXT-110 E45/E46/E47 VOLLSTÄNDIG CI-BESTÄTIGT · NICHT VERÖFFENTLICHT
+**P0 – Zwei vollständige CI-Läufe SUCCESS:** Quellcode-QA #40641361835 und abschließende Code-/Dokumentations-QA #40641459359 auf main-basiertem exaktem Git-Tree des Entwicklungsstands: **551 Vitest + 32 Node + 256 Chromium/WebKit Desktop/Mobil = 839/839**. Chromium Desktop/Mobil je 105, WebKit Desktop/iPhone je 23, 0 flaky/unerwartete Browserprüfungen. TypeScript, npm Audit, reproduzierbarer Build, Browser-/Evidence-Gates erfolgreich. QA-PR #119 Draft, **NIEMALS MERGEN**.
+
+**3/3 Pakete vollständig implementiert, zurückgelesen und CI-bestätigt:** **NEXT-110-E45** leeres UI-Feedback bei fehlendem Download mit 250-ms-Testbudget, `keines`-Diagnose und Page-Error-Prüfung (Commit `3cb0c2f2d37d`); **NEXT-110-E46** abwechselnd ungültige/gültige 120-Kampf-Importe ohne zusätzliche Downloads mit unverändertem Fortschritt, Paarungen, Replay und Sandbox (Commit `713bbaf39213`); **NEXT-110-E47** seeded Double-KO-Fixture mit fünf Seeds, Tickgrenzen 0/1/2/3/5, immutable Seek- und v1/v2-Kanonisierung (Commit `74bf4d16cf3d`). Refactoring vollständig erneut getestet, produktive Engine/RNG/v1-Regeln unverändert.
+
+**Kumulativ seit letzter bestätigter LIVE v0.1.61: 48 vollständig getestete, nicht live bestätigte Einheiten** (NEXT-106/107/109 auf main mit **Veröffentlichungsstatus ungeklärt**; 45 NEXT-110-Unterpakete E1/E2/E5–E47 auf Entwicklungsbranch, **nicht live**). E3/E4 nicht separat belegt. NEXT-110 als Gesamtaufgabe und NEXT-79e praktische Abnahme offen.
+
+| ID | Funktion | Tests | Veröffentlichungsstatus |
+| --- | --- | --- | --- |
+| NEXT-106 | Release-Evidence-Gate | 733/733 | main, Veröffentlichungsstatus ungeklärt |
+| NEXT-107 | Balance/Replay-Import | 736/736 | main, Veröffentlichungsstatus ungeklärt |
+| NEXT-109 | Erstschussdiagnose | 739/739 | main, Veröffentlichungsstatus ungeklärt |
+| NEXT-110-E1 | Versioniertes v2-Replayformat | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E2 | Replay-Player | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E5 | Replay-Statistiken | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E6 | 120-Kampf-Stresstest | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E7 | Archiv-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E8 | Double-KO-Browserprüfung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E9 | Double-KO-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E10 | Archiv-Grenzfälle | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E11 | Tastatur-/ARIA-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E12 | 120-Kampf-Archivschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E13 | Null-Tick-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E14 | Replay-Tastatursteuerung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E15 | Double-KO-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E16 | Seed-Manipulationsschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E17 | Replay-Grenzfälle | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E18 | Replay-Importschutz | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E19 | WebKit-Archivtest | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E20 | Double-KO-Fixture | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E21 | Wiederholte Replay-Importe | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E22 | WebKit-Timeout-Korrektur | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E23 | Manipulations-Testhilfe | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E24 | Archiv-Recovery | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E25 | WebKit-Zeitdiagnostik | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E26 | v1/v2-Determinismus | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E27 | Ungültige Archivformate | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E28 | Zeitdatenvalidierung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E29 | Mehr-Tick-Determinismus | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E30 | Archivmanipulation nach Wiederherstellung | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E31 | Zeitdaten-Schema-Refactoring | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E32 | Bidirektionale Replay-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E33 | Browser-Timeout-Korrektur | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E34 | Negative Zeitdaten-Tests | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E35 | Seek-/Pause-/Play-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E36 | Getrennte 120-Kampf-Browserphasen | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E37 | Browser-Zeitbudget-Vertrag | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E38 | Deterministische Replay-Ereignisfolgen | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E39 | Download-Fehlerdiagnostik | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E40 | Recovery-Invarianten | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E41 | Terminal- und Null-Tick-Fixtures | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E42 – NEU | Negativer Archiv-Download mit UI-Diagnose | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E43 – NEU | Zwei gültige 120-Kampf-Reimporte ohne zusätzliche Downloads | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E44 – NEU | Terminal-Seek-Fixture, v1/v2- und Seed-Regression | CI #40636353785, 834/834 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E45 – NEU | Leeres UI-Feedback bei Downloadfehler | CI #40641459359, 839/839 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E46 – NEU | Abwechselnd ungültiger/gültiger 120-Kampf-Import | CI #40641459359, 839/839 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E47 – NEU | Seeded Terminal-Seek- und Tickgrenzen | CI #40641459359, 839/839 gesamt | Entwicklungsbranch, nicht live |
+
+**Nächster Rolling Backlog (drei kleine Pakete):** NEXT-110-E48 (P1: abgebrochener Download-Trigger, strukturierte Fehlerursache, Datei `e2e/next110-v2-120-browser.spec.ts`, Akzeptanz kein unhandled rejection, Playwright vier Projekte, Abhängigkeit E45); NEXT-110-E49 (P1: abwechselnde Archivimporte mit fehlender Match-ID und duplizierter Ergebniszeile, gleiche Datei, Akzeptanz DOM-/Replay-/Sandbox-Invarianten, Playwright vier Projekte, Abhängigkeit E46); NEXT-110-E50 (P2: seeded Double-KO mit nichtmonotonem Seek und ungültigen Cursorgrenzen, Datei `tests/next110-replay-v2.test.ts`, Akzeptanz immutable Snapshots, v1/v2-Bytegleichheit, Vitest + volle CI, Abhängigkeit E47). NEXT-79e reale NVDA-/VoiceOver-/Touch-/Kontrastabnahme und NEXT-108 externe Commit-/CI-Provenienzprüfung offen.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung ausschließlich manuell.** main `753b1a3953b4`, letzte bestätigte Live-Version v0.1.61. Kein publish.php, Homepage, Release-Workflow, Release-Commit, Deployment, main-Merge oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 06:57 Uhr · NEXT-110 E45/E46/E47 IMPLEMENTIERT · CI AUSSTEHEND · NICHT VERÖFFENTLICHT
 **P0 – Vorprüfung:** Entwicklungs-PR #93 und QA-PR #116 Draft, nicht mergen. Abschließende Dokumentations-CI #40636353785 SUCCESS für E42–E44: **550 Vitest + 32 Node + 252 Chromium/WebKit Desktop/Mobil = 834/834**, TypeScript, Audit, reproduzierbarer Build und Gates erfolgreich. Letzte bestätigte Live-Version **v0.1.61**; main `753b1a3953b4`; NEXT-106/107/109 auf main, **Veröffentlichungsstatus ungeklärt**.
 
