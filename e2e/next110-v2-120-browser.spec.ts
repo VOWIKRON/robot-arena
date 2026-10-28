@@ -682,6 +682,27 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
+  // NEXT-110-E70: reject a 121st result despite a consistent completed
+  // 120-match cursor and total. The extra ID is unique, not a duplicate.
+  const extraResultArchive = structuredClone(original.archive);
+  const extraResult = structuredClone(extraResultArchive.run.results[119]);
+  extraResult.matchId = 'next110-e70-extra-121st-match';
+  extraResultArchive.run.results.push(extraResult);
+  expect(extraResultArchive.run.results).toHaveLength(121);
+  expect(new Set(extraResultArchive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(121);
+  expect(extraResultArchive.run.nextMatchIndex).toBe(120);
+  expect(extraResultArchive.run.totalMatches).toBe(120);
+  expect(extraResultArchive.run.status).toBe('completed');
+  await page.locator('#tournament-file').setInputFiles({
+    name: 'next110-e70-extra-result.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(extraResultArchive))
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
+  await importCanonicalArchive(page, 'next110-e70-valid-after-extra-result.json', canonicalArchive);
+  await assertCanonicalArchiveRestored(page, recoverySnapshot);
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
