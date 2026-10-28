@@ -262,6 +262,29 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   }
 
 
+  // NEXT-110-E43: two consecutive valid imports use DOM/state assertions only,
+  // avoiding further download events in the recovery phase.
+  const pairingsBeforeReimports = await page.locator('#tournament-pairings').innerText();
+  const progressBeforeReimports = await page.locator('#tournament-progress').innerText();
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e43-valid-${attempt}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(canonicalArchive)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
+    await expect(page.locator('#tournament-progress')).toContainText('120 / 120');
+    await expect(page.locator('#tournament-progress')).toContainText('completed');
+    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
+    await expect(page.locator('#tournament-autosave')).toBeDisabled();
+    await expect(page.locator('#tournament-pairings li').last()
+      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
+
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
   await page.locator('#tournament-pairings li').last()
