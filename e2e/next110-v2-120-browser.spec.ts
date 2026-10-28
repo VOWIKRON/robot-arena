@@ -822,6 +822,23 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E81: reject a null, scalar or array result at the tail of a
+  // running 119/120 prefix without mutating the recovered completed run.
+  for (const { name, value } of [
+    { name: 'null-result', value: null },
+    { name: 'string-result', value: 'not-a-match-result' },
+    { name: 'array-result', value: [] }
+  ] as Array<{ name: string; value: unknown }>) {
+    const corrupted = makeRunning119Archive(original.archive);
+    (corrupted.run.results as unknown[])[118] = value;
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.status).toBe('running');
+    await assertRejectedJsonThenRestore(
+      page, `next110-e81-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
