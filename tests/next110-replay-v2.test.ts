@@ -232,6 +232,46 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     }
   });
 
+  it('NEXT-110-E32 replays multiple ticks backward and forward without changing snapshots or RNG', () => {
+    for (const seed of [1, 42, 4711]) {
+      const canonical = serializeReplayV2(recordMatchV2(alpha, beta, seed, 8));
+      const recording = parseReplayV2(canonical);
+      const snapshots = reconstructReplayStatesV2(recording);
+      const player = new ReplayPlayer(recording);
+      expect(player.length).toBeGreaterThan(1);
+      player.seek(player.length);
+      expect(player.atEnd).toBe(true);
+      expect(player.outcome).toBe(recording.finalState.outcome);
+      for (let cursor = player.length - 1; cursor >= 0; cursor--) {
+        player.seek(cursor);
+        expect(player.tick).toBe(cursor);
+        expect(player.state).toEqual(snapshots[cursor]);
+        expect(player.isPlaying).toBe(false);
+        expect(player.outcome).toBeNull();
+      }
+      expect(player.play()).toBe(true);
+      for (let cursor = 1; cursor <= player.length; cursor++) {
+        expect(player.advance()).toBe(true);
+        expect(player.tick).toBe(cursor);
+        expect(player.state).toEqual(snapshots[cursor]);
+      }
+      expect(player.atEnd).toBe(true);
+      expect(player.advance()).toBe(false);
+      player.reset();
+      expect(player.tick).toBe(0);
+      expect(player.state).toEqual(snapshots[0]);
+      expect(player.isPlaying).toBe(false);
+      expect(player.step()).toBe(true);
+      expect(player.state).toEqual(snapshots[1]);
+      expect(player.advance()).toBe(false);
+      player.reset();
+      expect(player.state).toEqual(snapshots[0]);
+      expect(serializeReplayV2(recording)).toBe(canonical);
+      const legacy = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 8));
+      expect(serializeReplay(parseReplay(legacy))).toBe(legacy);
+    }
+  });
+
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
     const zero = parseReplayV2(serializeReplayV2(recordMatchV2(alpha, beta, 2, 0)));
     const player = new ReplayPlayer(zero);
