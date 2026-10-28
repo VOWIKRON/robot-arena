@@ -111,6 +111,32 @@ test('NEXT-110-E51: rejected trigger without UI feedback reports keines', async 
   expect(pageErrors).toEqual([]);
 });
 
+/** NEXT-110-E54: a delayed asynchronous trigger rejection must not be
+ * confused with a download timeout, even when the feedback element is blank. */
+test('NEXT-110-E54: delayed trigger rejection preserves cause without page errors', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-feedback').evaluate(node => { node.textContent = ''; });
+  const triggerFailure = new Error('E54 verzögerter Trigger-Abbruch');
+  const startedAt = Date.now();
+  const caught: unknown = await exportArchive(page, {
+    timeoutMs: 250,
+    trigger: async () => {
+      await new Promise<void>(resolve => setTimeout(resolve, 30));
+      throw triggerFailure;
+    }
+  }).then(() => null, (error: unknown) => error);
+  expect(caught).toBeInstanceOf(Error);
+  expect((caught as Error).cause).toBe(triggerFailure);
+  expect((caught as Error).message).toMatch(/Download fehlgeschlagen.*250ms.*UI-Feedback: keines/);
+  expect(Date.now() - startedAt).toBeLessThan(5_000);
+  // Wait beyond the download timeout to catch a late, unhandled rejection.
+  await page.waitForTimeout(300);
+  expect(pageErrors).toEqual([]);
+});
+
 test.describe.serial('NEXT-110 120-match archive isolation phases', () => {
 let canonicalArchive = '';
 
