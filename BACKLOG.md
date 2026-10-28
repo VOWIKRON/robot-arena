@@ -1,3 +1,18 @@
+## 29.10.2026 · 00:00 Uhr · NEXT-110 E96/E97/E98 IMPLEMENTIERT · QA AUSSTEHEND · NICHT VERÖFFENTLICHT
+
+**Geplant 3 / seriell implementiert 3 / neu CI-bestätigt 0:** E96 fehlendes `run.totalMatches` bei 119/120 running atomar zurückweisen (Commit `658fe262e5e7`); E97 `run.totalMatches` als `null` oder String `"120"` zurückweisen (`bb3c11d7a8a5`); E98 E93/E94-Recovery in typisierte E95-Hilfe konsolidieren, absichtlich fehlendes `run.results` und negative/gebrochene Cursor weiterhin explizit prüfen (`9033b8e4225a`). Drei serielle eigene Entwicklungsbranches, ausschließlich `e2e/next110-v2-120-browser.spec.ts` als Programmcode verändert; Engine, RNG und historische v1-Regeln unverändert.
+
+**Abnahme ausstehend:** Isolierte vollständige CI erforderlich: `npm run typecheck && npm test && npm run test:e2e && npm run build`, `npm audit --audit-level=moderate`, reproduzierbarer zweiter Build, Unit/Behavior/Regression/Determinismus, Chromium/WebKit Desktop/Mobil **nach** E98-Refactoring. Ungültige Importe müssen ohne Mutation von Fortschritt, 120 Paarungen, Replay, Autosave, Sandbox abgewiesen werden; gültiger Reimport muss gelingen. Code-Blob vor QA `d88d1d1b839c49015e61cff17635e1aadcd91818`. **Noch keine Erfolgsmeldung für E96–E98 ohne grüne CI.**
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.62:** weiterhin **93 CI-verifizierte, nicht live veröffentlichte NEXT-110-Unterpakete E1/E2/E5–E95**; E96–E98 neu implementiert, Test- und Veröffentlichungsstatus ausstehend/nicht live. E3/E4 separat unbewiesen, NEXT-110 Parent offen, NEXT-79e praktische Accessibility-Abnahme und NEXT-108 Provenienz offen.
+
+**Rolling Backlog (nächste drei unabhängige Pakete):**
+- **NEXT-110-E99 (P1):** `run.totalMatches` als -1 oder 120.5 im 119/120 running-Archiv zurückweisen; Datei `e2e/next110-v2-120-browser.spec.ts`; Abnahme 119 Ergebnisse, Cursor 119, Status running, unveränderte Paarungen/Replay/Autosave/Sandbox, gültiger Reimport; Tests `npm run typecheck && npm test && npm run test:e2e && npm run build`, Audit, zweiter Build; Abhängigkeit E87/E97.
+- **NEXT-110-E100 (P1):** `run.results` als Zahl oder Boolean im laufenden 119/120-Archiv atomar zurückweisen; gleiche Datei/Abnahme/Testmatrix; Abhängigkeit E84/E93.
+- **NEXT-110-E101 (P2):** E96/E97-Reject-/Recovery-Assertions über gemeinsame typisierte TotalMatches-Variante konsolidieren, `undefined` und `null` explizit bewahren; gleiche Datei, volle Chromium/WebKit Desktop/Mobil-Regression nach Refactoring; Abhängigkeit E96–E98.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt ausschließlich manuell.** Kein main-Merge, Release-Workflow/-Commit, publish.php, Homepage, Deployment oder andere Automationsänderungen.
+
 ## 28.10.2026 · 23:20 Uhr · NEXT-110 E93/E94/E95 VOLLSTÄNDIG QA GRÜN · 858/858 · NICHT VERÖFFENTLICHT
 
 **3/3 vollständig implementiert und isoliert getestet:** E93 fehlendes `run.results` im laufenden 119/120-Archiv atomar abgewiesen (`c1e3ed0b376546facd2532a62e1429695a5a183c`); E94 negative (-1) und nichtganzzahlige (119.5) Cursor abgewiesen (`29d6bf5e5f350cf47f8fc593ea7daf74fd341c52`); E95 E90/E91-Recovery auf typisierte, auch explizit `undefined` akzeptierende Cursor-Assertion refaktoriert (`fdc8858e760b5d66ad3b12cbe61d94789fe571d1`, Fix `ea9dba3b4d04eed8810c017ceec6964dd6facbc9`). Drei eigene aufeinander aufbauende Entwicklungsbranches; nur `e2e/next110-v2-120-browser.spec.ts` als Programmcode geändert; Engine/RNG/v1 unverändert.
