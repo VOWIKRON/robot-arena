@@ -956,19 +956,43 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E93: a running archive with the results property omitted must
-  // be rejected without modifying the recovered tournament or sandbox.
-  await assertRejectedRunning119VariantThenRestore(
-    page, 'next110-e93-running-missing-results.json', original.archive,
-    archive => { delete (archive.run as { results?: unknown }).results; },
-    archive => {
-      expect('results' in archive.run).toBe(false);
-      expect(archive.run.nextMatchIndex).toBe(119);
-      expect(archive.run.totalMatches).toBe(120);
-      expect(archive.run.status).toBe('running');
+  // NEXT-110-E98: E93 missing-results and E94 invalid-cursor imports
+  // share the E95 typed recovery helper; each keeps its schema assertions.
+  const runningSchemaCases: Array<{
+    name: string;
+    mutate: (archive: RunningArchiveFixture) => void;
+    verify: (archive: RunningArchiveFixture) => void;
+    expectedCursor: { value: unknown };
+  }> = [
+    {
+      name: 'e93-running-missing-results',
+      mutate: archive => { delete (archive.run as { results?: unknown }).results; },
+      verify: archive => {
+        expect('results' in archive.run).toBe(false);
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe('running');
+      },
+      expectedCursor: { value: 119 }
     },
-    recoverySnapshot, canonicalArchive
-  );
+    ...([-1, 119.5].map(invalidCursor => ({
+      name: `e94-running-cursor-${invalidCursor}`,
+      mutate: (archive: RunningArchiveFixture) => { archive.run.nextMatchIndex = invalidCursor; },
+      verify: (archive: RunningArchiveFixture) => {
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.nextMatchIndex).toBe(invalidCursor);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe('running');
+      },
+      expectedCursor: { value: invalidCursor }
+    })))
+  ];
+  for (const { name, mutate, verify, expectedCursor } of runningSchemaCases) {
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-${name}.json`, original.archive,
+      mutate, verify, recoverySnapshot, canonicalArchive, 120, expectedCursor
+    );
+  }
 
   // NEXT-110-E88/E92: absent and null statuses share typed recovery.
   for (const invalidStatus of ['missing', 'null'] as const) {
@@ -1020,21 +1044,6 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
         expect(archive.run.status).toBe('running');
       },
       recoverySnapshot, canonicalArchive, 120, { value: expectedCursor }
-    );
-  }
-
-  // NEXT-110-E94: negative and fractional running cursors must not
-  // be rounded, clamped or coerced into a valid 119/120 progress state.
-  for (const invalidCursor of [-1, 119.5]) {
-    const corrupted = makeRunning119Archive(original.archive);
-    corrupted.run.nextMatchIndex = invalidCursor;
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.nextMatchIndex).toBe(invalidCursor);
-    expect(corrupted.run.totalMatches).toBe(120);
-    expect(corrupted.run.status).toBe('running');
-    await assertRejectedJsonThenRestore(
-      page, `next110-e94-running-cursor-${invalidCursor}.json`, corrupted,
-      recoverySnapshot, canonicalArchive
     );
   }
 
