@@ -324,6 +324,41 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
     }
   });
 
+  it('NEXT-110-E38 preserves frame event streams across nonmonotonic v1/v2 seeks and replay resets', () => {
+    for (const seed of [0, 7, 42]) {
+      const canonicalV1 = serializeReplay(recordMatch(RAPTOR, TITAN, seed, 8));
+      const canonicalV2 = serializeReplayV2(recordMatchV2(alpha, beta, seed, 8));
+      const recordings = [parseReplay(canonicalV1), parseReplayV2(canonicalV2)];
+      for (const recording of recordings) {
+        const player = new ReplayPlayer(recording);
+        const reference = new ReplayPlayer(recording);
+        const originalEvents = JSON.stringify(recording.frames.map(frame => frame.events));
+        expect(player.length).toBeGreaterThan(3);
+        const positions = [player.length, 1, player.length - 1, 0, 2, 0, player.length];
+        for (const position of positions) {
+          player.seek(position);
+          reference.reset();
+          for (let i = 0; i < position; i++) expect(reference.step()).toBe(true);
+          const expected = position === 0 ? [] : recording.schemaVersion === 2
+            ? recording.frames[position - 1]!.events.filter(event => event.type !== 'draw')
+            : recording.frames[position - 1]!.events;
+          expect(player.events).toEqual(expected);
+          expect(player.events).toEqual(reference.events);
+          expect(player.state).toEqual(reference.state);
+          expect(player.isPlaying).toBe(false);
+        }
+        player.reset();
+        expect(player.events).toEqual([]);
+        expect(player.play()).toBe(true);
+        expect(player.advance()).toBe(true);
+        expect(player.events).toEqual(recording.frames[0]!.events.filter(event => event.type !== 'draw'));
+        expect(JSON.stringify(recording.frames.map(frame => frame.events))).toBe(originalEvents);
+        expect(recording.schemaVersion === 2 ? serializeReplayV2(recording) : serializeReplay(recording))
+          .toBe(recording.schemaVersion === 2 ? canonicalV2 : canonicalV1);
+      }
+    }
+  });
+
   it('NEXT-110-E17 keeps zero-tick replay cursor terminal and rejects invalid seeks without mutation', () => {
     const zero = parseReplayV2(serializeReplayV2(recordMatchV2(alpha, beta, 2, 0)));
     const player = new ReplayPlayer(zero);
