@@ -1,5 +1,6 @@
 import { deepFreeze } from './immutable';
 import { runMatch } from './simulation';
+import { runMatchV2 } from './simulation-v2';
 import { createTournamentDefinition, type TournamentDefinition } from './tournament-model';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { createTournamentMatchResult, type TournamentMatchResult } from './tournament-standings';
@@ -32,7 +33,10 @@ export function advanceTournamentRun(run: TournamentRun): TournamentRun {
   const robotA = run.definition.participants.find(robot => robot.id === fixture.robotAId);
   const robotB = run.definition.participants.find(robot => robot.id === fixture.robotBId);
   if (!robotA || !robotB) throw new Error('Turnierlauf: Teilnehmer fehlt');
-  const finalState = runMatch(robotA, robotB, fixture.seed, run.definition.maxTicks);
+  // Ruleset is persisted inside the immutable definition, including pause/resume.
+  const finalState = run.definition.schemaVersion === 2
+    ? runMatchV2(robotA, robotB, fixture.seed, run.definition.maxTicks)
+    : runMatch(robotA, robotB, fixture.seed, run.definition.maxTicks);
   if (finalState.outcome === 'active') throw new Error('Turnierlauf: Kampf nicht beendet');
   const result = createTournamentMatchResult(run.definition, {
     matchId: fixture.id,
