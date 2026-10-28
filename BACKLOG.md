@@ -1,3 +1,21 @@
+## 28.10.2026 · 12:00 Uhr · NEXT-110 E60/E61/E62 IMPLEMENTIERT · ISOLIERTE QA NOCH NICHT BESTÄTIGT · NICHT VERÖFFENTLICHT
+
+**Vorprüfung:** Entwicklungs-PR #93 Draft; letzter bestätigter isolierter QA-Lauf #40669861326 SUCCESS mit 858/858 (554 Vitest, 32 Node, 272 Chromium/WebKit Desktop/Mobil). Letzte bestätigte Live-Version v0.1.61. NEXT-106/107/109 bereits auf main, **Veröffentlichungsstatus ungeklärt**; separater Release-Kandidat v0.1.62 PR #124 offen, nicht bearbeitet. main bleibt unangetastet.
+
+**Drei geplante und tatsächlich seriell implementierte Unterpakete – 3/3 Code auf Entwicklungsbranch, 0/3 durch neue vollständige CI bestätigt:**
+- **NEXT-110-E60 (P1):** Abweichendes `run.totalMatches` (119/121 statt 120) und fehlendes letztes Ergebnis mit abgeschlossenem Status nach gültiger Recovery atomar zurückweisen. Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: sichtbare Ablehnung, 120 Paarungen, Fortschritt, Replay-Button, Autosave und Sandbox unverändert; nach jedem Fehler gültiger Reimport. Test: `npx playwright test e2e/next110-v2-120-browser.spec.ts` in Chromium/WebKit Desktop/Mobil und volle isolierte QA. Abhängigkeit: E58. Branch `feature/NEXT-110-E60-totalmatches-results-20261028`, Commit `b639088c1b1f`.
+- **NEXT-110-E61 (P1):** Abgeschnittenes und syntaktisch defektes JSON nach Recovery zurückweisen; Originalzustand, Replay und Sandbox erhalten, anschließend gültiger Reimport. Gleiche E2E-Datei, gleiches Browserkommando und volle QA. Abhängigkeit E58. Branch `feature/NEXT-110-E61-invalid-json-recovery-20261028`, Commit `0b1be4d697d7`.
+- **NEXT-110-E62 (P2):** Identische Reject-/Recovery-Invarianten der neuen E60/E61-Schleifen in typisierte Hilfen `ArchiveRecoverySnapshot`, `assertArchiveRejectedWithoutMutation`, `assertCanonicalArchiveRestored` konsolidieren. Keine Assertions entfernen, identische Zustands- und Sandboxprüfungen, Browsermatrix erneut testen. Gleiche E2E-Datei; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` plus `npm run typecheck && npm test && npm run test:e2e`; Abhängigkeiten E59/E60/E61. Branch `feature/NEXT-110-E62-recovery-assertions-20261028`, Commit `72a3b0149b32`.
+
+**Rolling Backlog für nächste Runde (nur bei grüner neuer QA als fertig zählen):**
+- **NEXT-110-E63 (P1):** Nach Recovery Archiv mit doppelter `matchId` und korrigiertem Cursor abweisen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: atomare Ablehnung, Replay/Autosave/Sandbox unverändert, gültiger Reimport; Test Playwright vier Projekte; abhängig E60 und erfolgreicher QA.
+- **NEXT-110-E64 (P1):** Leeres und nur Whitespace enthaltendes JSON nach Recovery zurückweisen; gleiche Datei; Akzeptanz: sichtbare Fehlermeldung, keine Änderung von 120 Ergebnissen, Replay oder Sandbox, anschließender gültiger Reimport; Test Playwright vier Projekte; abhängig E61 und erfolgreicher QA.
+- **NEXT-110-E65 (P2):** Gemeinsame Recovery-Hilfen für E55/E58 konsolidieren, Assertions vollständig erhalten und volle Browsermatrix erneut ausführen; gleiche Datei; Test `npm run typecheck && npm test && npm run test:e2e`; abhängig E62 und erfolgreicher QA.
+
+**Kumulativ SICHER TESTBESTÄTIGT seit v0.1.61: 60 Einheiten**, davon NEXT-106/107/109 auf main (Veröffentlichungsstatus ungeklärt) und 57 NEXT-110-Unteraufgaben E1/E2/E5–E59 auf Entwicklungsbranch (nicht live, nicht release-freigegeben). E60/E61/E62 sind noch NICHT in dieser Summe. E3/E4 nicht separat belegt, NEXT-110 Parent offen; NEXT-79e manuelle Hardware-Abnahme und NEXT-108 externe Provenienz offen. **Sofort veröffentlichbar aus dieser Automation: keine.**
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.** Kein main-Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 11:08 Uhr · NEXT-110 E57/E58/E59 ISOLIERT QA-BESTÄTIGT 858/858 · NICHT VERÖFFENTLICHT
 
 **P0 – CI:** Isolierte nicht veröffentlichende QA **#40668838853 SUCCESS** auf Test-only-PR #125 (Draft, NIEMALS MERGEN): **554 Vitest + 32 Node + 272 Chromium/WebKit Desktop/Mobil = 858/858**. TypeScript, Audit ohne bekannte Advisories, reproduzierbarer Build und vier Browserprojekte grün. Separates Release-Evidence-/Publish-Gate nicht ausgelöst. Code-Snapshot Git-Tree `161fd1e16a5fb3af14a16d3741168e1db5528252` entspricht Entwicklungsstand E57–E59 vor reinen Dokumentationsänderungen.
