@@ -132,6 +132,34 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
+  // NEXT-110-E30: after a successful recovery, malformed results must still be
+  // rejected without replacing the restored 120-match archive or sandbox.
+  const postRecoveryMutations: Array<{ name: string; change: (archive: any) => void }> = [
+    {
+      name: 'duplicate-result',
+      change: archive => { archive.run.results[118] = structuredClone(archive.run.results[117]); }
+    },
+    {
+      name: 'missing-match-id',
+      change: archive => { delete archive.run.results[118].matchId; }
+    }
+  ];
+  for (const { name, change } of postRecoveryMutations) {
+    const candidate = structuredClone(original.archive);
+    change(candidate);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e30-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(candidate))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+    expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+  }
+
   const invalidImportRecoveryElapsedMs = Date.now() - recoveryStartedAt;
 
   // The imported terminal match must still have an event-only replay and
