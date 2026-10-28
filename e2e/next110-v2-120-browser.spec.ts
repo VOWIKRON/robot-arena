@@ -944,6 +944,27 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E91: missing, null or string-valued nextMatchIndex is invalid
+  // even when the 119 completed results and remaining metadata are correct.
+  for (const invalidCursor of ['missing', 'null', 'string'] as const) {
+    const corrupted = makeRunning119Archive(original.archive);
+    if (invalidCursor === 'missing') {
+      delete (corrupted.run as { nextMatchIndex?: unknown }).nextMatchIndex;
+      expect('nextMatchIndex' in corrupted.run).toBe(false);
+    } else {
+      (corrupted.run as { nextMatchIndex: unknown }).nextMatchIndex =
+        invalidCursor === 'null' ? null : '119';
+      expect(corrupted.run.nextMatchIndex).toBe(invalidCursor === 'null' ? null : '119');
+    }
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    expect(corrupted.run.status).toBe('running');
+    await assertRejectedJsonThenRestore(
+      page, `next110-e91-running-cursor-${invalidCursor}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E90: non-string status types must not be coerced to 'running'.
   // The remaining 119/120 prefix is valid and recovery must remain atomic.
   for (const { name, value } of [
