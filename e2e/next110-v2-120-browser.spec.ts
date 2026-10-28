@@ -43,6 +43,32 @@ async function importCanonicalArchive(page: Page, filename: string, canonicalByt
   await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
 }
 
+
+/** NEXT-110-E62: preserve every post-rejection and post-recovery invariant. */
+type ArchiveRecoverySnapshot = Readonly<{
+  progress: string;
+  pairings: string;
+  sandboxStyle: string | null;
+}>;
+async function assertArchiveRejectedWithoutMutation(page: Page, snapshot: ArchiveRecoverySnapshot): Promise<void> {
+  await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
+  await expect(page.locator('#tournament-progress')).toHaveText(snapshot.progress);
+  await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+  expect(await page.locator('#tournament-pairings').innerText()).toBe(snapshot.pairings);
+  await expect(page.locator('#tournament-autosave')).toBeDisabled();
+  await expect(page.locator('#tournament-pairings li').last()
+    .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(snapshot.sandboxStyle);
+}
+async function assertCanonicalArchiveRestored(page: Page, snapshot: ArchiveRecoverySnapshot): Promise<void> {
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+  await expect(page.locator('#tournament-progress')).toHaveText(snapshot.progress);
+  await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+  expect(await page.locator('#tournament-pairings').innerText()).toBe(snapshot.pairings);
+  await expect(page.locator('#tournament-autosave')).toBeDisabled();
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(snapshot.sandboxStyle);
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -569,21 +595,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(JSON.stringify(corrupted))
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    await expect(page.locator('#tournament-pairings li').last()
-      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertArchiveRejectedWithoutMutation(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
     await importCanonicalArchive(page, `next110-e60-valid-after-${name}.json`, canonicalArchive);
-    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
   }
 
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
@@ -599,21 +613,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(bytes)
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    await expect(page.locator('#tournament-pairings li').last()
-      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertArchiveRejectedWithoutMutation(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
     await importCanonicalArchive(page, `next110-e61-valid-after-${name}.json`, canonicalArchive);
-    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
   }
 
   // The imported terminal match must still have an event-only replay and
