@@ -691,6 +691,24 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
+  // NEXT-110-E72: fixture-order validation rejects empty and whitespace
+  // match IDs even when the completed 120-result prefix is otherwise intact.
+  const blankMatchIds = [
+    { name: 'empty', value: '' },
+    { name: 'whitespace', value: '   ' }
+  ];
+  for (const { name, value } of blankMatchIds) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results[119].matchId = value;
+    expect(corrupted.run.results).toHaveLength(120);
+    expect(corrupted.run.nextMatchIndex).toBe(120);
+    expect(corrupted.run.status).toBe('completed');
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e72-${name}-match-id.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E70: reject a 121st result despite a consistent completed
   // 120-match cursor and total. The extra ID is unique, not a duplicate.
   const extraResultArchive = structuredClone(original.archive);
