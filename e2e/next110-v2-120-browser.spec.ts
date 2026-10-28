@@ -13,6 +13,41 @@ async function exportArchive(page: Page): Promise<{ archive: any; file: string }
   return { archive: JSON.parse(await readFile(file, 'utf8')), file };
 }
 
+/** NEXT-110-E31: reusable, fail-closed timing evidence contract before JSON attachment. */
+type TimingEvidence = {
+  ruleset: string;
+  participants: number;
+  matches: number;
+  maxTicks: number;
+  seed: number;
+  archiveBytes: number;
+  elapsedMs: number;
+  tournamentElapsedMs: number;
+  archiveImportElapsedMs: number;
+  invalidImportRecoveryElapsedMs: number;
+  timeoutBudgetMs: number;
+  browserProject: string;
+  importedArchiveIdentical: boolean;
+};
+
+function validateTimingEvidence(evidence: TimingEvidence, projectName: string): void {
+  const fields = [
+    'elapsedMs', 'tournamentElapsedMs', 'archiveImportElapsedMs',
+    'invalidImportRecoveryElapsedMs', 'timeoutBudgetMs'
+  ] as const;
+  for (const field of fields) {
+    expect(Number.isFinite(evidence[field]), `${field} must be finite`).toBe(true);
+    expect(evidence[field], `${field} must be nonnegative`).toBeGreaterThanOrEqual(0);
+  }
+  expect(evidence.archiveBytes).toBeGreaterThan(0);
+  expect(evidence.browserProject).toBe(projectName);
+  expect(evidence.ruleset).toBe('simultaneous-v2');
+  expect(evidence.participants).toBe(16);
+  expect(evidence.matches).toBe(120);
+  expect(evidence.importedArchiveIdentical).toBe(true);
+  expect(evidence.elapsedMs).toBeGreaterThanOrEqual(evidence.tournamentElapsedMs);
+}
+
 test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, reload, import and replay', async ({ page }, testInfo) => {
   // NEXT-110-E22: enforce the WebKit 120-match budget (the previous literal \\n was inside a comment).
   // On constrained CI runners, 120 UI updates may need up to three minutes.
@@ -178,24 +213,14 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
 
   // NEXT-110-E28: fail closed on missing/invalid timing evidence before
   // attaching it. JSON.stringify silently turns NaN/Infinity into null.
-  const timingEvidence = {
+  const timingEvidence: TimingEvidence = {
     ruleset: 'simultaneous-v2', participants: 16, matches: 120,
     maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
     elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
     invalidImportRecoveryElapsedMs, timeoutBudgetMs: isWebKit ? 180_000 : 120_000,
     browserProject: testInfo.project.name, importedArchiveIdentical: true
   };
-  const timingFields = [
-    'elapsedMs', 'tournamentElapsedMs', 'archiveImportElapsedMs',
-    'invalidImportRecoveryElapsedMs', 'timeoutBudgetMs'
-  ] as const;
-  for (const field of timingFields) {
-    expect(Number.isFinite(timingEvidence[field]), `${field} must be finite`).toBe(true);
-    expect(timingEvidence[field], `${field} must be nonnegative`).toBeGreaterThanOrEqual(0);
-  }
-  expect(timingEvidence.archiveBytes).toBeGreaterThan(0);
-  expect(timingEvidence.browserProject).toBe(testInfo.project.name);
-  expect(timingEvidence.elapsedMs).toBeGreaterThanOrEqual(timingEvidence.tournamentElapsedMs);
+  validateTimingEvidence(timingEvidence, testInfo.project.name);
   await testInfo.attach('next110-v2-120-browser.json', {
     body: Buffer.from(JSON.stringify(timingEvidence, null, 2)),
     contentType: 'application/json'
