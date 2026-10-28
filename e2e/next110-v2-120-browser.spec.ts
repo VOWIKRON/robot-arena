@@ -747,6 +747,22 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E75: a running 119/120 prefix with a duplicate match ID must
+  // be rejected even though the cursor, status and result count remain valid.
+  const duplicateRunningArchive = structuredClone(original.archive);
+  duplicateRunningArchive.run.results = duplicateRunningArchive.run.results.slice(0, 119);
+  duplicateRunningArchive.run.nextMatchIndex = 119;
+  duplicateRunningArchive.run.status = 'running';
+  duplicateRunningArchive.run.results[118].matchId = duplicateRunningArchive.run.results[117].matchId;
+  expect(duplicateRunningArchive.run.results).toHaveLength(119);
+  expect(duplicateRunningArchive.run.nextMatchIndex).toBe(119);
+  expect(duplicateRunningArchive.run.totalMatches).toBe(120);
+  expect(duplicateRunningArchive.run.status).toBe('running');
+  expect(new Set(duplicateRunningArchive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(118);
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e75-duplicate-running-match-id.json', duplicateRunningArchive, recoverySnapshot, canonicalArchive
+  );
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
