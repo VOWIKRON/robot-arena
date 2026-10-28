@@ -14,6 +14,9 @@ async function exportArchive(page: Page): Promise<{ archive: any; file: string }
   return { archive: JSON.parse(await readFile(file, 'utf8')), file };
 }
 
+test.describe.serial('NEXT-110 120-match archive isolation phases', () => {
+let canonicalArchive = '';
+
 test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, reload, import and replay', async ({ page }, testInfo) => {
   // NEXT-110-E22: enforce the WebKit 120-match budget (the previous literal \\n was inside a comment).
   // NEXT-110-E33: E30 adds several download/export integrity checks to the
@@ -137,6 +140,49 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
+  const invalidImportRecoveryElapsedMs = Date.now() - recoveryStartedAt;
+  canonicalArchive = before;
+
+  // NEXT-110-E28: fail closed on missing/invalid timing evidence before
+  // attaching it. JSON.stringify silently turns NaN/Infinity into null.
+  const timingEvidence: TimingEvidence = {
+    ruleset: 'simultaneous-v2', participants: 16, matches: 120,
+    maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
+    elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
+    invalidImportRecoveryElapsedMs, timeoutBudgetMs,
+    browserProject: testInfo.project.name, importedArchiveIdentical: true
+  };
+  validateTimingEvidence(timingEvidence, testInfo.project.name);
+  await testInfo.attach('next110-v2-120-browser.json', {
+    body: Buffer.from(JSON.stringify(timingEvidence, null, 2)),
+    contentType: 'application/json'
+  });
+});
+
+
+// NEXT-110-E36: a fresh Playwright page/context avoids Chromium's repeated
+// automatic-download throttling after the long E6/E12/E24/E27 sequence.
+// The second phase imports the exact browser-exported 120-match archive;
+// no fixture is synthesized and every export/restore assertion is retained.
+test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 matches and replay', async ({ page }, testInfo) => {
+  test.setTimeout(testInfo.project.name.includes('webkit') ? 180_000 : 150_000);
+  expect(canonicalArchive).not.toBe('');
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-file').setInputFiles({
+    name: 'next110-e36-original-120.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(canonicalArchive)
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+  await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
+  await expect(page.locator('#tournament-progress')).toContainText('120 / 120');
+  const original = { archive: JSON.parse(canonicalArchive) };
+  const before = canonicalArchive;
+  const progressBeforeTamper = await page.locator('#tournament-progress').innerText();
+  expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
   // NEXT-110-E30: after a successful recovery, malformed results must still be
   // rejected without replacing the restored 120-match archive or sandbox.
   const postRecoveryMutations: Array<{ name: string; change: (archive: any) => void }> = [
@@ -163,9 +209,18 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
     await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
     expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    // E36: a valid re-import must still work after every rejected mutation.
+    await page.locator('#tournament-file').setInputFiles({
+      name: 'next110-e36-valid-after-rejection.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(canonicalArchive)
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeTamper);
+    expect(JSON.stringify((await exportArchive(page)).archive)).toBe(before);
+    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
 
-  const invalidImportRecoveryElapsedMs = Date.now() - recoveryStartedAt;
 
   // The imported terminal match must still have an event-only replay and
   // visible v2 statistics; the sandbox must remain isolated throughout.
@@ -181,18 +236,5 @@ test('NEXT-110 E6: 16-robot / 120-match v2 browser tournament survives export, r
   await expect(page.locator('#replay-stat-b')).toContainText('Schüsse');
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
 
-  // NEXT-110-E28: fail closed on missing/invalid timing evidence before
-  // attaching it. JSON.stringify silently turns NaN/Infinity into null.
-  const timingEvidence: TimingEvidence = {
-    ruleset: 'simultaneous-v2', participants: 16, matches: 120,
-    maxTicks: 1, seed: 4711, archiveBytes: Buffer.byteLength(before),
-    elapsedMs: Date.now() - start, tournamentElapsedMs, archiveImportElapsedMs,
-    invalidImportRecoveryElapsedMs, timeoutBudgetMs,
-    browserProject: testInfo.project.name, importedArchiveIdentical: true
-  };
-  validateTimingEvidence(timingEvidence, testInfo.project.name);
-  await testInfo.attach('next110-v2-120-browser.json', {
-    body: Buffer.from(JSON.stringify(timingEvidence, null, 2)),
-    contentType: 'application/json'
-  });
+});
 });
