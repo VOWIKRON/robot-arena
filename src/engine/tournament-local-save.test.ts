@@ -91,4 +91,23 @@ describe('NEXT-68 local tournament autosave', () => {
     expect(storage.getItem(TOURNAMENT_AUTOSAVE_KEY)).toBeNull();
     expect(isTournamentAutosaveEnabled(storage)).toBe(false);
   });
+  it('never silently migrates or deletes an incompatible autosave snapshot', () => {
+    const storage = memoryStorage();
+    saveTournamentSnapshot(pauseTournamentRun(advanceTournamentRun(fixture(3))), storage);
+    const valid = storage.getItem(TOURNAMENT_AUTOSAVE_KEY)!;
+    for (const version of [0, 2, 99, '1']) {
+      const incompatible = JSON.parse(valid);
+      incompatible.schemaVersion = version;
+      const stored = JSON.stringify(incompatible);
+      storage.setItem(TOURNAMENT_AUTOSAVE_KEY, stored);
+      expect(() => restoreTournamentSnapshot(storage)).toThrow(/Version/);
+      expect(storage.getItem(TOURNAMENT_AUTOSAVE_KEY)).toBe(stored);
+    }
+    storage.setItem(TOURNAMENT_AUTOSAVE_KEY, '{broken');
+    expect(() => restoreTournamentSnapshot(storage)).toThrow(/beschädigtes JSON/);
+    expect(storage.getItem(TOURNAMENT_AUTOSAVE_KEY)).toBe('{broken');
+    storage.setItem(TOURNAMENT_AUTOSAVE_KEY, valid);
+    expect(restoreTournamentSnapshot(storage)).not.toBeNull();
+  });
+
 });
