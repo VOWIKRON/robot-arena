@@ -71,6 +71,27 @@ async function assertCanonicalArchiveRestored(page: Page, snapshot: ArchiveRecov
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(snapshot.sandboxStyle);
 }
 
+/** NEXT-110-E71: one typed rejection/recovery path for E66/E67.
+ * The input-clear wait, all immutable-state assertions and valid reimport
+ * assertions are identical to the original per-case loops. */
+async function assertRejectedJsonThenRestore(
+  page: Page,
+  filename: string,
+  invalidArchive: unknown,
+  snapshot: ArchiveRecoverySnapshot,
+  canonicalBytes: string
+): Promise<void> {
+  await page.locator('#tournament-file').setInputFiles({
+    name: filename,
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(invalidArchive))
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await assertArchiveRejectedWithoutMutation(page, snapshot);
+  await importCanonicalArchive(page, `next110-e71-valid-after-${filename}`, canonicalBytes);
+  await assertCanonicalArchiveRestored(page, snapshot);
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -621,15 +642,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(corrupted.run.results).toHaveLength(120);
     expect(corrupted.run.nextMatchIndex).toBe(120);
     expect(JSON.stringify(corrupted)).not.toBe(before);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e66-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify(corrupted))
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-    await importCanonicalArchive(page, `next110-e66-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e66-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
   }
 
   // NEXT-110-E67: the results collection itself must remain an array.
@@ -645,15 +660,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(corrupted.run.nextMatchIndex).toBe(120);
     expect(corrupted.run.status).toBe('completed');
     expect(JSON.stringify(corrupted)).not.toBe(before);
-    await page.locator('#tournament-file').setInputFiles({
-      name: `next110-e67-${name}.json`,
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify(corrupted))
-    });
-    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
-    await importCanonicalArchive(page, `next110-e67-valid-after-${name}.json`, canonicalArchive);
-    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e67-${name}.json`, corrupted, recoverySnapshot, canonicalArchive
+    );
   }
 
   // NEXT-110-E69: reject invalid matchId types in an otherwise complete
