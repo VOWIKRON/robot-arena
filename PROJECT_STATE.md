@@ -1,3 +1,24 @@
+## 28.10.2026 · 08:10 Uhr · NEXT-110 E48/E49/E50 VOLLSTÄNDIG ISOLIERT GETESTET · NICHT VERÖFFENTLICHT
+
+**P0 – CI-Befund und Reparatur:** Isolierte QA #40647276941 schlug ausschließlich bei WebKit fehl: auf dem QA-Runner fehlte `libevent-2.1.so.7`; Chromium, TypeScript, Unit-/Node-Tests und Build waren erfolgreich. Die **nicht veröffentlichende** Workflowdatei `.github/workflows/feature-qa.yml` installiert jetzt `npx playwright install --with-deps webkit` (Commit `848fdce26d9d`). Wiederholte isolierte QA **#40647709735 SUCCESS**, QA-PR #120 Draft, NIEMALS MERGEN: **552 Vitest + 32 Node + 260 Chromium/WebKit Desktop/Mobil = 844/844**, je Chromium 106, je WebKit 24. TypeScript, Audit, reproduzierbarer Build und Browsermatrix erfolgreich. Keine Development-Tests- oder Publish-Workflows ausgelöst. Isolierte QA enthält **nicht** die separaten NEXT-106-/NEXT-97-Evidence-Gates; diese bleiben als Release-Evidenz außerhalb dieses Laufs unverändert.
+
+**3/3 NEU vollständig implementiert, seriell integriert, aus GitHub zurückgelesen und in isolierter QA getestet:**
+- **NEXT-110-E48:** Abgebrochener Archiv-Download-Trigger bewahrt Fehlerursache und UI-Feedback, keine Page-Errors, 250-ms-Testbudget, <5 Sekunden. `e2e/next110-v2-120-browser.spec.ts`, Commit `ae7d6be164c8`.
+- **NEXT-110-E49:** Vier abwechselnde ungültige/gültige 120-Kampf-Importe mit fehlender Match-ID bzw. doppelter Ergebniszeile; Fortschritt, Paarungen, Replay, Autosave und Sandbox unverändert, ohne neue Downloads. Gleiche E2E-Datei, Commit `6b0a8fa5cb7f`.
+- **NEXT-110-E50:** Fünf Seeds, nichtmonotone Seek-Positionen, sechs ungültige Cursorwerte für Double-KO-v2 und Legacy-v1; RangeError ohne Mutation, immutable Snapshots und bytegleiche Serialisierung. `tests/next110-replay-v2.test.ts`, Commit `a5d1f8eb0697`. Refactoring/Regression vollständig erneut geprüft.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.61: 51 vollständig getestete, nicht live bestätigte Einheiten.** NEXT-106/107/109 auf main: **Veröffentlichungsstatus ungeklärt**. 48 NEXT-110-Unterpakete E1/E2/E5–E50 auf Entwicklungsbranch: **nicht live**. E3/E4 nicht separat belegt. Parent NEXT-110 offen; NEXT-79e reale NVDA-/VoiceOver-/Touch-/Kontrastabnahme offen. main unverändert `753b1a3953b4`.
+
+| NEU bestätigt | Funktion | Tests | Veröffentlichungsstatus |
+| --- | --- | --- | --- |
+| NEXT-110-E48 | Download-Trigger-Abbruch | isolierte QA #40647709735, 844/844 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E49 | Gemischte Archiv-Manipulationen und Recovery | isolierte QA #40647709735, 844/844 gesamt | Entwicklungsbranch, nicht live |
+| NEXT-110-E50 | Seeded Double-KO/v1 Seek-Grenzen | isolierte QA #40647709735, 844/844 gesamt | Entwicklungsbranch, nicht live |
+
+**Rolling Backlog:** E51 (P1: abgebrochener Trigger bei leerem UI-Feedback, E2E-Datei, Ursache und `keines` sowie keine Page-Errors, Playwright vier Projekte, abhängig E48); E52 (P1: Archiv-Mutation mit falscher Ruleset-Version und Seed-Reihenfolge, E2E-Datei, atomare Ablehnung und Recovery, Playwright vier Projekte, abhängig E49); E53 (P2: v1/v2 Seek-Grenz-Fixtures konsolidieren, Replay-Testdatei, Bytegleichheit/Determinismus und volle Regression, Vitest und Browsermatrix, abhängig E50). NEXT-108 externe Commit-/CI-Provenienz offen.
+
+**NICHT VERÖFFENTLICHT.** Kein main-Merge, keine Homepage, kein publish.php, kein Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 07:56 Uhr · NEXT-110 E48/E49/E50 IMPLEMENTIERT · ISOLIERTE QA AUSSTEHEND · NICHT VERÖFFENTLICHT
 
 **P0 Vorprüfung:** main unverändert `753b1a3953b4`, letzter bestätigter Live-Stand v0.1.61. Letzte vollständig erfolgreiche QA #40642049078: **839/839** (551 Vitest, 32 Node, 256 Chromium/WebKit Desktop/Mobil), TypeScript, Audit, reproduzierbarer Build und Gates grün. Diese CI bestätigt **E1/E2/E5–E47**, nicht die neuen E48–E50. Entwicklungs-PR #93 Draft; kein Merge/Release/Deployment.
