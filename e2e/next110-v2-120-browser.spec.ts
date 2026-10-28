@@ -839,6 +839,20 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E82: a running 119-result prefix must reject both a stale
+  // cursor (118) and a premature terminal cursor (120) atomically.
+  for (const invalidCursor of [118, 120]) {
+    const corrupted = makeRunning119Archive(original.archive);
+    corrupted.run.nextMatchIndex = invalidCursor;
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    expect(corrupted.run.status).toBe('running');
+    await assertRejectedJsonThenRestore(
+      page, `next110-e82-running-cursor-${invalidCursor}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
