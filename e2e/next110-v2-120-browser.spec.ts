@@ -778,6 +778,17 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     page, 'next110-e76-missing-running-match-id.json', missingRunningIdArchive, recoverySnapshot, canonicalArchive
   );
 
+  // NEXT-110-E78: a unique but wrong final matchId in a running 119/120
+  // prefix must fail despite consistent cursor, status and result count.
+  const wrongRunningIdArchive = makeRunning119Archive(original.archive);
+  const expectedRunningId = wrongRunningIdArchive.run.results[118].matchId;
+  wrongRunningIdArchive.run.results[118].matchId = 'next110-e78-unique-but-wrong-running-id';
+  expect(wrongRunningIdArchive.run.results[118].matchId).not.toBe(expectedRunningId);
+  expect(new Set(wrongRunningIdArchive.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e78-wrong-running-match-id.json', wrongRunningIdArchive, recoverySnapshot, canonicalArchive
+  );
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
