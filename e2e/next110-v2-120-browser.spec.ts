@@ -902,6 +902,26 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E88: missing or explicit null status must not be silently
+  // interpreted as a running tournament. Preserve all other 119/120 data.
+  for (const invalidStatus of ['missing', 'null'] as const) {
+    const corrupted = makeRunning119Archive(original.archive);
+    if (invalidStatus === 'missing') {
+      delete (corrupted.run as { status?: unknown }).status;
+      expect('status' in corrupted.run).toBe(false);
+    } else {
+      (corrupted.run as { status: unknown }).status = null;
+      expect(corrupted.run.status).toBeNull();
+    }
+    expect(corrupted.run.results).toHaveLength(119);
+    expect(corrupted.run.nextMatchIndex).toBe(119);
+    expect(corrupted.run.totalMatches).toBe(120);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e88-running-status-${invalidStatus}.json`, corrupted,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E85: 119 results with cursor 119 cannot claim a terminal
   // or unstarted status; both inconsistent states must reject atomically.
   for (const invalidStatus of ['completed', 'ready']) {
