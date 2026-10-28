@@ -163,12 +163,13 @@ async function assertRejectedRunning119VariantThenRestore<T extends RunningArchi
   mutate: (archive: T) => void,
   verify: (archive: T) => void,
   snapshot: ArchiveRecoverySnapshot,
-  canonicalBytes: string
+  canonicalBytes: string,
+  expectedMutatedTotal = 120
 ): Promise<void> {
   const corrupted = makeRunning119Archive(completed);
   mutate(corrupted);
   expect(corrupted.run.nextMatchIndex).toBe(119);
-  expect(corrupted.run.totalMatches).toBe(120);
+  expect(corrupted.run.totalMatches).toBe(expectedMutatedTotal);
   verify(corrupted);
   await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
 }
@@ -889,19 +890,19 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E87: the running prefix contains 119 of exactly 120 fixtures.
-  // Altering only totalMatches must reject atomically, even with valid
-  // cursor, result count, status and all existing match IDs unchanged.
+  // NEXT-110-E87/E92: invalid totalMatches must reject atomically;
+  // share typed recovery without weakening the intentional total mismatch.
   for (const invalidTotal of [119, 121]) {
-    const corrupted = makeRunning119Archive(original.archive);
-    corrupted.run.totalMatches = invalidTotal;
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.nextMatchIndex).toBe(119);
-    expect(corrupted.run.status).toBe('running');
-    expect(corrupted.run.totalMatches).toBe(invalidTotal);
-    await assertRejectedJsonThenRestore(
-      page, `next110-e87-running-total-${invalidTotal}.json`, corrupted,
-      recoverySnapshot, canonicalArchive
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e87-running-total-${invalidTotal}.json`, original.archive,
+      archive => { archive.run.totalMatches = invalidTotal; },
+      archive => {
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.status).toBe('running');
+        expect(archive.run.totalMatches).toBe(invalidTotal);
+      },
+      recoverySnapshot, canonicalArchive, invalidTotal
     );
   }
 
@@ -924,22 +925,27 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E88: missing or explicit null status must not be silently
-  // interpreted as a running tournament. Preserve all other 119/120 data.
+  // NEXT-110-E88/E92: absent and null statuses share typed recovery.
   for (const invalidStatus of ['missing', 'null'] as const) {
-    const corrupted = makeRunning119Archive(original.archive);
-    if (invalidStatus === 'missing') {
-      delete (corrupted.run as { status?: unknown }).status;
-      expect('status' in corrupted.run).toBe(false);
-    } else {
-      (corrupted.run as { status: unknown }).status = null;
-      expect(corrupted.run.status).toBeNull();
-    }
-    expect(corrupted.run.results).toHaveLength(119);
-    expect(corrupted.run.nextMatchIndex).toBe(119);
-    expect(corrupted.run.totalMatches).toBe(120);
-    await assertRejectedJsonThenRestore(
-      page, `next110-e88-running-status-${invalidStatus}.json`, corrupted,
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e88-running-status-${invalidStatus}.json`, original.archive,
+      archive => {
+        if (invalidStatus === 'missing') {
+          delete (archive.run as { status?: unknown }).status;
+        } else {
+          (archive.run as { status: unknown }).status = null;
+        }
+      },
+      archive => {
+        if (invalidStatus === 'missing') {
+          expect('status' in archive.run).toBe(false);
+        } else {
+          expect(archive.run.status).toBeNull();
+        }
+        expect(archive.run.results).toHaveLength(119);
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.totalMatches).toBe(120);
+      },
       recoverySnapshot, canonicalArchive
     );
   }
