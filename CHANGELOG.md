@@ -1,3 +1,20 @@
+## 29.10.2026 · 00:11 Uhr · NEXT-110 E96/E97/E98 VOLLSTÄNDIG QA GRÜN · 858/858 · NICHT VERÖFFENTLICHT
+
+**3/3 vollständig implementiert und isoliert getestet:** E96 fehlendes `run.totalMatches` bei 119 Ergebnissen/Cursor 119/Status running atomar abgewiesen (Commit `658fe262e5e7`); E97 `run.totalMatches` null und String `"120"` abgewiesen (`bb3c11d7a8a5`); E98 E93/E94-Recovery in gemeinsame typisierte E95-Hilfe refaktoriert, fehlende Ergebnisliste sowie negative/gebrochene Cursor ausdrücklich weiter geprüft (`9033b8e4225a`). Drei eigene serielle Entwicklungsbranches, nur `e2e/next110-v2-120-browser.spec.ts` als Programmcode verändert; Engine/RNG/historische v1-Regeln unverändert. Ungültige Importe lassen Fortschritt, 120 Paarungen, Replay, Autosave und Sandbox unverändert; gültiger Wiederimport gelingt.
+
+**QA:** Erster QA-PR #159 war wegen Konflikten mit der QA-Basis nicht mergebar und löste deshalb keine CI aus; geschlossen, NICHT gemergt. Neuer isolierter QA-PR #160 auf Basis des letzten erfolgreichen QA-Snapshots, weiterhin **DRAFT – NIEMALS MERGEN**. GitHub Actions **#40784700357 SUCCESS**: 554 Vitest Unit/Behavior/Regression/Determinismus, 32 Node, 272 Playwright Chromium/WebKit Desktop/Mobil, **858/858**; TypeScript, Audit (0 bekannte Schwachstellen), reproduzierbarer zweiter Build PASS. Volle Browserregression NACH E98-Refactoring. Test-Spec-Blob `d88d1d1b839c49015e61cff17635e1aadcd91818` identisch im QA-PR #160 und integrierten Entwicklungsstand.
+
+**Integration:** Entwicklungs-PR #158 nach grüner QA ausschließlich in `feature/NEXT-110-versioned-simultaneous-rules-unpublished` gemergt (Merge-Commit `099db43ba001ce7361c4fbb0cec3eecbbe0dc6ac`). Übergeordneter PR #93 bleibt Draft; QA-PR #160 bleibt Draft und wird NICHT gemergt. Dokumentation nach QA ergänzt, getesteter Programmcode unverändert.
+
+**Kumulativ seit letzter bestätigter Live-Version v0.1.62:** **96 vollständig CI-verifizierte, NICHT live veröffentlichte NEXT-110-Unterpakete E1/E2/E5–E98**. E3/E4 separat nicht nachgewiesen; NEXT-110 Parent OPEN, NEXT-79e reale Accessibility-Abnahme und NEXT-108 Provenienz offen. E96–E98 technisch getestet, NICHT release-freigegeben.
+
+**Rolling Backlog (nächste drei Pakete, seriell):**
+- **NEXT-110-E99 (P1):** `run.totalMatches` -1 oder 120.5 bei laufendem 119/120-Archiv atomar zurückweisen; Datei `e2e/next110-v2-120-browser.spec.ts`; Abnahme 119 gültige Ergebnisse/Cursor 119/Status running, Ablehnung ohne Mutation von Fortschritt/120 Paarungen/Replay/Autosave/Sandbox, gültiger Reimport; Tests `npm run typecheck && npm test && npm run test:e2e && npm run build`, Audit, reproduzierbarer Build; abhängig E87/E97.
+- **NEXT-110-E100 (P1):** `run.results` als Zahl oder Boolean bei laufendem 119/120-Archiv atomar zurückweisen; gleiche Datei/Abnahme/Testmatrix; abhängig E84/E93.
+- **NEXT-110-E101 (P2):** E96/E97-Reject-/Recovery-Prüfungen auf gemeinsame typisierte TotalMatches-Hilfe refaktorieren, `undefined` und `null` ausdrücklich erhalten; gleiche Datei, volle Chromium/WebKit Desktop/Mobil-Regression nach Refactoring; abhängig E96–E98.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt ausschließlich manuell.** Kein main-Merge, Release-Workflow/-Commit, publish.php, Homepage, Deployment oder Änderung anderer Automationen.
+
 ## 29.10.2026 · 00:00 Uhr · NEXT-110 E96/E97/E98 IMPLEMENTIERT · QA AUSSTEHEND · NICHT VERÖFFENTLICHT
 
 **Geplant 3 / seriell implementiert 3 / neu CI-bestätigt 0:** E96 fehlendes `run.totalMatches` bei 119/120 running atomar zurückweisen (Commit `658fe262e5e7`); E97 `run.totalMatches` als `null` oder String `"120"` zurückweisen (`bb3c11d7a8a5`); E98 E93/E94-Recovery in typisierte E95-Hilfe konsolidieren, absichtlich fehlendes `run.results` und negative/gebrochene Cursor weiterhin explizit prüfen (`9033b8e4225a`). Drei serielle eigene Entwicklungsbranches, ausschließlich `e2e/next110-v2-120-browser.spec.ts` als Programmcode verändert; Engine, RNG und historische v1-Regeln unverändert.
