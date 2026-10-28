@@ -1,3 +1,23 @@
+## 28.10.2026 · 10:04 Uhr · NEXT-110 E54/E55/E56 IMPLEMENTIERT – ISOLIERTE QA AUSSTEHEND – NICHT VERÖFFENTLICHT
+
+**Vorprüfung:** main `753b1a3953b4`, bestätigte Live-Version **v0.1.61**; letzter erfolgreich getesteter Entwicklungsstand E1/E2/E5–E53: **849/849** (553 Vitest, 32 Node, 264 Chromium/WebKit Desktop/Mobil), isolierte QA #40654390941 SUCCESS. Entwicklungs-PR #93 Draft; QA-PR #122 Draft und NIEMALS MERGEN. Separates Release-/Evidence-/Publish-Gate nicht ausgelöst.
+
+**3/3 seriell auf eigenen Branches implementiert und aus GitHub zurückgelesen; neue vollständige QA noch NICHT bestätigt, daher 0/3 neu testbestätigt:**
+- **NEXT-110-E54 (P1):** Verzögert abgelehnter Download-Trigger bei leerem Feedback, identische Fehlerursache, 250-ms-Wartebudget, <5s, nach 300ms keine Page-Errors. Datei `e2e/next110-v2-120-browser.spec.ts`; Branch `feature/NEXT-110-E54-delayed-trigger-rejection-20261028`; Commit `5991ef6360a3`. Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` in Chromium/WebKit Desktop/Mobil; abhängig von E51.
+- **NEXT-110-E55 (P1):** Vertauschte Ergebniszeilen und manipulierte Teilnehmer-ID nach 120-Match-Recovery atomar abweisen; Paarungen, Fortschritt, Autosave, Replay, Sandbox stabil; anschließend gültiger Import. Gleiche E2E-Datei; Branch `feature/NEXT-110-E55-archive-order-participant-20261028`; Commit `5def70d6f33e`. Test Playwright vier Browserprojekte; abhängig von E52.
+- **NEXT-110-E56 (P2):** Gemeinsame v1/v2-Regression für ungültigen Seek während Play/Pause/Reset; unveränderte Tick-/Zustands-/Eventdaten, unverändertes Playing-Flag, bytegleiche Serialisierung; Seeds 0/7/42, Ticks 0/1/5 und Double-KO. Datei `tests/next110-replay-v2.test.ts`; Branch `feature/NEXT-110-E56-replay-control-after-invalid-seek-20261028`; Commit `f16a0d92254f`. Test `npx vitest run tests/next110-replay-v2.test.ts` plus volle CI; abhängig von E53. Refactoring: gemeinsame Replay-Kontroll-Testhilfe, produktive Engine/RNG/v1-Regeln unverändert.
+
+**Kumulativ seit bestätigter Live-Version v0.1.61:** 54 vollständig CI-bestätigte, nicht live bestätigte Einheiten: NEXT-106/107/109 auf main (**Veröffentlichungsstatus ungeklärt**), 51 NEXT-110-Unterpakete E1/E2/E5–E53 auf Entwicklungsbranch (**nicht live**). E54–E56 erst nach neuer grüner QA hinzuzählen. E3/E4 nicht separat belegt; Parent NEXT-110 offen. NEXT-79e manuelle NVDA/VoiceOver/Touch/Kontrast-Abnahme und NEXT-108 externe Commit-/Artefaktprovenienz offen.
+
+**Veröffentlichungsreife:** NEXT-106/107/109 technisch getestet und auf main, Live-Status ungeklärt; für eine tatsächliche Veröffentlichung v0.1.62 plus Release-Gates/Deployment nötig. 51 getestete NEXT-110-Unterpakete technisch fertig, aber ohne eigenständige Release-Freigabe; E54–E56 QA ausstehend. **In diesem Lauf KEIN PUBLISHING.**
+
+**Rolling Backlog – nächste unabhängige kleine Pakete (erst nach QA dieser Runde):**
+- **NEXT-110-E57 (P1):** Trigger wird erfolgreich aufgelöst, aber es erscheint kein Download und kein Feedback; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: 250-ms-Grenze, UI-Diagnose `keines`, kein Page-Error/Unhandled-Rejection; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` vier Projekte; abhängig E54.
+- **NEXT-110-E58 (P1):** Archiv mit widersprüchlichem `nextMatchIndex` und `status` nach gültigem 120-Match-Recovery ablehnen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: atomare Ablehnung, 120 Paarungen, Replay/Sandbox unverändert, gültiger Reimport; Test Playwright vier Projekte; abhängig E55.
+- **NEXT-110-E59 (P2):** Wiederholte Archiv-Recovery-Testschritte in eine kleine typisierte E2E-Testhilfe auslagern; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: keine Assertions entfernt, unveränderte Browsermatrix, keine zusätzlichen Downloads, deterministische 120-Match-Fixture; Test Playwright vier Projekte und volle CI; abhängig E55/E58.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung nur manuell.** Kein main-Merge, publish.php, Homepage, Release-Workflow, Release-Commit, Deployment oder Änderung anderer Automationen.
+
 ## 28.10.2026 · 09:06 Uhr · NEXT-110 E51/E52/E53 VOLLSTÄNDIG ISOLIERT CI-BESTÄTIGT · NICHT VERÖFFENTLICHT
 
 **P0 – Isolierte QA #40653691141 SUCCESS**, exakter Code- und Dokumentations-Git-Tree des Entwicklungsstands, QA-PR #122 Draft und NIEMALS MERGEN: **553 Vitest + 32 Node + 264 Chromium/WebKit Desktop/Mobil = 849/849**. TypeScript, Sicherheits-Audit (null bekannte Advisories), reproduzierbarer Build und Browsermatrix grün. Separates Release-Evidence-/Publish-Gate wurde nicht ausgelöst.
