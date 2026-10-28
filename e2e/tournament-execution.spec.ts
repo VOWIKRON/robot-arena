@@ -1,6 +1,61 @@
 import { readFile } from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
 
+test('NEXT-110: v2 browser opt-in plays, replays and imports an archived match without touching the sandbox', async ({ page }) => {
+  await page.goto('/');
+  const sandboxBefore = await page.locator('#bot-a').getAttribute('style');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await page.locator('#tournament-ruleset').selectOption('simultaneous-v2');
+  await page.locator('#tournament-ticks').fill('1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('0 / 1');
+  await expect(page.locator('#tournament-autosave')).toBeDisabled();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+  const archivePromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const archive = await archivePromise;
+  const payload = JSON.parse(await (await import('node:fs/promises')).readFile(await archive.path(), 'utf8'));
+  expect(payload.schemaVersion).toBe(2);
+  expect(payload.run.definition.rulesetVersion).toBe('simultaneous-v2');
+  const replayButton = page.locator('#tournament-pairings li').first().getByRole('button', { name: /Replay abspielen/ });
+  await replayButton.click();
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  await expect(page.locator('#replay-progress')).toContainText('0 / 1');
+  await page.getByRole('button', { name: 'Replay-Schritt' }).click();
+  await expect(page.locator('#replay-progress')).toContainText('1 / 1');
+  await expect(page.locator('#replay-stats')).toContainText('A: Position');
+  await expect(page.locator('#replay-result')).toContainText('Ergebnis: Unentschieden (Ticklimit)');
+  await page.getByRole('button', { name: 'Schließen', exact: true }).click();
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-file').setInputFiles(await archive.path());
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
+  await expect(page.locator('#tournament-progress')).toContainText('1 / 1');
+  expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+});
+
+test('NEXT-110: legacy knockout never enables simultaneous-v2 and v1 remains default', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-ruleset').selectOption('simultaneous-v2');
+  await page.locator('#tournament-format').selectOption('knockout');
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await expect(page.locator('#tournament-ruleset')).toBeDisabled();
+  await page.locator('#tournament-format').selectOption('round-robin');
+  await expect(page.locator('#tournament-ruleset')).toBeEnabled();
+  await expect(page.locator('#tournament-ruleset')).toHaveValue('sequential-v1');
+  await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
+  await page.getByRole('button', { name: 'Nächster Kampf' }).click();
+  const archivePromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const archive = await archivePromise;
+  const payload = JSON.parse(await (await import('node:fs/promises')).readFile(await archive.path(), 'utf8'));
+  expect(payload.schemaVersion).toBe(1);
+  expect(payload.run.definition.rulesetVersion).toBeUndefined();
+});
+
 test('NEXT-59: tournament execution, pause, resume and archive roundtrip', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -46,7 +101,7 @@ test('NEXT-58: custom participant IDs survive import and invalid JSON preserves 
     name: 'broken.json', mimeType: 'application/json',
     buffer: Buffer.from('{"schemaVersion":2}')
   });
-  await expect(page.locator('#tournament-feedback')).toContainText(/ungültige Version/);
+  await expect(page.locator('#tournament-feedback')).toContainText(/ungültige Version|Laufdaten fehlen/);
   await expect(page.locator('#tournament-progress')).toHaveText(before);
   await expect(page.locator('#tournament-table tbody')).toContainText('Alpha Import');
 });
@@ -195,10 +250,19 @@ test('NEXT-67: verified tournament replay is isolated, keyboard-accessible and s
   await page.getByRole('button', { name: 'Speichern' }).click();
   const archive = await saved;
   await page.locator('#tournament-file').setInputFiles(await archive.path());
+  // File.text() and the archive import run asynchronously after setInputFiles resolves.
+  // A replay button from the previous run is already visible; wait for the file
+  // handler's finally block (which clears the input) before pressing Enter.
+  // Otherwise a late import re-renders the button between keydown and click.
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
   await expect(first.getByRole('button', { name: /Replay abspielen/ })).toBeVisible();
-  await first.getByRole('button', { name: /Replay abspielen/ }).focus();
-  await page.keyboard.press('Enter');
-  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible();
+  // NEXT-102: keep focus and keyboard activation in one locator action. On mobile,
+  // asynchronous archive UI updates may replace the button between focus() and
+  // page.keyboard.press('Enter'), silently sending Enter to a stale target.
+  const replayButton = first.getByRole('button', { name: /Replay abspielen/ });
+  await expect(replayButton).toBeEnabled();
+  await replayButton.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Replay-Dateien' })).toBeVisible({ timeout: 10_000 });
   await expect(page.locator('#replay-feedback')).toContainText('Turnierkampf verifiziert');
   await expect(page.locator('#replay-progress')).toContainText('0 / 1');
   await page.getByRole('button', { name: 'Replay-Schritt' }).click();
@@ -232,6 +296,13 @@ test('NEXT-68: opt-in autosave restores paused progress after reload without tou
   await page.getByRole('button', { name: 'Nächster Kampf' }).click();
   await page.getByRole('button', { name: 'Pause', exact: true }).last().click();
   await expect(page.locator('#tournament-progress')).toContainText('1 / 6');
+  // NEXT-80: Web Locks persist asynchronously; wait for the committed snapshot.
+  await expect.poll(() => page.evaluate(() => {
+    const saved = localStorage.getItem('robot-arena:tournament:autosave:v1');
+    if (!saved) return null;
+    const run = JSON.parse(saved).run;
+    return run.status + ':' + run.results.length;
+  })).toBe('paused:1');
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await expect(page.locator('#tournament-autosave')).toBeChecked();
@@ -243,6 +314,7 @@ test('NEXT-68: opt-in autosave restores paused progress after reload without tou
   await expect(page.locator('#tournament-progress')).toContainText('2 / 6');
   await page.getByRole('button', { name: 'Lokale Sicherung löschen' }).click();
   await expect(page.locator('#tournament-autosave')).not.toBeChecked();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave:v1'))).toBeNull();
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
@@ -274,6 +346,10 @@ test('NEXT-68: cancelled autosave stays cancelled after reload; disabling opt-in
   await page.getByRole('button', { name: 'Spielplan erstellen' }).click();
   await page.locator('#tournament-autosave').check();
   await page.getByRole('button', { name: 'Abbrechen' }).click();
+  await expect.poll(() => page.evaluate(() => {
+    const saved = localStorage.getItem('robot-arena:tournament:autosave:v1');
+    return saved ? JSON.parse(saved).run.status : null;
+  })).toBe('cancelled');
   await page.reload();
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
   await page.getByRole('button', { name: 'Lokale Sicherung laden' }).click();
@@ -283,6 +359,7 @@ test('NEXT-68: cancelled autosave stays cancelled after reload; disabling opt-in
   await expect(page.getByRole('button', { name: 'Nächster Kampf' })).toBeDisabled();
   await expect(page.locator('#tournament-progress')).toContainText('cancelled');
   await page.locator('#tournament-autosave').uncheck();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('robot-arena:tournament:autosave-enabled:v1'))).toBeNull();
   const saved = await page.evaluate(() => ({
     archive: localStorage.getItem('robot-arena:tournament:autosave:v1'),
     optIn: localStorage.getItem('robot-arena:tournament:autosave-enabled:v1')
