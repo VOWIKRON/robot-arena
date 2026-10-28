@@ -600,6 +600,28 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, { progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore });
   }
 
+  // NEXT-110-E63: a duplicate match ID must be rejected even when the
+  // completed 120-match cursor, result count and other metadata remain valid.
+  const duplicateMatchId = structuredClone(original.archive);
+  duplicateMatchId.run.results[119].matchId = duplicateMatchId.run.results[0].matchId;
+  expect(duplicateMatchId.run.results).toHaveLength(120);
+  expect(duplicateMatchId.run.nextMatchIndex).toBe(120);
+  expect(duplicateMatchId.run.status).toBe('completed');
+  expect(new Set(duplicateMatchId.run.results.map((result: { matchId: string }) => result.matchId)).size).toBe(119);
+  await page.locator('#tournament-file').setInputFiles({
+    name: 'next110-e63-duplicate-match-id-consistent-cursor.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(duplicateMatchId))
+  });
+  await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+  await assertArchiveRejectedWithoutMutation(page, {
+    progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
+  });
+  await importCanonicalArchive(page, 'next110-e63-valid-after-duplicate.json', canonicalArchive);
+  await assertCanonicalArchiveRestored(page, {
+    progress: progressBeforeReimports, pairings: pairingsBeforeReimports, sandboxStyle: sandboxBefore
+  });
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
