@@ -66,6 +66,8 @@ jobs:
             npx playwright install-deps chromium
             node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'
           fi
+      - name: Install WebKit browser and Linux runtime dependencies
+        run: npx playwright install --with-deps webkit
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         with:
