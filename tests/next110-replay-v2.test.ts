@@ -130,7 +130,9 @@ const expectControlsAfterInvalidSeek = (bytes: string, schemaVersion: 1 | 2): vo
   expect(player.state).toBe(firstState);
   expect(player.events).toEqual([]);
   expect(Object.isFrozen(player.state)).toBe(true);
-  expect(schemaVersion === 2 ? serializeReplayV2(recording) : serializeReplay(recording)).toBe(bytes);
+  const canonicalBytes = recording.schemaVersion === 2
+    ? serializeReplayV2(recording) : serializeReplay(recording);
+  expect(canonicalBytes).toBe(bytes);
 };
 
 describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () => {
