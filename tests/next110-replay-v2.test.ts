@@ -92,6 +92,47 @@ const expectSeededSeekBoundsImmutable = (bytes: string, schemaVersion: 1 | 2): v
   expect(bytesAfter).toBe(bytes);
 };
 
+/** NEXT-110-E56: one shared control-flow regression for v1/v2 recordings.
+ * Invalid seeks must not silently pause playback or alter cursor snapshots. */
+const expectControlsAfterInvalidSeek = (bytes: string, schemaVersion: 1 | 2): void => {
+  const recording = schemaVersion === 2 ? parseReplayV2(bytes) : parseReplay(bytes);
+  const player = new ReplayPlayer(recording);
+  const firstState = player.state;
+  const firstEvents = player.events;
+  expect(player.advance()).toBe(false);
+  expect(player.play()).toBe(player.length > 0);
+  const playingBefore = player.isPlaying;
+  for (const invalid of [-1, player.length + 1, Number.NaN]) {
+    expect(() => player.seek(invalid)).toThrow(RangeError);
+    expect(player.tick).toBe(0);
+    expect(player.state).toBe(firstState);
+    expect(player.events).toEqual(firstEvents);
+    expect(player.isPlaying).toBe(playingBefore);
+  }
+  if (player.length > 0) {
+    expect(player.advance()).toBe(true);
+    const tick = player.tick;
+    const pausedState = player.state;
+    const pausedEvents = player.events;
+    player.pause();
+    expect(player.advance()).toBe(false);
+    expect(() => player.seek(player.length + 1)).toThrow(RangeError);
+    expect(player.isPlaying).toBe(false);
+    expect(player.tick).toBe(tick);
+    expect(player.state).toBe(pausedState);
+    expect(player.events).toEqual(pausedEvents);
+    expect(player.play()).toBe(tick < player.length);
+    if (tick < player.length) expect(player.advance()).toBe(true);
+  }
+  player.reset();
+  expect(player.tick).toBe(0);
+  expect(player.isPlaying).toBe(false);
+  expect(player.state).toBe(firstState);
+  expect(player.events).toEqual([]);
+  expect(Object.isFrozen(player.state)).toBe(true);
+  expect(schemaVersion === 2 ? serializeReplayV2(recording) : serializeReplay(recording)).toBe(bytes);
+};
+
 describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () => {
   it('records and reconstructs 4 seeds without simulation or RNG during playback', () => {
     for (const seed of [1, 42, 4711, 65535]) {
@@ -504,6 +545,18 @@ describe('NEXT-110 stage E: opt-in simultaneous-v2 replay/event contract', () =>
         expect(serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks))).toBe(v2Bytes);
         expect(serializeReplay(recordMatch(RAPTOR, TITAN, seed, maxTicks))).toBe(v1Bytes);
       }
+    }
+  });
+
+  it('NEXT-110-E56: invalid seek preserves play/pause/reset for seeded v1 and v2 recordings', () => {
+    for (const seed of [0, 7, 42]) {
+      for (const maxTicks of [0, 1, 5]) {
+        const v2 = serializeReplayV2(recordMatchV2(alpha, beta, seed, maxTicks));
+        const v1 = serializeReplay(recordMatch(RAPTOR, TITAN, seed, maxTicks));
+        expectControlsAfterInvalidSeek(v2, 2);
+        expectControlsAfterInvalidSeek(v1, 1);
+      }
+      expectControlsAfterInvalidSeek(doubleKoReplayJson(seed), 2);
     }
   });
 
