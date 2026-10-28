@@ -1,4 +1,5 @@
 import { recordMatch } from './recorder';
+import { recordMatchV2, type ReplayDocumentV2 } from './replay-v2';
 import { parseReplay, serializeReplay, type ReplayDocument } from './replay-format';
 import { createRoundRobinSchedule } from './tournament-schedule';
 import { computeRoundRobinStandings } from './tournament-standings';
@@ -11,7 +12,7 @@ import type { TournamentRun } from './tournament-runner';
  * The archive contains an outcome summary, not an event stream. Replay is only
  * allowed if the regenerated outcome agrees exactly with that summary.
  */
-export function replayTournamentMatch(run: TournamentRun, matchId: string): ReplayDocument {
+export function replayTournamentMatch(run: TournamentRun, matchId: string): ReplayDocument | ReplayDocumentV2 {
   if (typeof matchId !== 'string' || !matchId) throw new Error('Replay: Match-ID fehlt');
   // Reject invalid or tampered archives before spending CPU on simulation.
   computeRoundRobinStandings(run.definition, run.results);
@@ -22,7 +23,9 @@ export function replayTournamentMatch(run: TournamentRun, matchId: string): Repl
   const a = run.definition.participants.find(robot => robot.id === fixture.robotAId);
   const b = run.definition.participants.find(robot => robot.id === fixture.robotBId);
   if (!a || !b) throw new Error('Replay: Teilnehmer fehlt');
-  const recording = recordMatch(a, b, fixture.seed, run.definition.maxTicks);
+  const recording = run.definition.schemaVersion === 2
+    ? recordMatchV2(a, b, fixture.seed, run.definition.maxTicks)
+    : recordMatch(a, b, fixture.seed, run.definition.maxTicks);
   const final = recording.finalState;
   if (final.outcome === 'active' ||
       final.tick !== result.ticks ||
@@ -32,5 +35,7 @@ export function replayTournamentMatch(run: TournamentRun, matchId: string): Repl
     throw new Error('Replay: Ergebnisabweichung zwischen Archiv und Simulation');
   }
   // The existing player accepts validated, immutable replay documents.
-  return parseReplay(serializeReplay(recording));
+  return 'schemaVersion' in recording
+    ? recording as ReplayDocumentV2
+    : parseReplay(serializeReplay(recording));
 }

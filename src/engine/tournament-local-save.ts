@@ -18,7 +18,7 @@ export function saveTournamentSnapshot(run: TournamentRun, storage: TournamentSn
 /** Validation precedes any caller-side state change. A corrupt snapshot is never applied. */
 export function restoreTournamentSnapshot(storage: TournamentSnapshotStorage): TournamentRun | null {
   const archive = storage.getItem(TOURNAMENT_AUTOSAVE_KEY);
-  return archive === null ? null : importTournamentRun(archive);
+  return archive === null ? null : importTournamentRun(archive, 1);
 }
 
 export function isTournamentAutosaveEnabled(storage: TournamentSnapshotStorage): boolean {
