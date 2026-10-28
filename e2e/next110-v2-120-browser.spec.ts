@@ -656,6 +656,32 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
+  // NEXT-110-E69: reject invalid matchId types in an otherwise complete
+  // 120-result archive. The missing-field case is already covered by E30.
+  const invalidMatchIds: Array<{ name: string; value: unknown }> = [
+    { name: 'null-id', value: null },
+    { name: 'numeric-id', value: 119 },
+    { name: 'array-id', value: ['match-119'] },
+    { name: 'object-id', value: { id: 'match-119' } }
+  ];
+  for (const { name, value } of invalidMatchIds) {
+    const corrupted = structuredClone(original.archive);
+    corrupted.run.results[119].matchId = value;
+    expect(corrupted.run.results).toHaveLength(120);
+    expect(corrupted.run.nextMatchIndex).toBe(120);
+    expect(corrupted.run.status).toBe('completed');
+    expect(JSON.stringify(corrupted)).not.toBe(before);
+    await page.locator('#tournament-file').setInputFiles({
+      name: `next110-e69-${name}.json`,
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(corrupted))
+    });
+    await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
+    await importCanonicalArchive(page, `next110-e69-valid-after-${name}.json`, canonicalArchive);
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
+  }
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
