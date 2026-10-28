@@ -66,6 +66,8 @@ async function assertCanonicalArchiveRestored(page: Page, snapshot: ArchiveRecov
   await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
   expect(await page.locator('#tournament-pairings').innerText()).toBe(snapshot.pairings);
   await expect(page.locator('#tournament-autosave')).toBeDisabled();
+  await expect(page.locator('#tournament-pairings li').last()
+    .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
   expect(await page.locator('#bot-a').getAttribute('style')).toBe(snapshot.sandboxStyle);
 }
 
@@ -506,6 +508,13 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
   }
 
+  // NEXT-110-E65: reuse the full rejection/recovery invariants for E55/E58.
+  const recoverySnapshot: ArchiveRecoverySnapshot = {
+    progress: progressBeforeReimports,
+    pairings: pairingsBeforeReimports,
+    sandboxStyle: sandboxBefore
+  };
+
   // NEXT-110-E55: reject a valid-looking but reordered result prefix and a
   // forged participant ID. Recovery must remain atomic without extra downloads.
   const structuralTamperCases: Array<{ name: string; change: (archive: any) => void }> = [
@@ -527,19 +536,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(JSON.stringify(corrupted))
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    await expect(page.locator('#tournament-pairings li').last()
-      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e55-valid-after-${name}.json`, canonicalArchive);
-    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // NEXT-110-E58: a fully completed 120-match archive must never accept a
@@ -560,20 +559,9 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
       buffer: Buffer.from(JSON.stringify(corrupted))
     });
     await expect.poll(() => page.locator('#tournament-file').inputValue()).toBe('');
-    await expect(page.locator('#tournament-feedback')).not.toBeEmpty();
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    await expect(page.locator('#tournament-pairings li').last()
-      .getByRole('button', { name: /Replay abspielen/ })).toBeEnabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertArchiveRejectedWithoutMutation(page, recoverySnapshot);
     await importCanonicalArchive(page, `next110-e58-valid-after-${name}.json`, canonicalArchive);
-    await expect(page.locator('#tournament-ruleset')).toHaveValue('simultaneous-v2');
-    await expect(page.locator('#tournament-progress')).toHaveText(progressBeforeReimports);
-    await expect(page.locator('#tournament-pairings li')).toHaveCount(120);
-    expect(await page.locator('#tournament-pairings').innerText()).toBe(pairingsBeforeReimports);
-    await expect(page.locator('#tournament-autosave')).toBeDisabled();
-    expect(await page.locator('#bot-a').getAttribute('style')).toBe(sandboxBefore);
+    await assertCanonicalArchiveRestored(page, recoverySnapshot);
   }
 
   // NEXT-110-E60: a completed archive may neither lie about its schedule
