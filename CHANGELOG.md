@@ -1,3 +1,50 @@
+## 28.10.2026 · 02:00 Uhr · NEXT-110 E30/E31/E32 IMPLEMENTIERT · CI AUSSTEHEND · NICHT VERÖFFENTLICHT
+**Vorprüfung:** GitHub Development Tests #40606444405 SUCCESS auf isoliertem QA-Snapshot 6b98691d265a (identischer Quellcode-Baum zu E27–E29): **542 Vitest + 32 Node + 244 Chromium/WebKit Desktop/Mobil = 818/818**; Typecheck, Audit, reproduzierbarer Build, Browser-/Evidence-Gates PASS. Damit E27/E28/E29 jetzt erstmals vollständig testbestätigt. Draft-PR #93 weiterhin offen; QA-PR #105 bleibt test-only und darf nicht gemergt werden. Letzte bestätigte LIVE-Version v0.1.61; NEXT-106/107/109 auf main, **Veröffentlichungsstatus ungeklärt**.
+
+**Drei geplante und tatsächlich implementierte Pakete (3/3, NEU, CI noch ausstehend):**
+- **NEXT-110-E30**: Ziel nach gültiger Wiederherstellung doppelte Ergebniszeilen und fehlende matchId in 120-Kampf-Archiv abweisen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: beide ungültigen Importe abgewiesen, 120 Pairings, Fortschritt, JSON-Export und Sandbox unverändert; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts` auf vier Projekten; Abhängigkeit E27; Branch `feature/NEXT-110-E30-post-recovery-tamper-20261028`, Commit `5767432da84b`.
+- **NEXT-110-E31**: Ziel Zeitdiagnostik-Validierung in einen wiederverwendbaren, fail-closed Helper mit explizitem Schema auslagern; gleiche Datei; Akzeptanz: fünf Zeitfelder endlich/nichtnegativ, Archivbytes positiv, Browserprojekt/Regelwerk/Teilnehmerzahl/Matchzahl korrekt, vor JSON-Attachment validiert; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts --project=desktop-webkit --project=mobile-webkit` plus Chromium; Abhängigkeit E28; Branch `feature/NEXT-110-E31-timing-schema-helper-20261028`, Commit `89ae00f6efcd`.
+- **NEXT-110-E32**: Ziel mehrtaktige v2-Replays über drei Seeds rückwärts/vorwärts seeken, spielen und zurücksetzen; Datei `tests/next110-replay-v2.test.ts`; Akzeptanz: jeder Cursor entspricht rekonstruiertem Snapshot, Reset/Play/Pause/Advance deterministisch, v1-Bytes unverändert; Test `npx vitest run tests/next110-replay-v2.test.ts` plus volle Regression; Abhängigkeit E29; Branch `feature/NEXT-110-E32-bidirectional-replay-20261028`, Commit `6ecdfb4237db`.
+
+**CI und Refactoring:** Alle drei Commits einzeln auf Branch erstellt, zurückgelesen und per Fast-Forward auf Entwicklungsbranch integriert; Quellcode-HEAD `6ecdfb4237dbaf2f3ecbb2746854f1dc68a026d9`. QA-PR #106 Draft **NIEMALS MERGEN**, isolierter Snapshot `41344c34de04bd84168ea33808832fdcb89bfa3b`, identischer Git-Tree `de06b85e0c2b7ef4b710438e69f97e40bcf5f872`. Neue vollständige CI noch nicht erfolgreich bestätigt; **E30/E31/E32 nicht als abgeschlossen zählen**. Refactoring E31 reduziert doppelte Zeitfeldprüfungen, keine Produktionsengine-/RNG-/v1-Regeländerung.
+
+**Kumulativ seit letzter bestätigter LIVE v0.1.61: 30 fertig implementierte und getestete, nicht live bestätigte Einheiten:** 3 Hauptaufgaben auf main mit Veröffentlichungsstatus ungeklärt und 27 NEXT-110-Unterpakete E1/E2/E5–E29 auf Entwicklungsbranches (nicht live). E3/E4 nicht separat belegt; NEXT-110 Gesamtaufgabe und NEXT-79e praktische NVDA/VoiceOver/Touch/Kontrastabnahme bleiben OFFEN. Neue E30–E32 zählen erst nach vollständiger CI.
+- NEXT-106: Release-Evidence-Gate; Tests 733/733; main; Veröffentlichungsstatus ungeklärt.
+- NEXT-107: Startseiten-Balance/Replay-Import; Tests 736/736; main; Veröffentlichungsstatus ungeklärt.
+- NEXT-109: Erstschussdiagnose; Tests 739/739; main; Veröffentlichungsstatus ungeklärt.
+- NEXT-110-E1: v2-Replayformat; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E2: Replay-Player; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E5: Replay-Statistik; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E6: 120-Kampf-Browser-Stress; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E7: Archiv-Manipulationsschutz; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E8: Double-KO-Browser; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E9: Double-KO-Manipulation; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E10: Archiv-Grenzfälle; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E11: Tastatur/ARIA; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E12: 120-Kampf-Archivschutz; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E13: Null-Tick-Manipulation; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E14: Replay-Tastatur; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E15: Double-KO-Regression; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E16: Seed-Manipulation; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E17: Replay-Grenzfälle; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E18: Replay-Importschutz; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E19: WebKit-Archiv; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E20: Double-KO-Fixture; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E21: Replay-Importwiederherstellung; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E22: WebKit-Timeout; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E23: Tamper-Fixture; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E24: Archiv-Recovery; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E25: WebKit-Zeitdiagnostik; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E26: v1/v2-Determinismus; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E27: Ungültige Archivformate; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E28: Zeitdatenvalidierung; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+- NEXT-110-E29: Mehr-Tick-Determinismus; Tests 818/818 (#40606444405); Entwicklungsbranch; nicht live.
+
+**Rolling Backlog:** P0 vollständige CI des QA-PR #106 abwarten, Fehler korrigieren und erneut alle Tests; P1 NEXT-110-E33: 120-Kampf-Archiv nach weiteren Manipulationen wiederholt gültig importieren (Datei `e2e/next110-v2-120-browser.spec.ts`, Akzeptanz Bytegleichheit/Isolation, Playwright vier Projekte, Abhängigkeit E30); P1 NEXT-110-E34: Timing-Schema-Helper mit negativen Unit-Assertions absichern (Datei `tests/next110-timing-evidence.test.ts` plus exportierbarer Helper, Akzeptanz NaN/Infinity/negative/fehlende Felder fail-closed, `npx vitest run tests/next110-timing-evidence.test.ts`, Abhängigkeit E31); P2 NEXT-110-E35: deterministische Seek-/Pause-/Play-Regressionsfälle für v1/v2 (Datei `tests/next110-replay-v2.test.ts`, Akzeptanz v1/v2 Cursor-/Zustandsidentität, Vitest, Abhängigkeit E32); P0 NEXT-79e echte Screenreader-/Touch-Abnahme; P2 NEXT-108 externe CI-Provenienz.
+
+**NICHT VERÖFFENTLICHT – Veröffentlichung nur manuell.** Kein publish.php, Homepage, Release-Workflow, Release-Commit, Deployment, main-Merge oder Änderungen anderer Automationen.
+
+
 ## 28.10.2026 · 01:05 Uhr · NEXT-110 E27/E28/E29 IMPLEMENTIERT, CI LÄUFT · NICHT VERÖFFENTLICHT
 - **Vorprüfung:** Entwicklungs-PR #93 Draft, QA-PR #104 Draft (niemals mergen), letzter bestätigter QA-Lauf #40600547540 SUCCESS mit **817/817** (541 Vitest, 32 Node, 244 Chromium/WebKit Desktop/Mobil), Typecheck, Audit, Build und Gates PASS. Letzte bestätigte Live-Version **v0.1.61**. NEXT-106/107/109 auf main, **Veröffentlichungsstatus ungeklärt**; NEXT-110 gesamt OFFEN, NEXT-79e reale NVDA-/VoiceOver-/Touch-/Kontrastabnahme OFFEN.
 - **Geplant und tatsächlich implementiert: 3/3; neue vollständig testbestätigte Pakete: 0/3 bis CI fertig.** (1) **NEXT-110-E27** Ziel: weitere ungültige 120-Kampf-Archivformate sicher abweisen; Datei `e2e/next110-v2-120-browser.spec.ts`; Akzeptanz: Array-Root und nicht unterstützte Schema-Version werden abgewiesen, Archivexport, 120 Pairings, Fortschritt und Sandbox bleiben byte-/zustandsgleich; Test `npx playwright test e2e/next110-v2-120-browser.spec.ts`; Abhängigkeit E24; Branch `feature/NEXT-110-E27-extra-invalid-archive-20261028`, Commit `7391d68672d3`.
