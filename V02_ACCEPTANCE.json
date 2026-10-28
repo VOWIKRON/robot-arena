@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "targetVersion": "0.2.0",
+  "policy": "manual-approval-only",
+  "criteria": [
+    {
+      "id": "aggressive",
+      "area": "KI",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "defensive",
+      "area": "KI",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "adaptive",
+      "area": "KI",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "combat",
+      "area": "Kampfsystem",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "tournament",
+      "area": "Turniere",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "usability",
+      "area": "Bedienung",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "quality",
+      "area": "Qualität",
+      "status": "pending",
+      "evidence": []
+    }
+  ]
+}
