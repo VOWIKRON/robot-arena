@@ -763,6 +763,22 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     page, 'next110-e75-duplicate-running-match-id.json', duplicateRunningArchive, recoverySnapshot, canonicalArchive
   );
 
+  // NEXT-110-E76: missing matchId on the last result of a running
+  // 119/120 prefix must fail atomically; the result itself still exists.
+  const missingRunningIdArchive = structuredClone(original.archive);
+  missingRunningIdArchive.run.results = missingRunningIdArchive.run.results.slice(0, 119);
+  missingRunningIdArchive.run.nextMatchIndex = 119;
+  missingRunningIdArchive.run.status = 'running';
+  delete missingRunningIdArchive.run.results[118].matchId;
+  expect(missingRunningIdArchive.run.results).toHaveLength(119);
+  expect(missingRunningIdArchive.run.nextMatchIndex).toBe(119);
+  expect(missingRunningIdArchive.run.totalMatches).toBe(120);
+  expect(missingRunningIdArchive.run.status).toBe('running');
+  expect(Object.hasOwn(missingRunningIdArchive.run.results[118], 'matchId')).toBe(false);
+  await assertRejectedJsonThenRestore(
+    page, 'next110-e76-missing-running-match-id.json', missingRunningIdArchive, recoverySnapshot, canonicalArchive
+  );
+
   // NEXT-110-E61: malformed JSON after a valid 120-match recovery must
   // never replace the active tournament, replay or sandbox state.
   const invalidJsonCases = [
