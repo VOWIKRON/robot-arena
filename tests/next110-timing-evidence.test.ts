@@ -19,6 +19,23 @@ describe('NEXT-110-E34 fail-closed timing evidence', () => {
     expect(JSON.stringify(evidence)).toBe(before);
   });
 
+  it('NEXT-110-E37 accepts exactly the four browser matrix budgets and rejects swapped evidence', () => {
+    const budgets = [
+      ['desktop-chromium', 240_000],
+      ['mobile-chromium', 240_000],
+      ['desktop-webkit', 300_000],
+      ['mobile-webkit', 300_000]
+    ] as const;
+    for (const [name, budget] of budgets) {
+      const valid = { ...baseline, browserProject: name, timeoutBudgetMs: budget };
+      expect(() => validateTimingEvidence(valid, name)).not.toThrow();
+      for (const invalidBudget of [1, budget - 1, budget + 1, Number.POSITIVE_INFINITY]) {
+        expect(() => validateTimingEvidence({ ...valid, timeoutBudgetMs: invalidBudget }, name)).toThrow();
+      }
+      expect(() => validateTimingEvidence(valid, 'unlisted-browser')).toThrow();
+    }
+  });
+
   it('rejects missing, extra, NaN, infinite, negative and inconsistent fields', () => {
     const mutations: Array<(value: Record<string, unknown>) => void> = [
       v => { delete v.elapsedMs; },
