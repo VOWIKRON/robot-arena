@@ -47,6 +47,23 @@ test('NEXT-110-E42: missing download reports bounded failure with UI feedback', 
   expect(Date.now() - startedAt).toBeLessThan(5_000);
 });
 
+// NEXT-110-E45: missing download without UI feedback must have a bounded,
+// actionable diagnostic and must not leak a page-level unhandled exception.
+test('NEXT-110-E45: missing download with empty feedback reports keines', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Turnier', exact: true }).click();
+  await page.locator('#tournament-feedback').evaluate(node => { node.textContent = ''; });
+  const startedAt = Date.now();
+  await expect(exportArchive(page, {
+    timeoutMs: 250,
+    trigger: async () => { await page.locator('#tournament-feedback').isVisible(); }
+  })).rejects.toThrow(/NEXT-110-E39\/E42:.*250ms.*UI-Feedback: keines/);
+  expect(Date.now() - startedAt).toBeLessThan(5_000);
+  expect(pageErrors).toEqual([]);
+});
+
 test.describe.serial('NEXT-110 120-match archive isolation phases', () => {
 let canonicalArchive = '';
 
