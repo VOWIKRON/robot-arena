@@ -37,8 +37,17 @@ export function validateTimingEvidence(value: unknown, projectName: string): ass
       throw new Error(`Invalid timing evidence: ${key}`);
     }
   }
-  if (typeof data.timeoutBudgetMs !== 'number' || data.timeoutBudgetMs <= 0) {
-    throw new Error('Invalid timeout budget');
+  // NEXT-110-E37: a positive but incorrect budget must not pass the
+  // browser evidence gate. Only the four CI browser projects are accepted.
+  const expectedBudgets: Readonly<Record<string, number>> = {
+    'desktop-chromium': 240_000,
+    'mobile-chromium': 240_000,
+    'desktop-webkit': 300_000,
+    'mobile-webkit': 300_000
+  };
+  const expectedBudget = expectedBudgets[projectName];
+  if (expectedBudget === undefined || data.timeoutBudgetMs !== expectedBudget) {
+    throw new Error('Timing evidence project/budget mismatch');
   }
   if (typeof data.elapsedMs !== 'number' || typeof data.tournamentElapsedMs !== 'number' ||
       data.elapsedMs < data.tournamentElapsedMs) {
