@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "scenario": "round-robin-fixed-seed-24ticks",
+  "samples": [
+    {
+      "participants": 2,
+      "matches": 1,
+      "ticks": 24,
+      "archiveBytes": 815,
+      "elapsedMs": 1.948851999999988,
+      "heapDeltaBytes": 436952
+    },
+    {
+      "participants": 4,
+      "matches": 6,
+      "ticks": 144,
+      "archiveBytes": 2082,
+      "elapsedMs": 6.828668999999991,
+      "heapDeltaBytes": -920536
+    },
+    {
+      "participants": 8,
+      "matches": 28,
+      "ticks": 672,
+      "archiveBytes": 6646,
+      "elapsedMs": 19.461718999999988,
+      "heapDeltaBytes": 2342224
+    },
+    {
+      "participants": 16,
+      "matches": 120,
+      "ticks": 2880,
+      "archiveBytes": 24004,
+      "elapsedMs": 99.52166000000003,
+      "heapDeltaBytes": -911288
+    }
+  ]
+}
