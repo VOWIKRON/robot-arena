@@ -84,6 +84,24 @@ test('NEXT-108: missing, duplicate, expired, empty, wrong-run and undigested art
     f => { f.artifacts[0].workflow_run.id = 999; }
   ]) check(change);
 });
+test('NEXT-108: exact NEXT-79e QA branches pass only with matching SHA/run/artifacts', () => {
+  for (const branch of ["feature/NEXT-79e-automated-preflight-20261029-0700","feature/NEXT-79e-AUTO4-provenance-fix-20261029-0800","feature/NEXT-79e-AUTO5-dialog-keyboard-20261029-0800","feature/NEXT-79e-AUTO6-motion-regression-20261029-0800"]) {
+    const f = fixture();
+    f.expected.branch = branch;
+    f.run.head_branch = branch;
+    for (const artifact of f.artifacts) artifact.workflow_run.head_branch = branch;
+    assert.equal(evaluateProvenance(f).gate, 'PASS');
+    f.artifacts[0].workflow_run.head_branch = 'integration/NEXT-110-v0162-rc-20261029-0300';
+    assert.throws(() => evaluateProvenance(f), /artifact provenance mismatch/);
+  }
+});
+test('NEXT-108: unauthorized QA feature branch remains fail-closed', () => {
+  const f = fixture();
+  f.expected.branch = 'feature/NEXT-79e-unauthorized';
+  f.run.head_branch = f.expected.branch;
+  for (const artifact of f.artifacts) artifact.workflow_run.head_branch = f.expected.branch;
+  assert.throws(() => evaluateProvenance(f), /unexpected QA branch/);
+});
 test('NEXT-108: missing credentials never produce a pass or a publish action', () => {
   const cli = new URL('../scripts/next108-verify-provenance.mjs', import.meta.url);
   const result = spawnSync(process.execPath, [cli.pathname], { encoding: 'utf8',
