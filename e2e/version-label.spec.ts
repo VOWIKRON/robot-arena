@@ -89,3 +89,46 @@ test('NEXT-110: array-shaped publication metadata is rejected without hiding val
   await expect(page.locator('#app-version')).toHaveText(expectedVersion);
   await expect(page).toHaveTitle(`Robot Arena ${expectedVersion}`);
 });
+
+
+test('NEXT-110: stalled scheduling endpoint times out without hiding publication', async ({ page }) => {
+  await page.route('**/version.json', route => route.fulfill({
+    status: 200, contentType: 'application/json',
+    body: JSON.stringify({ published: '2026-10-29T12:00:00Z' })
+  }));
+  await page.route('**/build-info.json', async route => {
+    await new Promise(resolve => setTimeout(resolve, 6500));
+    await route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ nextRunAt: '2026-11-01T12:00:00Z' })
+    }).catch(() => {});
+  });
+  await page.goto('/');
+  await expect(page.locator('#footer-published')).not.toHaveText('noch nicht verfügbar', { timeout: 9000 });
+  await expect(page.locator('#footer-next-run')).toHaveText('noch nicht verfügbar', { timeout: 9000 });
+  await page.waitForTimeout(7200);
+  await expect(page.locator('#footer-next-run')).toHaveText('noch nicht verfügbar');
+  await expect(page.locator('#app-version')).toHaveText(expectedVersion);
+  await expect(page).toHaveTitle(`Robot Arena ${expectedVersion}`);
+});
+
+test('NEXT-110: stalled publication endpoint times out without hiding schedule', async ({ page }) => {
+  await page.route('**/version.json', async route => {
+    await new Promise(resolve => setTimeout(resolve, 6500));
+    await route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ published: '2026-10-29T12:00:00Z' })
+    }).catch(() => {});
+  });
+  await page.route('**/build-info.json', route => route.fulfill({
+    status: 200, contentType: 'application/json',
+    body: JSON.stringify({ nextRunAt: '2026-11-01T12:00:00Z' })
+  }));
+  await page.goto('/');
+  await expect(page.locator('#footer-next-run')).not.toHaveText('noch nicht verfügbar', { timeout: 9000 });
+  await expect(page.locator('#footer-published')).toHaveText('noch nicht verfügbar', { timeout: 9000 });
+  await page.waitForTimeout(7200);
+  await expect(page.locator('#footer-published')).toHaveText('noch nicht verfügbar');
+  await expect(page.locator('#app-version')).toHaveText(expectedVersion);
+  await expect(page).toHaveTitle(`Robot Arena ${expectedVersion}`);
+});
