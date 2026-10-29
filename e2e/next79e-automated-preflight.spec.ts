@@ -57,3 +57,18 @@ test('NEXT-79e-AUTO3: 320px viewport keeps tournament dialog and trigger operabl
   expect(box!.x).toBeGreaterThanOrEqual(-1);
   expect(box!.x + box!.width).toBeLessThanOrEqual(321);
 });
+
+test('NEXT-79e-AUTO5: keyboard opens and dismisses tournament dialog with focus restored', async ({ page }) => {
+  await page.goto('/');
+  const trigger = page.getByRole('button', { name: 'Turnier', exact: true });
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.locator('#tournament-dialog');
+  await expect(dialog).toBeVisible();
+  const focusWithinDialog = await dialog.evaluate(element => element.contains(document.activeElement));
+  expect(focusWithinDialog).toBe(true);
+  await expect(page.getByRole('button', { name: 'Turnier schließen' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
