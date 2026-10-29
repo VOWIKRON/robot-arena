@@ -973,6 +973,24 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E100: number/boolean results must not be coerced into an array.
+  for (const { name, value } of [
+    { name: 'number', value: 119 },
+    { name: 'boolean', value: true }
+  ] as Array<{ name: string; value: unknown }>) {
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e100-running-results-${name}.json`, original.archive,
+      archive => { (archive.run as { results: unknown }).results = value; },
+      archive => {
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe('running');
+        expect(archive.run.results).toBe(value);
+      },
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E98: E93 missing-results and E94 invalid-cursor imports
   // share the E95 typed recovery helper; each keeps its schema assertions.
   const runningSchemaCases: Array<{
