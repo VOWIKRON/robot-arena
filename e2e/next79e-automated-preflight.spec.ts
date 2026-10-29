@@ -1,18 +1,5 @@
 import { test, expect } from '@playwright/test';
-
-function contrastRatio(foreground: string, background: string): number {
-  const luminance = (color: string): number => {
-    const matches = color.match(/[\d.]+/g);
-    if (!matches || matches.length < 3) throw new Error('Unsupported computed color: ' + color);
-    const [r, g, b] = matches.slice(0, 3).map(Number).map(channel => {
-      const s = channel / 255;
-      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
-  const a = luminance(foreground), b = luminance(background);
-  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-}
+import { contrastRatio } from './contrast';
 
 // Automated accessibility preflight only: never substitutes for physical
 // NVDA, VoiceOver, touch-device, or measured contrast acceptance (NEXT-79e).
