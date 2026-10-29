@@ -95,6 +95,31 @@ test('NEXT-108: exact NEXT-79e QA branches pass only with matching SHA/run/artif
     assert.throws(() => evaluateProvenance(f), /artifact provenance mismatch/);
   }
 });
+test('NEXT-108: exact approved smoke, docs and gameplay QA branches pass but arbitrary refs do not', () => {
+  const approved = [
+    'feature/NEXT-110-SMOKE-STRICT-20261029-2000',
+    'feature/NEXT-110-FOOTER-BOUNDARY-20261029-2000',
+    'docs/NEXT-110-RC5-qa-failure-20261029-2000',
+    'integration/NEXT-112-combat-speed-20261029-2105',
+    'integration/NEXT-112-combat-speed-reg-20261029-2105'
+  ];
+  for (const branch of approved) {
+    const f = fixture();
+    f.expected.branch = branch;
+    f.run.head_branch = branch;
+    for (const a of f.artifacts) a.workflow_run.head_branch = branch;
+    assert.equal(evaluateProvenance(f).gate, 'PASS');
+    assert.equal(evaluateProvenance(f).releaseAuthorized, false);
+  }
+  for (const branch of ['main', 'docs/anything-else', 'feature/NEXT-110-OTHER', 'integration/NEXT-112-unauthorized']) {
+    const f = fixture();
+    f.expected.branch = branch;
+    f.run.head_branch = branch;
+    for (const a of f.artifacts) a.workflow_run.head_branch = branch;
+    assert.throws(() => evaluateProvenance(f), /unexpected QA branch/);
+  }
+});
+
 test('NEXT-108: unauthorized QA feature branch remains fail-closed', () => {
   const f = fixture();
   f.expected.branch = 'feature/NEXT-79e-unauthorized';
