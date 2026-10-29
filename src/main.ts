@@ -29,6 +29,7 @@ import { TournamentAutosaveGuard, formatTournamentStorageError, AUTOSAVE_CONFLIC
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { combatIntervalMs } from './engine/combat-speed';
 import { advanceBoundedSteps } from './engine/batch-steps';
+import { combatRangeSnapshot } from './engine/combat-range';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
 
@@ -303,11 +304,13 @@ function robotStats(label: string, css: string, s: MatchState['robotA']): string
 }
 
 function render(): void {
+  const range = combatRangeSnapshot(state);
   renderRobot('bot-a', state.robotA.position.x, state.robotA.position.y, configurationA().chassis.id, configurationA().weapon.id, state.robotA.structure, state.robotA.definition.maxStructure, state.robotA.energy, state.robotA.definition.maxEnergy);
   renderRobot('bot-b', state.robotB.position.x, state.robotB.position.y, configurationB().chassis.id, configurationB().weapon.id, state.robotB.structure, state.robotB.definition.maxStructure, state.robotB.energy, state.robotB.definition.maxEnergy);
   el('stats').innerHTML =
     robotStats('A', 'robot-a', state.robotA) +
     robotStats('B', 'robot-b', state.robotB) +
+    `<div id="combat-range" class="combat-range" aria-label="Abstand und Waffenreichweite">Abstand: ${range.distance.toFixed(1)} · A: ${range.aInRange ? 'in Reichweite' : 'außer Reichweite'} (${range.aWeaponRange.toFixed(1)}) · B: ${range.bInRange ? 'in Reichweite' : 'außer Reichweite'} (${range.bWeaponRange.toFixed(1)})</div>` +
     `<div>Tick: ${state.tick}</div>`;
   const phase = timer !== null ? 'Kampf läuft' : state.tick > 0 ? 'Kampf pausiert' : 'Kampfbereit';
   el('status').textContent = state.outcome === 'draw' ? 'Unentschieden: Zeitlimit' : state.winner ? `Sieger: ${state.winner}` : phase;
