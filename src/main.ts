@@ -323,9 +323,15 @@ function formatDate(value: string | undefined): string {
 
 // Read publication and scheduling metadata independently: a malformed or offline
 // endpoint must not discard valid data returned by the other endpoint.
+// Bound each metadata request independently so a stalled endpoint cannot
+// prevent valid data from the other endpoint reaching the footer.
+const FOOTER_FETCH_TIMEOUT_MS = 3500;
+
 async function readFooterJson(path: string): Promise<Record<string, unknown>> {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), FOOTER_FETCH_TIMEOUT_MS);
   try {
-    const response = await fetch(path, { cache: 'no-store' });
+    const response = await fetch(path, { cache: 'no-store', signal: controller.signal });
     if (!response.ok) return {};
     const parsed: unknown = await response.json();
     return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)
@@ -333,6 +339,8 @@ async function readFooterJson(path: string): Promise<Record<string, unknown>> {
       : {};
   } catch {
     return {};
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 }
 
