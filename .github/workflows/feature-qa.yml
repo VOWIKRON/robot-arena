@@ -13,6 +13,7 @@ on:
       - integration/NEXT-110-RC5-evidence-qa-20261029-1400
       - integration/NEXT-110-RC5-ui-version-20261029-1500
       - integration/NEXT-110-RC5-ui-e2e-repair-20261029-1600
+      - integration/NEXT-110-RC5-footer-resilience-20261029-1700
       - feature/NEXT-79e-automated-preflight-20261029-0700
       - feature/NEXT-79e-AUTO4-provenance-fix-20261029-0800
       - feature/NEXT-79e-AUTO5-dialog-keyboard-20261029-0800
