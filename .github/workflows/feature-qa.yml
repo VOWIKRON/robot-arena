@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - qa/NEXT-71-combined-integration
+      - integration/NEXT-110-v0162-rc-20261029-0300
 
   pull_request:
     branches:
