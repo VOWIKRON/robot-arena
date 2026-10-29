@@ -1,0 +1,59 @@
+import { test, expect } from '@playwright/test';
+
+// Automated accessibility preflight only: never substitutes for physical
+// NVDA, VoiceOver, touch-device, or measured contrast acceptance (NEXT-79e).
+test('NEXT-79e-AUTO1: keyboard focus has a visible outline', async ({ page }) => {
+  await page.goto('/');
+  await page.keyboard.press('Tab');
+  const focused = page.locator(':focus-visible');
+  await expect(focused).toHaveCount(1);
+  const width = await focused.evaluate(element => parseFloat(getComputedStyle(element).outlineWidth));
+  expect(width).toBeGreaterThanOrEqual(3);
+});
+
+test('NEXT-79e-AUTO2: reduced-motion preference disables combat effects', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const result = await page.evaluate(() => {
+    const shot = document.createElement('div');
+    shot.className = 'shot-effect';
+    document.body.appendChild(shot);
+    const hit = document.createElement('div');
+    hit.className = 'hit-effect';
+    document.body.appendChild(hit);
+    const bot = document.querySelector<HTMLElement>('#bot-a');
+    if (!bot) throw new Error('Missing bot A');
+    bot.classList.add('is-hit');
+    const durations = {
+      shot: getComputedStyle(shot).animationDuration,
+      hit: getComputedStyle(hit).animationDuration,
+      botAnimation: getComputedStyle(bot).animationDuration,
+      botTransition: getComputedStyle(bot).transitionDuration,
+    };
+    shot.remove();
+    hit.remove();
+    bot.classList.remove('is-hit');
+    return durations;
+  });
+  expect(result.shot).toBe('0s');
+  expect(result.hit).toBe('0s');
+  expect(result.botAnimation).toBe('0s');
+  expect(result.botTransition).toBe('0s');
+});
+
+test('NEXT-79e-AUTO3: 320px viewport keeps tournament dialog and trigger operable', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/');
+  const trigger = page.getByRole('button', { name: 'Turnier', exact: true });
+  await expect(trigger).toBeVisible();
+  const triggerBox = await trigger.boundingBox();
+  expect(triggerBox).not.toBeNull();
+  expect(triggerBox!.height).toBeGreaterThanOrEqual(44);
+  await trigger.click();
+  const dialog = page.locator('#tournament-dialog');
+  await expect(dialog).toBeVisible();
+  const box = await dialog.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(-1);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(321);
+});
