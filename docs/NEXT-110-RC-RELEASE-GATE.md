@@ -1,3 +1,7 @@
+## Integration QA diagnostic (29 Oct 2026)
+
+QA #40804444059 FAILED because 52 WebKit tests could not start without libevent-2.1.so.7 (218 passed, 2 did not run). Unit/Node/typecheck/build/audit passed. This is a runner prerequisite, not proof of a product defect or successful integration. Isolated QA workflow on RC branch must add `npx playwright install --with-deps webkit` before E2E and rerun full matrix on final commit. RC1/RC2 remain NOT VERIFIED, RC3 NO-GO.
+
 # NEXT-110 — v0.1.62 integration release gate (NO-GO)
 
 Recorded 2026-10-29 03:xx Europe/Berlin. **This is a non-publishing development review, NOT a release approval.**

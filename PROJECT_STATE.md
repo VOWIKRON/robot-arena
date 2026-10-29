@@ -1,3 +1,11 @@
+## 29.10.2026 · RC1/RC2 Integrations-CI #40804444059 fehlgeschlagen: WebKit-Runner-Abhängigkeit, FIX IN ARBEIT · NO-GO
+
+- v0.1.62-Integrationsbranch `integration/NEXT-110-v0162-rc-20261029-0300`: 10 v2-Produktionsdateien, 13 Test-/Konfigurationsdateien, alle 7 Status-/HTML-Quellen und Release-Gate-Dokument übertragen; kein main-Merge, kein Publishing.
+- Isolierte Feature-QA **#40804444059 FAILED**, obwohl TypeScript, 554 Vitest/Unit/Behavior/Determinismus, 32 Node, Build, Audit und reproduzierbarer Build bestanden: Playwright **218 bestanden, 52 WebKit-Starts fehlgeschlagen, 2 nicht ausgeführt**. Belegter Runner-Fehler: `libevent-2.1.so.7: cannot open shared object file`. **Kein nachgewiesener Produktionscodefehler**, aber RC1/RC2 trotzdem NICHT abgeschlossen.
+- **P0 Fix:** Auf ausschließlich diesem Entwicklungsbranch isoliertes Workflow-`feature-qa.yml` um `npx playwright install --with-deps webkit` vor `npm run test:e2e` ergänzen (identisch zum früher erfolgreichen NEXT-110-QA-Workflow); danach **vollständige** CI erneut auf exakt neuem HEAD, einschließlich Refactoring-Regression. Keine Release-Workflow-Auslösung.
+- **Rolling 3 Pakete:** RC1 (v0.1.62/v1-Integration, Abnahme pending), RC2 (v2-120-/Double-KO-/Replay-Browsermatrix, WebKit-Runner-Fix + Retest pending), RC3 (SHA-/Artefakt-/NEXT-79e-/NEXT-108-Gates, NO-GO dokumentiert). Seit v0.1.62 **99 zuvor isoliert getestete, nicht live NEXT-110-E1/E2/E5–E101**, E3/E4 unbewiesen; neue RC-Tasks noch nicht als abgeschlossen zählen. Test: `npm run typecheck && npm test && npm run build && npm run test:e2e`, Audit, reproduzierbarer Build. Abhängigkeiten RC1→RC2→RC3.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 29.10.2026 · NEXT-110-RC1/RC2/RC3 v0.1.62-INTEGRATION VORBEREITET · NO-GO · NICHT VERÖFFENTLICHT
 
 - **Live-Basis:** v0.1.62, main `2cbbda87ebfbead0f74ead24fa016b0857f4eaaa`, Deploymentstatus SUCCESS. **Kumulativ:** 99 auf isoliertem v0.1.61-Snapshot getestete, NICHT LIVE NEXT-110-Unteraufgaben E1/E2/E5–E101; E3/E4 nicht eigenständig bestätigt. Keine neuen vollständig getesteten RC-Unteraufgaben.
