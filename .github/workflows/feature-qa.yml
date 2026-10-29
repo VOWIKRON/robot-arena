@@ -5,6 +5,7 @@ on:
     branches:
       - qa/NEXT-71-combined-integration
       - integration/NEXT-110-v0162-rc-20261029-0300
+      - integration/NEXT-110-RC3-provenance-gate-20261029
 
   pull_request:
     branches:
@@ -74,3 +75,26 @@ jobs:
         with:
           name: robot-arena-dist
           path: dist/
+
+  provenance:
+    name: Verify QA provenance (not release approval)
+    needs: quality
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Require successful quality job
+        env:
+          QUALITY_RESULT: ${{ needs.quality.result }}
+        run: test "$QUALITY_RESULT" = "success"
+      - name: Verify SHA, successful test steps and uploaded artifact provenance
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT108_MODE: in-run
+        run: node scripts/next108-verify-provenance.mjs
