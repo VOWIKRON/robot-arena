@@ -153,3 +153,9 @@
 .tournament-save-status[data-state="busy"]{color:#ffdf93}
 .tournament-save-status[data-state="saved"]{color:#a6f2c4}
 .tournament-save-status[data-state="error"]{color:#ffb4b4}
+
+/* NEXT-79e-AUTO1: consistent visible keyboard focus beyond tournament controls. */
+:where(button, a, input, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid #8bdcff;
+  outline-offset: 3px;
+}
