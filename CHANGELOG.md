@@ -1,3 +1,12 @@
+## 29.10.2026 · 08:00 · NEXT-79e-AUTO4/5/6 · QA-FIX UND REGRESSION · CI AUSSTEHEND · NICHT LIVE
+
+- **AUTO4 (P0, Fix):** CI #40827112904 hatte Quality SUCCESS (554 Vitest + 38 Node + 284 Chromium/WebKit = 876/876), aber Provenienzjob FAILURE: `unexpected QA branch`. Exakte QA-Branch-Allowlist im fail-closed NEXT-108-Verifier; Positiv-/Negativtests, QA-Workflow-Trigger. Dateien: `scripts/next108-verify-provenance.mjs`, `tests/next108-provenance.test.mjs`, `.github/workflows/feature-qa.yml`. Akzeptanz: beide Jobs SUCCESS auf exakter SHA, fremde Branches weiter abgelehnt. Test: `node --test tests/next108-provenance.test.mjs` + Feature-QA. Abhängigkeit: AUTO1–3. **Implementiert, finale CI offen.**
+- **AUTO5 (P1, Test):** Turnierdialog per Enter öffnen, Fokus im Modal, Escape schließen, Fokus zurück auf Auslöser. Datei: `e2e/next79e-automated-preflight.spec.ts`. Akzeptanz: Chromium/WebKit Desktop/Mobil PASS. Test: `npx playwright test e2e/next79e-automated-preflight.spec.ts`. Abhängigkeit: AUTO4. **Implementiert, finale CI offen.**
+- **AUTO6 (P1, Refactoring/Regression):** `prefers-reduced-motion` unterbindet auch Lebens-/Energiebalken-Transitions; normal → reduce → normal per Browser-Test. Dateien: `src/style.css`, `e2e/next79e-automated-preflight.spec.ts`. Akzeptanz: 0s bei reduce, ursprüngliche Dauer wiederhergestellt; 4 Browserprojekte. Test: `npm run typecheck && npm test && npm run test:e2e && npm run build`. Abhängigkeit: AUTO2/AUTO5. **Implementiert, finale CI offen.**
+- **Kumulativ seit Live v0.1.62:** 99 NEXT-110 E1/E2/E5–E101 (E3/E4 nicht separat belegt) + NEXT-108-A/B/C = **102 getestet, nicht live**. AUTO1–6 erst nach grüner finaler CI zählen. NEXT-79e echte NVDA-/VoiceOver-/Touch-/Kontrast-Abnahme 0/4, NEXT-110 NO-GO.
+- **Rolling Backlog:** (1) finalen AUTO6-HEAD mit Quality+Provenienz und Artefakten bestätigen, (2) sichere RC-Entwicklungsintegration und erneut komplette CI, (3) NEXT-79e reale 4 Prüfungen dokumentieren, (4) RC3 GO/NO-GO. Keine Freigabe, kein main-Merge, kein Deployment, kein publish.php.
+- **NICHT VERÖFFENTLICHT – Veröffentlichung erfolgt nur manuell.**
+
 ## 29.10.2026 · 07:00 · NEXT-79e-AUTO1/2/3 AUTOMATISIERTE VORPRÜFUNG – CI AUSSTEHEND · NICHT LIVE
 
 - **NEXT-79e-AUTO1 (P0):** Allgemein sichtbare Tastatur-Fokusmarkierung für Buttons, Links, Eingaben, Selects, Summary und Tabindex-Elemente. Datei: `src/style.css`. Abnahme: Fokusindikator >= 3px; Test: `npx playwright test e2e/next79e-automated-preflight.spec.ts`. Abhängigkeit: RC1/RC2. **Implementiert, CI offen.**

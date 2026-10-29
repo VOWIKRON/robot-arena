@@ -1,3 +1,10 @@
+## 29.10.2026 · 08:00 · AUTO4/5/6 – Release bleibt NO-GO
+
+- GitHub Actions #40827112904: Quality 876/876 SUCCESS, Provenienz FAILURE (`unexpected QA branch`). AUTO4 erlaubt nur ausdrücklich benannte QA-Feature-Branches und testet abgelehnte Branches weiterhin fail-closed.
+- AUTO5 ergänzt Keyboard-Dialog-Fokusregression. AUTO6 deaktiviert bei `prefers-reduced-motion` auch HUD-Balkenübergänge und testet den Medienwechsel.
+- Noch keine finale vollständige CI auf dem kombinierten AUTO6-HEAD. Keine zusätzlichen getesteten Aufgaben behaupten; 102 zuvor getestete unveröffentlichte technische Aufgaben. Praktische NVDA-/VoiceOver-/Touch-/Kontrast-Abnahme 0/4.
+- NEXT-110 NO-GO; keine Veröffentlichung, kein Merge nach main.
+
 ## 29.10.2026 · 05:00 · NEXT-108 D/E und RC3-Gates · QA 864/864 GRÜN · NUR RC-ENTWICKLUNG · NICHT LIVE
 
 - **NEXT-108-D (P0, abgeschlossen):** Isolierte GitHub Actions #40809602875 auf SHA `434975705ca8d9cd3a027741a3387a5a3503865c` vollständig SUCCESS: 554 Vitest + **38 Node** (einschließlich sechs NEXT-108-Negativ-/Positivtests) + 272 Chromium/WebKit Desktop/Mobil = **864/864**; TypeScript, Audit, reproduzierbarer Build, separater Provenienzjob PASS. GitHub-API nach Abschluss erneut kontrolliert: Run-ID, Branch, SHA, erfolgreicher Quality-/Provenienzjob und beide SHA-256-Artefakte mit exakter Run-/SHA-Zuordnung gültig. Test: `node --test tests/next108-provenance.test.mjs` und isolierte Feature-QA. Abhängigkeit NEXT-108-A/B/C.
