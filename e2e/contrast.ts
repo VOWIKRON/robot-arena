@@ -12,7 +12,7 @@ export function parseOpaqueComputedRgb(color: string): readonly [number, number,
     if (Number(alpha) !== 1 || (firstSeparator === ',' && alphaSeparator !== ',') || (firstSeparator !== ',' && alphaSeparator !== '/')) {
       throw new Error('Translucent or invalid computed color: ' + color);
     }
-  } else if (kind.toLowerCase() === 'rgba') {
+  } else if (kind?.toLowerCase() === 'rgba') {
     throw new Error('Missing alpha channel: ' + color);
   }
   const channels = [Number(r), Number(g), Number(b)];
@@ -24,11 +24,12 @@ export function parseOpaqueComputedRgb(color: string): readonly [number, number,
 
 export function contrastRatio(foreground: string, background: string): number {
   const luminance = (color: string): number => {
-    const [r, g, b] = parseOpaqueComputedRgb(color).map(channel => {
+    const [r, g, b] = parseOpaqueComputedRgb(color);
+    const linearize = (channel: number): number => {
       const s = channel / 255;
       return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    return 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b);
   };
   const a = luminance(foreground);
   const b = luminance(background);
