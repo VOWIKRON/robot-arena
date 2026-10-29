@@ -334,8 +334,7 @@ async function loadFooterMetadata(): Promise<void> {
     el('footer-release-published').textContent = published;
     el('footer-backlog-published').textContent = published;
     el('footer-next-run').textContent = formatDate(build.nextRunAt);
-    const visibleVersion = version.version ?? build.version;
-    if (visibleVersion) el('app-version').textContent = `v${visibleVersion}`;
+    // Published metadata is footer-only; the running build version comes from package.json.
   } catch {
     el('footer-published').textContent = 'noch nicht verfügbar';
     el('footer-release-published').textContent = 'noch nicht verfügbar';
