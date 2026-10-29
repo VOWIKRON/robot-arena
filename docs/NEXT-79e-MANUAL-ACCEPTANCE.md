@@ -1,3 +1,14 @@
+## 29.10.2026 · 06:00 – Ausführbare Prüfschritte (VORBEREITET, NICHT DURCHGEFÜHRT)
+
+**Referenz-RC:** `f97f35a352d8b2dbac02b4ac88078671b139e593` (nur lokale unveröffentlichte Vorschau; kein Deployment). Vor jedem realen Test den exakten Commit mit `git rev-parse HEAD` bestätigen. Keine automatisierte Simulation als reale Abnahme zählen.
+
+- **79e-1 / NVDA:** Windows-Gerät, NVDA und Chromium mit Version protokollieren. Nur mit Tab/Shift+Tab/Enter/Leertaste: Konfiguration öffnen, Eingaben ändern, Dialog schließen, Kampf starten/zurücksetzen und Turnier öffnen. Für jeden Schritt Fokusziel, gesprochene Rolle/Name/Zustand, erwartete und tatsächliche Ausgabe sowie Beleg notieren. FAIL bei Fokusverlust, unbedienbarer Funktion oder fehlender kritischer Ansage.
+- **79e-2 / VoiceOver:** Physisches macOS- oder iOS-Gerät mit Safari/WebKit und VoiceOver-Version. Mit VoiceOver-Navigation Dialog öffnen/schließen, Replay steuern, Archiv importieren/exportieren und Fehlerstatus auslösen. Gesprochene Beschriftung, Fokusfolge und Rückmeldung pro Schritt dokumentieren. FAIL bei unerreichbarer Steuerung oder fehlender kritischer Rückmeldung.
+- **79e-3 / Touch:** Physisches Smartphone/Tablet mit Modell, OS, Browser und Viewport erfassen. Hoch-/Querformat, 200%-Zoom soweit unterstützt, Scrollen, Dialog, Replay, Import-Dateiauswahl und Trefferflächen prüfen. Bei jedem Schritt unbeabsichtigte Aktivierung, Überlappung, abgeschnittene Inhalte und Bedienbarkeit festhalten. FAIL bei blockierter Kernfunktion.
+- **79e-4 / Kontrast:** Auf real gerenderten Desktop- und Mobilansichten die konkreten Vorder-/Hintergrundfarben von Text, Bedienelementen, Fokusmarkierungen und Statusanzeigen messen; Messwerkzeug, Screenshot und Kontrastverhältnis dokumentieren. WCAG-AA-Richtwerte: normaler Text 4,5:1, großer Text 3:1, notwendige UI-/Fokusindikatoren 3:1. FAIL bei unterschrittenem anwendbarem Schwellenwert.
+
+**Abnahmeformular je Fall:** `ID | Datum/Uhrzeit | RC-SHA | Gerät/OS | Browser/Version | Assistive-Technik/Version | Prüferkennung | Schritte | Soll | Ist | Beleg-ID | PASS/FAIL | Bug-ID/Nachtest`. **Alle vier weiterhin AUSSTEHEND/NO-GO.** Nach Bugfix neue SHA und vollständige betroffene Regression; keine Freigabe ohne unterschriebene reale Prüfbelege.
+
 # NEXT-79e – praktische Barrierefreiheitsabnahme (NICHT ABGENOMMEN)
 
 Stand: 29.10.2026. **NO-GO** bis zu echten, dokumentierten Prüfungen. Automatisierte Chromium-/WebKit-Tests und simulierte Tastaturereignisse sind **kein** Ersatz für NVDA/VoiceOver und reale Touch-Geräte. Keine Freigabe aus diesem Dokument ableiten.
