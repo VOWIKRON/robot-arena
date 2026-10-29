@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { contrastRatio } from './contrast';
 
 // Automated accessibility preflight only: never substitutes for physical
 // NVDA, VoiceOver, touch-device, or measured contrast acceptance (NEXT-79e).
@@ -99,4 +100,37 @@ test('NEXT-79e-AUTO6: reduced motion toggles shot and HUD transitions, restores 
   expect(await sample()).toEqual({ shot: '0s', health: '0s', energy: '0s' });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   expect(await sample()).toEqual(normal);
+});
+
+test('NEXT-79e-AUTO8: solid-surface text contrast meets WCAG AA in browser', async ({ page }) => {
+  await page.goto('/');
+  const samples = await page.evaluate(() => {
+    const selectors = ['#start', '#tournament-dialog', '.tournament-steps a'];
+    return selectors.map(selector => {
+      const element = document.querySelector<HTMLElement>(selector);
+      if (!element) throw new Error('Missing contrast sample: ' + selector);
+      const style = getComputedStyle(element);
+      return { selector, foreground: style.color, background: style.backgroundColor };
+    });
+  });
+  for (const sample of samples) {
+    const ratio = contrastRatio(sample.foreground, sample.background);
+    expect(ratio, sample.selector + ' text contrast').toBeGreaterThanOrEqual(4.5);
+  }
+});
+
+test('NEXT-79e-AUTO9: keyboard focus outline has strong contrast on dark backgrounds', async ({ page }) => {
+  await page.goto('/');
+  await page.keyboard.press('Tab');
+  const focused = page.locator(':focus-visible');
+  await expect(focused).toHaveCount(1);
+  const outline = await focused.evaluate(element => {
+    const style = getComputedStyle(element);
+    return { color: style.outlineColor, width: parseFloat(style.outlineWidth) };
+  });
+  expect(outline.width).toBeGreaterThanOrEqual(3);
+  // Both backgrounds occur in the responsive shell; this is an automated
+  // conservative preflight, not a substitute for measured real-device contrast.
+  expect(contrastRatio(outline.color, 'rgb(23, 33, 59)')).toBeGreaterThanOrEqual(3);
+  expect(contrastRatio(outline.color, 'rgb(7, 11, 20)')).toBeGreaterThanOrEqual(3);
 });
