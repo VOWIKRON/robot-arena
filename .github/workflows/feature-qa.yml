@@ -24,6 +24,9 @@ on:
       - integration/NEXT-110-RC5-provenance-allowlist-20261029-2105
       - integration/NEXT-112-combat-speed-20261029-2105
       - integration/NEXT-112-combat-speed-reg-20261029-2105
+      - feature/NEXT-112-C-webkit-clock-20261029-2200
+      - feature/NEXT-113-A-spacebar-control-20261029-2200
+      - feature/NEXT-113-B-spacebar-reg-20261029-2200
       - integration/NEXT-110-RC5-next111-combat-readout-20261029-2100
       - integration/NEXT-110-RC5-next111-readout-reg-20261029-2100
       - feature/NEXT-79e-automated-preflight-20261029-0700
