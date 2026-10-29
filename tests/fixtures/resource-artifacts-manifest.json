@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "description": "Verified snapshot of authentic GitHub Actions resource-trend JSON artifacts; GitHub run provenance checked on 2026-10-26. No ZIP content committed.",
+  "records": [
+    {
+      "runId": 40266761987,
+      "artifactId": 12626795952,
+      "commit": "1f0b6076c15923dfc49a9713ed8e6c239d814f55",
+      "workflow": "Development Tests",
+      "conclusion": "success",
+      "file": "tests/fixtures/next90-ci-40266761987.json",
+      "bytes": 793,
+      "sha256": "f06674781fca9244d77dcc5695b7b4e8527f8d9903cc0795370be2e47e09e382"
+    },
+    {
+      "runId": 40267008446,
+      "artifactId": 12626417753,
+      "commit": "3c840ba2f7a687a4339806d3a402294bc15573f9",
+      "workflow": "Development Tests",
+      "conclusion": "success",
+      "file": "tests/fixtures/next90-ci-40267008446.json",
+      "bytes": 800,
+      "sha256": "2e83ad7289b817a3936192cb87440378d052e72efe01b94a69c7e2c1304dc99d"
+    },
+    {
+      "runId": 40355252200,
+      "artifactId": 12665647754,
+      "commit": "4ed7d1c5c123e478b3cb587dd13c55b05f1455ff",
+      "workflow": "Development Tests",
+      "conclusion": "success",
+      "file": "tests/fixtures/next92-ci-40355252200.json",
+      "bytes": 801,
+      "sha256": "a56f73696906a1b98d50017ad6fc3ef296c2ecd98bf033c423f4ee2cea4a67e7"
+    }
+  ]
+}

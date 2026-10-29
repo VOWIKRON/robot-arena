@@ -8,6 +8,9 @@ on:
 
 jobs:
   quality:
+    permissions:
+      contents: read
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +34,28 @@ jobs:
         run: node -e 'const a=require("./audit-report.json"); const v=a.metadata?.vulnerabilities; if(!v || v.total>0){console.error("Dependency security gate blocked:",v);process.exit(1)}'
       - run: npm run typecheck
       - run: npm test
+        env:
+          NEXT89_RESOURCE_REPORT_PATH: next89-resource-trends.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-resource-trends
+          path: next89-resource-trends.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Inventory previous resource artifacts (read-only diagnostic)
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NEXT91_INVENTORY_PATH: next91-resource-inventory.json
+        run: node scripts/next91-resource-artifact-inventory.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-resource-inventory
+          path: next91-resource-inventory.json
+          if-no-files-found: ignore
+          retention-days: 30
       - run: npm run build
       - name: Verify second clean install and reproducible build on identical SHA
         shell: bash
@@ -60,7 +85,36 @@ jobs:
             npx playwright install-deps chromium
             node --input-type=module -e 'import { chromium } from "@playwright/test"; const browser = await chromium.launch(); await browser.close();'
           fi
-      - run: npm run test:e2e
+      - name: Install WebKit browser and Linux runtime dependencies
+        run: npx playwright install --with-deps webkit
+      - name: Browser matrix (Chromium/WebKit desktop/mobile; release gate)
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: next97-browser-matrix.json
+        run: npx playwright test --reporter=json
+      - name: Enforce browser compatibility release gate (no deployment)
+        run: node scripts/next97-browser-release-gate.mjs next97-browser-matrix.json next97-browser-gate.json
+      - name: Collect NEXT-106 focused Vitest evidence (read-only)
+        run: npx vitest run tests/adaptive-strategy.test.ts tests/next104-integration.test.ts tests/next105-adaptive-balance.test.ts --reporter=json --outputFile=next106-vitest-evidence.json
+      - name: NEXT-106 integrated evidence gate (NO DEPLOYMENT)
+        run: node scripts/next106-integrated-release-gate.mjs next106-vitest-evidence.json next97-browser-matrix.json next106-gate-result.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-integrated-evidence
+          path: |
+            next106-vitest-evidence.json
+            next106-gate-result.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-browser-compatibility
+          path: |
+            next97-browser-matrix.json
+            next97-browser-gate.json
+          if-no-files-found: ignore
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         with:
           name: robot-arena-dist
