@@ -321,26 +321,32 @@ function formatDate(value: string | undefined): string {
   }).format(date);
 }
 
-async function loadFooterMetadata(): Promise<void> {
+// Read publication and scheduling metadata independently: a malformed or offline
+// endpoint must not discard valid data returned by the other endpoint.
+async function readFooterJson(path: string): Promise<Record<string, unknown>> {
   try {
-    const [versionResponse, buildResponse] = await Promise.all([
-      fetch('./version.json', { cache: 'no-store' }),
-      fetch('./build-info.json', { cache: 'no-store' })
-    ]);
-    const version = versionResponse.ok ? await versionResponse.json() as { version?: string; published?: string } : {};
-    const build = buildResponse.ok ? await buildResponse.json() as { version?: string; nextRunAt?: string } : {};
-    const published = formatDate(version.published);
-    el('footer-published').textContent = published;
-    el('footer-release-published').textContent = published;
-    el('footer-backlog-published').textContent = published;
-    el('footer-next-run').textContent = formatDate(build.nextRunAt);
-    // Published metadata is footer-only; the running build version comes from package.json.
+    const response = await fetch(path, { cache: 'no-store' });
+    if (!response.ok) return {};
+    const parsed: unknown = await response.json();
+    return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? parsed as Record<string, unknown>
+      : {};
   } catch {
-    el('footer-published').textContent = 'noch nicht verfügbar';
-    el('footer-release-published').textContent = 'noch nicht verfügbar';
-    el('footer-backlog-published').textContent = 'noch nicht verfügbar';
-    el('footer-next-run').textContent = 'noch nicht verfügbar';
+    return {};
   }
+}
+
+async function loadFooterMetadata(): Promise<void> {
+  const [version, build] = await Promise.all([
+    readFooterJson('./version.json'),
+    readFooterJson('./build-info.json')
+  ]);
+  const published = formatDate(typeof version.published === 'string' ? version.published : undefined);
+  el('footer-published').textContent = published;
+  el('footer-release-published').textContent = published;
+  el('footer-backlog-published').textContent = published;
+  el('footer-next-run').textContent = formatDate(typeof build.nextRunAt === 'string' ? build.nextRunAt : undefined);
+  // Published metadata is footer-only; the running build version comes from package.json.
 }
 
 el<HTMLButtonElement>('open-config').addEventListener('click', () => el<HTMLDialogElement>('config-dialog').showModal());
