@@ -159,3 +159,9 @@
   outline: 3px solid #8bdcff;
   outline-offset: 3px;
 }
+
+/* NEXT-79e-AUTO2: honor reduced motion for damage/shot effects and bot hits. */
+@media (prefers-reduced-motion: reduce) {
+  .shot-effect, .hit-effect, .bot.is-hit { animation: none !important; }
+  .bot, .bot.is-hit { transition: none !important; }
+}
