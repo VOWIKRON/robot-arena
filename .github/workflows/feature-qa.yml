@@ -7,6 +7,9 @@ on:
       - integration/NEXT-110-v0162-rc-20261029-0300
       - integration/NEXT-110-RC3-provenance-gate-20261029
       - feature/NEXT-79e-automated-preflight-20261029-0700
+      - feature/NEXT-79e-AUTO4-provenance-fix-20261029-0800
+      - feature/NEXT-79e-AUTO5-dialog-keyboard-20261029-0800
+      - feature/NEXT-79e-AUTO6-motion-regression-20261029-0800
 
   pull_request:
     branches:
