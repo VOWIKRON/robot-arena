@@ -8,8 +8,12 @@ test('NEXT-112: speed changes reschedule live timer without extra ticks; Pause a
   await speed.selectOption('4');
   await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByText('Tick: 1', { exact: true })).toBeVisible();
-  await page.clock.runFor(80);
-  await expect(page.getByText('Tick: 5', { exact: true })).toBeVisible();
+  // Advance one interval at a time: WebKit may coalesce multiple fake-clock
+  // interval callbacks when a single runFor() spans several ticks.
+  for (let expectedTick = 2; expectedTick <= 5; expectedTick++) {
+    await page.clock.runFor(20);
+    await expect(page.getByText(`Tick: ${expectedTick}`, { exact: true })).toBeVisible();
+  }
   await speed.selectOption('0.5');
   await expect(page.getByText('Tick: 5', { exact: true })).toBeVisible();
   await page.clock.runFor(160);
