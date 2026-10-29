@@ -155,7 +155,7 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'v0.1.53 · Vorausschauende Defensive', exact: true })).toBeVisible();
 
   await page.goto('/backlog.html');
-  await expect(page.getByRole('heading', { name: 'Backlog' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Backlog', exact: true })).toBeVisible();
   await expect(page.getByText('Nächster Lauf', { exact: true })).toBeVisible();
   await expect(page.locator('.meta-grid').getByText(/^NEXT-\d+ · /)).toBeVisible();
   await expect(page.getByText('✓ NEXT-35 · Aggressive Strategie (v0.1.49)', { exact: true })).toBeVisible();
