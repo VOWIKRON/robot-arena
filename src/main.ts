@@ -1,4 +1,5 @@
 import './style.css';
+import appPackage from '../package.json';
 import { RAPTOR_CHASSIS, TITAN_CHASSIS, RAPTOR_WEAPON, TITAN_WEAPON, BALANCED_MOTOR, SWIFT_MOTOR, HEAVY_MOTOR, STANDARD_ARMOR, LIGHT_ARMOR, HEAVY_ARMOR, STANDARD_ENERGY, CAPACITY_ENERGY, REGEN_ENERGY, STANDARD_SENSOR, SHORT_SENSOR, LONG_SENSOR } from './engine/presets';
 import { buildRobotDefinition, validateRobotConfiguration, configurationWeight, DEFAULT_STRATEGY, type Armor, type Chassis, type EnergySupply, type Motor, type Sensor, type Weapon } from './engine/components';
 import { createMatch, stepMatchWithEvents } from './engine/simulation';
@@ -32,6 +33,9 @@ import type { MatchState } from './engine/types';
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('App root missing');
 
+// Keep the visible version and browser title aligned with package.json.
+document.title = `Robot Arena v${appPackage.version}`;
+
 function strategyControls(side: 'a' | 'b'): string {
   const label = side.toUpperCase();
   return `<div class="strategy-controls"><label for="strategy-${side}">Strategie ${label}</label><span class="field-help" id="strategy-help-${side}">Die Strategie bestimmt, ob der Roboter angreift, Abstand hält, ausweicht oder seine Taktik an Struktur, Energie und Bedrohung anpasst.</span><select id="strategy-${side}" aria-describedby="strategy-help-${side}">${AVAILABLE_STRATEGIES.map(item => `<option value="${item.value}">${item.label}</option>`).join('')}</select>
@@ -42,7 +46,7 @@ function strategyControls(side: 'a' | 'b'): string {
 
 app.innerHTML = `
 <div class="shell">
-<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v0.1.54</div></header>
+<header><div><h1>Robot Arena</h1><div class="subtitle">Deterministische Kampf-Sandbox</div></div><div class="version" id="app-version">v${appPackage.version}</div></header>
 <div class="grid">
 <section class="card">
 <div class="arena" id="arena"><div id="shot-layer" aria-hidden="true"></div><div class="bot bot-a" id="bot-a" aria-label="Roboter A"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter A" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter A"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">A</span></div><div class="bot bot-b" id="bot-b" aria-label="Roboter B"><span class="bot-body" aria-hidden="true"></span><span class="bot-energy" role="progressbar" aria-label="Energie Roboter B" aria-valuemin="0"><span class="bot-energy-fill"></span></span><span class="bot-health" aria-label="Lebensbalken Roboter B"><span class="bot-health-fill"></span></span><span class="bot-weapon" aria-hidden="true"></span><span class="bot-mark">B</span></div></div>
