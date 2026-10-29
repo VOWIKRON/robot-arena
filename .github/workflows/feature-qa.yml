@@ -6,6 +6,7 @@ on:
       - qa/NEXT-71-combined-integration
       - integration/NEXT-110-v0162-rc-20261029-0300
       - integration/NEXT-110-RC3-provenance-gate-20261029
+      - integration/NEXT-110-RC4-79e-consolidated-20261029-0900
       - feature/NEXT-79e-automated-preflight-20261029-0700
       - feature/NEXT-79e-AUTO4-provenance-fix-20261029-0800
       - feature/NEXT-79e-AUTO5-dialog-keyboard-20261029-0800
