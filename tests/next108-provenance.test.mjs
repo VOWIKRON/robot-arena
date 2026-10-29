@@ -102,6 +102,23 @@ test('NEXT-108: unauthorized QA feature branch remains fail-closed', () => {
   for (const artifact of f.artifacts) artifact.workflow_run.head_branch = f.expected.branch;
   assert.throws(() => evaluateProvenance(f), /unexpected QA branch/);
 });
+test('NEXT-108: RC5 evidence QA remains exact-branch, SHA- and artifact-bound, never a release', () => {
+  const branch = 'integration/NEXT-110-RC5-evidence-qa-20261029-1400';
+  const f = fixture();
+  f.expected.branch = branch;
+  f.run.head_branch = branch;
+  for (const a of f.artifacts) a.workflow_run.head_branch = branch;
+  const result = evaluateProvenance(f);
+  assert.equal(result.gate, 'PASS');
+  assert.equal(result.releaseAuthorized, false);
+  const wrongSha = structuredClone(f);
+  wrongSha.artifacts[0].workflow_run.head_sha = 'c'.repeat(40);
+  assert.throws(() => evaluateProvenance(wrongSha), /artifact provenance mismatch/);
+  const wrongBranch = structuredClone(f);
+  wrongBranch.run.head_branch = 'main';
+  assert.throws(() => evaluateProvenance(wrongBranch), /workflow SHA or branch mismatch/);
+});
+
 test('NEXT-108: missing credentials never produce a pass or a publish action', () => {
   const cli = new URL('../scripts/next108-verify-provenance.mjs', import.meta.url);
   const result = spawnSync(process.execPath, [cli.pathname], { encoding: 'utf8',
