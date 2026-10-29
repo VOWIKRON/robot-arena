@@ -100,3 +100,33 @@ test('NEXT-79e-AUTO6: reduced motion toggles shot and HUD transitions, restores 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   expect(await sample()).toEqual(normal);
 });
+
+test('NEXT-79e-AUTO8: solid-surface text contrast meets WCAG AA in browser', async ({ page }) => {
+  await page.goto('/');
+  const samples = await page.evaluate(() => {
+    const selectors = ['#start', '#tournament-dialog', '.tournament-steps a'];
+    return selectors.map(selector => {
+      const element = document.querySelector<HTMLElement>(selector);
+      if (!element) throw new Error('Missing contrast sample: ' + selector);
+      const style = getComputedStyle(element);
+      return { selector, foreground: style.color, background: style.backgroundColor };
+    });
+  });
+  const channels = (color: string) => {
+    const matches = color.match(/[\d.]+/g);
+    if (!matches || matches.length < 3) throw new Error('Unsupported color: ' + color);
+    return matches.slice(0, 3).map(Number);
+  };
+  const luminance = (color: string) => {
+    const [r, g, b] = channels(color).map(channel => {
+      const s = channel / 255;
+      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  for (const sample of samples) {
+    const a = luminance(sample.foreground), b = luminance(sample.background);
+    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    expect(ratio, sample.selector + ' text contrast').toBeGreaterThanOrEqual(4.5);
+  }
+});
