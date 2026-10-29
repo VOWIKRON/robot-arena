@@ -8,6 +8,7 @@ on:
       - integration/NEXT-110-RC3-provenance-gate-20261029
       - integration/NEXT-110-RC4-79e-consolidated-20261029-0900
       - integration/NEXT-110-RC4-contrast-auto8-20261029-1000
+      - integration/NEXT-110-RC4-focus-auto9-20261029-1000
       - feature/NEXT-79e-automated-preflight-20261029-0700
       - feature/NEXT-79e-AUTO4-provenance-fix-20261029-0800
       - feature/NEXT-79e-AUTO5-dialog-keyboard-20261029-0800
