@@ -175,6 +175,28 @@ async function assertRejectedRunning119VariantThenRestore<T extends RunningArchi
   await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
 }
 
+/** NEXT-110-E101: typed totalMatches recovery, including deliberately missing
+ * (undefined) and null values. Preserve the valid 119/120 baseline. */
+async function assertRejectedRunning119TotalThenRestore<T extends RunningArchiveFixture>(
+  page: Page,
+  filename: string,
+  completed: T,
+  mutate: (archive: T) => void,
+  verify: (archive: T) => void,
+  snapshot: ArchiveRecoverySnapshot,
+  canonicalBytes: string,
+  expectedTotal: { value: unknown }
+): Promise<void> {
+  const corrupted = makeRunning119Archive(completed);
+  mutate(corrupted);
+  expect(corrupted.run.results).toHaveLength(119);
+  expect(corrupted.run.nextMatchIndex).toBe(119);
+  expect(corrupted.run.status).toBe('running');
+  expect(corrupted.run.totalMatches).toBe(expectedTotal.value);
+  verify(corrupted);
+  await assertRejectedJsonThenRestore(page, filename, corrupted, snapshot, canonicalBytes);
+}
+
 test('NEXT-110-E42: missing download reports bounded failure with UI feedback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Turnier', exact: true }).click();
@@ -891,33 +913,38 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
-  // NEXT-110-E96: missing totalMatches must not be inferred from 119 results
-  // or from a still-consistent running cursor and status.
-  const missingTotalArchive = makeRunning119Archive(original.archive);
-  delete (missingTotalArchive.run as { totalMatches?: unknown }).totalMatches;
-  expect('totalMatches' in missingTotalArchive.run).toBe(false);
-  expect(missingTotalArchive.run.results).toHaveLength(119);
-  expect(missingTotalArchive.run.nextMatchIndex).toBe(119);
-  expect(missingTotalArchive.run.status).toBe('running');
-  await assertRejectedJsonThenRestore(
-    page, 'next110-e96-running-missing-total.json', missingTotalArchive,
-    recoverySnapshot, canonicalArchive
-  );
-
-  // NEXT-110-E97: do not coerce null or string totalMatches to 120.
-  for (const { name, value } of [
-    { name: 'null', value: null },
-    { name: 'string', value: '120' }
-  ] as Array<{ name: string; value: unknown }>) {
-    const invalidTotalArchive = makeRunning119Archive(original.archive);
-    (invalidTotalArchive.run as { totalMatches: unknown }).totalMatches = value;
-    expect(invalidTotalArchive.run.results).toHaveLength(119);
-    expect(invalidTotalArchive.run.nextMatchIndex).toBe(119);
-    expect(invalidTotalArchive.run.status).toBe('running');
-    expect(invalidTotalArchive.run.totalMatches).toBe(value);
-    await assertRejectedJsonThenRestore(
-      page, `next110-e97-running-total-${name}.json`, invalidTotalArchive,
-      recoverySnapshot, canonicalArchive
+  // NEXT-110-E101: E96/E97/E99 share typed totalMatches recovery.
+  // Explicit { value: undefined } distinguishes an absent field from a default.
+  const totalSchemaCases: Array<{
+    name: string;
+    mutate: (archive: RunningArchiveFixture) => void;
+    verify: (archive: RunningArchiveFixture) => void;
+    expectedTotal: { value: unknown };
+  }> = [
+    {
+      name: 'e96-running-missing-total',
+      mutate: archive => { delete (archive.run as { totalMatches?: unknown }).totalMatches; },
+      verify: archive => expect('totalMatches' in archive.run).toBe(false),
+      expectedTotal: { value: undefined }
+    },
+    ...([
+      { name: 'e97-running-total-null', value: null },
+      { name: 'e97-running-total-string', value: '120' },
+      { name: 'e99-running-total-negative', value: -1 },
+      { name: 'e99-running-total-fractional', value: 120.5 }
+    ].map(({ name, value }) => ({
+      name,
+      mutate: (archive: RunningArchiveFixture) => {
+        (archive.run as { totalMatches: unknown }).totalMatches = value;
+      },
+      verify: (archive: RunningArchiveFixture) => expect(archive.run.totalMatches).toBe(value),
+      expectedTotal: { value }
+    })))
+  ];
+  for (const { name, mutate, verify, expectedTotal } of totalSchemaCases) {
+    await assertRejectedRunning119TotalThenRestore(
+      page, `next110-${name}.json`, original.archive,
+      mutate, verify, recoverySnapshot, canonicalArchive, expectedTotal
     );
   }
 
@@ -945,6 +972,24 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
   ] as Array<{ name: string; value: unknown }>) {
     await assertRejectedRunning119VariantThenRestore(
       page, `next110-e84-${name}.json`, original.archive,
+      archive => { (archive.run as { results: unknown }).results = value; },
+      archive => {
+        expect(archive.run.nextMatchIndex).toBe(119);
+        expect(archive.run.totalMatches).toBe(120);
+        expect(archive.run.status).toBe('running');
+        expect(archive.run.results).toBe(value);
+      },
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
+  // NEXT-110-E100: number/boolean results must not be coerced into an array.
+  for (const { name, value } of [
+    { name: 'number', value: 119 },
+    { name: 'boolean', value: true }
+  ] as Array<{ name: string; value: unknown }>) {
+    await assertRejectedRunning119VariantThenRestore(
+      page, `next110-e100-running-results-${name}.json`, original.archive,
       archive => { (archive.run as { results: unknown }).results = value; },
       archive => {
         expect(archive.run.nextMatchIndex).toBe(119);
