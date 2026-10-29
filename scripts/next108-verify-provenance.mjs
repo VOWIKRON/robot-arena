@@ -36,6 +36,9 @@ export function evaluateProvenance({ run, jobs, artifacts, expected, mode = 'fin
     ,"feature/NEXT-114-A-ten-tick-20261029-2300"
     ,"feature/NEXT-114-B-ten-tick-e2e-20261029-2300"
     ,"feature/NEXT-114-C-batch-refactor-20261029-2300"
+    ,"feature/NEXT-115-A-combat-range-20261029-2357"
+    ,"feature/NEXT-115-B-range-unit-20261029-2357"
+    ,"feature/NEXT-115-C-range-e2e-20261029-2357"
 ]);
   if (typeof branch !== 'string' || !(branch.startsWith('integration/NEXT-110-') || isolatedQaBranches.has(branch))) fail('unexpected QA branch');
   if (!Number.isSafeInteger(Number(runId)) || Number(runId) < 1) fail('invalid expected run ID');
