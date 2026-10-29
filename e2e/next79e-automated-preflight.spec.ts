@@ -1,5 +1,19 @@
 import { test, expect } from '@playwright/test';
 
+function contrastRatio(foreground: string, background: string): number {
+  const luminance = (color: string): number => {
+    const matches = color.match(/[\\d.]+/g);
+    if (!matches || matches.length < 3) throw new Error('Unsupported computed color: ' + color);
+    const [r, g, b] = matches.slice(0, 3).map(Number).map(channel => {
+      const s = channel / 255;
+      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const a = luminance(foreground), b = luminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
 // Automated accessibility preflight only: never substitutes for physical
 // NVDA, VoiceOver, touch-device, or measured contrast acceptance (NEXT-79e).
 test('NEXT-79e-AUTO1: keyboard focus has a visible outline', async ({ page }) => {
@@ -112,21 +126,24 @@ test('NEXT-79e-AUTO8: solid-surface text contrast meets WCAG AA in browser', asy
       return { selector, foreground: style.color, background: style.backgroundColor };
     });
   });
-  const channels = (color: string) => {
-    const matches = color.match(/[\d.]+/g);
-    if (!matches || matches.length < 3) throw new Error('Unsupported color: ' + color);
-    return matches.slice(0, 3).map(Number);
-  };
-  const luminance = (color: string) => {
-    const [r, g, b] = channels(color).map(channel => {
-      const s = channel / 255;
-      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
   for (const sample of samples) {
-    const a = luminance(sample.foreground), b = luminance(sample.background);
-    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    const ratio = contrastRatio(sample.foreground, sample.background);
     expect(ratio, sample.selector + ' text contrast').toBeGreaterThanOrEqual(4.5);
   }
+});
+
+test('NEXT-79e-AUTO9: keyboard focus outline has strong contrast on dark backgrounds', async ({ page }) => {
+  await page.goto('/');
+  await page.keyboard.press('Tab');
+  const focused = page.locator(':focus-visible');
+  await expect(focused).toHaveCount(1);
+  const outline = await focused.evaluate(element => {
+    const style = getComputedStyle(element);
+    return { color: style.outlineColor, width: parseFloat(style.outlineWidth) };
+  });
+  expect(outline.width).toBeGreaterThanOrEqual(3);
+  // Both backgrounds occur in the responsive shell; this is an automated
+  // conservative preflight, not a substitute for measured real-device contrast.
+  expect(contrastRatio(outline.color, 'rgb(23, 33, 59)')).toBeGreaterThanOrEqual(3);
+  expect(contrastRatio(outline.color, 'rgb(7, 11, 20)')).toBeGreaterThanOrEqual(3);
 });
