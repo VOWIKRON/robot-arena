@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 function contrastRatio(foreground: string, background: string): number {
   const luminance = (color: string): number => {
-    const matches = color.match(/[\\d.]+/g);
+    const matches = color.match(/[\d.]+/g);
     if (!matches || matches.length < 3) throw new Error('Unsupported computed color: ' + color);
     const [r, g, b] = matches.slice(0, 3).map(Number).map(channel => {
       const s = channel / 255;
