@@ -921,6 +921,23 @@ test('NEXT-110-E36: post-recovery mutations and valid imports preserve 120 match
     );
   }
 
+  // NEXT-110-E99: reject negative/fractional totalMatches in a running 119/120 archive.
+  for (const { name, value } of [
+    { name: 'negative', value: -1 },
+    { name: 'fractional', value: 120.5 }
+  ]) {
+    const invalidTotalArchive = makeRunning119Archive(original.archive);
+    invalidTotalArchive.run.totalMatches = value;
+    expect(invalidTotalArchive.run.results).toHaveLength(119);
+    expect(invalidTotalArchive.run.nextMatchIndex).toBe(119);
+    expect(invalidTotalArchive.run.status).toBe('running');
+    expect(invalidTotalArchive.run.totalMatches).toBe(value);
+    await assertRejectedJsonThenRestore(
+      page, `next110-e99-running-total-${name}.json`, invalidTotalArchive,
+      recoverySnapshot, canonicalArchive
+    );
+  }
+
   // NEXT-110-E87/E92: invalid totalMatches must reject atomically;
   // share typed recovery without weakening the intentional total mismatch.
   for (const invalidTotal of [119, 121]) {
