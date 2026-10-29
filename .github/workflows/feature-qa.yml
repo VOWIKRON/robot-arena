@@ -30,6 +30,9 @@ on:
       - feature/NEXT-114-A-ten-tick-20261029-2300
       - feature/NEXT-114-B-ten-tick-e2e-20261029-2300
       - feature/NEXT-114-C-batch-refactor-20261029-2300
+      - feature/NEXT-115-A-combat-range-20261029-2357
+      - feature/NEXT-115-B-range-unit-20261029-2357
+      - feature/NEXT-115-C-range-e2e-20261029-2357
       - integration/NEXT-110-RC5-next111-combat-readout-20261029-2100
       - integration/NEXT-110-RC5-next111-readout-reg-20261029-2100
       - feature/NEXT-79e-automated-preflight-20261029-0700
