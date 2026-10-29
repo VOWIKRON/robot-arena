@@ -17,7 +17,7 @@ async function assertTacticalDistance(page: import('@playwright/test').Page) {
   for (const side of ['A', 'B'] as const) {
     const range = new RegExp(side + ': (in Reichweite|außer Reichweite) \\((\\d+\\.\\d+)\\)').exec(text);
     expect(range, side + ' independent range status is present').not.toBeNull();
-    expect(range![1] === 'in Reichweite').toBe(Number(distance![1]) <= Number(range![2]) + 0.051);
+    expect(range![1] === 'in Reichweite').toBe(expected <= Number(range![2]) + 0.051);
   }
 }
 
