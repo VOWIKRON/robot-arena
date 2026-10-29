@@ -121,7 +121,7 @@ test('robot movement is visually interpolated while positions stay deterministic
 
 test('public information pages are reachable', async ({ page }) => {
   await page.goto('/testsuite.html');
-  await expect(page.getByRole('heading', { name: 'Testsuite' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Testsuite', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Engine / Determinismus' })).toBeVisible();
   await expect(page.getByText('RAND-001')).toBeVisible();
   await expect(page.getByText('SIM-001')).toBeVisible();
@@ -150,7 +150,7 @@ test('public information pages are reachable', async ({ page }) => {
   await expect(page.getByText('E2E-STRAT-001', { exact: true })).toBeVisible();
 
   await page.goto('/release-notes.html');
-  await expect(page.getByRole('heading', { name: 'Release Notes' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Release Notes', exact: true })).toBeVisible();
 
   await expect(page.getByRole('heading', { name: 'v0.1.53 · Vorausschauende Defensive', exact: true })).toBeVisible();
 
