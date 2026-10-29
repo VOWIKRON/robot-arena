@@ -72,3 +72,31 @@ test('NEXT-79e-AUTO5: keyboard opens and dismisses tournament dialog with focus 
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
 });
+
+test('NEXT-79e-AUTO6: reduced motion toggles shot and HUD transitions, restores normal mode', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await page.evaluate(() => {
+    const shot = document.createElement('span');
+    shot.id = 'next79e-motion-probe';
+    shot.className = 'shot-effect';
+    document.body.appendChild(shot);
+  });
+  const sample = () => page.evaluate(() => {
+    const shot = document.getElementById('next79e-motion-probe');
+    const health = document.querySelector('#bot-a .bot-health-fill');
+    const energy = document.querySelector('#bot-a .bot-energy-fill');
+    if (!shot || !health || !energy) throw new Error('Missing visual-motion probes');
+    return {
+      shot: getComputedStyle(shot).animationDuration,
+      health: getComputedStyle(health).transitionDuration,
+      energy: getComputedStyle(energy).transitionDuration,
+    };
+  });
+  const normal = await sample();
+  for (const value of Object.values(normal)) expect(parseFloat(value)).toBeGreaterThan(0);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  expect(await sample()).toEqual({ shot: '0s', health: '0s', energy: '0s' });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  expect(await sample()).toEqual(normal);
+});
