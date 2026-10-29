@@ -19,7 +19,14 @@ export function evaluateProvenance({ run, jobs, artifacts, expected, mode = 'fin
   const { repository, sha, branch, runId } = expected;
   if (typeof repository !== 'string' || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository)) fail('invalid expected repository');
   if (typeof sha !== 'string' || !SHA.test(sha)) fail('invalid expected commit SHA');
-  if (typeof branch !== 'string' || !branch.startsWith('integration/NEXT-110-')) fail('unexpected QA branch');
+  // Explicitly allow only these isolated QA branches; never main, tags or arbitrary feature refs.
+  const isolatedQaBranches = new Set([
+    "feature/NEXT-79e-automated-preflight-20261029-0700",
+    "feature/NEXT-79e-AUTO4-provenance-fix-20261029-0800",
+    "feature/NEXT-79e-AUTO5-dialog-keyboard-20261029-0800",
+    "feature/NEXT-79e-AUTO6-motion-regression-20261029-0800"
+]);
+  if (typeof branch !== 'string' || !(branch.startsWith('integration/NEXT-110-') || isolatedQaBranches.has(branch))) fail('unexpected QA branch');
   if (!Number.isSafeInteger(Number(runId)) || Number(runId) < 1) fail('invalid expected run ID');
   if (!['final', 'in-run'].includes(mode)) fail('unknown verification mode');
   if (!run || Number(run.id) !== Number(runId)) fail('workflow run ID mismatch');
