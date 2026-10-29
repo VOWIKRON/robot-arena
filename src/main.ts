@@ -28,6 +28,7 @@ import { isTournamentAutosaveEnabled } from './engine/tournament-local-save';
 import { TournamentAutosaveGuard, formatTournamentStorageError, AUTOSAVE_CONFLICT_NOTICE } from './engine/tournament-storage-guard';
 import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { combatIntervalMs } from './engine/combat-speed';
+import { advanceBoundedSteps } from './engine/batch-steps';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
 
@@ -1166,7 +1167,7 @@ el('step').addEventListener('click', tick);
 // NEXT-114-A: pause live playback before deterministic, bounded manual stepping.
 el('step-ten').addEventListener('click', () => {
   pause();
-  for (let i = 0; i < 10 && state.outcome === 'active'; i++) tick();
+  advanceBoundedSteps(10, () => state.outcome === 'active', tick);
 });
 el('reset').addEventListener('click', resetAll);
 el('seed').addEventListener('change', resetMatch);
