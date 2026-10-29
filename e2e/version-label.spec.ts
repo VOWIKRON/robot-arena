@@ -132,3 +132,24 @@ test('NEXT-110: stalled publication endpoint times out without hiding schedule',
   await expect(page.locator('#app-version')).toHaveText(expectedVersion);
   await expect(page).toHaveTitle(`Robot Arena ${expectedVersion}`);
 });
+
+
+test('NEXT-110: both metadata sources resolving before deadline remain visible', async ({ page }) => {
+  // Delayed, but safely below the 3500ms deadline; no fake timeout success.
+  await page.route('**/version.json', async route => {
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    await route.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ published: '2026-10-29T12:00:00Z' }) });
+  });
+  await page.route('**/build-info.json', async route => {
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    await route.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ nextRunAt: '2026-11-01T12:00:00Z' }) });
+  });
+  await page.goto('/');
+  await expect(page.locator('#footer-published')).not.toHaveText('noch nicht verfügbar', { timeout: 8000 });
+  await expect(page.locator('#footer-release-published')).not.toHaveText('noch nicht verfügbar');
+  await expect(page.locator('#footer-next-run')).not.toHaveText('noch nicht verfügbar');
+  await expect(page.locator('#app-version')).toHaveText(expectedVersion);
+  await expect(page).toHaveTitle(`Robot Arena ${expectedVersion}`);
+});
