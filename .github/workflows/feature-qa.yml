@@ -43,6 +43,9 @@ on:
       - feature/NEXT-116-C-trend-boundary-20261030-0300
       - feature/NEXT-117-A-strategy-safety-20261030-0300
       - feature/NEXT-117-B-strategy-symmetry-20261030-0300
+      - docs/NEXT-117-C-compat-audit-20261030-0400
+      - feature/NEXT-117-D-tactical-preview-20261030-0400
+      - feature/NEXT-117-E-tactical-tests-20261030-0400
       - integration/NEXT-110-RC5-next111-combat-readout-20261029-2100
       - integration/NEXT-110-RC5-next111-readout-reg-20261029-2100
       - feature/NEXT-79e-automated-preflight-20261029-0700
