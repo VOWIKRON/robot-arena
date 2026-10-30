@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { fireInterval, installManualIntervals, pendingIntervals } from './helpers/manual-intervals';
 
 test('NEXT-114: ten-tick control advances exactly ten steps and reset clears progress', async ({ page }) => {
   await page.goto('/');
@@ -14,14 +15,16 @@ test('NEXT-114: ten-tick control advances exactly ten steps and reset clears pro
 });
 
 test('NEXT-114: ten-tick control stops live playback without hidden timer ticks', async ({ page }) => {
-  await page.clock.install();
+  await installManualIntervals(page);
   await page.goto('/');
   await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByText('Tick: 1', { exact: true })).toBeVisible();
+  expect(await pendingIntervals(page)).toEqual([80]);
   await page.getByRole('button', { name: '10 Ticks', exact: true }).click();
   await expect(page.getByText('Tick: 11', { exact: true })).toBeVisible();
   await expect(page.locator('#status')).toHaveText('Kampf pausiert');
-  await page.clock.runFor(800);
+  expect(await pendingIntervals(page)).toEqual([]);
+  expect(await fireInterval(page)).toBe(false);
   await expect(page.getByText('Tick: 11', { exact: true })).toBeVisible();
 });
 
