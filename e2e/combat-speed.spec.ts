@@ -1,29 +1,32 @@
 import { expect, test } from '@playwright/test';
+import { fireInterval, installManualIntervals, pendingIntervals } from './helpers/manual-intervals';
 
 test('NEXT-112: speed changes reschedule live timer without extra ticks; Pause and Reset work', async ({ page }) => {
-  await page.clock.install();
+  await installManualIntervals(page);
   await page.goto('/');
   const speed = page.getByRole('combobox', { name: 'Kampfgeschwindigkeit' });
   await expect(speed).toHaveValue('1');
   await speed.selectOption('4');
   await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByText('Tick: 1', { exact: true })).toBeVisible();
-  // Advance one interval at a time: WebKit may coalesce multiple fake-clock
-  // interval callbacks when a single runFor() spans several ticks.
+  expect(await pendingIntervals(page)).toEqual([20]);
   for (let expectedTick = 2; expectedTick <= 5; expectedTick++) {
-    await page.clock.runFor(20);
+    expect(await fireInterval(page)).toBe(true);
     await expect(page.getByText(`Tick: ${expectedTick}`, { exact: true })).toBeVisible();
   }
   await speed.selectOption('0.5');
+  expect(await pendingIntervals(page)).toEqual([160]);
   await expect(page.getByText('Tick: 5', { exact: true })).toBeVisible();
-  await page.clock.runFor(160);
+  expect(await fireInterval(page)).toBe(true);
   await expect(page.getByText('Tick: 6', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Pause', exact: true }).click();
-  await page.clock.runFor(640);
+  expect(await pendingIntervals(page)).toEqual([]);
+  expect(await fireInterval(page)).toBe(false);
   await expect(page.getByText('Tick: 6', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Reset', exact: true }).click();
   await expect(speed).toHaveValue('1');
   await expect(page.getByText('Tick: 0', { exact: true })).toBeVisible();
+  expect(await pendingIntervals(page)).toEqual([]);
 });
 
 test('NEXT-112: speed selection cannot change one-tick seeded simulation', async ({ page }) => {
