@@ -46,6 +46,9 @@ on:
       - docs/NEXT-117-C-compat-audit-20261030-0400
       - feature/NEXT-117-D-tactical-preview-20261030-0400
       - feature/NEXT-117-E-tactical-tests-20261030-0400
+      - feature/NEXT-117-F-dead-threat-20261030-0500
+      - feature/NEXT-117-G-threat-regression-20261030-0500
+      - docs/NEXT-117-H-qa-status-20261030-0500
       - integration/NEXT-110-RC5-next111-combat-readout-20261029-2100
       - integration/NEXT-110-RC5-next111-readout-reg-20261029-2100
       - feature/NEXT-79e-automated-preflight-20261029-0700

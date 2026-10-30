@@ -124,6 +124,9 @@ test('NEXT-108: exact approved smoke, docs and gameplay QA branches pass but arb
     'docs/NEXT-117-C-compat-audit-20261030-0400',
     'feature/NEXT-117-D-tactical-preview-20261030-0400',
     'feature/NEXT-117-E-tactical-tests-20261030-0400',
+    'feature/NEXT-117-F-dead-threat-20261030-0500',
+    'feature/NEXT-117-G-threat-regression-20261030-0500',
+    'docs/NEXT-117-H-qa-status-20261030-0500',
   ];
   for (const branch of approved) {
     const f = fixture();

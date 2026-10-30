@@ -19,7 +19,7 @@ export function tacticalMovementPreview(
 ): TacticalMovementPreview {
   const legacy = movementDelta(self, enemy, distance);
   const candidate = self.definition.strategy === 'adaptive' || self.definition.strategy === 'defensive';
-  if (!candidate || !Number.isFinite(distance) || distance < 0 || self.definition.speed <= 0) {
+  if (!candidate || !Number.isFinite(distance) || distance < 0 || self.definition.speed <= 0 || self.structure <= 0 || enemy.structure <= 0) {
     return { delta: legacy, reason: 'legacy' };
   }
 
@@ -31,7 +31,8 @@ export function tacticalMovementPreview(
   ).energyReserveRatio * enemy.definition.maxEnergy;
   const enemyCanFireNextAction =
     enemy.cooldown <= 1 &&
-    enemy.energy + enemy.definition.energyRegen >= enemy.definition.weaponEnergy + enemyReserve;
+    Math.min(enemy.definition.maxEnergy, enemy.energy + enemy.definition.energyRegen) >=
+      enemy.definition.weaponEnergy + enemyReserve;
   const exposedToLongerRange =
     enemy.definition.weaponRange > self.definition.weaponRange &&
     distance > self.definition.weaponRange &&
