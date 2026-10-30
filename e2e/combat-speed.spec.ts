@@ -46,3 +46,30 @@ test('NEXT-112: speed selection cannot change one-tick seeded simulation', async
     await expect(page.locator('#bot-' + side)).toHaveAttribute('data-y', first[index].y!);
   }
 });
+
+test('NEXT-112-E: repeated speed changes and reset leave no orphaned interval', async ({ page }) => {
+  await installManualIntervals(page);
+  await page.goto('/');
+  const speed = page.getByRole('combobox', { name: 'Kampfgeschwindigkeit' });
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  await expect(page.getByText('Tick: 1', { exact: true })).toBeVisible();
+  expect(await pendingIntervals(page)).toEqual([80]);
+  await speed.selectOption('2');
+  expect(await pendingIntervals(page)).toEqual([40]);
+  await speed.selectOption('4');
+  expect(await pendingIntervals(page)).toEqual([20]);
+  await expect(page.getByText('Tick: 1', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  expect(await pendingIntervals(page)).toEqual([]);
+  expect(await fireInterval(page)).toBe(false);
+  await expect(page.getByText('Tick: 0', { exact: true })).toBeVisible();
+  await expect(speed).toHaveValue('1');
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  expect(await pendingIntervals(page)).toEqual([80]);
+  expect(await fireInterval(page)).toBe(true);
+  await expect(page.getByText('Tick: 2', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Pause', exact: true }).click();
+  expect(await pendingIntervals(page)).toEqual([]);
+  expect(await fireInterval(page)).toBe(false);
+  await expect(page.getByText('Tick: 2', { exact: true })).toBeVisible();
+});
