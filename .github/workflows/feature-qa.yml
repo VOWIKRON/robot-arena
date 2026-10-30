@@ -37,6 +37,9 @@ on:
       - feature/NEXT-114-D-manual-timer-reg-20261030-0100
       - docs/NEXT-115-webkit-qa-evidence-20261030-0100
       - feature/NEXT-112-F-interval-isolation-20261030-0120
+      - docs/NEXT-112-F-evidence-20261030-0157
+      - feature/NEXT-116-A-range-trend-20261030-0157
+      - feature/NEXT-116-B-range-trend-reg-20261030-0157
       - integration/NEXT-110-RC5-next111-combat-readout-20261029-2100
       - integration/NEXT-110-RC5-next111-readout-reg-20261029-2100
       - feature/NEXT-79e-automated-preflight-20261029-0700
