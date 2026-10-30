@@ -30,6 +30,7 @@ import { AVAILABLE_STRATEGIES } from './engine/strategies';
 import { combatIntervalMs } from './engine/combat-speed';
 import { advanceBoundedSteps } from './engine/batch-steps';
 import { combatRangeSnapshot } from './engine/combat-range';
+import { combatDistanceTrend } from './engine/combat-trend';
 import { strategyLabel, strategyParameters, type StrategyType } from './engine/strategy-config';
 import type { MatchState } from './engine/types';
 
@@ -72,6 +73,8 @@ app.innerHTML = `
 </div>`;
 
 let state: MatchState;
+// Distance before the most recent simulation tick; reset with each new match.
+let previousCombatDistance: number | null = null;
 let rng: SeededRandom;
 let recorder: EventRecorder;
 let timer: number | null = null;
@@ -174,6 +177,7 @@ function resetMatch(): void {
   pause();
   if (!configurationValid()) return;
   state = createMatch(selectedRobotA(), selectedRobotB());
+  previousCombatDistance = null;
   rng = new SeededRandom(seedValue());
   recorder = new EventRecorder(state.robotA.definition, state.robotB.definition, seedValue());
   el('replay-feedback').textContent = '';
@@ -210,6 +214,7 @@ function tick(): void {
     pause();
     return;
   }
+  previousCombatDistance = combatRangeSnapshot(state).distance;
   const result = stepMatchWithEvents(state, rng);
   recorder.append(result);
   state = result.state;
@@ -305,12 +310,15 @@ function robotStats(label: string, css: string, s: MatchState['robotA']): string
 
 function render(): void {
   const range = combatRangeSnapshot(state);
+  const trend = combatDistanceTrend(previousCombatDistance, range.distance);
+  const trendLabel = trend === 'closing' ? 'Annäherung' : trend === 'separating' ? 'Entfernung' : trend === 'steady' ? 'Abstand unverändert' : 'noch kein Tick';
   renderRobot('bot-a', state.robotA.position.x, state.robotA.position.y, configurationA().chassis.id, configurationA().weapon.id, state.robotA.structure, state.robotA.definition.maxStructure, state.robotA.energy, state.robotA.definition.maxEnergy);
   renderRobot('bot-b', state.robotB.position.x, state.robotB.position.y, configurationB().chassis.id, configurationB().weapon.id, state.robotB.structure, state.robotB.definition.maxStructure, state.robotB.energy, state.robotB.definition.maxEnergy);
   el('stats').innerHTML =
     robotStats('A', 'robot-a', state.robotA) +
     robotStats('B', 'robot-b', state.robotB) +
     `<div id="combat-range" class="combat-range" aria-label="Abstand und Waffenreichweite">Abstand: ${range.distance.toFixed(1)} · A: ${range.aInRange ? 'in Reichweite' : 'außer Reichweite'} (${range.aWeaponRange.toFixed(1)}) · B: ${range.bInRange ? 'in Reichweite' : 'außer Reichweite'} (${range.bWeaponRange.toFixed(1)})</div>` +
+    `<div id="combat-trend" class="combat-range" aria-label="Abstandstrend der Roboter">Abstandstrend: ${trendLabel}</div>` +
     `<div>Tick: ${state.tick}</div>`;
   const phase = timer !== null ? 'Kampf läuft' : state.tick > 0 ? 'Kampf pausiert' : 'Kampfbereit';
   el('status').textContent = state.outcome === 'draw' ? 'Unentschieden: Zeitlimit' : state.winner ? `Sieger: ${state.winner}` : phase;
