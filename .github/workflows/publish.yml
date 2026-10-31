@@ -75,7 +75,7 @@ jobs:
             next106-gate-result.json
             next97-browser-matrix.json
             next97-browser-gate.json
-          if-no-files-found: ignore
+          if-no-files-found: error
 
       - name: Check immutable release archive before publishing
         id: guard
