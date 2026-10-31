@@ -60,6 +60,7 @@ test('NEXT-106: missing unit suite or incomplete assertions fail closed', () => 
 test('NEXT-106: browser project exists but missing required feature test fails closed', () => {
   const r = fixture();
   r.browser.suites[0].specs[0].tests.pop();
+  r.browser.stats.expected = 7; // valid count, but a required feature/project is absent
   assert.throws(() => evaluateIntegratedEvidence(r.unit, r.browser), /Missing browser acceptance evidence/);
 });
 
