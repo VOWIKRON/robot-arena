@@ -52,7 +52,30 @@ jobs:
           npm ci
           npm run quality
           npx playwright install --with-deps
-          npm run test:e2e
+
+      # NEXT-106: never let the NEXT-120 manual publisher bypass the evidence
+      # gate that protects Development Tests. The same raw runner JSON is required.
+      - name: Collect browser evidence (Chromium/WebKit desktop/mobile)
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: next97-browser-matrix.json
+        run: npx playwright test --reporter=json
+      - name: Enforce NEXT-97 browser compatibility gate
+        run: node scripts/next97-browser-release-gate.mjs next97-browser-matrix.json next97-browser-gate.json
+      - name: Collect NEXT-106 focused unit/behavior evidence
+        run: npx vitest run tests/adaptive-strategy.test.ts tests/next104-integration.test.ts tests/next105-adaptive-balance.test.ts --reporter=json --outputFile=next106-vitest-evidence.json
+      - name: Enforce NEXT-106 integrated evidence gate before any upload
+        run: node scripts/next106-integrated-release-gate.mjs next106-vitest-evidence.json next97-browser-matrix.json next106-gate-result.json
+      - name: Save fail-closed evidence for manual release review
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-arena-manual-publish-evidence
+          path: |
+            next106-vitest-evidence.json
+            next106-gate-result.json
+            next97-browser-matrix.json
+            next97-browser-gate.json
+          if-no-files-found: error
 
       - name: Check immutable release archive before publishing
         id: guard
