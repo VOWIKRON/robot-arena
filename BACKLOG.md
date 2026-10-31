@@ -6,7 +6,7 @@
 
 ## Als Nächstes – nach Priorität
 
-**P0 NEXT-106:** Härtungs-PR mit fail-closed Negativtests und NEXT-120-Kompatibilität integrieren, CI auf exaktem finalem main SHA und Evidenz-Artefakte prüfen; erst danach Veröffentlichung ausdrücklich freigeben. Referenz: main-CI #41201746486 auf `69a86de5` vor Härtung. Live-Stand separat verifizieren.
+**NEXT-106 – Code/Fach-QA abgeschlossen, Veröffentlichung noch NICHT freigegeben:** PR #221 integriert, main-CI #41211781285 auf exakt `85b3995398975b57d31c09bd8619675f5e489a16` **SUCCESS** (499 Vitest + 36 Node + 208 Browser = 743/743). NEXT-106 Evidence-Artefakt ID `13046536641`, Browser ID `13046805904` und Dist ID `13046721143` tragen denselben main-SHA. Die reine Dokumentationsfortschreibung erfordert eine eigene exakte CI; Live-Stand bleibt ungeklärt. Kein Auto-Publish.
 
 
 | Prio | Task | Status | Unmittelbar nächster Schritt | Nachweis |
@@ -29,7 +29,7 @@
 
 | Task | Stand / nächster Check |
 |---|---|
-| NEXT-106 | PR #90 nach main gemergt; main-CI #41201746486 (SHA `69a86de5`) 739/739 PASS. Fail-Closed-Hardening und NEXT-120-Evidence-Gate auf separatem Branch `fix/NEXT-106-fail-closed-publish-readiness-20261031`, finale CI/Integration noch offen; NICHT veröffentlicht. |
+| NEXT-106 | ✅ Implementiert und über PRs #90 + #221 in `main` integriert. Main-CI #41211781285 auf SHA `85b3995` 743/743 PASS, NEXT-106 Gate PASS, SHA/Run/Artefakte geprüft. NEXT-120 prüft das Gate auch vor manuellem Upload. **Code release-reif**, kein Deployment bestätigt, Dokumentations-PR benötigt finalen CI-Abgleich. |
 | NEXT-107 | Historisch QA-grün; Release-/Live-Stand nicht aus diesem Dokument ableiten. |
 | NEXT-109 | Ursachenanalyse und Startseiten-Effekt dokumentiert; NEXT-110 adressiert die Regelarchitektur. Abschluss/Release anhand PR/CI prüfen. |
 | NEXT-112 | Geschwindigkeitsregler implementiert; historische 992/992 QA für Entwicklungskandidat dokumentiert; Integration PR #218 offen. |
