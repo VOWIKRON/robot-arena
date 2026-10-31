@@ -19,17 +19,24 @@ export function evaluateIntegratedEvidence(unitReport, browserReport) {
   if (!isObject(unitReport) || unitReport.success !== true ||
       !Number.isSafeInteger(unitReport.numPassedTests) || unitReport.numPassedTests < 1 ||
       unitReport.numFailedTests !== 0 || unitReport.numPendingTests !== 0 ||
-      !Array.isArray(unitReport.testResults) || unitReport.testResults.length === 0) {
+      !Array.isArray(unitReport.testResults) || unitReport.testResults.length === 0 ||
+      unitReport.numTotalTests !== unitReport.numPassedTests ||
+      unitReport.numPassedTestSuites !== unitReport.testResults.length ||
+      unitReport.numTotalTestSuites !== unitReport.testResults.length ||
+      unitReport.numFailedTestSuites !== 0 || unitReport.numPendingTestSuites !== 0) {
     throw new Error('Missing, incomplete or failed Vitest JSON report');
   }
   const unit = Object.fromEntries(REQUIRED_UNIT.map(name => [name, 0]));
   let actualPassed = 0;
+  const seenUnitFiles = new Set();
   for (const suite of unitReport.testResults) {
     if (!isObject(suite) || suite.status !== 'passed' ||
         !Array.isArray(suite.assertionResults) || suite.assertionResults.length === 0) {
       throw new Error('Vitest suite missing or not passed');
     }
     const file = basename(suite.name);
+    if (!file || seenUnitFiles.has(file)) throw new Error('Missing or duplicate Vitest suite name: ' + file);
+    seenUnitFiles.add(file);
     for (const assertion of suite.assertionResults) {
       if (!isObject(assertion) || assertion.status !== 'passed') {
         throw new Error('Vitest assertion failed, skipped or incomplete');
@@ -46,6 +53,14 @@ export function evaluateIntegratedEvidence(unitReport, browserReport) {
   }
 
   const browser = evaluateBrowserMatrix(browserReport);
+  // NEXT-97 permits intentionally skipped unrelated cases; a release evidence gate
+  // must not. Reject skipped, retried, contradictory or uncounted tests globally.
+  const browserStats = browserReport.stats;
+  if (!Number.isSafeInteger(browserStats?.expected) ||
+      !Number.isSafeInteger(browserStats?.skipped) || browserStats.skipped !== 0 ||
+      browserStats.expected !== browser.observedTests) {
+    throw new Error('Incomplete or contradictory Playwright statistics');
+  }
   const covered = Object.fromEntries(REQUIRED_BROWSER.map(file => [
     file, Object.fromEntries(REQUIRED_BROWSER_PROJECTS.map(project => [project, 0]))
   ]));
@@ -53,12 +68,17 @@ export function evaluateIntegratedEvidence(unitReport, browserReport) {
     for (const suite of suites) {
       const file = basename(suite.file || parentFile || suite.title);
       for (const spec of suite.specs ?? []) {
+        if (!Array.isArray(spec.tests) || spec.tests.length === 0 || spec.ok === false) {
+          throw new Error('Missing or unsuccessful Playwright spec');
+        }
         const source = basename(spec.file || file);
-        if (!Object.hasOwn(covered, source)) continue;
-        for (const item of spec.tests ?? []) {
-          if (Object.hasOwn(covered[source], item.projectName) &&
-              item.status === 'expected' && item.expectedStatus === 'passed' &&
-              item.results?.some(result => result.status === 'passed')) {
+        for (const item of spec.tests) {
+          if (item.status !== 'expected' || item.expectedStatus !== 'passed' ||
+              !Array.isArray(item.results) || item.results.length !== 1 ||
+              item.results[0]?.status !== 'passed') {
+            throw new Error('Skipped, retried or contradictory Playwright evidence');
+          }
+          if (Object.hasOwn(covered, source) && Object.hasOwn(covered[source], item.projectName)) {
             covered[source][item.projectName] += 1;
           }
         }
@@ -75,12 +95,12 @@ export function evaluateIntegratedEvidence(unitReport, browserReport) {
   return {
     schemaVersion: 1, gate: 'PASS', automatedEvidenceOnly: true,
     releaseAuthorized: false, readyForManualRelease: false,
-    manualAcceptancePending: ['NEXT-79e'],
+    manualAcceptancePending: [], // NEXT-79e accepted in the user-reduced scope on 31.10.2026.
     externalCIProvenanceVerificationRequired: true,
     unitTests: actualPassed, requiredUnitSuites: unit,
     browserTests: browser.observedTests, browserProjects: browser.projects,
     requiredBrowserSuites: covered,
-    note: 'Runner evidence verified locally; GitHub CI SHA and physical-device accessibility acceptance require independent verification.'
+    note: 'Runner evidence verified locally. GitHub CI SHA/run/artifacts require independent verification; no release or publish is authorized by this gate.'
   };
 }
 
