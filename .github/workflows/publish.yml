@@ -8,13 +8,14 @@ on:
         required: true
         type: string
       same_version:
-        description: "Same-version policy (safe skip only; archive overwrite forbidden)"
+        description: "Same-version policy"
         required: true
         default: "skip-identical"
         type: choice
         options:
           - skip-identical
           - reject
+          - current-only
 
 permissions:
   contents: read
@@ -70,7 +71,13 @@ jobs:
               echo "Already live at identical version and commit; no archive overwritten."
               exit 0
             fi
-            echo "::error::Version v$VERSION already exists with another commit or re-publish rejected. Bump version or implement a server-side current-only endpoint that preserves archives."
+            if [[ "$POLICY" == "current-only" && "$LIVE_COMMIT" != "$GITHUB_SHA" ]]; then
+              echo "mode=current-only" >> "$GITHUB_OUTPUT"
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "::error::Same version with different commit: choose current-only explicitly or bump version."
+            exit 1
             exit 1
           fi
           # Existing archived release must never be overwritten, even if current version differs.
@@ -79,6 +86,7 @@ jobs:
             echo "::error::Archive URL returned HTTP $CODE (not proven absent). Refusing overwrite."
             exit 1
           fi
+          echo "mode=release" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Add immutable build metadata and manifest
@@ -103,11 +111,12 @@ jobs:
         env:
           PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
           VERSION: ${{ steps.guard.outputs.version }}
+          MODE: ${{ steps.guard.outputs.mode }}
         run: |
           set -euo pipefail
           test -n "$PUBLISH_TOKEN"
           curl --fail-with-body --retry 2 --connect-timeout 15 --max-time 120 \
-            -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" \
+            -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" -F "mode=$MODE" \
             -F "file=@robot-arena-release.zip" \
             https://www.vowikron.de/try_folder/robot-arena/publish.php
 
