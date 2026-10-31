@@ -1,118 +1,148 @@
-name: Publish
+name: Publish (manual, verified)
 
 on:
-  workflow_run:
-    workflows: ["Development Tests"]
-    types: [completed]
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Full main commit SHA approved for deployment"
+        required: true
+        type: string
+      same_version:
+        description: "Same-version policy"
+        required: true
+        default: "skip-identical"
+        type: choice
+        options:
+          - skip-identical
+          - reject
+          - current-only
 
 permissions:
   contents: read
-  statuses: write
+
+concurrency:
+  group: robot-arena-manual-publish
+  cancel-in-progress: false
 
 jobs:
   publish:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Verify explicitly approved main commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          ACTUAL_SHA: ${{ github.sha }}
+          BRANCH: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          test "$BRANCH" = "refs/heads/main"
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_SHA" = "$ACTUAL_SHA"
+
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-          fetch-depth: 2
-
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-
-      - name: Read version
-        id: version
-        shell: bash
+          node-version: '22'
+          cache: npm
+      - name: Reproducible install and complete quality gate
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          npm ci
+          npm run quality
+          npx playwright install --with-deps
+          npm run test:e2e
 
-      - name: Check whether version is already live
-        id: live
-        shell: bash
-        run: |
-          LIVE_VERSION="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/version.json 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("version", ""))' 2>/dev/null || true)"
-          LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))' 2>/dev/null || true)"
-          echo "live_version=$LIVE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "live_commit=$LIVE_COMMIT" >> "$GITHUB_OUTPUT"
-
-      - name: Classify same-version commit
-        id: classify
-        shell: bash
-        run: |
-          META_ONLY=false
-          if [[ "${{ steps.live.outputs.live_version }}" == "${{ steps.version.outputs.version }}" && -n "${{ steps.live.outputs.live_commit }}" && "${{ steps.live.outputs.live_commit }}" != "${{ github.event.workflow_run.head_sha }}" ]]; then
-            git fetch --no-tags origin "${{ steps.live.outputs.live_commit }}" --depth=1 || true
-            CHANGED="$(git diff --name-only "${{ steps.live.outputs.live_commit }}" "${{ github.event.workflow_run.head_sha }}" || true)"
-            echo "Changes since live commit:"
-            printf '%s\n' "$CHANGED"
-            if [[ -n "$CHANGED" ]] && ! printf '%s\n' "$CHANGED" | grep -Ev '^(\.github/|RUN_STATE\.md$|PROJECT_STATE\.md$|BACKLOG\.md$|CHANGELOG\.md$|PROTOKOLL\.md$)' >/dev/null; then
-              META_ONLY=true
-            fi
-          fi
-          echo "meta_only=$META_ONLY" >> "$GITHUB_OUTPUT"
-
-      - name: Install dependencies
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
-        run: npm install
-
-      - name: Build
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
-        run: npm run build
-
-      - name: Add release metadata
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+      - name: Check immutable release archive before publishing
+        id: guard
         env:
-          VERSION: ${{ steps.version.outputs.version }}
-          BUILD_COMMIT: ${{ github.event.workflow_run.head_sha }}
-        shell: bash
+          POLICY: ${{ inputs.same_version }}
         run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          BASE="https://www.vowikron.de/try_folder/robot-arena"
+          LIVE_VERSION="$(curl -fsS "$BASE/version.json" | python3 -c 'import json,sys;print(json.load(sys.stdin).get("version",""))' || true)"
+          LIVE_COMMIT="$(curl -fsS "$BASE/build-info.json" | python3 -c 'import json,sys;print(json.load(sys.stdin).get("commit",""))' || true)"
+          if [[ "$LIVE_VERSION" == "$VERSION" ]]; then
+            if [[ "$LIVE_COMMIT" == "$GITHUB_SHA" && "$POLICY" == "skip-identical" ]]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "Already live at identical version and commit; no archive overwritten."
+              exit 0
+            fi
+            if [[ "$POLICY" == "current-only" && "$LIVE_COMMIT" != "$GITHUB_SHA" ]]; then
+              echo "mode=current-only" >> "$GITHUB_OUTPUT"
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "::error::Same version with different commit: choose current-only explicitly or bump version."
+            exit 1
+            exit 1
+          fi
+          # Existing archived release must never be overwritten, even if current version differs.
+          CODE="$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/releases/v$VERSION/" || true)"
+          if [[ "$CODE" != "404" ]]; then
+            echo "::error::Archive URL returned HTTP $CODE (not proven absent). Refusing overwrite."
+            exit 1
+          fi
+          echo "mode=release" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Add immutable build metadata and manifest
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.guard.outputs.version }}
+        run: |
+          set -euo pipefail
           python3 - <<'PY'
-          import json, os
-          from datetime import datetime, timedelta
-          from zoneinfo import ZoneInfo
-          tz=ZoneInfo("Europe/Berlin"); now=datetime.now(tz)
-          next_run=now.replace(minute=0,second=0,microsecond=0)+timedelta(hours=1)
-          data={"version":os.environ["VERSION"],"commit":os.environ["BUILD_COMMIT"],"builtAt":now.isoformat(),"nextRunAt":next_run.isoformat(),"quality":{"typecheck":"passed","unit":"passed","build":"passed","desktopE2E":"passed","mobileE2E":"passed"}}
-          with open("dist/build-info.json","w",encoding="utf-8") as f: json.dump(data,f,indent=2)
+          import hashlib, json, os, pathlib
+          root = pathlib.Path('dist')
+          (root/'build-info.json').write_text(json.dumps({'version':os.environ['VERSION'],'commit':os.environ['GITHUB_SHA']},sort_keys=True)+'\n')
+          # Hash all actual deployed assets except the manifest itself.
+          manifest = {str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob('*')) if p.is_file() and p.name!='publish-manifest.json'}
+          (root/'publish-manifest.json').write_text(json.dumps({'version':os.environ['VERSION'],'commit':os.environ['GITHUB_SHA'],'files':manifest},sort_keys=True,indent=2)+'\n')
           PY
+          (cd dist && zip -q -r ../robot-arena-release.zip .)
+          sha256sum robot-arena-release.zip
 
-      - name: Package release
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
-        run: cd dist && zip -r ../robot-arena-release.zip .
-
-      - name: Publish to vowikron.de
-        if: ${{ steps.live.outputs.live_version != steps.version.outputs.version }}
+      - name: Upload release using existing server publisher
+        if: steps.guard.outputs.skip != 'true'
         env:
           PUBLISH_TOKEN: ${{ secrets.ROBOT_ARENA_PUBLISH_TOKEN }}
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSION: ${{ steps.guard.outputs.version }}
+          MODE: ${{ steps.guard.outputs.mode }}
         run: |
+          set -euo pipefail
           test -n "$PUBLISH_TOKEN"
-          curl --fail-with-body -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" -F "file=@robot-arena-release.zip" https://www.vowikron.de/try_folder/robot-arena/publish.php
+          curl --fail-with-body --retry 2 --connect-timeout 15 --max-time 120 \
+            -F "token=$PUBLISH_TOKEN" -F "version=v$VERSION" -F "mode=$MODE" \
+            -F "file=@robot-arena-release.zip" \
+            https://www.vowikron.de/try_folder/robot-arena/publish.php
 
-      - name: Verify deployment
+      - name: Verify every live file against release manifest
         env:
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSION: ${{ steps.guard.outputs.version }}
         run: |
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/testsuite.html
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/release-notes.html
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/backlog.html
-          curl --fail https://www.vowikron.de/try_folder/robot-arena/releases/v$VERSION/
-          LIVE_COMMIT="$(curl -fsS https://www.vowikron.de/try_folder/robot-arena/build-info.json | python3 -c 'import sys,json; print(json.load(sys.stdin).get("commit", ""))')"
-          if [[ "${{ steps.live.outputs.live_version }}" == "$VERSION" && "${{ steps.classify.outputs.meta_only }}" == "true" ]]; then
-            echo "Same release version is already live from $LIVE_COMMIT; current commit contains metadata/workflow changes only."
-          else
-            test "$LIVE_COMMIT" = "${{ github.event.workflow_run.head_sha }}" || (echo "Published commit mismatch: $LIVE_COMMIT" && exit 1)
-          fi
-
-      - name: Record verified deployment status
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.version.outputs.version }}
-          DEPLOYED_COMMIT: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$DEPLOYED_COMMIT" -f state="success" -f context="robot-arena/deployment" -f description="v$VERSION verified live on vowikron.de"
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, urllib.request
+          base='https://www.vowikron.de/try_folder/robot-arena/'
+          def fetch(path):
+              with urllib.request.urlopen(base+path,timeout=30) as response:
+                  if response.status != 200: raise RuntimeError(f'{path}: HTTP {response.status}')
+                  return response.read()
+          remote_bytes=fetch('publish-manifest.json')
+          if os.path.exists('dist/publish-manifest.json'):
+              with open('dist/publish-manifest.json','rb') as local:
+                  assert hashlib.sha256(remote_bytes).digest()==hashlib.sha256(local.read()).digest(), 'Live manifest differs from approved build'
+          remote=json.loads(remote_bytes)
+          assert remote['version']==os.environ['VERSION']
+          assert remote['commit']==os.environ['GITHUB_SHA']
+          for path,digest in remote['files'].items():
+              assert not path.startswith('/') and '..' not in path.split('/')
+              actual=hashlib.sha256(fetch(path)).hexdigest()
+              if actual != digest: raise RuntimeError(f'Live checksum mismatch: {path}')
+          assert json.loads(fetch('build-info.json'))['commit']==os.environ['GITHUB_SHA']
+          print(f"Verified {len(remote['files'])} live files for v{remote['version']} at {remote['commit']}")
+          PY
