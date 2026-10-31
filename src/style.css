@@ -154,3 +154,7 @@
 .tournament-save-status[data-state="busy"]{color:#ffdf93}
 .tournament-save-status[data-state="saved"]{color:#a6f2c4}
 .tournament-save-status[data-state="error"]{color:#ffb4b4}
+
+/* NEXT-112: accessible combat speed selector */
+.combat-speed-control{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;color:#d4e3f7;font-size:.88rem}
+.combat-speed-control select{width:auto;min-width:110px;min-height:44px}
