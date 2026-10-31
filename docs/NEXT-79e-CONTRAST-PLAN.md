@@ -1,10 +1,10 @@
-# NEXT-79e – Kontrastabnahme (Windows/Firefox/Touch)
+# NEXT-119 – Sandbox- und Button-Kontrast (neue Aufgabe)
 
-## Nutzerfreigabe / Umfang (31.10.2026)
+## Abgrenzung und Nutzerentscheidung (31.10.2026)
 - Touchbedienung: vom Nutzer als passend bestätigt.
 - Firefox: vom Nutzer als passend bestätigt.
 - Screenreader/NVDA und VoiceOver sowie Apple-spezifische Abnahme sind auf ausdrücklichen Nutzerwunsch **nicht Teil des Projekt-Abnahmekatalogs**.
-- Noch offen: Sandbox und Buttons optisch deutlich stärker vom Seitenhintergrund absetzen.
+- NEXT-79e gilt im vom Nutzer reduzierten Umfang als abgenommen; die visuelle Verbesserung ist ein eigenständiger neuer Task NEXT-119.
 
 ## Umsetzung (separater Entwicklungs-Task)
 1. Sandbox-Arena durch klar unterscheidbare Hintergrundfläche, sichtbare Kontur und/oder Schatten vom Seitenhintergrund abheben; auch im schmalen mobilen Layout.
@@ -15,5 +15,5 @@
 ## Abnahme
 - Sichtprüfung auf Windows/Firefox und Touch-Bildschirm: Sandbox ist sofort als eigene Spielfläche erkennbar; Buttons heben sich eindeutig vom Hintergrund ab.
 - Automatisierte Kontrast-/CSS-Regression sowie bestehende Desktop-/Mobil-Browsertests bestehen auf dem finalen Commit.
-- **NEXT-79e erst nach Umsetzung und erfolgreicher Abnahme schließen**; Nutzerwunsch allein ist keine Bestätigung der noch ausstehenden Kontraständerung.
+- **NEXT-119** erst nach Umsetzung und erfolgreicher Abnahme schließen. **NEXT-79e** wird durch diesen Task nicht blockiert.
 - Keine automatische Veröffentlichung oder Merge nach main.
