@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { evaluateIntegratedEvidence } from '../scripts/next106-integrated-release-gate.mjs';
 import { REQUIRED_BROWSER_PROJECTS } from '../scripts/next97-browser-release-gate.mjs';
 
@@ -136,4 +137,19 @@ test('NEXT-106: supported 4-project feature acceptance must not use skipped evid
   r.browser.suites[0].specs[0].tests[0].expectedStatus = 'skipped';
   r.browser.suites[0].specs[0].tests[0].results = [];
   assert.throws(() => evaluateIntegratedEvidence(r.unit, r.browser), /contradictory|evidence/);
+});
+
+test('NEXT-106/NEXT-120: manual publisher cannot bypass evidence gate before upload', () => {
+  const publish = readFileSync(new URL('../.github/workflows/publish.yml', import.meta.url), 'utf8');
+  const ci = readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  const gate = 'node scripts/next106-integrated-release-gate.mjs';
+  const upload = 'name: Upload release using existing server publisher';
+  assert.match(publish, /workflow_dispatch:/);
+  assert.doesNotMatch(publish, /workflow_run:/);
+  assert.ok(publish.indexOf(gate) > 0 && publish.indexOf(gate) < publish.indexOf(upload));
+  assert.ok(publish.indexOf('node scripts/next97-browser-release-gate.mjs') < publish.indexOf(gate));
+  assert.ok(ci.includes(gate));
+  // Positive evidence is required even if the artifact upload operation succeeds.
+  assert.match(publish, /name: robot-arena-manual-publish-evidence[\s\S]*?if-no-files-found: error/);
+  assert.match(ci, /name: robot-arena-integrated-evidence[\s\S]*?if-no-files-found: error/);
 });
