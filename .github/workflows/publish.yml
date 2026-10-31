@@ -123,7 +123,11 @@ jobs:
               with urllib.request.urlopen(base+path,timeout=30) as response:
                   if response.status != 200: raise RuntimeError(f'{path}: HTTP {response.status}')
                   return response.read()
-          remote=json.loads(fetch('publish-manifest.json'))
+          remote_bytes=fetch('publish-manifest.json')
+          if os.path.exists('dist/publish-manifest.json'):
+              with open('dist/publish-manifest.json','rb') as local:
+                  assert hashlib.sha256(remote_bytes).digest()==hashlib.sha256(local.read()).digest(), 'Live manifest differs from approved build'
+          remote=json.loads(remote_bytes)
           assert remote['version']==os.environ['VERSION']
           assert remote['commit']==os.environ['GITHUB_SHA']
           for path,digest in remote['files'].items():
