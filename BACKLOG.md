@@ -6,6 +6,9 @@
 
 ## Als Nächstes – nach Priorität
 
+**P0 NEXT-106:** Härtungs-PR mit fail-closed Negativtests und NEXT-120-Kompatibilität integrieren, CI auf exaktem finalem main SHA und Evidenz-Artefakte prüfen; erst danach Veröffentlichung ausdrücklich freigeben. Referenz: main-CI #41201746486 auf `69a86de5` vor Härtung. Live-Stand separat verifizieren.
+
+
 | Prio | Task | Status | Unmittelbar nächster Schritt | Nachweis |
 |---|---|---|---|---|
 | P0 | NEXT-108 – Fail-closed Provenienz | 🟡 A–C integriert; D in Prüfung | Finalen Quality- und Provenienz-CI-Lauf auf exaktem HEAD von PR #187 bestätigen; ggf. Fehler beheben | [PR #187](https://github.com/VOWIKRON/robot-arena/pull/187) |
@@ -26,7 +29,7 @@
 
 | Task | Stand / nächster Check |
 |---|---|
-| NEXT-106 | Historisch QA-grün; Release-/Live-Stand nicht aus diesem Dokument ableiten. |
+| NEXT-106 | PR #90 nach main gemergt; main-CI #41201746486 (SHA `69a86de5`) 739/739 PASS. Fail-Closed-Hardening und NEXT-120-Evidence-Gate auf separatem Branch `fix/NEXT-106-fail-closed-publish-readiness-20261031`, finale CI/Integration noch offen; NICHT veröffentlicht. |
 | NEXT-107 | Historisch QA-grün; Release-/Live-Stand nicht aus diesem Dokument ableiten. |
 | NEXT-109 | Ursachenanalyse und Startseiten-Effekt dokumentiert; NEXT-110 adressiert die Regelarchitektur. Abschluss/Release anhand PR/CI prüfen. |
 | NEXT-112 | Geschwindigkeitsregler implementiert; historische 992/992 QA für Entwicklungskandidat dokumentiert; Integration PR #218 offen. |
