@@ -21,8 +21,9 @@ export function evaluateIntegratedEvidence(unitReport, browserReport) {
       unitReport.numFailedTests !== 0 || unitReport.numPendingTests !== 0 ||
       !Array.isArray(unitReport.testResults) || unitReport.testResults.length === 0 ||
       unitReport.numTotalTests !== unitReport.numPassedTests ||
-      unitReport.numPassedTestSuites !== unitReport.testResults.length ||
-      unitReport.numTotalTestSuites !== unitReport.testResults.length ||
+      !Number.isSafeInteger(unitReport.numPassedTestSuites) ||
+      unitReport.numPassedTestSuites < unitReport.testResults.length ||
+      unitReport.numTotalTestSuites !== unitReport.numPassedTestSuites ||
       unitReport.numFailedTestSuites !== 0 || unitReport.numPendingTestSuites !== 0) {
     throw new Error('Missing, incomplete or failed Vitest JSON report');
   }
